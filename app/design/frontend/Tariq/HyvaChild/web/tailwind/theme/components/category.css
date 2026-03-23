@@ -1,0 +1,273 @@
+/* .category-view .sidebar .block.filter {} */
+
+
+#category-view-container {
+	@apply pt-0;
+}
+.hide-cat {
+	@apply hidden;
+}
+.no-mess-sec {
+	@apply lg:max-w-[950px] lg:mb-16;
+}
+.best-sell-list {
+	@apply lg:w-[350px];
+}
+.bestselling-products {
+	@apply lg:my-20;
+}
+.category-tilte {
+	@apply lg:leading-[44px];
+}
+.category-view .category-cms {
+    @apply w-full;
+}
+.category-cms .info-section {
+    @apply mb-8;
+}
+
+.no-mess-left {
+    @apply md:w-[600px];
+}
+.no-mess-right {
+    @apply md:w-[350px];
+}
+.left_section .category-description {
+    @apply lg:pr-20;
+}
+
+.category-view .top-div {
+    @apply bg-[#F5F9F7];
+}
+.recipe_banners_section {
+    @apply bg-[#F5F9F7];
+}
+
+.category-view .top-deals-sec {
+    @apply lg:my-6 inline-block;
+}
+
+.category-top-list a{
+    @apply hover:-translate-y-2 transition transform duration-300;
+}
+.category-lamb-sec .group-c{
+    @apply hover:-translate-y-2 transition transform duration-300;
+}
+
+.cat-section .group{
+    @apply hover:-translate-y-2 transition transform duration-300;
+}
+
+.category-premium-sec .feature-b{
+    @apply hover:-translate-y-2 transition transform duration-300;
+}
+.after-banner-sec .feature-b{
+    @apply hover:-translate-y-2 transition transform duration-300;
+}
+.recipe-list-sec {
+    @apply md:w-[725px] mx-auto;
+}
+.recipe-blog-view {
+    @apply !px-0;
+}
+.nutrition-sec {
+    @apply bg-[#F5F9F7];
+}
+
+.category-newsletter button.category-subscribe-btn {
+    @apply hidden;
+}
+
+@layer utilities {
+  @media (max-width: 767px) { 
+    .category-recipe > :nth-child(2) {
+      @apply hidden;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+	.category-top-list {
+        @apply gap-2;
+    }
+    .category-premium-sec,
+    .no-mess-sec,
+    .category-newsletter,
+    .tag-list,
+    .category-post,
+    .info-section,
+    .catalog-category-view .delivery.partners,
+    .product-list-point,
+    .recipe-banner,
+    .pdp-stock,
+    .pdp-payment,
+    .pdp-share-i,
+    .product-info-main .vip-points,
+    .custom-logo-section,
+    .pdo-google-review,
+    .catalog-product-view .video-section,
+    .pdp-button-sec button.add-to-basket,
+    .pdp-button-sec #add-to-wishlist,
+    .catalog-product-view .breadcrumbs {
+    	@apply hidden;
+    }
+    .category-lamb-sec .group-c {
+    	@apply mb-8;
+    }
+    .product-info {
+    	@apply px-0;
+    }
+    .product-info .list-title {
+        @apply h-[50px] text-[15px] leading-[24px];
+    }
+    .product-info button {
+        @apply text-sm px-4;
+    }
+    .pdp-img-sec {
+        @apply flex-col;
+    }
+    .pdp-img-sec #thumbs {
+        @apply order-2 w-full items-start;
+    }
+    #thumbs .js_thumbs_slide {
+        @apply w-[60px];
+    }
+    .pdp-flex-wrapper {
+        @apply flex flex-col;
+    }
+    .description-sec {
+        @apply order-2 mt-8 mb-6;
+    }
+    .mageplaza-frequently-bought-together-block {
+        @apply order-1;
+    }
+    .mageplaza-fbt-title {
+        @apply p-0;
+    }
+    .column.main .mageplaza-fbt-image-box .product-item {
+        @apply !w-full;
+    }
+    .column.main .mageplaza-fbt-image-box .product-item .m-list,
+    .column.main .mageplaza-fbt-image-box .mp-product-item .fbt-product-item-info {
+        @apply flex justify-start items-start h-[150px];
+    }
+    .product-item .product-image-container,
+    .fbt-product-item-info .product-item-photo,
+    .mageplaza-fbt-image-box .item.product img.product-image-photo {
+       @apply !w-[140px] !h-[150px] !mr-[10px];
+    }
+    .mageplaza-fbt-image-box .item.product {
+        @apply !p-[5px];
+    }
+    .mageplaza-fbt-image-box .item.product .price-box.price-final_price {
+        @apply justify-start;
+    }
+     .mageplaza-fbt-content .product-item-plus {
+        @apply leading-normal block h-[8px];
+    }
+    .mageplaza-fbt-content .product-item-plus span {
+        @apply z-[999] absolute top-[-13px] left-[45%];
+    }
+    .mageplaza-fbt-content .product-item-details {
+        @apply mt-2;
+    }
+    .mageplaza-fbt-image-box .item.product .related-checkbox {
+        @apply right-[8px] bottom-[65px] left-auto;
+    }
+    .pdp-sticky-btn {
+        @apply fixed bottom-0 left-0 w-full z-[9] bg-[#000] bg-opacity-60;
+    }
+    .pdp-sticky-btn .pdp-share-i.desktop {
+        @apply inline-block;
+    }
+    .pdp-sticky-btn .social-media-icons button{
+        @apply gap-0 px-0 py-0;
+    }
+    .pdp-sticky-btn .social-media-icons button span{
+        @apply text-[0px] w-[50px] h-[50px] flex items-center justify-center;
+    }
+    .pdp-sticky-btn .social-media-icons button span img{
+        @apply h-5;
+    }
+    .pdp-sticky-btn button.add-to-basket {
+        @apply w-[190px] text-sm;   
+    }
+    .pdp-sticky-btn #add-to-wishlist {
+        @apply w-[50px] h-[50px] bg-white rounded-[50px];
+    }
+    .category-lamb-sec .group-c {
+        @apply w-auto;
+    }
+    .category-view .top-div {
+        @apply bg-[#F5F9F7] w-full;
+    }
+    .category-view .top-div .left_section {
+        @apply items-center py-8;
+    }
+    .recipe_banners_section.top-div .left_section {
+        @apply items-center py-8;
+    }
+    
+    .category-view .top-div .left_section .page-title {
+        @apply text-[36px] leading-[40px] text-center px-2;
+    }
+    .recipe_banners_section.top-div .left_section .page-title {
+        @apply text-[36px] leading-[40px] text-center px-2;
+    }
+    .page-title-wrapper .custom.container {
+        @apply p-0;
+    }
+    .checkout-cart-index .page-title-wrapper .custom.container {
+        @apply px-4;
+    }
+    .cms-page-view .page-title-wrapper .custom.container {
+        @apply px-6;
+    }
+    .career-index-index .page-title-wrapper .custom.container {
+        @apply px-6;
+    }
+    .customer-account-create .page-title-wrapper .custom.container {
+        @apply px-6;
+    }
+    .product-name {
+        @apply h-[50px];
+    }
+    .product-card-list .product-name {
+        @apply h-[50px];
+    }
+    .catalogsearch-result-index .page-title-wrapper .custom.container {
+        @apply px-5;
+    }
+    .catalogsearch-result-index .products.list .group {
+        @apply px-0;
+    }
+    .toolbar.toolbar-products {
+        @apply hidden
+    }
+    .category-top-list.scroll-item{
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+     
+}
+
+
+@layer utilities {
+  .news-letter-sec input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #2a2a2a inset !important;
+    -webkit-text-fill-color: #fff !important;
+  }
+}
+
+
+.reveal {
+  opacity: 0.85;               
+  transform: translateY(60px); 
+  transition: transform 0.7s ease-out, opacity 0.6s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}

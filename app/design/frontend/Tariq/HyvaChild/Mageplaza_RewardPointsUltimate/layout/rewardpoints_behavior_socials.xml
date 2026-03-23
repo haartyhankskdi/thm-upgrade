@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="main.content">
+            <container name="mp_rw_socials" as="mp_socials" label="Reward Point Socials" htmlTag="div" htmlId="mp_rw_socials_earning" before="-">
+                <block class="Magento\Framework\View\Element\Template" name="mp_reward_socials" template="Mageplaza_RewardPointsUltimate::socials.phtml">
+                    <block class="Mageplaza\RewardPointsUltimate\Block\Socials\Facebook" name="mp_rw_like_fb" before="-" template="Mageplaza_RewardPointsUltimate::socials/facebook.phtml" ifconfig="rewardpoints/behavior/facebook/enabled"/>
+                    <block class="Mageplaza\RewardPointsUltimate\Block\Socials\Twitter" name="mp_rw_like_twitter" after="mp_rw_like_fb" template="Mageplaza_RewardPointsUltimate::socials/twitter.phtml" ifconfig="rewardpoints/behavior/twitter/enabled"/>
+                </block>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

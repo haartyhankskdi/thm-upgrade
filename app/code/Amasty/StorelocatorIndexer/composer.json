@@ -1,0 +1,24 @@
+{
+    "name": "amasty/module-store-locator-indexer",
+    "description": "Store Locator Indexer by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.19.1"
+    },
+    "suggest": {
+        "amasty/module-graphql-application-server-compatibility": "Install this package for compatibility with GraphQL Application Server."
+    },
+    "type": "magento2-module",
+    "version": "1.2.1",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\StorelocatorIndexer\\": ""
+        }
+    }
+}

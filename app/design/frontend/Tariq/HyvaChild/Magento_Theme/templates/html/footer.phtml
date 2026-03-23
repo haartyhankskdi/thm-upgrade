@@ -1,0 +1,45 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<div class="text-gray-700 body-font bg-black py-16 m-footer">
+
+     <div class="container pt-4 pb-2 mx-auto m-links hidden lg:block">
+    <img src="<?= $this->getViewFileUrl('images/footer-logo.png') ?>" width="28" height="32" alt="footer-logo" />
+</div>
+    <div class="container py-8 mx-auto m-links order-2">
+        <div class="w-full gap-y-16">
+            <?php foreach ($block->getChildNames() as $childName): ?>
+                <?= $childName !== 'footer-copyright' ? $block->getBlockHtml($childName) : '' ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="w-full py-8 inline-block m-logo order-1">
+    <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('footer_logo')->toHtml(); ?>
+    </div>
+    <div class="bg-black py-4 m-copyright order-3">
+        <div class="container flex flex-col md:flex-row items-center justify-between">
+           
+            <div class="px-0">
+                <?= $block->getChildHtml('copyright') ?>
+            </div>
+        <div class="flex gap-4 mt-0">
+          <!--Payment Cards Section-->
+        <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('footer_payment_address')->toHtml(); ?>
+        </div>
+        </div>
+    </div>
+</div>
+

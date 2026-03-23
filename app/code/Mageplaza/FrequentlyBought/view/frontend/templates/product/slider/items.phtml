@@ -1,0 +1,731 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Magento\Catalog\ViewModel\Product\Listing\PreparePostData;
+use Magento\Framework\App\ActionInterface;
+
+/** @var \Mageplaza\FrequentlyBought\Block\Product\ProductList\FrequentlyBought $block */
+
+$product           = $block->getProduct();
+$productId         = $product->getId();
+$items             = $block->getItems();
+$templateType      = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+$canItemsAddToCart = false;
+$type              = 'related';
+$showAddTo         = true;
+$showCart          = true;
+if ($block->isShow() && $items->getSize()):?>
+    <hr>
+    <?php if ($title = $block->getTitleBlock()): ?>
+        <div class="mageplaza-fbt-title block-title title">
+            <h2 id="block-mageplaza-fbt-heading"><?= $block->escapeHtml($title) ?></h2>
+        </div>
+    <?php endif; ?>
+    <div class="mageplaza-fbt-content">
+        <div class="wrapper grid products-grid">
+            <ol class="mageplaza-fbt-image-box">
+                <?php if ($isSalable = $block->getProductIsSalable($product)): ?>
+                <li class="item product first-item product-item mageplaza-fbt-item-<?= /* @noEscape */ $productId ?>">
+                    <span>
+                        <input type="checkbox" class="related-checkbox" data-mageplaza-fbt-product-id="<?= /* @noEscape */ $productId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($product) ?>" id="mageplaza-fbt-slider-checkbox-<?= /* @noEscape */ $productId;?>" name="mageplaza_fbt[<?= /* @noEscape */ $productId ?>]" <?= (!$block->getProductIsSalable($product)) ? 'disabled="disabled"' : '' ?> />
+                        <?= $block->getImage($product, 'related_products_list')->toHtml() ?>
+                        <div class="product details product-item-details">
+                                <strong class="product name product-item-name"><a
+                                        class="product-item-link"
+                                        title="<?= $block->escapeHtmlAttr($product->getName()) ?>"
+                                        href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
+                                        <?= $block->escapeHtml($product->getName()) ?></a>
+                                </strong>
+
+                                <?= /* @noEscape */ $block->getProductPrice($product) ?>
+
+                                <?php if ($templateType):?>
+                                    <?= $block->getReviewsSummaryHtml($product, $templateType) ?>
+                                <?php endif; ?>
+
+                            <?php if ($canItemsAddToCart && !$product->isComposite() && $product->isSaleable()
+                                && $type == 'related'):?>
+                                <?php if (!$product->getRequiredOptions()):?>
+                                    <div class="field choice related">
+                                            <input
+                                                type="checkbox"
+                                                class="checkbox related"
+                                                id="related-checkbox<?= $block->escapeHtmlAttr($productId) ?>"
+                                                name="related_products[]"
+                                                value="<?= $block->escapeHtmlAttr($productId) ?>" />
+                                            <label class="label"
+                                                   for="related-checkbox<?= $block->escapeHtmlAttr($productId)
+                                                    ?>"><span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                            </label>
+                                        </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <?php if ($showAddTo || $showCart):?>
+                                <?php // phpcs:disable ?>
+                                <div class="product actions product-item-actions">
+                                        <?php if ($showCart):?>
+                                            <div class="actions-primary">
+                                                <?php if ($product->isSaleable()):?>
+                                                    <?php if (!$product->getTypeInstance()->isPossibleBuyFromList($product) && !$block->usePopup()):?>
+                                                        <button
+                                                            class="action tocart primary"
+                                                            data-mage-init='{"redirectUrl": {"url": "<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"}}' type="button" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>">
+                                                            <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                                        </button>
+                                                    <?php else :?>
+                                                        <?php
+                                                        /** @var $viewModel PreparePostData */
+                                                        $viewModel = $block->getViewModel();
+                                                        $postArray = $viewModel->getPostData(
+                                                            $block->escapeUrl($block->getAddToCartUrl($product)),
+                                                            ['product' => $product->getEntityId()]
+                                                        );
+                                                        $value = $postArray['data'][ActionInterface::PARAM_NAME_URL_ENCODED];
+                                                        ?>
+                                                        <form data-role="tocart-form"
+                                                             data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>"
+                                                             action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+                                                             method="post">
+                                                            <input type="hidden" name="product"
+                                                                   value="<?= /* @noEscape */ (int)$product->getEntityId() ?>">
+                                                            <input type="hidden"
+                                                                   name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED?>"
+                                                                   value="<?= /* @noEscape */ $value ?>">
+                                                            <?= $block->getBlockHtml('formkey') ?>
+                                                            <button title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                                                    <?= ($product->getTypeId() === 'simple') ? 'data-ajax-addtocart="true"' : '' ?>
+                                                                    class="action tocart primary">
+                                                                <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                                            </button>
+                                                        </form>
+                                                    <?php endif; ?>
+                                                <?php else:?>
+                                                    <?php if ($product->isAvailable()):?>
+                                                        <div class="stock available">
+                                                            <span><?= $block->escapeHtml(__('In stock')) ?></span>
+                                                        </div>
+                                                    <?php else:?>
+                                                        <div class="stock unavailable">
+                                                            <span><?= $block->escapeHtml(__('Out of stock')) ?></span>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                    <?php if ($showAddTo):?>
+                                        <div class="secondary-addto-links actions-secondary"
+                                             data-role="add-to-links">
+                                                <?php if ($addToBlock = $block->getChildBlock('addto')):?>
+                                                    <?= $addToBlock->setProduct($product)->getChildHtml() ?>
+                                                <?php endif; ?>
+                                            </div>
+                                    <?php endif; ?>
+                                    </div>
+                                <?php // phpcs:enable ?>
+                            <?php endif; ?>
+                            </div>
+                    </span>
+                </li>
+                <li class="product-item-plus">
+                    <?php if ($separateImage = $block->getSeparatorImage()): ?>
+                        <img src="<?= $block->escapeUrl($separateImage) ?>" alt="+" />
+                    <?php else: ?>
+                        <span>&#43;</span>
+                    <?php endif; ?>
+                </li>
+                <?php endif; ?>
+                <div class="mageplaza-fbt-carousel-container">
+                    <div id="mageplaza-fbt-carousel" class="owl-carousel owl-theme">
+                    <?php foreach ($items as $_item):?>
+                        <?php $itemId = $_item->getProductId() ?: $_item->getId() ?>
+                        <?php if ($isSalable = $block->getProductIsSalable($_item)): ?>
+                        <li class="item product product-item mageplaza-fbt-item-<?= /* @noEscape */ $itemId?>">
+                            <div class="fbt-product-item-info">
+                                <input type="checkbox" class="related-checkbox" data-mageplaza-fbt-product-id="<?= /* @noEscape */ $itemId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($_item); ?>" id="mageplaza-fbt-slider-checkbox-<?= /* @noEscape */ $itemId?>" name="mageplaza_fbt[<?= /* @noEscape */ $itemId?>]"/>
+                                <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+                                   class="product photo product-item-photo">
+                                    <?= $block->getImage($_item, 'related_products_list')->toHtml() ?>
+                                </a>
+                                <div class="product details product-item-details">
+                                    <strong class="product name product-item-name"><a
+                                            class="product-item-link"
+                                            title="<?= $block->escapeHtmlAttr($_item->getName()) ?>"
+                                            href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>">
+                                            <?= $block->escapeHtml($_item->getName()) ?></a>
+                                    </strong>
+
+                                    <?= /* @noEscape */ $block->getProductPrice($_item) ?>
+
+                                    <?php if ($templateType):?>
+                                        <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
+                                    <?php endif; ?>
+
+                                    <?php if ($canItemsAddToCart && !$_item->isComposite() && $_item->isSaleable()
+                                        && $type == 'related'):?>
+                                        <?php if (!$_item->getRequiredOptions()):?>
+                                            <div class="field choice related">
+                                                <input
+                                                    type="checkbox"
+                                                    class="checkbox related"
+                                                    id="related-checkbox<?= $block->escapeHtmlAttr($_item->getId()) ?>"
+                                                    name="related_products[]"
+                                                    value="<?= $block->escapeHtmlAttr($_item->getId()) ?>" />
+                                                <label class="label"
+                                                       for="related-checkbox<?= $block->escapeHtmlAttr($_item->getId())
+                                                        ?>"><span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                                </label>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+                                    <?php if ($showAddTo || $showCart):?>
+                                        <?php // phpcs:disable ?>
+                                        <div class="product actions product-item-actions">
+                                            <?php if ($showCart):?>
+                                                <div class="actions-primary">
+                                                    <?php if ($_item->isSaleable()):?>
+                                                        <?php if (!$_item->getTypeInstance()->isPossibleBuyFromList($_item) && !$block->usePopup()):?>
+                                                            <button
+                                                                class="action tocart primary"
+                                                                data-mage-init='{"redirectUrl": {"url": "<?= $block->escapeUrl($block->getAddToCartUrl($_item)) ?>"}}' type="button" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>">
+                                                                <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                                            </button>
+                                                        <?php else :?>
+                                                            <?php
+                                                            /** @var $viewModel PreparePostData */
+                                                            $viewModel = $block->getViewModel();
+                                                            $postArray = $viewModel->getPostData(
+                                                                $block->escapeUrl($block->getAddToCartUrl($_item)),
+                                                                ['product' => $_item->getEntityId()]
+                                                            );
+                                                            $value = $postArray['data'][ActionInterface::PARAM_NAME_URL_ENCODED];
+                                                            ?>
+                                                            <form data-role="tocart-form"
+                                                                  data-product-sku="<?= $block->escapeHtmlAttr($_item->getSku()) ?>"
+                                                                  action="<?= $block->escapeUrl($block->getAddToCartUrl($_item)) ?>"
+                                                                  method="post">
+                                                                <input type="hidden" name="product"
+                                                                       value="<?= /* @noEscape */ (int)$_item->getEntityId() ?>">
+                                                                <input type="hidden"
+                                                                       name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED?>"
+                                                                       value="<?= /* @noEscape */ $value ?>">
+                                                                <?= $block->getBlockHtml('formkey') ?>
+                                                                <button title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                                                        <?= ($_item->getTypeId() === 'simple') ? 'data-ajax-addtocart="true"' : '' ?>
+                                                                        class="action tocart primary">
+                                                                    <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                                                </button>
+                                                            </form>
+                                                        <?php endif; ?>
+                                                    <?php else:?>
+                                                        <?php if ($_item->isAvailable()):?>
+                                                            <div class="stock available">
+                                                                <span><?= $block->escapeHtml(__('In stock')) ?></span>
+                                                            </div>
+                                                        <?php else:?>
+                                                            <div class="stock unavailable">
+                                                                <span><?= $block->escapeHtml(__('Out of stock')) ?></span>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <?php if ($showAddTo):?>
+                                                <div class="secondary-addto-links actions-secondary"
+                                                     data-role="add-to-links">
+                                                    <?php if ($addToBlock = $block->getChildBlock('addto')):?>
+                                                        <?= $addToBlock->setProduct($_item)->getChildHtml() ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php // phpcs:enable ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    </div>
+                </div>
+            </ol>
+        </div>
+        <form id="mageplaza-fbt-form" method="post" action="<?= $block->escapeUrl($block->getUrl('frequentlybought/cart/add')) ?>" data-mage-init='{"validation": {}, "frequentlyBought": <?= /* @noEscape */ $block->getJsonConfig() ?>}'>
+            <?= $block->getFormKeyHtml() ?>
+            <div class="mageplaza-fbt-price-box">
+                <div class="mageplaza-fbt-total-price">
+                        <span class="mageplaza-fbt-total-price-label">
+                            <?= /* @noEscape */ __('Total price:') ?>
+                        </span>
+                    <span data-price-amount="0" class="mageplaza-fbt-price-wrapper">
+                            <span class="mageplaza-fbt-price">
+                                <?= /* @noEscape */ $block->getPriceWithCurrency(0) ?>
+                            </span>
+                        </span>
+                </div>
+                <div class="mageplaza-fbt-buttons">
+                    <div class="mageplaza-fbt-add-to-cart">
+                        <button type="submit" title="<?= /* @noEscape */ __('Add selected to cart') ?>" class="action primary mpfbt-tocart">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span><?= /* @noEscape */ __('Add selected to cart') ?></span>
+                        </button>
+                    </div>
+                    <?php if ($block->getShowWishList()): ?>
+                        <div class="mageplaza-fbt-add-to-wishlist">
+                            <button type="submit" title="<?= /* @noEscape */ __('Add selected to wishlist') ?>" data-url="<?= /* @noEscape */ $block->getUrl('frequentlybought/wishlist/add') ?>">
+                                <span><?= /* @noEscape */ __('Add selected to wishlist') ?></span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="mp-clear"></div>
+            <div class="mageplaza-fbt-rows">
+                <ul>
+                    <li>
+                        <input type="checkbox" class="related-checkbox" data-mageplaza-fbt-product-id="<?= /* @noEscape */ $productId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($product) ?>" id="mageplaza-fbt-checkbox-<?= /* @noEscape */ $productId;?>" name="mageplaza_fbt[<?= /* @noEscape */ $productId ?>]" <?= (!$block->getProductIsSalable($product)) ? 'disabled="disabled"' : '' ?> />
+                        <span>
+                            <div class="mageplaza-fbt-checkbox-label">
+                                <strong><?= /* @noEscape */ __('This item:') ?></strong>
+                                <span class="mageplaza-fbt-name-<?= /* @noEscape */ $productId;?>"><?= $block->escapeHtml($product->getName()) ?></span>
+                                <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */ $productId?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($product) ?>"><?= /* @noEscape */ $block->getPriceWithCurrency($block->getPriceAmount($product)) ?></span>
+                                <?php if (!$block->getProductIsSalable($product)): ?>
+                                    <span class="mageplaza-fbt-out-of-stock"><?= /* @noEscape */ __('Out of stock') ?></span>
+                                <?php endif; ?>
+                                <?php if (!$block->usePopup()): ?>
+                                    <span class="mageplaza-fbt-detail"></span>
+                                <?php endif; ?>
+                            </div>
+                        </span>
+                        <?php if (!$block->usePopup()): ?>
+                        <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */ $productId?> mageplaza-fbt-hidden"><?= /* @noEscape */ $block->getOptionWrapper() ?></div>
+                        <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */ $productId?> mageplaza-fbt-hidden"><?= /* @noEscape */ $block->getCustomOption() ?></div>
+                        <?php endif; ?>
+                    </li>
+                    <?php foreach ($items as $_item):?>
+                        <?php $itemId = $_item->getProductId() ?: $_item->getId(); ?>
+                        <?php $isSalable = $block->getProductIsSalable($_item); ?>
+                        <li>
+                            <input type="checkbox" class="related-checkbox" data-mageplaza-fbt-product-id="<?= /* @noEscape */ $itemId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($_item); ?>" id="mageplaza-fbt-checkbox-<?= /* @noEscape */ $itemId?>" name="mageplaza_fbt[<?= /* @noEscape */ $itemId?>]" <?= (!$isSalable) ? 'disabled="disabled"' : '' ?> />
+                            <span>
+                                <div class="mageplaza-fbt-checkbox-label">
+                                    <a href="<?= /* @noEscape */ $block->getProductUrl($_item) ?>">
+                                        <?= $block->escapeHtml($_item->getName()) ?>
+                                    </a>
+                                    <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */ $itemId?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($_item) ?>">
+                                        <?= /* @noEscape */ $block->getPriceWithCurrency($block->getPriceAmount($_item)); ?>
+                                    </span>
+                                    <?php if (!$isSalable): ?>
+                                        <span class="mageplaza-fbt-out-of-stock"><?= /* @noEscape */ __('Out of stock') ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!$block->usePopup()): ?>
+                                        <span class="mageplaza-fbt-detail"></span>
+                                    <?php endif; ?>
+                                </div>
+                            </span>
+                            <?php if (!$block->usePopup()): ?>
+                            <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */ $itemId?> mageplaza-fbt-hidden"><?= /* @noEscape */ $block->getOptionWrapper($itemId) ?></div>
+                            <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */ $itemId?> mageplaza-fbt-hidden"><?= /* @noEscape */ $block->getCustomOption($itemId) ?></div>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <hr>
+
+    <?php if ($block->usePopup()):?>
+        <a href="#mpfbt-popup" id="mpfbt-open-popup" style="display: none"></a>
+        <div id="mpfbt-popup" class="white-popup mfp-hide">
+            <div id="mpfbt-popup-main">
+                <form id="mageplaza-fbt-form-popup" method="post" action="<?= $block->escapeUrl($block->getUrl('frequentlybought/cart/add')) ?>" data-mage-init='{"validation": {}, "FbtAjaxCart": <?= /* @noEscape */ $block->getJsonConfig() ?>}'>
+                    <div id="mageplaza-fbt-formkey-popup">
+                        <?= $block->getFormKeyHtml() ?>
+                    </div>
+                    <div id="mpfbt-popup-content">
+                        <table data-role="grid">
+                        <thead>
+                            <tr>
+                                <th><span><?= /* @noEscape */ __('Thumbnail') ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Name') ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Price') ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Options') ?></span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="mpfbt-popup-product-detail" data-mpfbt-popup-product-id="<?= /* @noEscape */ $productId ?>">
+                            <input type="hidden" class="mpfbt-product-input" id="mpfbt-product-input-<?= /* @noEscape */ $productId ?>" data-mpfbt-popup-product-id="<?= /* @noEscape */ $productId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($product) ?>" name="mageplaza_fbt[<?= /* @noEscape */ $productId ?>]" value="" />
+                            <td>
+                                <div>
+                                    <a href="<?= /* @noEscape */ $block->getProductUrl($product) ?>">
+                                        <span><?= $block->getImage($product, 'related_products_list')->toHtml() ?></span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="<?= /* @noEscape */ $block->getProductUrl($product) ?>">
+                                        <span><?= $block->escapeHtml($product->getName()) ?></span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span class="mp-base-product-price item-price mageplaza-fbt-price-<?= /* @noEscape */ $productId?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($product) ?>">
+                                        <?= /* @noEscape */ $block->formatPriceWithCurrency($block->getPriceAmount($product)) ?>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */ $productId?>"><?= /* @noEscape */ $block->getOptionWrapper($productId) ?></div>
+                                    <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */ $productId?>"><?= /* @noEscape */ $block->getCustomOption($productId) ?></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php foreach ($items as $_item):?>
+                            <?php $itemId = $_item->getProductId() ?: $_item->getId() ?>
+                            <tr class="mpfbt-popup-product-detail" data-mpfbt-popup-product-id="<?= /* @noEscape */ $itemId ?>">
+                                <input type="hidden" class="mpfbt-product-input" id="mpfbt-product-input-<?= /* @noEscape */ $itemId ?>" data-mpfbt-popup-product-id="<?= /* @noEscape */ $itemId ?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($_item) ?>" name="mageplaza_fbt[<?= /* @noEscape */ $itemId ?>]" value="" />
+                                <td>
+                                    <div>
+                                        <a href="<?= /* @noEscape */ $block->getProductUrl($_item) ?>">
+                                            <span><?= $block->getImage($_item, 'related_products_list')->toHtml(); ?></span>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <a href="<?= /* @noEscape */ $block->getProductUrl($_item) ?>">
+                                            <span><?= $block->escapeHtml($_item->getName()) ?></span>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */ $itemId?>" data-price-amount="<?= /* @noEscape */ $block->getPriceAmount($_item) ?>">
+                                            <?= /* @noEscape */ $block->formatPriceWithCurrency($block->getPriceAmount($_item)); ?>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */ $itemId?>"><?= /* @noEscape */ $block->getOptionWrapper($itemId) ?></div>
+                                        <div class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */ $itemId?>"><?= /* @noEscape */ $block->getCustomOption($itemId) ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="mpfbt-total-items">
+                        <span class="mpfbt-total-items-label">
+                            <?= /* @noEscape */ __('Total Selected Items:') ?>
+                        </span>
+                        <span class="mpfbt-total-items-value"></span>
+                    </div>
+                    <div class="mageplaza-fbt-price-box">
+                        <div class="mageplaza-fbt-total-price">
+                            <span class="mageplaza-fbt-total-price-label">
+                                <?= /* @noEscape */ __('Total price:') ?>
+                            </span>
+                            <span data-price-amount="0" class="mageplaza-fbt-price-wrapper">
+                                <span class="mageplaza-fbt-price">
+                                    <?= /* @noEscape */ $block->getPriceWithCurrency(0) ?>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mpfbt-actions">
+                        <button type="submit" title="Continue shopping" class="action primary mpfbt-btn-continue">
+                            <span><?= /** @noEscape */ __('Continue shopping') ?></span>
+                        </button>
+                        <button type="submit" title="Add All To Cart" class="action primary" id="mpfbt-btn-addtocart">
+                            <span><?= /** @noEscape */ __('Add All To Cart') ?></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+    <script>
+        require(['jquery', 'Mageplaza_Core/js/owl.carousel.min'], function ($) {
+            var items = <?= /* @noEscape */ $block->getNumberOfProductOnSlider() ?>;
+            $('#mageplaza-fbt-carousel').owlCarousel({
+                loop: false,
+                stagePadding: 10,
+                margin: 15,
+                nav: true,
+                items: items >= 3 ? 3 : items,
+                responsive:{
+                    0:{
+                        items: 1,
+                        margin: 0,
+                        stagePadding: 0
+                    },
+                    640:{
+                        items: items >= 2 ? 2 : items,
+                        margin: 5,
+                        stagePadding: 0
+                    },
+                    1200:{
+                        items: items >= 3 ? 3 : items
+                    }
+                }
+            });
+
+            $('.mageplaza-fbt-image-box .related-checkbox').each(function () {
+                var $this       = $(this),
+                    productId   = $(this).attr('data-mageplaza-fbt-product-id'),
+                    fbtCheckbox = $('#mageplaza-fbt-checkbox-' + productId);
+                $(this).prop('checked', fbtCheckbox.prop('checked'));
+                $(this).on('change', function () {
+                    fbtCheckbox.prop('checked', $(this).prop('checked'));
+                    fbtCheckbox.trigger('change');
+                });
+                fbtCheckbox.on('change', function () {
+                    $this.prop('checked', $(this).prop('checked'));
+
+                    if (!$('.mageplaza-fbt-rows .related-checkbox:checked').length) {
+                        $('.mageplaza-fbt-image-box').addClass('mageplaza-fbt-hidden');
+                    } else {
+                        $('.mageplaza-fbt-image-box').removeClass('mageplaza-fbt-hidden');
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        .mageplaza-fbt-image-box li.product-item .fbt-product-item-info, .mageplaza-fbt-image-box li.first-item{
+            position: relative;
+            width: auto;
+        }
+        .mageplaza-fbt-image-box li.product-item .related-checkbox{
+            position: absolute;
+            right: 20px;
+            z-index: 1000;
+        }
+        .product-item-plus {
+            margin-top: 30px;
+        }
+        .mageplaza-fbt-carousel-container {
+            float: right;
+            display: inline-block;
+        }
+        #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-prev,
+        #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-next {
+            position: absolute;
+            top: 150px;
+            background: #1979c3;
+            border: 1px solid #1979c3;
+            color: #ffffff !important;
+            padding: 7px 15px !important;
+            font-size: 20px !important;
+            line-height: 20px;
+        }
+        #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-prev {
+            left: -50px;
+        }
+        #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-next {
+            right: -40px;
+        }
+        @media (max-width: 1023px) {
+            .mageplaza-fbt-image-box {
+                float: none;
+            }
+            #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-next {
+                right: 0;
+            }
+            #mageplaza-fbt-form {
+                float: left;
+            }
+            #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-prev {
+                left: -65px;
+            }
+        }
+        @media (max-width: 767px) {
+            .mageplaza-fbt-carousel-container {
+                float: none;
+            }
+            .mageplaza-fbt-image-box {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .product-item-plus {
+                margin-top: 0;
+            }
+            .mageplaza-fbt-image-box .product-item-actions .actions-primary {
+                display: inline-block;
+            }
+        }
+        @media (max-width: 639px) {
+            #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-prev {
+                left: -70px;
+            }
+            #mageplaza-fbt-carousel.owl-carousel .owl-nav button.owl-next {
+                right: -40px;
+            }
+        }
+        .mageplaza-fbt-option-product .bundle-options-container .bundle-options-wrapper,
+        .mageplaza-fbt-option-product .bundle-options-container .product-options-wrapper {
+            width: auto;
+        }
+        .mageplaza-fbt-image-box li.product-item {
+            width: auto !important;
+        }
+        .column.main .mageplaza-fbt-image-box .product-item {
+            margin-top: 10px;
+        }
+        @media (min-width: 1024px) {
+            .mageplaza-fbt-price-box {
+                margin-top: 100px;
+                margin-left: 15px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .mageplaza-fbt-content .products-grid .fbt-product-item-info:hover,
+            .mageplaza-fbt-content .products-grid .fbt-product-item-info.active {
+                background: #ffffff;
+                box-shadow: 3px 4px 4px 0 rgba(0, 0, 0, 0.3);
+                border: 1px solid #bbbbbb;
+                margin: -10px;
+                padding: 9px;
+                position: relative;
+                z-index: 9;
+            }
+            .mageplaza-fbt-image-box li.product-item .fbt-product-item-info:hover input {
+                margin-top: 11px;
+                margin-right: 14px;
+                padding: -9px;
+            }
+        }
+
+        <?php if ($block->getNumberOfProductOnSlider() === 1): ?>
+            <?php if ($block->getProductLayoutDesign() === '3columns'): ?>
+                .mageplaza-fbt-image-box {
+                    width: auto;
+                }
+            <?php else: ?>
+                .mageplaza-fbt-image-box {
+                    width: 40%;
+                }
+            <?php endif; ?>
+
+        .mageplaza-fbt-carousel-container {
+            width: 48%;
+        }
+        @media (max-width: 1439px) {
+            .mageplaza-fbt-image-box {
+                width: 45%;
+            }
+            .mageplaza-fbt-carousel-container {
+                width: 45%;
+            }
+        }
+        @media (max-width: 1023px) {
+            .mageplaza-fbt-image-box {
+                width: 66%;
+            }
+        }
+        @media (max-width: 767px) {
+            .mageplaza-fbt-image-box {
+                width: 75%;
+            }
+        }
+        @media (max-width: 639px) {
+            .mageplaza-fbt-image-box {
+                width: 90%;
+            }
+            .mageplaza-fbt-carousel-container {
+                width: 60%;
+            }
+        }
+        <?php elseif ($block->getNumberOfProductOnSlider() === 2): ?>
+        .mageplaza-fbt-image-box {
+            width: 60%;
+        }
+        .mageplaza-fbt-carousel-container {
+            width: 64%;
+        }
+        @media (max-width: 1439px) {
+            .mageplaza-fbt-image-box {
+                width: 66%;
+            }
+        }
+        @media (max-width: 1023px) {
+            .mageplaza-fbt-image-box {
+                width: 90%;
+            }
+        }
+        @media (max-width: 767px) {
+            .mageplaza-fbt-image-box {
+                width: 100%;
+            }
+            .mageplaza-fbt-carousel-container {
+                width: 75%;
+            }
+        }
+        @media (max-width: 639px) {
+            .mageplaza-fbt-carousel-container {
+                width: 60%;
+            }
+        }
+        <?php else: ?>
+        .mageplaza-fbt-image-box, .mageplaza-fbt-carousel-container {
+            width: 75%;
+        }
+        @media (max-width: 1439px) {
+            .mageplaza-fbt-carousel-container {
+                width: 66%;
+            }
+        }
+        @media (max-width: 1023px) {
+            .mageplaza-fbt-image-box {
+                width: 90%;
+            }
+        }
+        @media (max-width: 767px) {
+            .mageplaza-fbt-image-box {
+                width: 100%;
+            }
+            .mageplaza-fbt-carousel-container {
+                width: 75%;
+            }
+        }
+        @media (max-width: 639px) {
+            .mageplaza-fbt-carousel-container {
+                width: 60%;
+            }
+        }
+            <?php if ($block->getSeparatorImage()): ?>
+            .product-item-plus {
+                margin-left: -12px;
+            }
+            <?php endif; ?>
+        <?php endif; ?>
+    </style>
+<?php endif; ?>

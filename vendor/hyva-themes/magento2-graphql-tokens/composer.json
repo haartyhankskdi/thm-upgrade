@@ -1,0 +1,26 @@
+{
+  "name": "hyva-themes/magento2-graphql-tokens",
+  "description": "Adds Customer and Cart tokens to CustomerData sections",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "magento/module-catalog": ">=103.0.0",
+    "magento/module-checkout": ">=100.3.0",
+    "magento/module-customer": ">=102.0.0"
+  },
+  "authors": [{
+      "name": "Hyvä Themes BV",
+      "email": "info@hyva.io"
+  }],
+  "license": [
+      "BSD-3-Clause"
+  ],
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\GraphqlTokens\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!--=========================================== CART =================================================-->
+    <route url="/V1/mpReward/carts/mine/spending-configuration" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\CartRepositoryInterface" method="getSpendingRuleConfiguration"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <!--=========================================== CATALOG RULES =================================================-->
+    <route url="/V1/mpReward/catalog-rules" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\CatalogRuleRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_catalog" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/catalog-rules/:id" method="DELETE">
+        <service class="Mageplaza\RewardPointsPro\Api\CatalogRuleRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_catalog" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/catalog-rules/:id" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\CatalogRuleRepositoryInterface" method="getCatalogRuleById"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_catalog" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/catalog-rules" method="POST">
+        <service class="Mageplaza\RewardPointsPro\Api\CatalogRuleRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_catalog" />
+        </resources>
+    </route>
+
+    <!--=========================================== SHOPPING CART RULES =================================================-->
+    <route url="/V1/mpReward/shopping-cart-earning-rules" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\SCEarningRuleRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-earning-rules/:id" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\SCEarningRuleRepositoryInterface" method="getEarningRuleById"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-earning-rules/:id" method="DELETE">
+        <service class="Mageplaza\RewardPointsPro\Api\SCEarningRuleRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-earning-rules" method="POST">
+        <service class="Mageplaza\RewardPointsPro\Api\SCEarningRuleRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_shopping_cart" />
+        </resources>
+    </route>
+
+    <route url="/V1/mpReward/shopping-cart-spending-rules" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\SCSpendingRuleRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::spending_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-spending-rules/:id" method="GET">
+        <service class="Mageplaza\RewardPointsPro\Api\SCSpendingRuleRepositoryInterface" method="getSpendingRuleById"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::spending_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-spending-rules/:id" method="DELETE">
+        <service class="Mageplaza\RewardPointsPro\Api\SCSpendingRuleRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::spending_shopping_cart" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/shopping-cart-spending-rules" method="POST">
+        <service class="Mageplaza\RewardPointsPro\Api\SCSpendingRuleRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::spending_shopping_cart" />
+        </resources>
+    </route>
+</routes>

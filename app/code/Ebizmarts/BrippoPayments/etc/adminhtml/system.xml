@@ -1,0 +1,1283 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="brippo_payments" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+                <fieldset_css>complex brippo-section</fieldset_css>
+                <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\ConfigHeader</frontend_model>
+                <group id="global" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>General</label>
+                    <field id="mode" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Mode</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\Mode</source_model>
+                        <config_path>brippo_payments/global/mode</config_path>
+                    </field>
+                    <field id="connected_account_status" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Live Account Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\ConnectedAccountStatus</frontend_model>
+                        <depends>
+                            <field id="mode">live</field>
+                        </depends>
+                    </field>
+                    <field id="connected_account_status_test" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Test Account Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\ConnectedAccountStatusTest</frontend_model>
+                        <depends>
+                            <field id="mode">test</field>
+                        </depends>
+                    </field>
+                    <field id="payment_methods_test" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Methods Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodsStatusTest</frontend_model>
+                        <depends>
+                            <field id="mode">test</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_methods" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Methods Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodsStatus</frontend_model>
+                        <depends>
+                            <field id="mode">live</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_method_domains_test" translate="label" type="text" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Domain Registration Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodDomainsStatusTest</frontend_model>
+                        <depends>
+                            <field id="mode">test</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_method_domains" translate="label" type="text" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Domain Registration Status</label>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodDomainsStatus</frontend_model>
+                        <depends>
+                            <field id="mode">live</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="currency_mode" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Currency</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CurrencyMode</source_model>
+                        <config_path>brippo_payments/global/currency_mode</config_path>
+                        <comment>
+                            <![CDATA[When 'Base Currency' is chosen, payments will be processed in the store's default currency. Otherwise, the currency switcher's selection will determine the currency used.]]>
+                        </comment>
+                    </field>
+                    <field id="statement_descriptor_suffix" translate="label" type="text" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Statement Descriptor Suffix</label>
+                        <config_path>brippo_payments/global/statement_descriptor_suffix</config_path>
+                        <comment>
+                            <![CDATA[<div class="brippoStatementDescriptorPreview">Your final statement descriptor ends up being...</div>]]>
+                        </comment>
+                    </field>
+                </group>
+                <group id="advanced" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Advanced</label>
+                    <field id="api_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>API Key</label>
+                        <config_path>brippo_payments/global/api_key</config_path>
+                        <comment>
+                            <![CDATA[While API key isn’t required for processing payments, it is essential for accessing advanced features. To obtain your API key, please visit <a href="https://dashboard.brippo.com/accounts/dashboard#settings?section=developers" target="_blank">this section</a> of your Brippo portal.]]>
+                        </comment>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    </field>
+                    <field id="payments_monitor" translate="label" type="select" sortOrder="30" showInDefault="1">
+                        <label>Monitoring Cron</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/global/payments_monitor</config_path>
+                    </field>
+                    <field id="specific_countries_active" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/global/specific_countries_active</config_path>
+                        <comment>
+                            <![CDATA[When enabled, our Payment Methods will only be available to the countries selected below.]]>
+                        </comment>
+                    </field>
+                    <field id="specific_country" translate="label" type="multiselect" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Config\Model\Config\Source\Locale\Country</source_model>
+                        <config_path>brippo_payments/global/specific_country</config_path>
+                        <depends>
+                            <field id="specific_countries_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="hide_customer_info" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Hide Customer Info in Logs</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/global/hide_customer_info</config_path>
+                    </field>
+                    <field id="debug_mode" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/global/debug_mode</config_path>
+                    </field>
+                </group>
+                <group id="brippo_payments_paymentelement" translate="label,comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout</label>
+                    <comment>UI component embedded into your self-hosted checkout.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_paymentelement/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethod</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="status_triggering_capture" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Status Triggering Capture</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/status_triggering_capture</config_path>
+                        <depends>
+                            <field id="capture_method">manual_onstatuschange</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="three_d_secure" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>3D Secure</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ThreeDSecure</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/three_d_secure</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="three_d_secure_threshold" translate="label,comment" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>3D Secure Threshold</label>
+                        <config_path>payment/brippo_payments_paymentelement/three_d_secure_threshold</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                            <field id="three_d_secure">any_for_threshold</field>
+                        </depends>
+                        <comment>Order minimum amount to trigger 3D Secure.</comment>
+                    </field>
+                    <field id="include_wallets" translate="label, comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Include Wallets</label>
+                        <comment>Whether or not to include wallets additionally to manual card input.</comment>
+                        <config_path>payment/brippo_payments_paymentelement/include_wallets</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_methods_available" translate="label,comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Methods Available</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentMethodsAvailable</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/payment_methods_available</config_path>
+                        <comment>Whether the payment methods available are automatic, based on your Connected Account settings or manually selected.</comment>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_methods" translate="label,comment" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Methods</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentMethods</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/payment_methods</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                            <field id="payment_methods_available">manual</field>
+                        </depends>
+                    </field>
+                    <field id="payment_option_logos" translate="label,comment" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title Logos</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentOptionsLogos</source_model>
+                        <config_path>payment/brippo_payments_paymentelement/payment_option_logos</config_path>
+                        <comment>The selected options will display the corresponding payment logos on the checkout page.</comment>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/brippo_payments_paymentelement/sort_order</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <group id="brippo_payments_paymentelement_styling" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Styling</label>
+                        <field id="theme" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Theme</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentElementTheme</source_model>
+                            <config_path>payment/brippo_payments_paymentelement/theme</config_path>
+                        </field>
+                        <field id="layout" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Layout</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentElementLayout</source_model>
+                            <config_path>payment/brippo_payments_paymentelement/layout</config_path>
+                        </field>
+                        <field id="labels" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Labels</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentElementLabels</source_model>
+                            <config_path>payment/brippo_payments_paymentelement/labels</config_path>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_paymentelement_standalone" translate="label,comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout (Standalone)</label>
+                    <comment>UI component embedded into your self-hosted checkout with only one payment method option.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_paymentelement_standalone/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_paymentelement_standalone/title</config_path>
+                    </field>
+                    <field id="payment_method" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentMethods</source_model>
+                        <config_path>payment/brippo_payments_paymentelement_standalone/payment_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                            <field id="payment_methods_available">manual</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/brippo_payments_paymentelement_standalone/sort_order</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_ece" translate="label,comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Wallets Express Checkout</label>
+                    <comment>Allow customers to do express checkout via Apple Pay, Google Pay and/or Stripe Link.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_ece/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_ece/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethod</source_model>
+                        <config_path>payment/brippo_payments_ece/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="status_triggering_capture" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Status Triggering Capture</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/brippo_payments_ece/status_triggering_capture</config_path>
+                        <depends>
+                            <field id="capture_method">manual_onstatuschange</field>
+                        </depends>
+                    </field>
+                    <field id="business_name" translate="label,comment" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Business Name</label>
+                        <comment>
+                            <![CDATA[This is the text that appears as PAY [BUSINESS NAME] in the payment modal. If left empty will show as 'GRAND TOTAL'.]]>
+                        </comment>
+                        <config_path>payment/brippo_payments_ece/business_name</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="blocked_shipping_methods" translate="label,comment" type="multiselect" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Block Delivery Methods</label>
+                        <comment>
+                            <![CDATA[Block specific delivery methods even if quote and shipping address rules allow them.]]>
+                        </comment>
+                        <config_path>payment/brippo_payments_ece/blocked_shipping_methods</config_path>
+                        <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                        <frontend_class>allowed-shipping-multiselect</frontend_class>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="blocked_customer_groups" translate="label" type="multiselect" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Block Customer Groups</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\AvailableCustomerGroups</source_model>
+                        <config_path>payment/brippo_payments_ece/blocked_customer_groups</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <group id="brippo_payments_ece_locations" translate="label,comment" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Placements</label>
+                        <group id="brippo_payments_ece_locations_cart" translate="label,comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Cart</label>
+                            <field id="locations_cart" translate="label,comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Enabled</label>
+                                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_cart</config_path>
+                            </field>
+                            <field id="locations_cart_placement_selector" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Custom Placement</label>
+                                <config_path>payment/brippo_payments_ece/locations_cart_placement_selector</config_path>
+                                <comment>
+                                    <![CDATA[Css selectors of the elements in which the buttons should be placed. Leave blank for default placing.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_cart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_cart_placement_mode" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Placement Mode</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EcePlacementMode</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_cart_placement_mode</config_path>
+                                <depends>
+                                    <field id="locations_cart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_cart_or_separator" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>OR Separator</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceOrSeparator</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_cart_or_separator</config_path>
+                                <depends>
+                                    <field id="locations_cart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_cart_min_amount" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Minimum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_cart_min_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_cart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_cart_max_amount" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Maximum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_cart_max_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_cart">1</field>
+                                </depends>
+                            </field>
+                        </group>
+                        <group id="brippo_payments_ece_locations_minicart" translate="label,comment" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Mini Cart</label>
+                            <field id="locations_minicart" translate="label,comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Enabled</label>
+                                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_minicart</config_path>
+                            </field>
+                            <field id="locations_minicart_placement_selector" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Custom Placement</label>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_placement_selector</config_path>
+                                <comment>
+                                    <![CDATA[Css selectors of the elements in which the buttons should be placed. Leave blank for default placing.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_minicart_placement_mode" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Placement Mode</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EcePlacementMode</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_placement_mode</config_path>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_minicart_event_type" translate="label,comment" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Event type</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\MinicartEventSetup</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_event_type</config_path>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_minicart_or_separator" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>OR Separator</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceOrSeparator</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_or_separator</config_path>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_minicart_min_amount" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Minimum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_min_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_minicart_max_amount" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Maximum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_minicart_max_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_minicart">1</field>
+                                </depends>
+                            </field>
+                        </group>
+                        <group id="brippo_payments_ece_locations_product" translate="label,comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Product Page</label>
+                            <field id="locations_product" translate="label,comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Enabled</label>
+                                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_product</config_path>
+                            </field>
+                            <field id="locations_product_placement_selector" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Custom Placement</label>
+                                <config_path>payment/brippo_payments_ece/locations_product_placement_selector</config_path>
+                                <comment>
+                                    <![CDATA[Css selectors of the elements in which the buttons should be placed. Leave blank for default placing.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_product">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_product_placement_mode" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Placement Mode</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EcePlacementMode</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_product_placement_mode</config_path>
+                                <depends>
+                                    <field id="locations_product">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_product_or_separator" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>OR Separator</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceOrSeparator</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_product_or_separator</config_path>
+                                <depends>
+                                    <field id="locations_product">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_product_min_amount" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Minimum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_product_min_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_product">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_product_max_amount" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Maximum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_product_max_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_product">1</field>
+                                </depends>
+                            </field>
+                        </group>
+                        <group id="brippo_payments_ece_locations_checkout" translate="label,comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Checkout</label>
+                            <field id="locations_checkout" translate="label,comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Enabled</label>
+                                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_checkout</config_path>
+                            </field>
+                            <field id="locations_checkout_placement_selector" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Custom Placement</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_placement_selector</config_path>
+                                <comment>
+                                    <![CDATA[Css selectors of the elements in which the buttons should be placed. Leave blank for default placing.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_placement_mode" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Placement Mode</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EcePlacementMode</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_placement_mode</config_path>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_title" translate="label,comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Title</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_title</config_path>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_or_separator" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>OR Separator</label>
+                                <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceOrSeparator</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_or_separator</config_path>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_min_amount" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Minimum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_min_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_max_amount" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Maximum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_max_amount</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_checkout">1</field>
+                                </depends>
+                            </field>
+                        </group>
+                        <group id="brippo_payments_ece_locations_checkout_list" translate="label,comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Checkout [Payment's List]</label>
+                            <field id="locations_checkout_list" translate="label,comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Enabled</label>
+                                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_list</config_path>
+                            </field>
+                            <field id="locations_checkout_min_amount_list" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Minimum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_min_amount_list</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_checkout_list">1</field>
+                                </depends>
+                            </field>
+                            <field id="locations_checkout_max_amount_list" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Maximum Amount Threshold</label>
+                                <config_path>payment/brippo_payments_ece/locations_checkout_max_amount_list</config_path>
+                                <comment>
+                                    <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                                </comment>
+                                <depends>
+                                    <field id="locations_checkout_list">1</field>
+                                </depends>
+                            </field>
+                            <field id="sort_order" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                                <label>Sort Order</label>
+                                <config_path>payment/brippo_payments_ece/sort_order</config_path>
+                                <depends>
+                                    <field id="locations_checkout_list">1</field>
+                                </depends>
+                            </field>
+                        </group>
+                    </group>
+                    <group id="brippo_payments_ece_wallets" translate="label,comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Available Wallets</label>
+                        <field id="wallets_apple_pay" translate="label,comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Apple Pay</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceShowWallet</source_model>
+                            <config_path>payment/brippo_payments_ece/wallets_apple_pay</config_path>
+                            <comment>
+                                <![CDATA[When 'auto' is selected, the wallet will only display if the customer has a saved card in the browser. If 'always' is selected, it will display regardless. Only supported browsers will show this wallet.]]>
+                            </comment>
+                        </field>
+                        <field id="wallets_google_pay" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Google Pay</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceShowWallet</source_model>
+                            <config_path>payment/brippo_payments_ece/wallets_google_pay</config_path>
+                            <comment>
+                                <![CDATA[When 'auto' is selected, the wallet will only display if the customer has a saved card in the browser. If 'always' is selected, it will display regardless. Only supported browsers will show this wallet.]]>
+                            </comment>
+                        </field>
+                        <field id="wallets_link" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Stripe Link</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceShowWalletLink</source_model>
+                            <config_path>payment/brippo_payments_ece/wallets_link</config_path>
+                        </field>
+                        <field id="wallets_applepay_order" translate="label,comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Apple Pay Sort Order</label>
+                            <config_path>payment/brippo_payments_ece/wallets_applepay_order</config_path>
+                            <depends>
+                                <field id="wallets_apple_pay" separator=",">auto,always</field>
+                            </depends>
+                        </field>
+                        <field id="wallets_googlepay_order" translate="label,comment" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Google Pay Sort Order</label>
+                            <config_path>payment/brippo_payments_ece/wallets_googlepay_order</config_path>
+                            <depends>
+                                <field id="wallets_google_pay" separator=",">auto,always</field>
+                            </depends>
+                        </field>
+                        <field id="wallets_link_order" translate="label,comment" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Stripe Link Sort Order</label>
+                            <config_path>payment/brippo_payments_ece/wallets_link_order</config_path>
+                            <depends>
+                                <field id="wallets_link">1</field>
+                            </depends>
+                        </field>
+                        <depends>
+                            <field id="wallets_link">auto</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_ece_layout" translate="label,comment" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Layout Options</label>
+                        <field id="layout_max_rows" translate="label,comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Max Rows</label>
+                            <config_path>payment/brippo_payments_ece/layout_max_rows</config_path>
+                            <comment>
+                                <![CDATA[Defines the maximum number of rows the Express Checkout Element can use to render. Default is 0, meaning unlimited.]]>
+                            </comment>
+                        </field>
+                        <field id="layout_max_columns" translate="label,comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Max Columns</label>
+                            <config_path>payment/brippo_payments_ece/layout_max_columns</config_path>
+                            <comment>
+                                <![CDATA[Defines the maximum number of columns the Express Checkout Element can use to render.]]>
+                            </comment>
+                        </field>
+                        <field id="layout_overflow" translate="label,comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Overflow</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceLayoutOverflow</source_model>
+                            <config_path>payment/brippo_payments_ece/layout_overflow</config_path>
+                            <comment>
+                                <![CDATA[When 'auto' is selected and the amount of wallet buttons exceeds the max rows/cols setting, a 'See more' link shows to hide overflowing buttons.]]>
+                            </comment>
+                        </field>
+                        <depends>
+                            <!--                            <field id="location" separator=",">product_page</field>-->
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_ece_styling" translate="label,comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Style Options</label>
+                        <field id="theme" translate="label,comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Theme</label>
+                            <config_path>payment/brippo_payments_ece/theme</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceTheme</source_model>
+                        </field>
+                        <field id="style_buttons_height" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Buttons Height</label>
+                            <config_path>payment/brippo_payments_ece/style_buttons_height</config_path>
+                            <comment>
+                                <![CDATA[By default, the height of the buttons are 44 (px). You can override this to specify a custom button height in the range of 40 to 55 (px)]]>
+                            </comment>
+                        </field>
+                        <field id="style_buttons_corner_radius" translate="label,comment" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Buttons Corner Radius</label>
+                            <config_path>payment/brippo_payments_ece/style_buttons_corner_radius</config_path>
+                            <comment>
+                                <![CDATA[By default, the corner radius of the buttons is 4 (px). You can override this to specify a custom corner radius in the range of 0 to 20 (px).]]>
+                            </comment>
+                        </field>
+                        <field id="style_font_size_base" translate="label,comment" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Font Size Base</label>
+                            <config_path>payment/brippo_payments_ece/style_font_size_base</config_path>
+                            <comment>
+                                <![CDATA[Make sure that you choose a font size of at least 16px for input fields on mobile.]]>
+                            </comment>
+                        </field>
+                        <field id="style_apple_pay" translate="label,comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Apple Pay Button Style</label>
+                            <config_path>payment/brippo_payments_ece/style_apple_pay</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceApplePayStyle</source_model>
+                        </field>
+                        <field id="type_apple_pay" translate="label,comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Apple Pay Button Type</label>
+                            <config_path>payment/brippo_payments_ece/type_apple_pay</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceApplePayType</source_model>
+                        </field>
+                        <field id="style_google_pay" translate="label,comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Google Pay Button Style</label>
+                            <config_path>payment/brippo_payments_ece/style_google_pay</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceGooglePayStyle</source_model>
+                        </field>
+                        <field id="type_google_pay" translate="label,comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Google Pay Button Type</label>
+                            <config_path>payment/brippo_payments_ece/type_google_pay</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\EceGooglePayType</source_model>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_ece_advanced" translate="label,comment" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Advanced</label>
+                        <field id="pick_up_input_values" translate="label,comment" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Pickup Input Values</label>
+                            <config_path>payment/brippo_payments_ece/pick_up_input_values</config_path>
+                            <comment>
+                                <![CDATA[To save custom input fields in your order details, please consult our <a href="https://docs.brippo.com/#pick_up_input_values">documentation</a> for guidance.]]>
+                            </comment>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_express" translate="label,comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Alternative Payment Types [Legacy]</label>
+                    <comment>Allow customers to checkout via Apple Pay, Google Pay, or similar from any page of your website.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_express/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_express/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethod</source_model>
+                        <config_path>payment/brippo_payments_express/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="status_triggering_capture" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Status Triggering Capture</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/brippo_payments_express/status_triggering_capture</config_path>
+                        <depends>
+                            <field id="capture_method">manual_onstatuschange</field>
+                        </depends>
+                    </field>
+                    <field id="business_name" translate="label,comment" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Business Name</label>
+                        <comment>
+                            <![CDATA[This is the text that appears as PAY [BUSINESS NAME] in the payment modal. If left empty will show as 'GRAND TOTAL'.]]>
+                        </comment>
+                        <config_path>payment/brippo_payments_express/business_name</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="currency_mode" translate="label,comment" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Wallets Currency</label>
+                        <comment>
+                            <![CDATA[Display either the base currency amount or the selected currency amount in the wallet modal.]]>
+                        </comment>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CurrencyMode</source_model>
+                        <config_path>payment/brippo_payments_express/currency_mode</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="location" translate="label" type="multiselect" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Location</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ExpressLocation</source_model>
+                        <config_path>payment/brippo_payments_express/location</config_path>
+                        <frontend_class>wallets-multiselect</frontend_class>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="request_agreements" translate="label,comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Request Agreements</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_express/request_agreements</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>
+                            <![CDATA[Request the customer to accept agreements in express locations (Cart, Minicart & Product Page).]]>
+                        </comment>
+                    </field>
+                    <field id="wallets" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Wallets</label>
+                        <config_path>payment/brippo_payments_express/wallets</config_path>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\Wallets</source_model>
+                        <frontend_class>wallets-multiselect</frontend_class>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="blocked_shipping_methods" translate="label,comment" type="multiselect" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Block Delivery Methods</label>
+                        <comment>
+                            <![CDATA[Block specific delivery methods even if quote and shipping address rules allow them.]]>
+                        </comment>
+                        <config_path>payment/brippo_payments_express/blocked_shipping_methods</config_path>
+                        <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                        <frontend_class>allowed-shipping-multiselect</frontend_class>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <group id="brippo_payments_express_product" translate="label,comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Product Page Options</label>
+                        <field id="product_page_behavior" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Product Page Behavior</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ProductPageBehavior</source_model>
+                            <config_path>payment/brippo_payments_express/product_page_behavior</config_path>
+                        </field>
+                        <field id="product_button_layout_block" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Layout Placement</label>
+                            <config_path>payment/brippo_payments_express/product_button_layout_block</config_path>
+                            <comment>
+                                <![CDATA[CSS selector of the element you want the Express Checkout to be appended to. Leave empty to place in default position.]]>
+                            </comment>
+                        </field>
+                        <field id="minimum_amount" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Minimum Amount Threshold</label>
+                            <config_path>payment/brippo_payments_express/product_minimum_amount</config_path>
+                            <comment>
+                                <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>
+                            </comment>
+                        </field>
+                        <field id="maximum_amount" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Maximum Amount Threshold</label>
+                            <config_path>payment/brippo_payments_express/product_maximum_amount</config_path>
+                            <comment>
+                                <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>
+                            </comment>
+                        </field>
+                        <field id="product_button_or" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Show OR separator</label>
+                            <config_path>payment/brippo_payments_express/product_button_or</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        </field>
+                        <field id="product_page_allowed_categories" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Allowed Categories</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ProductPageCategory</source_model>
+                            <config_path>payment/brippo_payments_express/product_page_allowed_categories</config_path>
+                            <comment>
+                                <![CDATA[Show only for products within selected categories.]]>
+                            </comment>
+                        </field>
+                        <depends>
+                            <field id="location" separator=",">product_page</field>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_express_checkout" translate="label,comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Checkout Options</label>
+                        <field id="checkout_location" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Checkout Location</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CheckoutLocation</source_model>
+                            <config_path>payment/brippo_payments_express/checkout_location</config_path>
+                        </field>
+                        <field id="checkout_email" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Guest Email</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CheckoutEmail</source_model>
+                            <config_path>payment/brippo_payments_express/checkout_email</config_path>
+                        </field>
+                        <field id="checkout_button_layout_block" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Layout Placement</label>
+                            <config_path>payment/brippo_payments_express/checkout_button_layout_block</config_path>
+                            <depends>
+                                <field id="checkout_location">on_top</field>
+                            </depends>
+                            <comment>
+                                <![CDATA[CSS selector of the element you want the Express Checkout to be pre-pended to. Leave empty to place in default position.]]>
+                            </comment>
+                        </field>
+                        <field id="checkout_form_validation_mode" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Form Validation Mode</label>
+                            <config_path>payment/brippo_payments_express/checkout_form_validation_mode</config_path>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CheckoutOnTopValidationMode</source_model>
+                            <depends>
+                                <field id="checkout_location">on_top</field>
+                            </depends>
+                            <comment>
+                                <![CDATA[Only-Agreements mode will only require the checkout agreements form to be validated additionally, the shipping address and method is going to be requested by the wallet modal.]]>
+                            </comment>
+                        </field>
+                        <field id="checkout_button" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Place Order Button</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CheckoutButton</source_model>
+                            <config_path>payment/brippo_payments_express/checkout_button</config_path>
+                            <depends>
+                                <field id="checkout_location">payments_list</field>
+                            </depends>
+                        </field>
+                        <field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Sort Order</label>
+                            <config_path>payment/brippo_payments_express/sort_order</config_path>
+                            <depends>
+                                <field id="checkout_location">payments_list</field>
+                            </depends>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <!--                    <group id="brippo_payments_express_cart" translate="label,comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                    <!--                        <label>Cart Options</label>-->
+                    <!--                        <field id="minimum_amount" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                    <!--                            <label>Minimum Amount Threshold</label>-->
+                    <!--                            <config_path>payment/brippo_payments_express/cart_minimum_amount</config_path>-->
+                    <!--                            <comment>-->
+                    <!--                                <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>-->
+                    <!--                            </comment>-->
+                    <!--                        </field>-->
+                    <!--                        <field id="maximum_amount" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                    <!--                            <label>Maximum Amount Threshold</label>-->
+                    <!--                            <config_path>payment/brippo_payments_express/cart_maximum_amount</config_path>-->
+                    <!--                            <comment>-->
+                    <!--                                <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>-->
+                    <!--                            </comment>-->
+                    <!--                        </field>-->
+                    <!--                    </group>-->
+                    <group id="brippo_payments_express_minicart" translate="label,comment" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minicart Options</label>
+                        <field id="minicart_button_layout_block" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Layout Placement</label>
+                            <config_path>payment/brippo_payments_express/minicart_button_layout_block</config_path>
+                            <comment>
+                                <![CDATA[CSS selector of the element you want the Express Wallet to be appended to. Leave empty to place in default position.]]>
+                            </comment>
+                        </field>
+                        <field id="minicart_button_or" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Show OR separator</label>
+                            <config_path>payment/brippo_payments_express/minicart_button_or</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        </field>
+                        <!--                        <field id="minimum_amount" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                        <!--                            <label>Minimum Amount Threshold</label>-->
+                        <!--                            <config_path>payment/brippo_payments_express/minicart_minimum_amount</config_path>-->
+                        <!--                            <comment>-->
+                        <!--                                <![CDATA[Show only when the cart total amount is equal of greater than this number. 0 to disable.]]>-->
+                        <!--                            </comment>-->
+                        <!--                        </field>-->
+                        <!--                        <field id="maximum_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                        <!--                            <label>Maximum Amount Threshold</label>-->
+                        <!--                            <config_path>payment/brippo_payments_express/minicart_maximum_amount</config_path>-->
+                        <!--                            <comment>-->
+                        <!--                                <![CDATA[Show only when the cart total amount is equal of less than this number. 0 to disable.]]>-->
+                        <!--                            </comment>-->
+                        <!--                        </field>-->
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_express_discount" translate="label,comment" type="text" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Discount Code Input</label>
+                        <comment>
+                            <![CDATA[Display coupon code input for Minicart and Product Page locations.]]>
+                        </comment>
+                        <field id="coupon_code" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Enabled</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/brippo_payments_express/coupon_code</config_path>
+                        </field>
+                        <field id="coupon_code_note" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Comment</label>
+                            <comment>
+                                <![CDATA[Display a comment for the discount code input.]]>
+                            </comment>
+                            <config_path>payment/brippo_payments_express/coupon_code_note</config_path>
+                            <depends>
+                                <field id="coupon_code">1</field>
+                            </depends>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <group id="brippo_payments_express_styling" translate="label,comment" type="text" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Styling</label>
+                        <field id="button_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Button Type</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ExpressButtonType</source_model>
+                            <config_path>payment/brippo_payments_express/button_type</config_path>
+                        </field>
+                        <field id="button_theme" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Button Theme</label>
+                            <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ExpressButtonTheme</source_model>
+                            <config_path>payment/brippo_payments_express/button_theme</config_path>
+                        </field>
+                        <field id="button_height" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Button Height</label>
+                            <config_path>payment/brippo_payments_express/button_height</config_path>
+                        </field>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </group>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_paybylink" translate="label,comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pay by Link</label>
+                    <comment>Customer receives an email afterwards to finalize payment from Stripe-hosted checkout.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_paybylink/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_paybylink/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethodPayByLink</source_model>
+                        <config_path>payment/brippo_payments_paybylink/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="note" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Note for Customer in Checkout</label>
+                        <config_path>payment/brippo_payments_paybylink/note</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="checkout_success_note" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Note for Customer in Success</label>
+                        <config_path>payment/brippo_payments_paybylink/checkout_success_note</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="hosted_confirmation_message" translate="label,textarea" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Note for Customer after Payment Confirmation</label>
+                        <config_path>payment/brippo_payments_paybylink/hosted_confirmation_message</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="email_sender" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Sender</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>payment/brippo_payments_paybylink/email_sender</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="email_template" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Template</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <config_path>payment/brippo_payments_paybylink/email_template</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="payment_option_logos" translate="label,comment" type="multiselect" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title Logos</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\PaymentOptionsLogos</source_model>
+                        <config_path>payment/brippo_payments_paybylink/payment_option_logos</config_path>
+                        <comment>The selected options will display the corresponding payment logos on the checkout page.</comment>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/brippo_payments_paybylink/sort_order</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_paybylink_backend" translate="label,comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pay by Link Backend</label>
+                    <comment>Customer receives an email afterwards to finalize payment from Stripe-hosted checkout.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_paybylink_backend/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_paybylink_backend/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethodPayByLink</source_model>
+                        <config_path>payment/brippo_payments_paybylink_backend/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="hosted_confirmation_message" translate="label,textarea" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Note for Customer after Payment Confirmation</label>
+                        <config_path>payment/brippo_payments_paybylink_backend/hosted_confirmation_message</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="model"></field>
+                </group>
+                <group id="brippo_payments_terminal_moto_backend" translate="label,comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brippo Terminal from Backend</label>
+                    <comment>Send a payment request to one of your available Brippo terminals.</comment>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/brippo_payments_terminal_moto_backend/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/brippo_payments_terminal_moto_backend/title</config_path>
+                    </field>
+                    <field id="capture_method" translate="label,comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Capture Method</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\CaptureMethodPayByLink</source_model>
+                        <config_path>payment/brippo_payments_terminal_moto_backend/capture_method</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <comment>When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.</comment>
+                    </field>
+                    <field id="model"></field>
+                </group>
+                <group id="notifications" translate="label,comment" type="text" sortOrder="1000" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Merchant Notifications</label>
+                    <field id="uncaptured_transactions" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Transactions pending to be captured</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/notifications/uncaptured_transactions</config_path>
+                    </field>
+                </group>
+                <group id="recover_checkout" translate="label,comment" type="text" sortOrder="1010" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Recover Checkout</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/recover_checkout/active</config_path>
+                    </field>
+                    <field id="automatic_notifications" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Automatic Notifications</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\RecoverCheckoutAutomaticNotifications</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications</config_path>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                    <field id="automatic_notifications_first" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Send First Notification After</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\RecoverCheckoutAutomaticNotificationsTimeframe</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_first</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="automatic_notifications_separation" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Spacing Before Next</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\RecoverCheckoutAutomaticNotificationsTimeframe</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_separation</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="automatic_notifications_email" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notify via Email</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_email</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="automatic_notifications_template" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notification Email Template</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_template</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                            <field id="automatic_notifications_email">1</field>
+                        </depends>
+                    </field>
+                    <field id="email_sender" translate="label" type="select" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notification Email Sender</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_sender</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                            <field id="automatic_notifications_email">1</field>
+                        </depends>
+                    </field>
+                    <field id="automatic_notifications_sms" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notify via SMS</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_sms</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\FieldRequiresAPIKeyComment</frontend_model>
+                    </field>
+                    <field id="automatic_notifications_whatsapp" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notify via WhatsApp</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/recover_checkout/automatic_notifications_whatsapp</config_path>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                        <frontend_model>Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\FieldRequiresAPIKeyComment</frontend_model>
+                    </field>
+                </group>
+                <group id="soft_fail_recovery" sortOrder="1020" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Soft Fail Recovery</label>
+                    <comment>With Soft Fail Recovery, when a payment authorization fails, the order is still created but marked “On Hold”, no error message is shown during checkout. The system then immediately notifies the customer a secure payment link, and once the new transaction succeeds, the hold is released and the order proceeds as normal.</comment>
+                    <field id="soft_fail_recovery_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_active</config_path>
+                    </field>
+                    <field id="soft_fail_recovery_only_second" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Only After First Attempt</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_only_second</config_path>
+                        <comment>If enabled, first time payment fails will be blocked as usual and error message displayed. Allow to pass on second try.</comment>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="soft_fail_recovery_allowed_codes" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Affected Error Types</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\ErrorTypes</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_allowed_codes</config_path>
+                        <comment>Error types that this behaviour will be applied over.</comment>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="soft_fail_recovery_email_template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Template</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_email_template</config_path>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="soft_fail_recovery_email_sender" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Sender</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_email_sender</config_path>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="soft_fail_recovery_expiration_hours" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Expire Order After</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\RecoverCheckoutAutomaticNotificationsTimeframe</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_expiration_hours</config_path>
+                        <comment>Order will be canceled after this period and stock returned.</comment>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                    <field id="soft_fail_recovery_notifications" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notifications Before Expiration</label>
+                        <source_model>Ebizmarts\BrippoPayments\Model\Config\Source\RecoverCheckoutAutomaticNotifications</source_model>
+                        <config_path>brippo_payments/advanced/soft_fail_recovery_notifications</config_path>
+                        <comment>Times the customer will be notified after initial notification and before expiration. Time between notifications will vary depending on the expiration time.</comment>
+                        <depends>
+                            <field id="soft_fail_recovery_active">1</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

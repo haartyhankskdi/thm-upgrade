@@ -1,0 +1,25 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/**
+ * @var \Amasty\Gdpr\Block\Adminhtml\System\Config\GdprComment $block
+ * @var \Amasty\Gdpr\ViewModel\Adminhtml\System\Config\GdprCommentViewModel $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+?>
+<?php if ($viewModel->isValidSection()): ?>
+    <script type="text/x-magento-init">
+        {
+            "<?= $block->escapeJs($viewModel->getSelector()); ?>": {
+                "Amasty_Gdpr/js/config/gdpr":{
+                        "comment":"<?= $block->escapeJs($viewModel->getTranslatedComment()); ?>"
+                    }
+            }
+        }
+
+    </script>
+<?php endif; ?>

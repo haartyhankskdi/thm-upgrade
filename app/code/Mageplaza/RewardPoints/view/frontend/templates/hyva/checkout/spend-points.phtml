@@ -1,0 +1,145 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Mageplaza\RewardPoints\Magewire\Checkout\SpendPoints as Magewire;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Mageplaza\RewardPoints\Helper\Data;
+use Mageplaza\RewardPoints\Helper\Calculation;
+
+/** @var Template $block */
+/** @var Magewire $magewire */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var Data $helper */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons   = $viewModels->require(HeroiconsOutline::class);
+$helper      = $this->helper(Data::class);
+$calculation = $this->helper(Calculation::class);
+
+$spentPoints       = $helper->getQuote()->getMpRewardSpent();
+$maxSpendingByRate = 0;
+$maxSpendingPoint  = 0;
+$minSpendingPoint  = 0;
+if ($helper->getQuote()->getCustomerId()) {
+    $maxSpendingByRate = $calculation->getMaxSpendingPointsByRate($helper->getQuote());
+    $maxSpendingPoint  = $calculation->getMaxSpendingPoints($maxSpendingByRate);
+    $rate              = $calculation->getSpendingRateByQuote($helper->getQuote());
+    $minSpendingPoint  = $rate->getMinPoint();
+}
+?>
+
+<div
+    x-data="spendPoints"
+    x-show="hasRules"
+    class="pb-6"
+    id="rewardpoints"
+>
+    <button
+        type="button"
+        class="cursor-pointer flex gap-1.5 items-center text-slate-700 w-full"
+        aria-controls="checkout-spend-points-details"
+        x-on:click="toggleExpand"
+        x-bind:aria-expanded="expand"
+    >
+        <?= $heroicons->sparklesHtml('w-5 h-5 text-blue-900', 18, 18, ["aria-hidden" => "true"]) ?>
+        <span class="flex relative font-bold"><?= $escaper->escapeHtml(__('Spend Your Points')) ?></span>
+        <span class="ml-auto"
+              :class="applyDownRotateClass">
+            <?= $heroicons->chevronDownHtml('', 16, 16, ['aria-hidden' => 'true']) ?>
+        </span>
+    </button>
+
+    <div class="mt-4 reward-points-payment-content"
+         data-role="content"
+         x-show="expand"
+         x-cloak
+    >
+        <div class="reward-box">
+            <div class="points mb-2">
+                <span x-html="balanceFormatted"></span>
+            </div>
+            <div class="reward-rule-select">
+                <div class="label mb-2">
+                    <strong><?= $escaper->escapeHtml(__('Choose how many points to spend')) ?></strong>
+                </div>
+                <div class="content">
+                    <template x-if="hasOneRule">
+                        <span x-html="selectedRule.label"></span>
+                    </template>
+                    <template x-if="hasMoreRules">
+                        <select x-model="selectedRuleId" name="reward-rules" id="reward-spending-rules"
+                                class="w-full"
+                                x-on:change="changeRule">
+                            <template x-for="rule in rules" :key="rule.id">
+                                <option
+                                    :value="rule.id"
+                                    x-text="rule.label"
+                                ></option>
+                            </template>
+                        </select>
+                    </template>
+                </div>
+            </div>
+            <template x-if="isDisplaySlider">
+                <div class="reward-slider-content">
+                    <div class="reward-spending-slider mb-4">
+                        <div class="range flex" style="padding: 0; width: 100%">
+                            <div class="field flex items-center gap-4 w-full">
+                                <div class="w-5 value" style="position: unset" x-text="selectedRule.min"></div>
+                                <input
+                                    type="range"
+                                    class="form-range flex-1 reward-range-slider"
+                                    x-model="pointSpent"
+                                    :min="selectedRule.min"
+                                    :max="selectedRule.max"
+                                    @input="changePointSpent"
+                                >
+                                <div class="w-5 value" style="position: unset" x-text="selectedRule.max"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extra-controls mb-4">
+                        <span><?= $escaper->escapeHtml(__('You will spend')) ?></span>
+                        <input
+                            type="number"
+                            class="form-input w-20 ml-2"
+                            x-model="pointSpent"
+                            :min="selectedRule.min"
+                            :max="selectedRule.max"
+                            @input="changePointSpent"
+                        >
+                    </div>
+                    <div class="field choice">
+                        <span style="margin-left: -30%;margin-right: 1%;">
+                            <input type="checkbox" name="max-point" id="reward-use-max-point"
+                                   x-model="useMaxPoint" @click="changeMaxPoint" x-ref="maxPointCheckbox"/>
+                        </span>
+                        <label class="inline-block ml-2"><?= $escaper->escapeHtml(__('Maximize my discount with points')) ?></label>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>

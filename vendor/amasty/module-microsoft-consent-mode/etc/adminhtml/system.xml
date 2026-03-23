@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amasty_gdprcookie">
+            <group id="microsoft_mode">
+                <field id="consent_types" translate="label comment" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Consent Types</label>
+                    <frontend_model>Amasty\MicrosoftConsentMode\Block\Adminhtml\System\Config\Form\Field\ConsentTypes</frontend_model>
+                    <backend_model>Amasty\MicrosoftConsentMode\Model\Config\Backend\Serialized\ConsentTypesArraySerialized</backend_model>
+                    <comment><![CDATA[More information on how Microsoft Advertising handles consent signals received through UET for consent mode can be found <a href="https://help.ads.microsoft.com/#apex/ads/en/60119/1:~:text=granted-,Expected%20behavior,-Before%20user%20consent" target="_blank">here</a>.]]></comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

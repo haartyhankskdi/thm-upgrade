@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Clarity Consent Mode
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <amasty_gdprcookie>
+            <clarity_consent_mode>
+                <clarity_consent_types>{"clarity_item1":{"consent_type":"analytics_Storage","default_status":"0","cookie_group":"clarity"},"clarity_item2":{"consent_type":"ad_Storage","default_status":"0","cookie_group":"clarity"}}</clarity_consent_types>
+            </clarity_consent_mode>
+        </amasty_gdprcookie>
+    </default>
+</config>

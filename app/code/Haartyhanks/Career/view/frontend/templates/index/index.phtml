@@ -1,0 +1,244 @@
+<?php 
+    $oldData = array();
+    if($block->getCustomerCareerFormData()) $oldData = $block->getCustomerCareerFormData();
+?>
+<script src='https://www.google.com/recaptcha/api.js' async defer ></script>
+<div class="career-form-page w-full inline-block bg-gray-50 py-12">
+  <div id="down"></div>
+
+  <div class="max-w-4xl mx-auto bg-white md:p-6 md:p-10 rounded-lg shadow">
+    <h2 class="text-2xl md:text-3xl font-semibold text-center mb-2">
+      Join Our Team
+    </h2>
+    <p class="text-center text-black text-base mb-8">
+      Please enter your details below to Join our team
+    </p>
+
+    <form
+      id="career_form"
+      method="post"
+      action="<?php echo $block->getBaseUrl() . 'careers/post'; ?>"
+      enctype="multipart/form-data"
+      class="space-y-8"
+    >
+      <input
+        name="form_key"
+        type="hidden"
+        value="<?php echo $block->getFormKey();?>"
+      />
+
+      <!-- FORM GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- First Name -->
+        <div>
+          <label for="first_name" class="block text-base font-medium mb-1">
+            First Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 "
+          />
+        </div>
+
+        <!-- Last Name -->
+        <div>
+          <label for="last_name" class="block text-base font-medium mb-1">
+            Last Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 "
+          />
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label for="phone" class="block text-base font-medium mb-1">
+            Phone <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            maxlength="11"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 "
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-base font-medium mb-1">
+            Email <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 "
+          />
+        </div>
+
+        <!-- Role -->
+        <div>
+          <label for="role" class="block text-base font-medium mb-1">
+            Select Role <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="role"
+            name="role"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 bg-white "
+          >
+            <option value="">Please Select</option>
+            <option>Area Managers</option>
+            <option>Drivers</option>
+            <option>Butchers</option>
+            <option>Head Office Admin</option>
+            <option>Counter Assistants</option>
+            <option>Warehouse Loaders/Helpers</option>
+          </select>
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label for="location" class="block text-base font-medium mb-1">
+            Location <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="location"
+            name="location"
+            required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 bg-white "
+          >
+            <option value="">Please Select</option>
+            <option>Fulham Branch</option>
+            <option>Ilford Branch</option>
+            <option>Leyton Branch</option>
+            <option>Hounslow Branch</option>
+            <option>Streatham Branch</option>
+            <option>Southall Branch</option>
+            <option>Croydon Branch</option>
+            <option>Wembley Branch (Outlet)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Resume Upload -->
+      <div class="w-full my-8">
+        <label for="attachment" class="block text-base font-medium mb-1">
+          Upload Your Resume/CV <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="file"
+          id="attachment"
+          name="attachment"
+          required
+          accept=".doc,.docx,.pdf"
+          class="w-full border border-gray-300 rounded-md px-4 py-3"
+        />
+        <span class="text-xs text-gray-500 mt-2 inline-block">
+          (Upload: doc, docx and pdf)
+        </span>
+      </div>
+
+      <!-- CAPTCHA -->
+      <div>
+        <div
+          class="g-recaptcha"
+          data-sitekey="6LctPiEsAAAAAAhcAJ6dgdrtPQLKcKh710g_bxcH"
+        ></div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="w-full mt-8">
+        <button
+          type="submit"
+          class="bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs md:text-base  font-normal px-12 py-3 rounded-full transition duration-400 uppercase w-[215px]"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+require(['jquery', 'mage/mage'], function($) {
+
+    $(document).ready(function() {
+
+
+
+        $(".first_capital").on('propertychange input', function(e) {
+
+            var text_message = $(this).val();
+
+            str = text_message.toLowerCase().replace(/^[a-z]/g, function(letter) {
+
+                return letter.toUpperCase();
+
+            });
+
+            $(this).val(str);
+
+        });
+
+
+
+        $(".remove_all_space").keyup(function() {
+
+            var removeSpace = $(this).val().replace(/ /g, '');
+
+            $(this).val(removeSpace);
+
+        });
+
+
+
+        $(".only_numeric").on('propertychange input', function(e) {
+
+            var contact_num = jQuery(this).val();
+
+            $(this).val(contact_num.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'));
+
+        });
+
+
+
+    });
+
+    var dataForm = $('#career_form');
+    dataForm.mage('validation', {});
+    $("#career_form").submit(function (e) {
+        if(!grecaptcha || grecaptcha.getResponse().length === 0){
+            e.preventDefault();
+        }
+        if(dataForm.validation('isValid') === false){
+            e.preventDefault();
+            $("#g-captcha-error").show();
+            console.log("Captcha working");
+        }else{
+            $("#g-captcha-error").hide();
+        }
+    });
+
+});
+
+/* function recaptchaCallback() {
+    require(['jquery', function ($) {
+        $('#submitBtn').removeAttr('disabled');
+    }]);
+}; */
+</script>
+<?php $block->unSetOldFormData(); ?>
+
+ 

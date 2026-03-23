@@ -1,0 +1,160 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopupQueries;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\GraphqlViewModel\ViewModel\GraphqlViewModel;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    'use strict';
+
+    function deepMerge(target, ...sources) {
+        if (!sources.length) return target;
+
+        for (const source of sources) {
+            if (typeof source !== 'object' || source === null) continue;
+
+            for (const key in source) {
+                if (!source.hasOwnProperty(key)) continue;
+
+                if (Array.isArray(source[key])) {
+                    target[key] = (target[key] || []).concat(source[key]);
+                } else if (typeof source[key] === 'object' && source[key] !== null) {
+                    target[key] = deepMerge(target[key] || {}, source[key]);
+                } else {
+                    target[key] = source[key];
+                }
+            }
+        }
+
+        return target;
+    }
+
+    function mergeFunctions(functions) {
+        return function (...args) {
+            functions.forEach(func => func && func.apply(this, args));
+        };
+    }
+
+    /**
+     * Carousel component for xsearch
+     *
+     * @param key
+     * @param itemCount
+     * @returns Object
+     */
+    function amXsearchCarouselComponent(key, itemCount) {
+        return {
+            itemCount,
+            pageSize: 4,
+            active: 0,
+            slider: null,
+            pageFillers: 0,
+            sliderEl: false,
+            smallWindowItemWidth: false,
+            init($refs) {
+                const sliderEl = $refs[`${key}Container`];
+                if (!sliderEl || itemCount === 0) {
+                    return this;
+                }
+
+                if (sliderEl) {
+                    if (!this.isDefaultSearchInput && !this.isFullWidthSearch) {
+                        if (this.searchPopupWidth <= 900) {
+                            this.smallWindowItemWidth = sliderEl.clientWidth / 3;
+                        }
+                        if (this.searchPopupWidth <= 700) {
+                            this.smallWindowItemWidth = sliderEl.clientWidth / 2;
+                        }
+                        if (this.searchPopupWidth <= 500) {
+                            this.smallWindowItemWidth = sliderEl.clientWidth - 30;
+                        }
+                    }
+                }
+
+                this.sliderEl = sliderEl;
+                this.recalculate();
+            },
+            getSlider() {
+                return this.sliderEl.querySelector('.carousel-slides');
+            },
+            calcPageSize() {
+                const slider = this.getSlider();
+                if (!slider) {
+                    return this;
+                }
+
+                const slides = slider.querySelectorAll('.carousel-slide');
+                if (this.smallWindowItemWidth) {
+                    slides.forEach(slide => {
+                        slide.style.width = `${this.smallWindowItemWidth}px`;
+                    });
+                }
+
+                const firstSlide = slides[0];
+
+                this.itemCount = slides.length;
+                this.pageSize = Math.round(slider.clientWidth / firstSlide.clientWidth);
+
+                this.pageFillers = this.pageSize * Math.ceil(this.itemCount / this.pageSize) - this.itemCount;
+            },
+            calcActive() {
+                const slider = this.getSlider();
+                if (!slider) {
+                    return this;
+                }
+
+                const sliderItems = Math.round(this.itemCount) + Math.round(this.pageFillers);
+                const calculatedActiveSlide = Math.round(
+                    Math.round(slider.scrollLeft) / (Math.round(slider.scrollWidth) / sliderItems)
+                );
+
+                this.active = Math.round(calculatedActiveSlide / Math.round(this.pageSize)) * Math.round(this.pageSize);
+            },
+            prev() {
+                this.scrollTo(this.active - this.pageSize);
+            },
+            next() {
+                this.scrollTo(this.active + this.pageSize);
+            },
+            scrollTo(index) {
+                const slider = this.getSlider();
+                if (!slider) {
+                    return this;
+                }
+
+                const slideWidth = slider.scrollWidth / (this.itemCount + this.pageFillers);
+                slider.scrollLeft = Math.floor(slideWidth) * index;
+
+                this.calcActive();
+            },
+
+            isActive(index) {
+                return index === this.active;
+            },
+
+            recalculate() {
+                this.calcPageSize();
+                setTimeout(() => this.calcActive(), 100);
+            },
+            onResize() {
+                this.calcPageSize();
+                setTimeout(() => this.calcActive(), 100);
+            }
+        };
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

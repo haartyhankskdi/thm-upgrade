@@ -1,0 +1,126 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Clarity Consent Mode
+ */
+
+use Amasty\ClarityConsentMode\ViewModel\ClarityViewModel;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+
+/** @var Template $block */
+/** @var SecureHtmlRenderer $secureRenderer */
+
+/** @var ClarityViewModel $clarityViewModel */
+$clarityViewModel = $block->getViewModel();
+
+$script = <<<SCRIPT
+    window.amClarityConsentManager = window.amClarityConsentManager || {
+        microsoftPixels: [],
+        consentStates: {
+            denied: 'denied',
+            granted: 'granted'
+        },
+        storageName: 'amClarityConsentMode',
+        gdprCookie: {
+            cookieGroupName: 'amcookie_allowed',
+            allCookiesAllowed: '0'
+        },
+        defaultConsentTypesData: {$clarityViewModel->getConsentTypesData()},
+        currentStoreId: {$clarityViewModel->getStoreId()},
+        init: function () {
+            this.initStorage();
+            this.setDefaultConsent();
+        },
+        initStorage: function () {
+            const persistedConsentTypes = this.getPersistedConsentTypeState();
+
+            if (Object.keys(persistedConsentTypes).length !== 0 && !this.shouldResetConsentState(persistedConsentTypes)) {
+                return;
+            }
+
+            let consentState = {};
+            for (const [type, data] of Object.entries(this.defaultConsentTypesData)) {
+                consentState[type] = {
+                    group: data.group,
+                    status: data.default === '1' ? this.consentStates.granted : this.consentStates.denied
+                };
+            }
+
+            this.resetAllowedCookiesGroups();
+            this.persistConsentTypeState(consentState);
+        },
+        setDefaultConsent: function () {
+            !!window.clarity && window.clarity('consentv2', this.getPersistedConsentTypeStateForClarity());
+        },
+        updateConsent: function (consent) {
+            const storageConsent = this.getPersistedConsentTypeState();
+            const consentState = {...storageConsent, ...consent};
+
+            this.persistConsentTypeState(consentState);
+            !!window.clarity && window.clarity('consentv2', this.getPersistedConsentTypeStateForClarity());
+        },
+        getConsentTypeStateByGroupIds: function (groups) {
+            let consentTypeState = {};
+
+            for (const [type, data] of Object.entries(this.defaultConsentTypesData)) {
+                consentTypeState[type] = {
+                    group: data.group,
+                    status: (groups.includes(data.group) || groups.includes(this.gdprCookie.allCookiesAllowed))
+                        ? this.consentStates.granted
+                        : this.consentStates.denied
+                }
+            }
+
+            return consentTypeState;
+        },
+        persistConsentTypeState: function (consentTypeState) {
+            let persistedState = this.getPersistedConsentTypeState(false);
+            persistedState[this.currentStoreId] = consentTypeState;
+            localStorage.setItem(this.storageName, JSON.stringify(persistedState));
+        },
+        getPersistedConsentTypeState: function (forCurrentStore = true) {
+            let persistedStates = JSON.parse(localStorage.getItem(this.storageName)) ?? {};
+
+            if (forCurrentStore) {
+                return persistedStates?.[this.currentStoreId] ?? {};
+            }
+
+            return persistedStates;
+        },
+        getPersistedConsentTypeStateForClarity: function () {
+            let consentTypeState = {};
+            let persistedState = this.getPersistedConsentTypeState();
+
+            for (const [type, data] of Object.entries(persistedState)) {
+                consentTypeState[type] = data.status;
+            }
+
+            return consentTypeState;
+        },
+        shouldResetConsentState: function (persistedConsentTypes) {
+            if (Object.keys(persistedConsentTypes).length != Object.keys(this.defaultConsentTypesData).length
+                || !document.cookie.includes(this.gdprCookie.cookieGroupName)
+            ) {
+                return true;
+            }
+
+            for (const [type, data] of Object.entries(persistedConsentTypes)) {
+                if (data.group !== this.defaultConsentTypesData[type].group) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        resetAllowedCookiesGroups: function () {
+            document.cookie = this.gdprCookie.cookieGroupName + '=0;max-age=-1;domain=' + location.hostname;
+            !!window.clarity && window.clarity('consent', false);
+        }
+    };
+
+    window.amClarityConsentManager.init();
+SCRIPT;
+?>
+<?= /** @noEscape */ $secureRenderer->renderTag('script', ['type' => 'text/javascript'], $script, false); ?>

@@ -1,0 +1,39 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ProductList\Upsell $block */
+$items = $block->getItemCollection();
+$formKey = $block->getFormKey(); // Form key access
+?>
+
+<?php if ($items && count($items)) : ?>
+    <div class="custom-upsell-products">
+        <h2>You May Also Like</h2>
+        <div class="products-grid">
+            <?php foreach ($items as $_product): ?>
+                <div class="product-item">
+                    <a href="<?= $_product->getProductUrl() ?>">
+                        <img src="<?= $block->getImage($_product, 'product_base_image')->getImageUrl() ?>"
+                             alt="<?= $block->escapeHtml($_product->getName()) ?>" />
+                        <h3><?= $block->escapeHtml($_product->getName()) ?></h3>
+                    </a>
+
+                    <?php if ($_product->getSpecialPrice() && $_product->getSpecialPrice() < $_product->getPrice()): ?>
+                        <p class="price"><del><?= $block->getPriceHtml($_product, true) ?></del></p>
+                        <p class="special-price"><?= $block->getPriceHtml($_product) ?></p>
+                    <?php else: ?>
+                        <p class="price"><?= $block->getPriceHtml($_product) ?></p>
+                    <?php endif; ?>
+
+                    <?php if ($_product->isSaleable()): ?>
+                        <form data-role="tocart-form" action="<?= $block->getAddToCartUrl($_product) ?>" method="post">
+                            <input type="hidden" name="form_key" value="<?= $formKey ?>" />
+                            <input type="hidden" name="product" value="<?= $_product->getId() ?>">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                    <?php else: ?>
+                        <p>Out of Stock</p>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif; ?>

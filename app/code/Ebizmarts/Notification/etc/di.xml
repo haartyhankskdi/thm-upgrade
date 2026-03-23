@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Ebizmarts\Notification\Api\Data\Notification\NotificationInterface" type="Ebizmarts\Notification\Model\Notification"/>
+    <preference for="Ebizmarts\Notification\Api\NotificationRepositoryInterface" type="Ebizmarts\Notification\Model\NotificationRepository"/>
+
+    <type name="Ebizmarts\Notification\Model\Module\Management">
+        <arguments>
+            <argument name="availableModules" xsi:type="array">
+                <item name="mailchimp" xsi:type="string">Ebizmarts_MailChimp</item>
+                <item name="opayo" xsi:type="string">Ebizmarts_SagePaySuite</item>
+                <item name="brippo" xsi:type="string">Ebizmarts_BrippoPaymentsFrontend</item>
+                <item name="pos" xsi:type="string">Ebizmarts_Pos</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

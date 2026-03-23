@@ -1,0 +1,30 @@
+{
+    "name": "amasty/module-store-locator-subscription-package",
+    "description": "Store Locator Subscription Package by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.19.1",
+        "amasty/module-store-locator": ">=3.3.0"
+    },
+    "suggest": {
+        "amasty/module-store-locator-graphql": "Install this package to ensure Amasty Store Locator extension works with GraphQl",
+        "amasty/module-store-locator-import-entity": "Install this package for Import Locations compatibility.",
+        "amasty/module-store-locator-export-entity": "Install this package for Export Locations compatibility.",
+        "amasty/module-storelocator-holidays": "Install this package to set up Location Holiday schedules.",
+        "amasty/module-storelocator-subscription-functionality": "Install this package for compatibility with Meta Keywords functionality.",
+        "amasty/module-storelocator-hyva": "Install this package to ensure the Store Locator extension works with the Hyv\u00e4 Theme.",
+        "amasty/module-store-locator-xml-sitemap": "Install this package to make sure Store Locator pages are added to Amasty XML Sitemap."
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "3.5.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\StoreLocatorSubscriptionPackage\\": ""
+        }
+    }
+}

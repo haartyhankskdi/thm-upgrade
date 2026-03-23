@@ -1,0 +1,123 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Magento\Catalog\Pricing\Price\TierPrice;
+
+/**
+ * @var Magento\GroupedProduct\Block\Product\View\Type\Grouped $block
+ */
+/** @var Magento\Framework\Escaper $escaper */
+$block->setPreconfiguredValue();
+$product               = $block->getProduct();
+$associatedProducts    = $block->getAssociatedProducts();
+$hasAssociatedProducts = count($associatedProducts) > 0;
+$_product              = $block->getProduct();
+?>
+
+<div class="my-12 w-full mageplaza-fbt-grouped">
+    <div id="mageplaza-fbt-super-product-table-<?php  /* @noEscape */ echo $_product->getId(); ?>">
+        <?php if ($hasAssociatedProducts): ?>
+            <div class="hidden sm:flex py-2 border-gray-300
+        w-full items-center justify-between gap-2"
+            >
+                <div class="text-gray-500 font-semibold text-left">
+                    <?= $escaper->escapeHtml(__('Product Name')) ?>
+                </div>
+                <div class="text-gray-500 font-semibold text-left w-20">
+                    <?= $escaper->escapeHtml(__('Qty')) ?>
+                </div>
+            </div>
+
+            <?php foreach ($associatedProducts as $item): ?>
+                <div class="flex flex-wrap border-t border-gray-300
+            py-2 w-full items-center justify-between gap-2"
+                >
+                    <label
+                        class="text-gray-700 text-left"
+                        for="super_group[<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                    >
+                <span class="product-item-name font-semibold">
+                    <?= $escaper->escapeHtml($item->getName()) ?>
+                </span>
+                        <?php if ($block->getCanShowProductPrice($product)): ?>
+                            <?php if ($block->getCanShowProductPrice($item)): ?>
+                                <?= /* @noEscape */
+                                $block->getProductPrice($item) ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </label>
+                    <div class="label text-gray-900 text-left sm:text-right w-full sm:w-20">
+                        <?php if ($product->isSaleable()): ?>
+
+                            <?php if ($item->isSaleable()): ?>
+                                <div class="control qty">
+                                    <input type="number"
+                                           min="0"
+                                           name="super_group[<?php /* @noEscape */
+                                           echo $_product->getId() ?>][<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                                           id="super_group[<?php /* @noEscape */
+                                           echo $_product->getId() ?>][<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                                           value="<?= $escaper->escapeHtmlAttr($item->getQty() * 1) ?>"
+                                           title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
+                                           class="qty form-input px-2 py-2 w-20 text-center mageplaza-fbt-grouped-qty"
+                                           data-child-product-price-amount="<?php /* @noEscape */
+                                           echo $item->getPriceInfo()->getPrice('final_price')->getAmount()->getValue() ?>"
+                                           data-child-product-id="<?php /* @noEscape */
+                                           echo $item->getId() ?>"
+
+                                           data-validate='{"validate-grouped-qty":"#mageplaza-fbt-super-product-table-<?php /* @noEscape */ echo $_product->getId(); ?>"}'
+
+                                    />
+                                </div>
+                            <?php else: ?>
+                                <div class="stock unavailable"
+                                     title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>"
+                                >
+                                    <?= $escaper->escapeHtml(__('Out of stock')) ?>
+                                </div>
+                            <?php endif; ?>
+
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($block->getCanShowProductPrice($product)
+                        && $block->getCanShowProductPrice($item)
+                        && trim($block->getProductPriceHtml(
+                            $item,
+                            TierPrice::PRICE_CODE
+                        ))): ?>
+                        <div class="flex pt-2 w-full items-center">
+                            <?= $block->getProductPriceHtml(
+                                $item,
+                                TierPrice::PRICE_CODE
+                            ) ?>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <?= $escaper->escapeHtml(__('No options of this product are available.')) ?>
+        <?php endif; ?>
+    </div>
+</div>

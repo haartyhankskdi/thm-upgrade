@@ -1,0 +1,34 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var Mageplaza\RewardPointsPro\Block\Checkout\Cart\Items\Earning $block */
+$earnPoint = $block->getPointEarn();
+if ($earnPoint) : ?>
+    <div class="catalog-points mp-reward-points">
+        <?= /** @noEscape */
+        $block->getIconHtml() ?>
+        <div class="mp-point-label">
+            <span class="points"><?= /** @noEscape */
+                __('Earning %1 for this item', '<strong class="mp-rw-highlight">' . $earnPoint . '</strong>') ?></span>
+        </div>
+        <div class="clr"></div>
+    </div>
+<?php endif; ?>

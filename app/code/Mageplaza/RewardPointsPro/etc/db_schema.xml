@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Mageplaza
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Mageplaza.com license that is
+* available through the world-wide-web at this URL:
+* https://www.mageplaza.com/LICENSE.txt
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade this extension to newer
+* version in the future.
+*
+* @category    Mageplaza
+* @package     Mageplaza_RewardPointsPro
+* @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+* @license     https://www.mageplaza.com/LICENSE.txt
+*/
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mageplaza_reward_catalogrule" resource="default" engine="innodb" comment="Mageplaza Reward Catalog Rule">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Rule Id"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="date" name="from_date" comment="From Date"/>
+        <column xsi:type="date" name="to_date" comment="To Date"/>
+        <column xsi:type="smallint" name="is_active" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Is Active"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Conditions Serialized"/>
+        <column xsi:type="mediumtext" name="actions_serialized" nullable="true" comment="Actions Serialized"/>
+        <column xsi:type="smallint" name="stop_rules_processing" padding="6" unsigned="false" nullable="false" identity="false" default="1" comment="Stop Rules Processing"/>
+        <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="varchar" name="action" nullable="false" length="32" default="fixed" comment="Simple Action"/>
+        <column xsi:type="varchar" name="discount_style" nullable="false" length="25" default="fixed" comment="Discount Style"/>
+        <column xsi:type="int" name="point_amount" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Point Amount"/>
+        <column xsi:type="int" name="discount_amount" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Discount Amount"/>
+        <column xsi:type="int" name="money_step" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Money Step"/>
+        <column xsi:type="int" name="max_points" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Max Points"/>
+        <column xsi:type="int" name="priority" padding="11" unsigned="false" nullable="true" identity="false" default="0" comment="Priority"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+        </constraint>
+        <index referenceId="MAGEPLAZA_REWARD_CATRULE_IS_ACTIVE_SORT_ORDER_TO_DATE_FROM_DATE" indexType="btree">
+            <column name="is_active"/>
+            <column name="sort_order"/>
+            <column name="to_date"/>
+            <column name="from_date"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_catalogrule_product" resource="default" engine="innodb" comment="Mageplaza Reward Catalog Rule Product">
+        <column xsi:type="int" name="rule_product_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Rule Product Id"/>
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Rule Id"/>
+        <column xsi:type="int" name="from_time" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="From Time"/>
+        <column xsi:type="int" name="to_time" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="To time"/>
+        <column xsi:type="int" name="customer_group_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Customer Group Id"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Product Id"/>
+        <column xsi:type="smallint" name="rule_type" padding="5" unsigned="true" nullable="false" identity="false" comment="Rule Type"/>
+        <column xsi:type="varchar" name="action" nullable="true" length="32" default="fixed" comment="Simple Action"/>
+        <column xsi:type="varchar" name="discount_style" nullable="true" length="32" default="fixed" comment="Discount Style"/>
+        <column xsi:type="int" name="point_amount" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Point Amount"/>
+        <column xsi:type="decimal" name="discount_amount" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Discount Amount"/>
+        <column xsi:type="smallint" name="action_stop" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Action Stop"/>
+        <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Website Id"/>
+        <column xsi:type="decimal" name="money_step" scale="4" precision="12" unsigned="false" nullable="false" default="0" comment="Point Amount"/>
+        <column xsi:type="int" name="max_points" padding="10" unsigned="true" nullable="false" identity="false" comment="Max Points"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_product_id"/>
+            <column name="customer_group_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_REWARD_CATRULE_PRD_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="mageplaza_reward_catalogrule_product" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_9309C14F34FBDB7B96C95B52CE45ED6F" table="mageplaza_reward_catalogrule_product" column="customer_group_id" referenceTable="customer_group" referenceColumn="customer_group_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_A9EA715B1184077D7828EAE4FBCF2580" table="mageplaza_reward_catalogrule_product" column="rule_id" referenceTable="mageplaza_reward_catalogrule" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_REWARD_CATRULE_PRD_WS_ID_STORE_WS_WS_ID" table="mageplaza_reward_catalogrule_product" column="website_id" referenceTable="store_website" referenceColumn="website_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="IDX_5E4A62A18338FFD51F58B355EC8CE1ED">
+            <column name="rule_id"/>
+            <column name="from_time"/>
+            <column name="to_time"/>
+            <column name="website_id"/>
+            <column name="customer_group_id"/>
+            <column name="product_id"/>
+            <column name="sort_order"/>
+        </constraint>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_CUSTOMER_GROUP_ID" indexType="btree">
+            <column name="customer_group_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_FROM_TIME" indexType="btree">
+            <column name="from_time"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_TO_TIME" indexType="btree">
+            <column name="to_time"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_PRODUCT_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_catalogrule_website" resource="default" engine="innodb" comment="Mageplaza Reward Catalog Rules Websites">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Rule Id"/>
+        <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Website Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+            <column name="website_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_59D6A9C9077E29DBCCE6D3D8DEB8FE34" table="mageplaza_reward_catalogrule_website" column="rule_id" referenceTable="mageplaza_reward_catalogrule" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_REWARD_CATRULE_WS_WS_ID_STORE_WS_WS_ID" table="mageplaza_reward_catalogrule_website" column="website_id" referenceTable="store_website" referenceColumn="website_id" onDelete="CASCADE"/>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_WEBSITE_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_WEBSITE_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_catalogrule_customer_group" resource="default" engine="innodb" comment="Mageplaza Reward Catalog Rules Customer Groups">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Rule Id"/>
+        <column xsi:type="int" name="customer_group_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Group Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+            <column name="customer_group_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_9FDE2ECFB9F7A4978E1E9E6DAF2B15F2" table="mageplaza_reward_catalogrule_customer_group" column="rule_id" referenceTable="mageplaza_reward_catalogrule" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_316DCA759AE10A89EEDE14E4C4D74507" table="mageplaza_reward_catalogrule_customer_group" column="customer_group_id" referenceTable="customer_group" referenceColumn="customer_group_id" onDelete="CASCADE"/>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_CUSTOMER_GROUP_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_CATALOGRULE_CUSTOMER_GROUP_CUSTOMER_GROUP_ID" indexType="btree">
+            <column name="customer_group_id"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_shopping_cart" resource="default" engine="innodb" comment="Mageplaza Reward Shopping Cart">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Rule Id"/>
+        <column xsi:type="smallint" name="rule_type" padding="6" unsigned="false" nullable="false" identity="false" default="1" comment="Rule Type"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="date" name="from_date" comment="From Date"/>
+        <column xsi:type="date" name="to_date" comment="To Date"/>
+        <column xsi:type="smallint" name="is_active" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Is Active"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Conditions Serialized"/>
+        <column xsi:type="mediumtext" name="actions_serialized" nullable="true" comment="Actions Serialized"/>
+        <column xsi:type="smallint" name="stop_rules_processing" padding="6" unsigned="false" nullable="false" identity="false" default="1" comment="Stop Rules Processing"/>
+        <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="varchar" name="action" nullable="false" length="32" default="fixed" comment="Action"/>
+        <column xsi:type="int" name="point_amount" padding="10" unsigned="true" nullable="false" identity="false" comment="Point Amount"/>
+        <column xsi:type="int" name="money_step" padding="10" unsigned="true" nullable="false" identity="false" comment="Money Step"/>
+        <column xsi:type="int" name="qty_step" padding="10" unsigned="true" nullable="false" identity="false" comment="Quantity Step"/>
+        <column xsi:type="int" name="max_points" padding="10" unsigned="true" nullable="false" identity="false" comment="Max Points"/>
+        <column xsi:type="varchar" name="discount_style" nullable="false" length="32" default="fixed" comment="Discount Style"/>
+        <column xsi:type="int" name="discount_amount" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Discount Amount"/>
+        <column xsi:type="smallint" name="apply_to_shipping" padding="6" unsigned="false" nullable="true" identity="false" default="0" comment="Apply To Shipping"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+        </constraint>
+        <index referenceId="IDX_3F923448FC5D7C37FC412E2520752F6A" indexType="btree">
+            <column name="is_active"/>
+            <column name="sort_order"/>
+            <column name="to_date"/>
+            <column name="from_date"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_shopping_cart_website" resource="default" engine="innodb" comment="Mageplaza Reward Shopping Cart Website Table">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Rule Id"/>
+        <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Website Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+            <column name="website_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_CE6CC750FD1AA1B5A5B62DCD48C8F8AB" table="mageplaza_reward_shopping_cart_website" column="rule_id" referenceTable="mageplaza_reward_shopping_cart" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_WS_WS_ID_STORE_WS_WS_ID" table="mageplaza_reward_shopping_cart_website" column="website_id" referenceTable="store_website" referenceColumn="website_id" onDelete="CASCADE"/>
+        <index referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_WEBSITE_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_shopping_cart_customer_group" resource="default" engine="innodb" comment="Mageplaza Reward Shopping Cart Rules Customer Groups">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Rule Id"/>
+        <column xsi:type="int" name="customer_group_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Group Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+            <column name="customer_group_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_8B61BB9241E55BDECA1968FF3E836704" table="mageplaza_reward_shopping_cart_customer_group" column="rule_id" referenceTable="mageplaza_reward_shopping_cart" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_DB14101EFBC306CDAC7D5AF3EC495F83" table="mageplaza_reward_shopping_cart_customer_group" column="customer_group_id" referenceTable="customer_group" referenceColumn="customer_group_id" onDelete="CASCADE"/>
+        <index referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_CUSTOMER_GROUP_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_CUSTOMER_GROUP_CUSTOMER_GROUP_ID" indexType="btree">
+            <column name="customer_group_id"/>
+        </index>
+    </table>
+    <table name="mageplaza_reward_shopping_cart_label" resource="default" engine="innodb" comment="Mageplaza Reward Shopping Cart Label">
+        <column xsi:type="int" name="label_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Label Id"/>
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Rule Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Label"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="label_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_8F22196B9E4F050CB3B1A2AE3423E353" table="mageplaza_reward_shopping_cart_label" column="rule_id" referenceTable="mageplaza_reward_shopping_cart" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_LABEL_STORE_ID_STORE_STORE_ID" table="mageplaza_reward_shopping_cart_label" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="SALESRULE_LABEL_RULE_ID_STORE_ID">
+            <column name="rule_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <index referenceId="MAGEPLAZA_REWARD_SHOPPING_CART_LABEL_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+    </table>
+
+    <!--update holding points-->
+    <table name="mageplaza_reward_customer">
+        <column xsi:type="int" name="point_holding" padding="11" unsigned="false" nullable="false" identity="false" comment="Point holding"/>
+    </table>
+    <table name="mageplaza_reward_transaction">
+        <column xsi:type="timestamp" name="holding_date" on_update="false" nullable="true" comment="Holding Date"/>
+    </table>
+    <table name="sales_order" resource="default">
+        <column xsi:type="int" name="mp_reward_hold" comment="Mp Reward Hold"/>
+    </table>
+</schema>

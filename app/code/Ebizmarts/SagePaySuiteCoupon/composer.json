@@ -1,0 +1,29 @@
+{
+  "name": "ebizmarts/sagepaysuitecoupon",
+  "version": "103.0.1",
+  "description": "Opayo Coupon integration for Magento 2.",
+  "require": {
+    "magento/framework": ">=103.0.0"
+  },
+  "type": "magento2-module",
+  "autoload": {
+    "psr-4": {"Ebizmarts\\SagePaySuiteCoupon\\":""},
+    "files": ["registration.php"]
+  },
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "support": {
+    "email": "sagepay@ebizmarts-desk.zendesk.com",
+    "wiki": "http://wiki.ebizmarts.com",
+    "forum": "http://ebizmarts.com/forums/view/2"
+  },
+  "authors": [
+    {
+      "name": "Ebizmarts Corp",
+      "email": "info@ebizmarts.com",
+      "homepage": "http://ebizmarts.com"
+    }
+  ]
+}

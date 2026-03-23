@@ -1,0 +1,57 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<?= $block->getChildHtml('amasty.xsearch.recent.searches.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.recent.viewed.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.popular.searches.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.products.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.pages.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.landing.page.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.faq.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.faq.questions.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.category.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.browsing.history.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.brands.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.blog.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.bestsellers.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.product.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.rating.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.product.slider.item.script') ?>
+<?= $block->getChildHtml('amasty.xsearch.price.script') ?>
+
+<script>
+    function amXsearchHeaderScripts() {
+        return Object.assign(
+            amXsearchRecentSearches(),
+            amXsearchRecentlyViewed(),
+            amXsearchPopularSearches(),
+            amXsearchProducts(),
+            amXsearchPages(),
+            amXsearchLandingPages(),
+            amXsearchFaq(),
+            amXsearchFaqQuestions(),
+            amXsearchCategory(),
+            amXsearchBrowsingHistory(),
+            amXsearchBrands(),
+            amXsearchBlog(),
+            amXsearchBestsellers(),
+            amXsearchProduct(),
+            amXsearchRating(),
+            amXsearchProductItem()
+        )
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

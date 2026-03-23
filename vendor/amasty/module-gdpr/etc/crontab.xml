@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="amasty_gdpr">
+        <job name="amasty_gdpr_policy_change_notification" instance="Amasty\Gdpr\Model\Cron\ConsentEmailQueueProcessor" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="amasty_gdpr_clear_log" instance="Amasty\Gdpr\Model\Cron\ClearLog" method="clearLog">
+            <schedule>0 0 * * *</schedule>
+        </job>
+        <job name="amasty_gdpr_clear_visitor_consent_log" instance="Amasty\Gdpr\Model\Cron\ClearVisitorConsentLog" method="clearLog">
+            <schedule>0 0 * * *</schedule>
+        </job>
+        <job name="amasty_gdpr_create_requests" instance="Amasty\Gdpr\Model\Cron\AutomaticRequests" method="orderProcess">
+            <schedule>0 0 * * *</schedule>
+        </job>
+        <job name="amasty_gdpr_automatic_anonymization" instance="Amasty\Gdpr\Model\Cron\AutomaticAnonymizer" method="requestProcess">
+            <schedule>0 0 * * *</schedule>
+        </job>
+    </group>
+</config>

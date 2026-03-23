@@ -1,0 +1,118 @@
+.amsearch-container {
+    background-color: var(--amsearch-color-background, #ffffff);
+
+    .amsearch-highlight {
+        color: var(--amsearch-color-highlight, #1c6f5a);
+        font-weight: 700;
+    }
+
+    .card-interactive {
+        background-color: var(--amsearch-color-background, #ffffff);
+
+        &:hover {
+             background-color: var(--amsearch-color-hover, #f4f5fa);
+        }
+
+        &:focus {
+             background-color: var(--amsearch-color-hover, #f4f5fa);
+        }
+    }
+
+    .amsearch-product-name,
+    .am-search-view-all a {
+        color: var(--amsearch-color-text, #1c6f5a);
+
+        &:hover {
+            color: var(--amsearch-color-text-hover, #1c6f5a);
+        }
+
+        &:focus {
+            color: var(--amsearch-color-text-focus, #1c6f5a);
+        }
+    }
+}
+
+.am-search-item-list {
+    a:not(.reviews-link) {
+        color: var(--amsearch-color-text, #1c6f5a);
+
+        &:hover {
+             background: var(--amsearch-color-hover, #f4f5fa);
+             color: var(--amsearch-color-text-hover, #1c6f5a);
+        }
+
+        &:focus {
+             background: var(--amsearch-color-hover-focus, #f4f5fa);
+             color: var(--amsearch-color-text-focus, #1c6f5a);
+        }
+    }
+}
+
+#search_mini_form {
+    .product-item {
+        a:not(.reviews-link) {
+            color: var(--amsearch-color-text, rgba(59, 130, 246, 0.8));
+
+            &:hover {
+                 color: var(--amsearch-color-hover-text-hover, rgba(59, 130, 246, 1));
+            }
+        }
+
+        &:hover {
+             background: var(--amsearch-color-hover, #f4f5fa);
+        }
+    }
+}
+
+.amtabs-wrapper {
+    .amcontent {
+        a:not(.product-item-link) {
+            color: #1979c2;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.am-search-content {
+    width: 100%;
+
+    &:not(.am-search-horizontal-view) {
+        @media (min-width: 768px) {
+            width: calc(100% - 283px);
+        }
+    }
+
+    &.am-search-sidebar-disabled {
+        @media (min-width: 768px) {
+            width: 100%;
+        }
+    }
+}
+
+.am-search-sidebar {
+    width: 100%;
+
+    &:not(.am-search-horizontal-view) {
+        @media (min-width: 768px) {
+            max-width: 283px;
+        }
+    }
+}
+
+.am-custom-search-button {
+    background: var(--amsearch-color-search_button, rgba(59, 130, 246, 1));
+    color: var(--amsearch-color-search_button_text, #fff);
+
+    &:hover {
+         background: var(--amsearch-color-search_button-hover, rgba(59, 130, 246, 1));
+         color: var(--amsearch-color-search_button_text-hover, #fff);
+    }
+
+    &:focus {
+         background: var(--amsearch-color-search_button-hover, #f4f5fa);
+         color: var(--amsearch-color-search_button_text-hover, #1c6f5a);
+    }
+}

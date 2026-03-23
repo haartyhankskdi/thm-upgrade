@@ -1,0 +1,53 @@
+<?php declare(strict_types=1);
+
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$productId = $block->getProductId();
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    function initAmInitConfigurableSwatchOptions_<?= $escaper->escapeJs($productId) ?>() {
+        const initConfigurableSwatchOptions = window.initConfigurableSwatchOptions_<?= $escaper->escapeJs($productId) ?>
+        && typeof window.initConfigurableSwatchOptions_<?= $escaper->escapeJs($productId) ?> === 'function'
+            ? window.initConfigurableSwatchOptions_<?= $escaper->escapeJs($productId) ?>() : {};
+
+        return {
+            ...initConfigurableSwatchOptions,
+            init() {
+                this.$watch('showSwatches', value => {
+                    if (value) {
+                        window.dispatchEvent(new CustomEvent('configurable-show-swatches', {
+                            detail: {
+                                productId: this.productId,
+                                element: this.$el
+                            }
+                        }));
+                    }
+                });
+                this.findAllowedAttributeOptions();
+                this.$nextTick(() => {
+                    if (typeof this.optionConfig.defaultValues === 'object') {
+                        for (const [attributeId, value] of Object.entries(this.optionConfig.defaultValues)) {
+                            this.changeOption(attributeId, value + '');
+                        }
+                    }
+                });
+            },
+        }
+    }
+</script>

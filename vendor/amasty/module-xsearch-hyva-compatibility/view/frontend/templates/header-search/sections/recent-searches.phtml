@@ -1,0 +1,31 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+<div class="w-full mb-6 am-search-item-list">
+    <h3
+        class="text-lg font-bold mb-2 px-4"
+        x-text="recentSearchesTitle"
+    ></h3>
+
+    <div class="flex direction-row flex-wrap mx-4">
+        <template x-for="(searchItem, index) in recentSearchesItems" :key="index">
+            <a
+                class="bg-gray-100 hover:bg-gray-200 py-1 px-4 rounded-lg mr-2 mb-2"
+                :href="recentSearchesLink"
+                x-html="recentSearchesItemName"
+            ></a>
+        </template>
+    </div>
+</div>

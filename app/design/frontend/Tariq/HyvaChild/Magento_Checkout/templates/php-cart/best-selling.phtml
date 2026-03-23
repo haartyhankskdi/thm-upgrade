@@ -1,0 +1,421 @@
+ <?php 
+    $bestselling = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\BestSellers::class);
+    $wishlistHelper = $this->helper("Magento\Wishlist\Helper\Data");
+    $customerSession = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+    $isLoggedIn = $customerSession->getCustomerData()->isLoggedIn();
+    $bestsell_products = $bestselling->getBestSellingProducts(9) ?? [];
+    $formKey = $bestselling->getFormKey();
+    $cartBlock = $block->getLayout()->createBlock(\Magento\Checkout\Block\Cart\Sidebar::class);
+    $cartItems = $cartBlock->getItems() ?? [];
+    ?>
+     <form id="cart-form" style="display:none;">
+        <input type="hidden" name="form_key" value="<?= $formKey ?>">
+    </form>
+<?php if (!empty($cartItems)) {?>
+<div class="cart_best_seller py-10 hidden md:inline-block w-full">
+   
+
+    <!-- Section Title -->
+    <div class="section-title text-center mb-12">
+        <h2 class="text-3xl md:text-[38px] font-normal text-black">
+            <span class="font-bold">Bestsellers</span> You'll Love
+        </h2>
+        <p class="text-gray-600 mt-2">
+            Shop what everyone's talking about.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div>
+
+   
+    <!-- Alpine.js Slider -->
+    <div x-data="cartbestSellingSlider()" x-init="init()" class="relative mt-6">
+        <div class="overflow-hidden">
+           <div class="flex md:gap-2" @mousedown="dragStart($event)" @mousemove="dragMove($event)"
+        @mouseup="dragEnd()"
+        @mouseleave="dragEnd()"
+        @touchstart="dragStart($event)"
+        @touchmove="dragMove($event)"
+        @touchend="dragEnd()"
+       :style="sliderStyle">
+                
+                <template x-for="product in products" :key="product.id">
+                   <div class="flex-none product-card-list">
+
+                        <div class="group bestsell-item border-0 bg-transparent hover:bg-[#F5F9F7] hover:shadow-lg transition-shadow duration-300 transition relative cursor-pointer pb-4 lg:pb-10">
+
+                            <!-- Discount Badge -->
+                            <template x-if="product.discount">
+                                <div class="discount-badge absolute z-10 top-3 right-3 bg-red-600 text-white w-[58px] h-[58px] flex flex-col items-center justify-center text-center leading-[18px] rounded-full px-2 py-1" x-text="product.discount + '% OFF'"></div>
+                            </template>
+
+                            <!-- NEW Badge -->
+                            <template x-if="product.isNew">
+                                <div class="custom-new-label absolute z-10 top-3 right-3 bg-green-600 text-green text-xs px-2 py-1 rounded">NEW</div>
+                            </template>
+
+                            <!-- Product Image -->
+                            <div class="bg-[#f3f3f3] mb-2 p-1">
+                            <a :href="product.url" @click.prevent="if (!dragged) window.location = product.url">
+                                <img :src="product.image" class="w-full transform transition-transform duration-500 group-hover:scale-110" alt="">
+                            </a>
+                            </div>
+
+                            <!-- Wishlist -->
+                            <div class="absolute z-10 top-3 left-3 w-[31px] h-[31px] bg-black rounded-full flex items-center justify-center opacity-0 scale-90
+      transition-all duration-300 ease-out
+
+      group-hover:opacity-100
+      group-hover:scale-100">
+                               <template x-if="product.isLoggedIn">
+                                  <form :action="product.wishlistUrl" method="post">
+                                     <input type="hidden" name="product" :value="product.id">
+                                     <input type="hidden" name="form_key" :value="product.formKey">
+                                       <button type="submit" class="wishlist-btn">
+                      <img :src="product.inWishlist ? product.heartRedIcon : product.heartIcon" class="w-4 h-4 ml-[1px]" alt="heart" >
+                         </button>
+                          </form>
+                         </template>
+                                <template x-if="!product.isLoggedIn">
+                                    <a :href="product.loginUrl" class="wishlist-btn">
+                                        <img :src="product.heartIcon" class="w-4 h-4 ml-[1px]" alt="heart">
+                                    </a>
+                                </template>
+                            </div>
+
+                            <div class="py-4 px-0 lg:px-2 text-center">
+                            <!-- Product Name -->
+                            <div class="bestsell-product-name text-base mt-3 font-semibold text-black lg:text-xl line-clamp-2 md:h-[58px] lg:px-4">
+                                <a :href="product.url" @click.prevent="if (!dragged) window.location = product.url" x-text="product.name"></a>
+                            </div>
+
+                            <!-- Price -->
+                                <div class="text-lg mt-1 mb-6 font-semibold text-black lg:text-xl">
+                      <template x-if="product.specialPrice">
+                       <div>
+               <span class="font-bold text-black text-xl" x-text="product.price"></span>
+            <span class="text-gray-400 font-normal text-xl line-through ml-2" x-text="product.regularPrice"></span>
+        </div>
+        </template>
+     <template x-if="!product.specialPrice">
+        <span class="font-semibold text-black text-xl" x-text="product.price"></span>
+    </template>
+</div>
+                            <div class="flex text-center gap-2 justify-center mt-3 prod-list-vip-sec">
+                            <!-- Weight -->
+                             <div :class="{ 'no_weight': !product.weight}">
+                            <template x-if="product.weight">
+                                <div class="bestsell-product-weight text-xs text-black font-normal">
+                                    Weight <span class="bg-[#3B7E48] text-xs text-white font-normal p-0.5" x-text="product.weight"></span>
+                                </div>
+                            </template>
+                             </div>
+                            <!-- VIP Points -->
+                            <span class="vip-points text-xs text-[#AC7928] font-normal block">Get 2 VIP Points</span>
+
+                        </div>
+
+                            <!-- Add to Cart -->
+                            <div class="mt-4" x-data="cartbasket(product.id, product.qtyInCart, product.itemId, product.hasOptions)">
+                                <template x-if="product.hasOptions">
+                                    <button type="button" :onclick="'location.href=\'' + product.url + '\''" 
+                                            class="w-full bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base font-normal px-2 py-3 rounded-full transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl uppercase llg:w-full">
+                                        Customise & Add to Basket
+                                    </button>
+                                </template>
+
+                                <template x-if="!product.hasOptions">
+                                    <div class="custom-cart-ui">
+                                        <template x-if="qty === 0">
+                                            <div class="cart-btn-wrapper default-state">
+                                                <button @click="addToCart()" class="w-full bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base font-normal px-2 py-3 rounded-full transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl uppercase lg:w-[215px]">
+                                                    + Add to Basket
+                                                </button>
+                                            </div>
+                                        </template>
+
+                                        <template x-if="qty > 0">
+                                            <div class="qty-state items-center gap-2 justify-center bg-white border border-black inline-block w-auto mt-1">
+                                                <button @click="decrease()" class="bg-black px-3 py-2 rounded-none text-white">-</button>
+                                                <span x-text="qty + ' Added'" class="text-sm font-medium qty-text bg-white inline-block w-[60px] h-[32px] leading-[32px]"></span>
+                                                <button @click="increase()" class="bg-black px-3 py-2 rounded-none text-white">+</button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+             <div class="flex justify-center mt-4 space-x-2">
+    <template x-for="n in totalDots" :key="n">
+    <div @click="goToSlide(n - 1)"
+         class="w-3 h-3 rounded-full cursor-pointer"
+         :class="currentIndex === (n - 1) ? 'bg-[#E63833]' : 'bg-gray-300'">
+    </div>
+</template>
+
+</div>
+    </div>
+</div>
+
+<!-- Alpine injection (products JSON) -->
+<script>
+    document.addEventListener("alpine:init", () => {
+        Alpine.store("cartbestSellingProducts", [
+            <?php foreach ($bestsell_products as $product):
+                $image = $bestselling->getProductImage($product);
+                 $currentDate = date('Y-m-d');
+                $specialPrice = $product->getSpecialPrice();
+            $regularPrice = $product->getPrice();
+        $specialFromDate = $product->getSpecialFromDate();
+         $specialToDate = $product->getSpecialToDate();
+         $todayDate = new \DateTime(); // today's date
+       $specialFrom = $specialFromDate ? new \DateTime($specialFromDate) : null;
+    $specialTo   = $specialToDate ? new \DateTime($specialToDate) : null;
+  $hasDiscount = false;
+  if ($specialPrice && $specialPrice < $regularPrice) {
+    if ($specialFrom && $specialTo) {
+        if ($todayDate >= $specialFrom && $todayDate <= $specialTo) {
+            $hasDiscount = true;
+        }
+    } elseif ($specialFrom && !$specialTo) {
+        if ($todayDate >= $specialFrom) {
+            $hasDiscount = true;
+        }
+    } elseif (!$specialFrom && $specialTo) {
+        if ($todayDate <= $specialTo) {
+            $hasDiscount = true;
+        }
+    } else {
+        $hasDiscount = true; 
+    }
+}
+$isSpecialPriceActive = false;
+if ($specialPrice && $specialPrice < $regularPrice) {
+    if ($specialFrom && $specialTo) {
+        $isSpecialPriceActive = ($todayDate >= $specialFrom && $todayDate <= $specialTo);
+    } elseif ($specialFrom && !$specialTo) {
+        $isSpecialPriceActive = ($todayDate >= $specialFrom);
+    } elseif (!$specialFrom && $specialTo) {
+        $isSpecialPriceActive = ($todayDate <= $specialTo);
+    } else {
+        $isSpecialPriceActive = true; 
+    }
+}
+$displayPrice = $isSpecialPriceActive ? $specialPrice : $regularPrice;
+$displayRegularPrice = $regularPrice;
+$discount = $hasDiscount ? round(100 - ($specialPrice / $regularPrice) * 100) : 0;
+                $createdAt = $product->getCreatedAt();
+                $isNew = ($createdAt && (new DateTime())->diff(new DateTime($createdAt))->days <= 5);
+                $hasOptions = $product->getHasOptions();
+                $inWishlist = false;
+                if ($isLoggedIn) {
+                    $wishlist = $wishlistHelper->getWishlist();
+                    if ($wishlist) {
+                        foreach ($wishlist->getItemCollection() as $item) {
+                            if ($item->getProductId() == $product->getId()) { $inWishlist = true; break; }
+                        }
+                    }
+                }
+
+                $productInCart = 0;
+                $itemId = 'null';
+                foreach ($cartItems as $item) {
+                    if ($item->getProductId() == $product->getId()) {
+                        $productInCart = (int)$item->getQty();
+                        $itemId = $item->getItemId();
+                        break;
+                    }
+                }
+            ?>
+            {
+                id: <?= $product->getId() ?>,
+                name: "<?= addslashes($product->getName()) ?>",
+                url: "<?= $product->getProductUrl() ?>",
+                loginUrl:"<?= $block->getUrl('customer/account/login/') ?>",
+                image: "<?= $image->getImageUrl() ?>",
+                isLoggedIn: <?= $isLoggedIn ? 'true' : 'false' ?>,
+                inWishlist: <?= $inWishlist ? 'true' : 'false' ?>,
+                wishlistUrl: "<?= $block->getUrl('wishlist/index/add') ?>",
+                formKey: "<?= $formKey ?>",
+                heartIcon: "<?= $block->getViewFileUrl('images/heart.svg') ?>",
+                heartRedIcon: "<?= $block->getViewFileUrl('images/heart-red.svg') ?>",
+                specialPrice: <?= $isSpecialPriceActive ? $specialPrice : 'null' ?>,
+                regularPrice: "£<?= number_format($regularPrice ?? 0, 2) ?>",
+                discount: <?= $discount ?>,
+                isNew: <?= $isNew ? 'true' : 'false' ?>,
+                hasOptions: <?= $hasOptions ? 'true' : 'false' ?>,
+                weight: "<?php $value = (float) $product->getWeight();
+                  if ($value > 0) {
+                     if (floor($value) == $value) {
+                      echo number_format($value, 1, ".", "");
+                      } else {
+                       echo
+                    rtrim(rtrim(number_format($value, 4, ".", ""), "0"), ".");
+                       }
+                         } 
+                    ?>",
+
+               price: "£<?= number_format($displayPrice ?? 0, 2) ?>",
+                qtyInCart: <?= $productInCart ?>,
+                itemId: <?= $itemId ?>
+            },
+            <?php endforeach; ?>
+        ]);
+    });
+</script>
+<?php } ?>
+
+<script>
+  window.cartbestSellingSlider = function () {
+     
+        return {
+        currentIndex: 0,
+        products: Alpine.store("cartbestSellingProducts"),
+        slidesPerView: 3,
+        isDragging: false,
+        dragged: false,
+        startX: 0,
+        currentTranslate: 0,
+        prevTranslate: 0,
+
+        init() {
+            this.updateSlidesPerView();
+            window.addEventListener("resize", () => this.updateSlidesPerView());
+            this.currentTranslate = -this.currentIndex * 100;
+        },
+
+        updateSlidesPerView() {
+            const width = window.innerWidth;
+            if (width >= 1024) this.slidesPerView = 3;
+            else if (width >= 768) this.slidesPerView = 2;
+            else this.slidesPerView = 2;
+        },
+
+         get totalDots() {
+        if (!this.products?.length) return 1;
+       return Math.ceil(this.products.length / this.slidesPerView);
+       },
+
+        maxIndex() {
+            return this.totalDots - 1;
+        },
+
+        goToSlide(i) {
+            this.currentIndex = Math.max(0, Math.min(i, this.maxIndex()));
+            this.currentTranslate = -this.currentIndex * 100;
+        },
+
+        prev() { this.goToSlide(this.currentIndex - 1); },
+        next() { this.goToSlide(this.currentIndex + 1); },
+
+    dragStart(e) {
+      if (e.type.includes("mouse")) e.preventDefault();
+      this.isDragging = true;
+      this.dragged = false;
+      this.startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      this.prevTranslate = -this.currentIndex * 100;
+    },
+
+        dragMove(e) {
+            if (!this.isDragging) return;
+            const currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+            const diff = currentX - this.startX;
+
+            if (Math.abs(diff) > 5) this.dragged = true;
+            this.currentTranslate = this.prevTranslate + (diff / window.innerWidth) * 100;
+        },
+
+        dragEnd() {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            const moved = this.currentTranslate - this.prevTranslate;
+
+            if (moved < -10) this.next();
+            else if (moved > 10) this.prev();
+            else this.goToSlide(this.currentIndex);
+        },
+
+        get sliderStyle() {
+    const slideWidth = 100 / this.slidesPerView;
+    return `
+        display: flex;
+        transform: translateX(${this.currentTranslate}%);
+        transition: ${this.isDragging ? 'none' : 'transform .5s ease'};
+    `;
+},
+    }
+
+};
+
+
+function cartbasket(productId, initialQty = 0, initialItemId = null, hasOptions = false) {
+    return {
+        qty: initialQty,
+        itemId: initialItemId,
+        loading: false,
+        hasOptions: hasOptions,
+
+        getFormKey() {
+            return document.querySelector('input[name="form_key"]')?.value;
+        },
+
+        addToCart() {
+            if (this.loading) return;
+            this.loading = true;
+
+            const formKey = this.getFormKey();
+            if (!formKey) { window.location.reload(); return; }
+
+            fetch("/checkout/cart/add/", {
+                method: "POST",
+                body: new URLSearchParams({ product: productId, qty: 1, form_key: formKey })
+            })
+            .then(() => window.location.reload())
+            .finally(() => (this.loading = false));
+        },
+
+        increase() {
+            this.addToCart();
+        },
+
+        decrease() {
+            if (this.loading || !this.itemId) return;
+            this.loading = true;
+
+            const formKey = this.getFormKey();
+            if (!formKey) { window.location.reload(); return; }
+
+            if (this.qty > 1) {
+                this.qty--;
+                fetch("/checkout/cart/updatePost/", {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        update_cart_action: "update_qty",
+                        ["cart[" + this.itemId + "][qty]"]: this.qty,
+                        form_key: formKey
+                    })
+                })
+                .then(() => window.location.reload())
+                .finally(() => (this.loading = false));
+            } else {
+                fetch("/checkout/cart/delete/", {
+                    method: "POST",
+                    body: new URLSearchParams({ id: this.itemId, form_key: formKey })
+                })
+                .then(() => {
+                    this.qty = 0;
+                    this.itemId = null;
+                    window.location.reload();
+                })
+                .finally(() => (this.loading = false));
+            }
+        }
+    };
+}
+</script>

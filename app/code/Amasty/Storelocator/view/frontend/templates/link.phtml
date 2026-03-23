@@ -1,0 +1,20 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+/** @var \Amasty\Storelocator\Block\Location $block */
+if ($block->getProduct()) {
+    if (!$block->getRequest()->getParam("product")) {
+        $productId = $block->getProduct()->getId();
+    }
+    $locationCollection = $block->getLocationCollection();
+
+    if (count($locationCollection) > 0 && $block->isNeedToShowLink($locationCollection, $block->getProduct())) {
+        $target = $block->getTarget();
+        $linkText = $block->getLinkText();
+        echo '<div style="clear: both"><a href="' . $block->escapeHtml($block->getLinkToMap(["product" => $productId]))
+            . '"' . $block->escapeHtml($target) . '>' . $block->escapeHtml($linkText) . '</a></div>';
+    }
+}

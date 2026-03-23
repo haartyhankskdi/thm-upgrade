@@ -1,0 +1,23 @@
+{
+    "name": "amasty/module-shop-by-brand-subscription-functionality-hyva",
+    "description": "Shop by Brand Subscription Functionality Hyva",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.18.1",
+        "amasty/module-shop-by-brand-subscription-functionality": ">=1.2.0",
+        "hyva-themes/magento2-default-theme": ">=1.2.9",
+        "hyva-themes/magento2-compat-module-fallback": "*"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.1.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\ShopByBrandSubscriptionFunctionalityHyva\\": ""
+        }
+    }
+}

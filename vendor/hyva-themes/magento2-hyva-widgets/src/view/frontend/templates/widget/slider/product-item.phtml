@@ -1,0 +1,56 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\BlockJsDependencies;
+use Hyva\Theme\ViewModel\ProductListItem;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Product $item */
+$product = $block->getData('item');
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductListItem $productListItemViewModel */
+$productListItemViewModel = $viewModels->require(ProductListItem::class);
+
+$imageDisplayArea = 'category_page_grid';
+$productImage = $productViewModel->getImage($product, $imageDisplayArea);
+
+$pageJsRegistry = $viewModels->require(BlockJsDependencies::class);
+$pageJsRegistry->setBlockNameDependency($block, 'category.products.list.js.wishlist');
+$pageJsRegistry->setBlockNameDependency($block, 'category.products.list.js.compare');
+
+?>
+<a href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>"
+   class="product photo product-item-photo block mx-auto mb-3"
+   tabindex="-1">
+    <img class="hover:shadow-sm object-contain"
+         loading="lazy"
+         alt="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+         title="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+         src="<?= $escaper->escapeUrl($productImage->getImageUrl()) ?>"
+         width="<?= $escaper->escapeHtmlAttr($productImage->getWidth()) ?>"
+         height="<?= $escaper->escapeHtmlAttr($productImage->getHeight()) ?>"
+    />
+    <p class="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">
+        <?= $escaper->escapeHtml($product->getName()); ?>
+    </p>
+    <p class="block text-sm font-medium text-gray-500 pointer-events-none">
+        <?= /* @noEscape */ $productListItemViewModel->getProductPriceHtml($product) ?>
+    </p>
+</a>

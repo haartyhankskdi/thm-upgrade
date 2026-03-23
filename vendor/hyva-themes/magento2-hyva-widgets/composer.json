@@ -1,0 +1,26 @@
+{
+  "name": "hyva-themes/magento2-hyva-widgets",
+  "description": "Hyvä Themes Magento 2 module that adds a simple widget CMS system",
+  "type": "magento2-module",
+  "require": {
+    "php": ">=7.4.0",
+    "magento/framework": ">=102.0.0",
+    "hyva-themes/magento2-default-theme": ">=1.1.10"
+  },
+  "authors": [{
+    "name": "Goran Horvat",
+    "email": "goran@bemeir.com"
+  },{
+      "name": "Willem Wigman",
+      "email": "willem@hyva.io"
+  }],
+  "license": "See LICENSE.md or https://hyva.io/license",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\Widgets\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "hyva-themes/magento2-theme-fallback",
+  "description": "Allow for Hyvä Themes to fall back to regular Magento themes on specific routes.",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*"
+  },
+  "authors": [{
+      "name": "Hyvä Themes B.V.",
+      "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\ThemeFallback\\": "src/"
+    }
+  }
+}

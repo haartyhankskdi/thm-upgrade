@@ -1,0 +1,35 @@
+<ol class="mt-10 mb-12 flex flex-col gap-8">
+    <li class="flex gap-6 items-start">
+        <span class="border border-blue-100 bg-blue-50 text-blue-700 rounded-full p-3.5 shrink-0">
+            {{icon "heroicons/solid/check" width=36 height=36 aria-hidden=true}}
+        </span>
+        <div class="grow">
+            <h2 class="text-3xl font-bold mb-1.5">Order confirmed</h2>
+            <p>We’re on it!</p>
+        </div>
+    </li>
+    <li class="flex gap-6 items-start">
+        <span class="border border-blue-100 bg-blue-50 text-blue-700 rounded-full p-3.5 shrink-0">
+            {{icon "heroicons/solid/truck" width=36 height=36 aria-hidden=true}}
+        </span>
+        <div class="grow">
+            <h2 class="text-3xl font-bold mb-1.5">Order updates</h2>
+            <p>You will receive order and shipping updates via email.</p>
+        </div>
+    </li>
+    <li class="flex gap-6 items-start">
+        <span class="border border-blue-100 bg-blue-50 text-blue-700 rounded-full p-3.5 shrink-0">
+            {{icon "heroicons/solid/question-mark-circle" width=36 height=36 aria-hidden=true}}
+        </span>
+        <div class="grow">
+            <h2 class="text-3xl font-bold mb-1.5">Need help?</h2>
+            <p>
+                We’re here to be of service.
+                Reach out to our customer service at
+                <a href="mailto:{{config path='trans_email/ident_support/email'}}">
+                    <strong>{{config path="trans_email/ident_support/email"}}</strong>
+                </a>
+            </p>
+        </div>
+    </li>
+</ol>

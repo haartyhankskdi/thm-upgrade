@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sage_pay_suite_recover_coupon">
+        <observer name="sagepaysuite_recover_coupon" instance="Ebizmarts\SagePaySuiteCoupon\Observer\RecoverCoupon" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="sagepaysuite_try_cancel_coupon" instance="Ebizmarts\SagePaySuiteCoupon\Observer\TryCancelCouponUsage"/>
+    </event>
+</config>

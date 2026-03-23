@@ -1,0 +1,12 @@
+{
+    "amasty_amshopby_option_setting": {
+        "column": {
+            "page_layout": true,
+            "show_brand_info": true,
+            "brand_info_block_position": true,
+            "brand_info_postal_address": true,
+            "brand_info_electronic_address": true,
+            "brand_info_contact": true
+        }
+    }
+}

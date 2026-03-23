@@ -1,0 +1,277 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\ProductPrice;
+use Hyva\Theme\ViewModel\Slider;
+use Hyva\Widgets\Block\Widgets\Category;
+use Hyva\Widgets\ViewModel\CategoryProducts;
+use Magento\Framework\Escaper;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Category $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var Slider $sliderViewModel */
+
+/** @var CategoryProducts $categoryProductsViewModel */
+$categoryProductsViewModel = $viewModels->require(CategoryProducts::class);
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductPrice $productPriceViewModel */
+$productPriceViewModel = $viewModels->require(ProductPrice::class);
+
+$categoryId = $block->getData('hyva_category_list');
+$limit = $block->getData('hyva_category_limit');
+$sortBy = $block->getData('hyva_category_sort_by');
+$sortDirection = $block->getData('hyva_category_sort_direction');
+$productItems = $categoryProductsViewModel->getProductCollection($categoryId, $sortBy, $sortDirection, $limit);
+
+$categoryBackground = $block->getData('hyva_category_background');
+// phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+$categoryContent = html_entity_decode($block->getData('hyva_category_content') ?? '');
+$categoryMargin = $block->getData('hyva_category_margin');
+$categoryPadding = $block->getData('hyva_category_padding');
+$categoryContentPadding = $block->getData('hyva_category_content_padding');
+$categoryTitle = $block->getData('hyva_category_title');
+$contentContainerClasses = $block->getData('hyva_category_container') ? 'container mx-auto' : '';
+
+$displayType = $block->getData('hyva_category_type');
+
+$imageDisplayArea = 'category_page_grid';
+
+if ($fadeAnimations = $block->getData('hyva_category_fade_animations')) {
+    $animationClasses = 'transform ease-in-out transition';
+    $animationClassesStart = 'duration-300 ';
+    $animationClassesEnd = 'duration-500 ';
+
+    if ($fadeAnimations) {
+        if (strpos($fadeAnimations, 'fade') !== false) {
+            $animationClassesStart .= 'opacity-0';
+            $animationClassesEnd .= 'opacity-100';
+        }
+
+        if (strpos($fadeAnimations, 'up') !== false) {
+            $animationClassesStart .= ' translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'right') !== false) {
+            $animationClassesStart .= ' -translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+
+        if (strpos($fadeAnimations, 'down') !== false) {
+            $animationClassesStart .= ' -translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'left') !== false) {
+            $animationClassesStart .= ' translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+    }
+}
+?>
+<div class="overflow-hidden -m-4 p-4">
+    <section
+        <?php if ($categoryBackground): ?>style="background: <?= $escaper->escapeHtmlAttr($categoryBackground) ?>"<?php endif; ?>
+        <?php if ($fadeAnimations): ?>
+            x-data="{ intersecting: false }"
+            x-intersect:enter.half="intersecting = true"
+            x-intersect:leave="intersecting = false"
+            :class="{
+                '<?= $escaper->escapeHtmlAttr($animationClassesEnd) ?>' : intersecting,
+                '<?= $escaper->escapeHtmlAttr($animationClassesStart) ?>' : !intersecting
+            }"
+        <?php endif; ?>
+        class="hyva-category
+            <?= $escaper->escapeHtmlAttr($fadeAnimations ? $animationClasses . ' ' . $animationClassesStart . '' : '') ?>
+            <?= $escaper->escapeHtmlAttr($categoryMargin) ?>"
+    >
+
+        <div class="<?= $escaper->escapeHtmlAttr($contentContainerClasses . ' ' . $categoryPadding) ?>"
+        >
+            <?php if ($categoryTitle): ?>
+            <h2 class="text-2xl font-medium text-gray-900 title-font <?= $escaper->escapeHtmlAttr($categoryContentPadding) ?>">
+                <?= $escaper->escapeHtml($categoryTitle) ?>
+            </h2>
+            <?php endif; ?>
+            <div class="hyva-category-content <?= $escaper->escapeHtmlAttr($categoryContentPadding) ?>">
+                <?= /** @noEscape */ $categoryContent; ?>
+            </div>
+
+            <?php if ($displayType === 'grid'): ?>
+                <div class="grid">
+                    <ul role="list"
+                        class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+
+                        <?php foreach ($productItems as $product): ?>
+                            <?php
+                                $productImage = $productViewModel->getImage($product, $imageDisplayArea);
+                                $productPrice = $product->getPriceInfo()->getPrice('regular_price')->getValue();
+                                $formattedPrice = $productPrice ? $productPriceViewModel->format($productPrice, false) : '';
+                            ?>
+                            <li class="relative">
+                                <a class="text-gray-900 hover:no-underline hover:text-gray-600"
+                                   href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($product->getProductUrl())); ?>">
+                                    <div
+                                        class="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden"
+                                    >
+                                        <img class="object-cover pointer-events-none group-hover:opacity-75 w-full"
+                                             loading="lazy"
+                                             alt="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+                                             title="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+                                             src="<?= $escaper->escapeUrl($productImage->getImageUrl()) ?>"
+                                             width="<?= $escaper->escapeHtmlAttr($productImage->getWidth()) ?>"
+                                             height="<?= $escaper->escapeHtmlAttr($productImage->getHeight()) ?>"
+                                        >
+                                    </div>
+                                    <p class="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">
+                                        <?= $escaper->escapeHtml($product->getName()); ?>
+                                    </p>
+                                    <p class="block text-sm font-medium text-gray-500 pointer-events-none">
+                                        <?= $escaper->escapeHtml($formattedPrice) ?>
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+
+                    </ul>
+                </div>
+
+            <?php elseif ($displayType === 'splide_slider'): ?>
+
+                <div class="splide pb-8" data-id-category="<?= $escaper->escapeHtmlAttr($block->getJsId()); ?>">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <?php foreach ($productItems as $product): ?>
+                                <?php
+                                    $productImage = $productViewModel->getImage($product, $imageDisplayArea);
+                                    $productPrice = $product->getPriceInfo()->getPrice('regular_price')->getValue();
+                                    $formattedPrice = $productPrice ? $productPriceViewModel->format($productPrice, false) : '';
+                                ?>
+                                <li class="splide__slide">
+                                    <a class="text-gray-900 hover:no-underline hover:text-gray-600"
+                                       href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($product->getProductUrl())); ?>">
+                                    <span
+                                            class="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
+                                        <img class="object-cover pointer-events-none group-hover:opacity-75 w-full"
+                                             loading="lazy"
+                                             alt="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+                                             title="<?= $escaper->escapeHtmlAttr($productImage->getLabel()) ?>"
+                                             src="<?= $escaper->escapeUrl($productImage->getImageUrl()) ?>"
+                                             width="<?= $escaper->escapeHtmlAttr($productImage->getWidth()) ?>"
+                                             height="<?= $escaper->escapeHtmlAttr($productImage->getHeight()) ?>"
+                                        >
+                                    </span>
+                                        <p class="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">
+                                            <?= $escaper->escapeHtml($product->getName()); ?>
+                                        </p>
+                                        <p class="block text-sm font-medium text-gray-500 pointer-events-none">
+                                            <?= $escaper->escapeHtml($formattedPrice) ?>
+                                        </p>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+                <script>
+                    (function () {
+                        <?php $splideCssUrl = $block->getViewFileUrl('Hyva_Widgets::css/splide.min.css'); ?>
+                        const styleSheetHref = '<?= $escaper->escapeJs($escaper->escapeUrl($splideCssUrl)) ?>'
+
+                        if (typeof window.SplideCSS === 'undefined') {
+                            const style = document.createElement("link");
+                            style.rel = "stylesheet";
+                            style.type = "text/css";
+                            style.href = styleSheetHref;
+
+                            const insertAt = document.getElementsByTagName('link')[0];
+                            if (insertAt) { // prevent conflicts by loading before other CSS
+                                insertAt.parentNode.insertBefore(style, insertAt);
+                            } else {
+                                document.head.appendChild(style);
+                            }
+                            window.SplideCSS = 'loaded';
+                        }
+
+                        function initSplide() {
+                            const elements = document.querySelectorAll('[data-id-category="<?= $escaper->escapeJs($block->getJsId()); ?>"]');
+                            Array.from(elements).forEach(element => {
+                                new Splide(element, {
+                                    type: 'loop',
+                                    perPage: 4,
+                                    gap: '1em',
+                                    autoplay: true,
+                                    arrows: 'slider',
+                                    breakpoints: {
+                                        480: {
+                                            perPage: 1,
+                                        },
+                                        768: {
+                                            perPage: 2,
+                                            gap: '1.5em',
+                                        },
+                                        1024: {
+                                            perPage: 3,
+                                        },
+                                        1280: {
+                                            perPage: 4,
+                                        }
+                                    },
+                                    classes: {
+                                        pagination: 'splide__pagination bottom-auto top-full mt-2',
+                                        page      : 'splide__pagination__page shadow',
+                                    }
+                                }).mount();
+                            });
+                        }
+
+                        if (typeof window.Splide === 'function') {
+                            initSplide();
+                        } else {
+                            <?php $splideJsUrl = $block->getViewFileUrl('Hyva_Widgets::js/splide.min.js'); ?>
+                            const scriptSource = '<?= $escaper->escapeJs($escaper->escapeUrl($splideJsUrl)) ?>';
+
+                            const pendingLoadScript = Array.from(document.scripts).find(script => script.src === scriptSource);
+
+                            if (pendingLoadScript){ // Splide is already being loaded
+                                pendingLoadScript.addEventListener('load', () => initSplide());
+                                return;
+                            }
+
+                            const script = document.createElement('script')
+                            script.src = scriptSource;
+                            script.async = true;
+
+                            script.addEventListener('load', () => initSplide());
+                            document.head.append(script);
+                        }
+
+                    })();
+
+                </script>
+
+            <?php else: ?>
+
+                <?php
+                $sliderViewModel = $viewModels->require(Slider::class);
+                $itemsTemplate   = 'Hyva_Widgets::widget/slider/product-item.phtml';
+                ?>
+                <?= $sliderViewModel->getSliderForItems($itemsTemplate, $productItems)
+                    ->toHtml() ?>
+
+            <?php endif; ?>
+        </div>
+    </section>
+</div>

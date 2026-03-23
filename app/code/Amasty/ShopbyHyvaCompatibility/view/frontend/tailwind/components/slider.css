@@ -1,0 +1,190 @@
+/* Custom slider styles */
+.amshopby-fromto-wrap input.am-filter-price {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.amshopby-slider-container {
+    .noUi-handle::after, .noUi-handle::before {
+        @apply hidden;
+    }
+
+    .noUi-horizontal {
+        .noUi-tooltip {
+            @apply bottom-[130%];
+        }
+    }
+
+    .noUi-tooltip {
+        @apply opacity-0 transition-opacity pointer-events-none text-white border-none p-1 rounded text-white text-xs;
+        border-color: inherit;
+        background-color: inherit;
+
+        &:after {
+            content: '';
+            @apply absolute top-full left-1/2 w-0 h-0 ml-[-6px];
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid;
+            border-top-color: inherit;
+
+        }
+    }
+
+    .noUi-handle {
+        @apply shadow-none border-none;
+
+        &:hover {
+            .noUi-tooltip {
+                @apply opacity-100;
+            }
+        }
+    }
+
+    .noUi-target {
+        @apply border-none;
+    }
+
+    /*default*/
+
+    &.-default {
+        .noUi-connect {
+            @apply bg-amsb_sl_gray_1;
+        }
+
+        .noUi-target {
+            @apply h-[10px] bg-amsb_sl_gray shadow-none;
+        }
+
+        .noUi-handle {
+            @apply w-4 h-4 top-[-3px] rounded-full -right-2 shadow-none border-0 cursor-pointer;
+        }
+
+        .noUi-tooltip {
+            @apply text-transparent    bg-transparent;
+
+            &:after {
+                @apply border-transparent;
+            }
+        }
+    }
+
+    /*improved*/
+
+    &.-improved {
+        .noUi-connect {
+            @apply bg-amsb_sl_gray_1;
+        }
+
+        .noUi-target {
+            @apply h-1 bg-amsb_sl_gray shadow-none;
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply mb-1;
+            }
+        }
+
+        .noUi-handle {
+            @apply w-4 h-4 top-[-6px] rounded-full -right-2 shadow-none border-0 cursor-pointer;
+        }
+    }
+
+    /*volumetric gradient*/
+
+    &.-volumetric {
+        .noUi-connect {
+            @apply bg-amsb_sl_gray_1;
+        }
+
+        .noUi-target {
+            @apply h-1 bg-amsb_sl_gray_2;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply mb-1;
+            }
+        }
+
+        .noUi-handle {
+            @apply w-2 h-3 top-3 rounded-sm -right-1 border-0 cursor-pointer;
+
+            &:before {
+                content: '';
+                @apply absolute top-0 left-1/2 w-0 h-0 -ml-1 -mt-2 block;
+                border-left: 4px solid theme('colors.white');
+                border-right: 4px solid theme('colors.white');
+                border-top: 4px solid theme('colors.white');
+                border-bottom: 4px solid;
+                border-bottom-color: inherit;
+            }
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply mb-4;
+            }
+        }
+    }
+
+    /*light*/
+
+    &.-light {
+        .noUi-connect {
+            @apply bg-amsb_sl_gray_1;
+        }
+
+        .noUi-target {
+            @apply h-[2px] bg-amsb_sl_gray_2 shadow-none;
+        }
+
+        .noUi-handle {
+            @apply w-4 h-4 top-[-7px] bg-white rounded-full -right-2 shadow-none border-solid border-amsb_sl_gray_2 cursor-pointer;
+
+            &:not(:hover) {
+                border-color: theme('colors.amsb_sl_gray_2') !important;
+            }
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply border-solid border-amsb_sl_gray_2 mb-1;
+
+                &:after {
+                    @apply border-t-0 border-r-0 border-b border-l border-amsb_sl_gray_2
+                    bg-white transform -rotate-45 origin-center w-[6px] h-[6px] -ml-1 mt-[-2px];
+                }
+            }
+        }
+    }
+
+    /*dark*/
+
+    &.-dark {
+        .noUi-target {
+            @apply h-[3px] bg-amsb_sl_gray_3 shadow-none;
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply mb-1;
+            }
+        }
+
+        .noUi-handle {
+            @apply w-[10px] h-[15px] top-[-6px] right-[-5px] rounded-sm  border-0 cursor-pointer;
+        }
+
+        .noUi-horizontal {
+            .noUi-tooltip {
+                @apply mb-1;
+            }
+        }
+    }
+}

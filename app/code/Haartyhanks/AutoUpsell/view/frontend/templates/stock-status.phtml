@@ -1,0 +1,42 @@
+<?php
+/** @var \Haartyhanks\AutoUpsell\Block\ProductInfo $block */
+/** @var \Magento\Catalog\Model\Product $_product */
+
+// Get product from registry
+$_product = $block->getProduct();
+?>
+
+<?php if ($_product && $block->isInStock($_product)): ?>
+    <div class="product-stock-status instock">In stock | Usually dispatched within 24 hours</div>
+<?php elseif ($_product): ?>
+    <div class="product-stock-status outofstock">Out of stock</div>
+<?php endif; ?>
+
+<!-- Payment Logo Section -->
+<img src="<?= $block->getViewFileUrl('images/payment_detail.png') ?>" 
+     alt="Trust Badge" 
+     class="after-wishlist-image" 
+     />
+     
+<style type="text/css">
+    .product-stock-status {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .product-stock-status.instock {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+    }
+
+    .product-stock-status.outofstock {
+        background-color: red;
+        color: white;
+        border: 2px solid red;
+    }
+</style>

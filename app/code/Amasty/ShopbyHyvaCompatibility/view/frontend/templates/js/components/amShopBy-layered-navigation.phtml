@@ -1,0 +1,149 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function initLayeredNavigation() {
+        return deepMerge({}, initLayeredNavigationTop(), {
+            selectors: {
+                body: '#html-body',
+                columns: '.columns',
+                sidebar: '.sidebar-main',
+                
+                filterItem: '.am-filter',
+                filterOption: '.filter-option',
+                filterContent: '.filter-content',
+                
+                selectedClass: '.amshopby-link-selected',
+                showMore: '.am-show-more > button'
+            },
+            blockOpen: false,
+            isApplySticky: false,
+            isTopNavigation: false,
+            isStickyEnabled: false,
+            filtersOverflowOffset: 25,
+
+            /**
+             *
+             * @param element
+             */
+            checkIsMobileResolution(element) {
+                this.isMobile = window.matchMedia('(max-width: 768px)').matches;
+                
+                this.$nextTick(() => {
+                    if (this.isStickyEnabled && !this.isMobile) {
+                        this.isApplySticky = true;
+
+                        this.enableStickySidebar(element);
+                    }
+                    this.openFiltersByDefault(element);
+                })
+            },
+
+            /**
+             *
+             * @param element
+             */
+            enableStickySidebar(element) {
+                const bodyElement = document.querySelector(this.selectors.body);
+                const filtersBlock = document.querySelector(this.selectors.filterContent);
+                const filtersMaxHeight = element.offsetHeight - filtersBlock.offsetHeight + this.filtersOverflowOffset;
+
+                // add classes
+                bodyElement.classList.add('-amshopby-sticky');
+                element.classList.add('-amshopby-sticky');
+                // set container max-height
+                filtersBlock.style.maxHeight = 'calc(100vh - ' + filtersMaxHeight + 'px)'
+            },
+
+            /**
+             *
+             * @param element
+             */
+            openFiltersByDefault(element) {
+                let filters = element.querySelectorAll(this.selectors.filterItem);
+                filters.forEach((filter) => {
+                    let filterOption = filter.closest(this.selectors.filterOption);
+                    let hasSelectedOption = filter.querySelector(this.selectors.selectedClass);
+                    switch (parseInt(filter.dataset.amshopbyExpanded)) {
+                        case 1:
+                            this._openFilterEvent(filterOption);
+                            break;
+                        case 2:
+                            if (!this.isMobile || hasSelectedOption) {
+                                this._openFilterEvent(filterOption);
+                            }
+                            break;
+                        default:
+                            if (hasSelectedOption) {
+                                this._openFilterEvent(filterOption);
+                            }
+                    }
+                })
+            },
+
+            /**
+             * Create event for open filter
+             * @param target element for creating event
+             * @returns {*}
+             * @private
+             */
+            _openFilterEvent(target) {
+                return target.dispatchEvent(new CustomEvent('amSetFilterOpenState', {}));
+            },
+
+            /**
+             *
+             * @param index
+             * @param element
+             */
+            setOpenedFilter(index, element) {
+                if (!this.isMobile) {
+                    return;
+                }
+                const collapseComponent = element.closest(this.selectors.filterOption);
+                const showMoreEls = collapseComponent.querySelectorAll(this.selectors.showMore);
+                this.openedFilter !== parseInt(index) ? this.openedFilter = parseInt(index) : this.openedFilter = null;
+                this._clearShowMoreElements(showMoreEls);
+            },
+
+            /**
+             *
+             * @param elements
+             * @private
+             */
+            _clearShowMoreElements(elements) {
+                if (!elements) {
+                    return;
+                }
+                elements.forEach((el, i) => {
+                    if (i > 0) {
+                        el.remove();
+                    }
+                })
+            },
+
+            /**
+             *
+             * @param index
+             * @returns {boolean}
+             */
+            isFilterOpened(index) {
+                return this.openedFilter === parseInt(index);
+            }
+        }, initSelectorsILN())
+    }
+</script>

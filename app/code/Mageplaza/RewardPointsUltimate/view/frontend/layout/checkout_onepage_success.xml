@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order.success.additional.info">
+            <block class="Mageplaza\RewardPointsUltimate\Block\Socials\Share\Product" name="mp_rw_share" template="Mageplaza_RewardPointsUltimate::socials/product/items.phtml" cacheable="false">
+                <block class="Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Image" name="mp.rw.item.image" template="Mageplaza_RewardPointsUltimate::item/column/image.phtml"/>
+                <block class="Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Info" name="mp.rw.item.name" template="item/column/name.phtml"/>
+                <block class="Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Cart" name="mp.rw.item.price" template="item/column/price.phtml">
+                    <block class="Magento\Catalog\Pricing\Render" name="product.price.render.wishlist">
+                        <arguments>
+                            <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                            <argument name="price_type_code" xsi:type="string">wishlist_configured_price</argument>
+                            <argument name="price_label" xsi:type="boolean">false</argument>
+                            <argument name="zone" xsi:type="string">item_list</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,13 @@
+<div class="amgdprcookie-toggle-cookie">
+    <input class="amgdprcookie-input"
+           type="checkbox"
+           data-amcookie-js="field"
+           name="groups[]"
+           data-bind="
+                    attr: {id: 'switch-box-' + $index(), disabled: isEssential},
+                    value: $data.groupId,
+                    css: {'disabled': isEssential},
+                    checked: checked"
+    >
+    <label class="amgdprcookie-label" data-bind="attr: {for: 'switch-box-' + $index()}"></label>
+</div>

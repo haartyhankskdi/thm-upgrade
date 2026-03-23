@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/mpfrequentlybought/config" method="GET">
+        <service class="Mageplaza\FrequentlyBought\Api\FrequentlyBoughtRepositoryInterface" method="config"/>
+        <resources>
+            <resource ref="Mageplaza_FrequentlyBought::configuration" />
+        </resources>
+    </route>
+    <route url="/V1/mpfrequentlybought/products/:sku" method="GET">
+        <service class="Mageplaza\FrequentlyBought\Api\FrequentlyBoughtRepositoryInterface" method="getList"/>
+      <!--   <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources> -->
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/mpfrequentlybought/:sku/links" method="PUT">
+        <service class="Mageplaza\FrequentlyBought\Api\FrequentlyBoughtRepositoryInterface" method="save"/>
+       <!--  <resources>
+            <resource ref="Magento_Catalog::catalog"/>
+        </resources> -->
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/mpfrequentlybought/:sku/links/:linkedProductSku" method="DELETE">
+        <service class="Mageplaza\FrequentlyBought\Api\FrequentlyBoughtRepositoryInterface" method="deleteById"/>
+       <!--  <resources>
+            <resource ref="Magento_Catalog::catalog"/>
+        </resources> -->
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

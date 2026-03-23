@@ -1,0 +1,51 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var ViewModelRegistry $viewModels */
+
+$isHaveCsp = class_exists(\Hyva\Theme\ViewModel\HyvaCsp::class);
+$hyvaCsp   = '';
+if ($isHaveCsp) {
+    $hyvaCsp = $viewModels->require(\Hyva\Theme\ViewModel\HyvaCsp::class);
+}
+?>
+<script>
+    function mpRwPriceSummaryCartItems () {
+        return hyva.createBooleanObject('visible', this.$wire.expand, {
+            applyDownRotateClass () {
+                return {
+                    'transform rotate-180': this.visible()
+                }
+            }
+        })
+    }
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('mpRwPriceSummaryCartItems', mpRwPriceSummaryCartItems)
+    }, {once: true})
+</script>
+<?php if ($isHaveCsp) {
+    $hyvaCsp->registerInlineScript();
+} ?>

@@ -1,0 +1,330 @@
+type Query {
+    xsearchProducts(
+        search: String @doc(description: "Performs a search by products using the entered words or parts of words.")
+    ): XsearchProducts
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Product")
+    @doc(description: "Products matching customers' search query.")
+
+    xsearchRelatedTerms(
+        search: String @doc(description: "Query string")
+        ): XsearchRelatedTerms
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\RelatedTerms")
+    @doc(description: "Get related search terms by query.")
+
+    xsearchRecentlyViewed: XsearchProducts
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\RecentlyViewed")
+    @doc(description: "An array of recently viewed products")
+
+     xsearchBestsellerProducts: XsearchProducts
+     @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Bestsellers")
+     @doc(description: "An array of bestsellers products")
+
+    xsearchPopularSearches (
+        search: String @doc(description: "Performs a search by popular search queries.")
+    ): XsearchSearches
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Popular")
+    @doc(description: "Popular search queries generated based on customers' searches.")
+
+    xsearchBrowsingHistory: XsearchSearches
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\BrowsingHistory")
+    @doc(description: "Resent search queries generated based on customer's searches.")
+
+    xsearchRecentSearches: XsearchSearches
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Recent")
+    @doc(description: "Recent search queries generated based on customers' searches.")
+
+    xsearchCategories (
+        search: String @doc(description: "Performs a search by categories using the entered words or parts of words.")
+    ): XsearchCategories
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Category")
+    @doc(description: "Categories matching customers' search query.")
+
+    xsearchPages (
+        search: String @doc(description: "Performs a search by pages using the entered words or parts of words.")
+    ): XsearchPages
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Page")
+    @doc(description: "Pages matching customers' search query.")
+
+    xsearchBrands(
+        search: String @doc(description: "Performs a search by brands using the entered words or parts of words.")
+    ): XsearchBrands
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Brand")
+    @doc(description: "Brands matching customers' search query.")
+
+    xsearchLandings(
+        search: String @doc(description: "Performs a search by landing pages using the entered words or parts of words.")
+    ): XsearchLandings
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Landing")
+    @doc(description: "Landings matching customers' search query.")
+
+    xsearchBlogs(
+        search: String @doc(description: "Performs a search by landing pages using the entered words or parts of words.")
+    ): XsearchBlogs
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Blog")
+    @doc(description: "Landings matching customers' search query.")
+
+    xsearchFaqs(
+        search: String @doc(description: "Performs a search by FAQ pages using the entered words or parts of words.")
+    ): XsearchFaqs
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Faq")
+    @doc(description: "FAQ pages matching customers' search query.")
+
+    xsearchStoreLocations(
+        search: String @doc(description: "Performs a search by Store Locations using the entered words or parts of words.")
+    ): XsearchStoreLocations
+    @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\StoreLocator")
+    @doc(description: "Store Locations matching customers search query.")
+}
+
+type XsearchSearch @doc(description: "Object that contains all search data.") {
+    name: String @doc(description: "Search name as entered value.")
+    url: String @doc(description: "Search url as entered value.")
+    num_results: String @doc(description: "Results number of search.")
+}
+
+type XsearchSearches @doc(description: "Object that contains list of searches.") {
+    items: [XsearchSearch] @doc(description: "An array of searches.")
+    total_count: Int @doc(description: "Number of searches returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchCategory @doc(description: "Object that contains all suggested category data.") {
+    name: String @doc(description: "Category name as entered value.")
+    url: String @doc(description: "Category URL.")
+    description: String @doc(description: "Category description.")
+}
+
+type XsearchCategories @doc(description: "Object that contains list of suggested categories.") {
+    items: [XsearchCategory] @doc(description: "An array of suggested categories.")
+    total_count: Int @doc(description: "Number of categories returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchRelatedTerm @doc(description: "Object that contains all related term data.") {
+    name: String @doc(description: "Term name as entered value.")
+    count: Int  @doc(description: "Term count.")
+}
+
+type XsearchRelatedTerms @doc(description: "Object that contains list of related terms.") {
+    items: [XsearchRelatedTerm] @doc(description: "An array of related terms.")
+}
+
+type XsearchPage @doc(description: "Object that contains all suggested page data.") {
+    name: String @doc(description: "Page name.")
+    description: String @doc(description: "Page description.")
+    url: String @doc(description: "Page URL.")
+    title: String @doc(description: "Page title.")
+}
+
+type XsearchPages @doc(description: "Object that contains list of suggested pages.") {
+    items: [XsearchPage] @doc(description: "An array of suggested pages.")
+    total_count: Int @doc(description: "Number of pages returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchProduct {
+    id: Int @doc(description: "The ID number assigned to the product.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\EntityIdToId")
+    name: String @doc(description: "The product name. Customers use this name to identify the product.")
+    sku: String @doc(description: "A number or code assigned to a product to identify the product, options, price, and manufacturer.")
+    description: ComplexTextValue @doc(description: "Detailed information about the product. The value can include simple HTML tags.") @resolver(class: "\\Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\ProductComplexTextAttribute")
+    short_description: ComplexTextValue @doc(description: "A short description of the product. Its use depends on the theme.") @resolver(class: "\\Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\ProductComplexTextAttribute")
+    image: ProductImage @doc(description: "The relative path to the main image on the product page.") @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Product\\ProductImage")
+    small_image: ProductImage @doc(description: "The relative path to the small image, which is used on catalog pages.") @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Product\\ProductImage")
+    thumbnail: ProductImage @doc(description: "The relative path to the product's thumbnail image.") @resolver(class: "Amasty\\ElasticSearchGraphQl\\Model\\Resolver\\Product\\ProductImage")
+    price_range: PriceRange! @doc(description: "A PriceRange object, indicating the range of prices for the product") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\PriceRange")
+    is_salable: Boolean @doc(description: "Is product salable")
+    rating_summary: Int @doc(description: "Product rating.")
+    reviews_count: Int @doc(description: "Product reviews count.")
+    url_key: String @doc(description: "The part of the URL that identifies the product")
+    url_suffix: String @doc(description: "The part of the product URL that is appended after the url key") @resolver(class: "Magento\\CatalogUrlRewriteGraphQl\\Model\\Resolver\\ProductUrlSuffix")
+    url_path: String @deprecated(reason: "Use product's `canonical_url` or url rewrites instead")
+    url_rewrites: [UrlRewrite] @doc(description: "URL rewrites list") @resolver(class: "Magento\\UrlRewriteGraphQl\\Model\\Resolver\\UrlRewrite")
+    special_price: Float @doc(description: "The discounted price of the product.")
+    special_from_date: String @doc(description: "The beginning date that a product has a special price.")
+    special_to_date: String @doc(description: "The end date that a product has a special price.")
+    attribute_set_id: Int @doc(description: "The attribute set assigned to the product.")
+    meta_title: String @doc(description: "A string that is displayed in the title bar and tab of the browser and in search results lists.")
+    meta_keyword: String @doc(description: "A comma-separated list of keywords that are visible only to search engines.")
+    meta_description: String @doc(description: "A brief overview of the product for search results listings, maximum 255 characters.")
+    new_from_date: String @doc(description: "The beginning date for new product listings, and determines if the product is featured as a new product.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\NewFromTo")
+    new_to_date: String @doc(description: "The end date for new product listings.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\NewFromTo")
+    tier_price: Float @deprecated(reason: "Use price_tiers for product tier price information.") @doc(description: "The price when tier pricing is in effect and the items purchased threshold has been reached.")
+    options_container: String @doc(description: "If the product has multiple options, determines where they appear on the product page.")
+    created_at: String @doc(description: "Timestamp indicating when the product was created.")
+    updated_at: String @doc(description: "Timestamp indicating when the product was updated.")
+    type_id: String @doc(description: "One of simple, virtual, bundle, downloadable, grouped, or configurable.") @deprecated(reason: "Use __typename instead.")
+    websites: [Website] @doc(description: "An array of websites in which the product is available.") @deprecated(reason: "The field should not be used on the storefront.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\Websites")
+    product_links: [ProductLinksInterface] @doc(description: "An array of ProductLinks objects.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\BatchProductLinks")
+    media_gallery_entries: [MediaGalleryEntry] @deprecated(reason: "Use product's `media_gallery` instead") @doc(description: "An array of MediaGalleryEntry objects.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\MediaGalleryEntries")
+    price: ProductPrices @deprecated(reason: "Use price_range for product price information.") @doc(description: "A ProductPrices object, indicating the price of an item.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\Price")
+    price_range: PriceRange! @doc(description: "A PriceRange object, indicating the range of prices for the product") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\PriceRange")
+    gift_message_available: String @doc(description: "Indicates whether a gift message is available.")
+    manufacturer: Int @doc(description: "A number representing the product's manufacturer.")
+    categories: [CategoryInterface] @doc(description: "The categories assigned to a product.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Categories") @cache(cacheIdentity: "Magento\\CatalogGraphQl\\Model\\Resolver\\Category\\CategoriesIdentity")
+    canonical_url: String @doc(description: "Relative canonical URL. This value is returned only if the system setting 'Use Canonical Link Meta Tag For Products' is enabled") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\CanonicalUrl")
+}
+
+type XsearchProducts @doc(description: "Object that contains list of products.") {
+    items: [XsearchProduct] @doc(description: "An array of found products.")
+    total_count: Int @doc(description: "Number of products returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchBrand @doc(description: "Object that contains all suggested brand data.") {
+    name: String @doc(description: "Brand name.")
+    url: String @doc(description: "Brand URL.")
+    title: String @doc(description: "Brand title.")
+}
+
+type XsearchBrands @doc(description: "Object that contains list of suggested brands.") {
+    items: [XsearchBrand] @doc(description: "An array of suggested brands.")
+    total_count: Int @doc(description: "Number of brands returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchLanding @doc(description: "Object that contains all suggested landing page data.") {
+    name: String @doc(description: "Landing page name.")
+    url: String @doc(description: "Landing page URL.")
+    title: String @doc(description: "Landing page title.")
+}
+
+type XsearchLandings @doc(description: "Object that contains list of suggested landing pages.") {
+    items: [XsearchLanding] @doc(description: "An array of suggested landing pages.")
+    total_count: Int @doc(description: "Number of landing pages returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchBlog @doc(description: "Object that contains all suggested blog data.") {
+    name: String @doc(description: "Blog name.")
+    url: String @doc(description: "Blog URL.")
+    title: String @doc(description: "Blog title.")
+    description: String @doc(description: "Blog description.")
+}
+
+type XsearchBlogs @doc(description: "Object that contains list of suggested blogs.") {
+    items: [XsearchBlog] @doc(description: "An array of suggested blogs.")
+    total_count: Int @doc(description: "Number of blogs returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchFaq @doc(description: "Object that contains all suggested FAQ page data.") {
+    name: String @doc(description: "FAQ page name.")
+    url: String @doc(description: "FAQ page URL.")
+    title: String @doc(description: "FAQ page title.")
+}
+
+type XsearchFaqs @doc(description: "Object that contains list of suggested FAQ pages.") {
+    items: [XsearchFaq] @doc(description: "An array of suggested FAQ pages.")
+    total_count: Int @doc(description: "Number of FAQ pages returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type XsearchStoreLocation @doc(description: "Object that contains all suggested Store Location data.") {
+    name: String @doc(description: "Store Location name.")
+    url: String @doc(description: "Store Location URL.")
+    title: String @doc(description: "Store Location title.")
+}
+
+type XsearchStoreLocations @doc(description: "Object that contains list of suggested Store Locations.") {
+    items: [XsearchStoreLocation] @doc(description: "An array of suggested Store Locations.")
+    total_count: Int @doc(description: "Number of Store Locations returned.")
+    code: String @doc(description: "Part of setting path for getting item configuration.")
+}
+
+type StoreConfig @doc(description: "The type contains information about a store config.") {
+    amasty_xsearch_general_popup_width: Int @doc(description: "Amasty Xsearch General Config Popup Width (px).")
+    amasty_xsearch_general_dynamic_search_width: String @doc(description: "Amasty Xsearch General Config Search Field Width.")
+    amasty_xsearch_general_min_chars: Int @doc(description: "Amasty Xsearch General Config Min Characters.")
+    amasty_xsearch_general_four_zero_four_redirect: Int @doc(description: "Enable Redirect from 404 to Search Results.")
+    amasty_xsearch_general_enable_tabs_search_result: Boolean @doc(description: "Amasty Xsearch General Config Enable Tabs on the Search Result Page.")
+    amasty_xsearch_general_show_related_terms: Int @doc(description: "Amasty Xsearch General Config Show Related Search Queries in Search Results.")
+    amasty_xsearch_general_show_related_terms_results: Boolean @doc(description: "Amasty Xsearch General Config Show Related Search Queries Result Numbers.")
+
+    amasty_xsearch_product_enabled: Boolean @doc(description: "Amasty Xsearch Products Config Enabled.")
+    amasty_xsearch_product_title: String @doc(description: "Amasty Xsearch Products Config Title.")
+    amasty_xsearch_product_position: Int @doc(description: "Amasty Xsearch Products Config Position.")
+    amasty_xsearch_product_limit: Int @doc(description: "Amasty Xsearch Products Config Max Results.")
+    amasty_xsearch_product_name_length: Int @doc(description: "Amasty Xsearch Products Config Name Length.")
+    amasty_xsearch_product_desc_length: Int @doc(description: "Amasty Xsearch Products Config Short Description Length.")
+    amasty_xsearch_product_reviews: Boolean @doc(description: "Amasty Xsearch Products Config Show reviews.")
+    amasty_xsearch_product_add_to_cart: Boolean @doc(description: "Amasty Xsearch Products Config Enable 'Add to Cart' button.")
+    amasty_xsearch_product_redirect_single_product: Boolean @doc(description: "Amasty Xsearch Products Config Redirect to Product Page.")
+
+    amasty_xsearch_popular_searches_enabled: Boolean @doc(description: "Amasty Xsearch Popular Searches Config Enabled.")
+    amasty_xsearch_popular_searches_first_click: Boolean @doc(description: "Amasty Xsearch Popular Searches Config Show on First Click.")
+    amasty_xsearch_popular_searches_title: String @doc(description: "Amasty Xsearch Popular Searches Config Title.")
+    amasty_xsearch_popular_searches_position: Int @doc(description: "Amasty Xsearch Popular Searches Config Position.")
+    amasty_xsearch_popular_searches_limit: Int @doc(description: "Amasty Xsearch Popular Searches Config Max Results.")
+
+    amasty_xsearch_browsing_history_enabled: Boolean @doc(description: "Amasty Xsearch Browsing History Config Enabled.")
+    amasty_xsearch_browsing_history_first_click: Boolean @doc(description: "Amasty Xsearch Browsing History Config Show on First Click.")
+    amasty_xsearch_browsing_history_title: String @doc(description: "Amasty Xsearch Browsing History Config Title.")
+    amasty_xsearch_browsing_history_position: Int @doc(description: "Amasty Xsearch Browsing History Config Position.")
+    amasty_xsearch_browsing_history_limit: Int @doc(description: "Amasty Xsearch Browsing History Config Max Results.")
+
+    amasty_xsearch_recent_searches_enabled: Boolean @doc(description: "Amasty Xsearch Recent Searches Config Enabled.")
+    amasty_xsearch_recent_searches_first_click: Boolean @doc(description: "Amasty Xsearch Recent Searches Config Show on First Click.")
+    amasty_xsearch_recent_searches_title: String @doc(description: "Amasty Xsearch Recent Searches Config Title.")
+    amasty_xsearch_recent_searches_position: Int @doc(description: "Amasty Xsearch Recent Searches Config Position.")
+    amasty_xsearch_recent_searches_limit: Int @doc(description: "Amasty Xsearch Recent Searches Config Max Results.")
+
+    amasty_xsearch_blog_enabled: Boolean @doc(description: "Amasty Xsearch Blog Config Enabled.")
+    amasty_xsearch_blog_title: String @doc(description: "Amasty Xsearch Blog Config Title.")
+    amasty_xsearch_blog_position: Int @doc(description: "Amasty Xsearch Blog Config Position.")
+    amasty_xsearch_blog_limit: Int @doc(description: "Amasty Xsearch Blog Max Results.")
+    amasty_xsearch_blog_name_length: Int @doc(description: "Amasty Xsearch Blog Config Content Heading Length.")
+    amasty_xsearch_blog_desc_length: Int @doc(description: "Amasty Xsearch Blog Config Content Length.")
+
+    amasty_xsearch_brand_enabled: Boolean @doc(description: "Amasty Xsearch Brands Config Enabled.")
+    amasty_xsearch_brand_title: String @doc(description: "Amasty Xsearch Brands Config Title.")
+    amasty_xsearch_brand_position: Int @doc(description: "Amasty Xsearch Brands Config Position.")
+    amasty_xsearch_brand_limit: Int @doc(description: "Amasty Xsearch Brands Max Results.")
+    amasty_xsearch_brand_name_length: Int @doc(description: "Amasty Xsearch Brands Config Content Heading Length.")
+    amasty_xsearch_brand_desc_length: Int @doc(description: "Amasty Xsearch Brands Config Content Length.")
+
+    amasty_xsearch_category_enabled: Boolean @doc(description: "Amasty Xsearch Categories Config Enabled.")
+    amasty_xsearch_category_title: String @doc(description: "Amasty Xsearch Categories Config Title.")
+    amasty_xsearch_category_position: Int @doc(description: "Amasty Xsearch Categories Config Position.")
+    amasty_xsearch_category_limit: Int @doc(description: "Amasty Xsearch Categories Max Results.")
+    amasty_xsearch_category_name_length: Int @doc(description: "Amasty Xsearch Categories Config Name Length.")
+    amasty_xsearch_category_desc_length: Int @doc(description: "Amasty Xsearch Categories Config Description Length.")
+    amasty_xsearch_category_full_path: Boolean @doc(description: "Amasty Xsearch Categories Config Display Full Category Path.")
+
+    amasty_xsearch_page_enabled: Boolean @doc(description: "Amasty Xsearch CMS Page Config Enabled.")
+    amasty_xsearch_page_title: String @doc(description: "Amasty Xsearch CMS Page Config Title.")
+    amasty_xsearch_page_position: Int @doc(description: "Amasty Xsearch CMS Page Config Position.")
+    amasty_xsearch_page_limit: Int @doc(description: "Amasty Xsearch CMS Page Max Results.")
+    amasty_xsearch_page_name_length: Int @doc(description: "Amasty Xsearch CMS Page Config Content Heading Length.")
+    amasty_xsearch_page_desc_length: Int @doc(description: "Amasty Xsearch CMS Page Config Content Length.")
+
+    amasty_xsearch_landing_page_enabled: Boolean @doc(description: "Amasty Xsearch Landing Page Config Enabled.")
+    amasty_xsearch_landing_page_title: String @doc(description: "Amasty Xsearch Landing Page Config Title.")
+    amasty_xsearch_landing_page_position: Int @doc(description: "Amasty Xsearch Landing Page Config Position.")
+    amasty_xsearch_landing_page_limit: Int @doc(description: "Amasty Xsearch Landing Page Max Results.")
+    amasty_xsearch_landing_page_name_length: Int @doc(description: "Amasty Xsearch Landing Pages Config Content Heading Length.")
+    amasty_xsearch_landing_page_desc_length: Int @doc(description: "Amasty Xsearch Landing Pages Config Content Length.")
+
+    amasty_xsearch_faq_enabled: Boolean @doc(description: "Amasty Xsearch FAQ Question Config Enabled.")
+    amasty_xsearch_faq_title: String @doc(description: "Amasty Xsearch FAQ Question Config Title.")
+    amasty_xsearch_faq_position: Int @doc(description: "Amasty Xsearch FAQ Question Config Position.")
+    amasty_xsearch_faq_limit: Int @doc(description: "Amasty Xsearch FAQ Question Max Results.")
+    amasty_xsearch_faq_name_length: Int @doc(description: "Amasty Xsearch FAQ Question Config Content Heading Length.")
+    amasty_xsearch_faq_desc_length: Int @doc(description: "Amasty Xsearch FAQ Question Config Content Length.")
+
+    amasty_xsearch_layout_enabled: Boolean @doc(description: "Amasty Xsearch Custom Layout Config Enabled.")
+    amasty_xsearch_layout_border: String @doc(description: "Amasty Xsearch Custom Layout Config Border.")
+    amasty_xsearch_layout_hover: String @doc(description: "Amasty Xsearch Custom Layout Config Hover.")
+    amasty_xsearch_layout_highlight: String @doc(description: "Amasty Xsearch Custom Layout Config Highlight.")
+    amasty_xsearch_layout_background: String @doc(description: "Amasty Xsearch Custom Layout Config Background.")
+    amasty_xsearch_layout_text: String @doc(description: "Amasty Xsearch Custom Layout Config Text.")
+    amasty_xsearch_layout_hover_text: String @doc(description: "Amasty Xsearch Custom Layout Config Hover Text.")
+
+    amasty_xsearch_recently_viewed_enabled: String @doc(description: "Amasty Xsearch Recently Viewed products Enabled.")
+    amasty_xsearch_recently_viewed_title: String @doc(description: "Amasty Xsearch Recently Viewed products block titile")
+    amasty_xsearch_recently_viewed_limit: String @doc(description: "Amasty Xsearch Recently Viewed limit")
+
+    amasty_xsearch_bestsellers_enabled: String @doc(description: "Amasty Xsearch Bestsellers Block Enabled")
+    amasty_xsearch_bestsellers_title: String @doc(description: "Amasty Xsearch Bestsellers Block Title")
+    amasty_xsearch_bestsellers_position: String @doc(description: "Amasty Xsearch Bestsellers Block Position")
+    amasty_xsearch_bestsellers_limit: String @doc(description: "Amasty Xsearch Bestsellers Block Limit")
+}

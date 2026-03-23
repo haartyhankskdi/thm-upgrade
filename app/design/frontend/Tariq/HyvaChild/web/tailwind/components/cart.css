@@ -1,0 +1,5 @@
+/* Keep file for backwards compatibility */
+
+.cart-empty {
+	@apply text-center text-xl;
+}

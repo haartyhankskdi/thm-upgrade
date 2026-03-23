@@ -1,0 +1,89 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+$helper = $this->helper(\Magento\Search\Helper\Data::class);
+
+/**
+ * @var $better Nilesh\BetterSearch\Helper\Data
+ */
+$betterSearchHelper = $this->helper(\Nilesh\BetterSearch\Helper\Data::class);
+
+?>
+<div class="block block-search">
+    <div class="block block-title"><strong><?= $block->escapeHtml(__('Search')) ?></strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form" action="<?= $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </label>
+                <div class="control">
+                    <select name="cat" id="catalog_serch">
+                        <option value="">Select Category</option>
+                        <?php 
+                            foreach ($betterSearchHelper->getSearchOptionCategory() as $cat) {
+                                ?>
+                                    <option value="<?php echo $cat['value']; ?>"><?php echo $cat['name'] ?></option>
+                                <?php 
+                            }
+                        ?>
+                    </select>
+                    <!-- 
+                        data-mage-init='{"quickSearch":{
+                                "formSelector":"#search_mini_form",
+                                "url":"<?= $block->escapeUrl($helper->getSuggestUrl())?>",
+                                "destinationSelector":"#search_autocomplete"}
+                           }'
+                     -->
+                    <input id="search"
+                           type="text"
+                           name="<?= $block->escapeHtmlAttr($helper->getQueryParamName()) ?>"
+                           value="<?= $block->escapeHtmlAttr($helper->getEscapedQueryText()) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Search entire store here...')) ?>"
+                           class="input-text"
+                           maxlength="<?= $block->escapeHtmlAttr($helper->getMaxQueryLength()) ?>"
+                           role="combobox"
+                           aria-haspopup="false"
+                           aria-autocomplete="both"
+                           autocomplete="off"
+                           aria-expanded="false" />
+                    <div id="search_autocomplete" class="search-autocomplete" style="display:none"></div>
+                    <div class="autocomplete-suggestions" style="display:none; position: absolute; max-height: 2000px; z-index: 9999; width: 374px;">
+                        <div class="inner-bound-row-one">
+                            <div id="productSection"></div>
+                            <div id="footerProductSection">
+                                <div class="resultCount">Total Results: <span class="count">0</span></div>
+                                <div class="paginationDiv"></div>
+                            </div>
+                        </div>
+                        <div class="inner-bound-row-one" id="resourceSection"></div>
+                    </div>
+                    <?= $block->getChildHtml() ?>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                    title="<?= $block->escapeHtml(__('Search')) ?>"
+                    class="action search"
+                    aria-label="Search"
+                >
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php      
+    $mediaUrl = $betterSearchHelper->mediaUrl();
+    $foldername = $betterSearchHelper->foldername();
+    $storeCode = $betterSearchHelper->storeCode();
+?><script async src="<?php echo $mediaUrl.$foldername.'/'.$storeCode.'.js'; ?>"></script><script>
+    requirejs(["jquery"],function(t){function e(){var e=t(".autocomplete-suggestions"),a=t("#search"),c=t("#productSection"),i=t("#footerProductSection"),o=(t("#resourceSection"),a.val()),s=0,n=0,r=0,l="",u=t("#catalog_serch").val();c.html(""),i.find(".paginationDiv").html(""),o.length>1?(t.map(bs_product_search,function(t,e){var a="<?php echo $block->getBaseUrl(); ?>/pub/static/frontend/Magento/luma/en_US/Magento_Catalog/images/product/placeholder/image.jpg";if(t.pn.toLowerCase().startsWith(o.toLowerCase())){var p=t.cids,d=!1;""!=u&&p.includes(u)?d=!0:""==u&&(d=!0),1==d&&(s+=1,n=Math.ceil(s/3),0!==t.img.length&&(t.img.includes("productno_selection")||(a="<?php echo $mediaUrl; ?>"+t.img)),l=1===n?"active":"",n<4&&(c.append(`<div class="search-productListItem ${l} active-${n}"><a class="search-productItem-link" href="${t.pu}"><img class="Search-productItemImage" src="${a}" alt="${t.pn}"><div class="Search-productItemContent"><p class="Search-productItemTitle">${t.pn}</p><div class="Search-productItemActions"><div class="Search-productItemBtn-shop"><a href="${t.pu}" class="button button--primary-light button--size-small "><span class="button__content">View More</span></a></div></div></div></a></div>`),n!==r&&i.find(".paginationDiv").append(`<button type="button" class="pagination" data-pageactive="active-${n}">${n}</button>`),r=n))}}),i.find(".resultCount").find(".count").html(s),e.show().addClass("active")):(c.html(""),e.hide().removeClass("active"))}t(".autocomplete-suggestions").hide(),t(".autocomplete-suggestions").on("click",".pagination",function(e){e.preventDefault();var a=t(this).data("pageactive");t(".search-productListItem").removeClass("active"),t("."+a).addClass("active")}),t("#search").keyup(function(t){t.preventDefault(),e()}),t("#catalog_serch").change(function(t){t.preventDefault(),e()}),t("body").on("click",function(e){var a=t("#search_mini_form");a.is(e.target)||0!==a.has(e.target).length||t(".autocomplete-suggestions").hide()})});</script>

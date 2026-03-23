@@ -1,0 +1,63 @@
+<!--@subject {{trans "Recruitment Enquiry"}} @-->
+<!--@vars {} @-->
+
+{{template config_path="design/email/header_template"}}
+
+
+<table  width="100%">
+    <tr>
+        <td style="vertical-align: top;
+    color: #333;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    background-color: #fff;
+    padding: 30px 25px 30px 25px;">
+
+    <p class="greeting" style="color: #333;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 700;">{{trans "Dear Sir / Madam,"}}</p>
+            <!-- <p>
+                {{trans "Example Email Intro"}}
+            </p> -->
+          <table width="100%">
+     
+    <tr>
+        <td height="28" style="width: 100px;"><strong>First Name:</strong></td>
+        <td>{{var first_name}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Last Name:</strong></td>
+        <td>{{var last_name}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Phone:</strong></td>
+        <td>{{var phone}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Email:</strong></td>
+        <td>{{var email}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Select Role:</strong></td>
+        <td>{{var role}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Location:</strong></td>
+        <td>{{var location}}</td>
+    </tr>
+    <tr>
+        <td height="28" style="width: 100px;"><strong>Resume/CV:</strong></td>
+        <td><a href="{{media url=career_uploads/}}{{var attachment}}">Download</a></td>
+    </tr>
+    
+
+    
+</table>  
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

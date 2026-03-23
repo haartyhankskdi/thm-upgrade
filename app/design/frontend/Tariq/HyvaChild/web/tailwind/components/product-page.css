@@ -1,0 +1,247 @@
+.page-product-bundle {
+    .price-final_price {
+        .price-from,
+        .price-to {
+            .price-container {
+                @apply text-gray-700 block mb-4;
+
+                .price-label {
+                    @apply block text-lg font-medium;
+                }
+
+                .price {
+                    @apply font-semibold text-2xl text-gray-800 leading-tight;
+                }
+            }
+
+            .price-including-tax + .price-excluding-tax {
+                @apply mt-1;
+
+                .price {
+                    @apply text-base;
+                }
+            }
+
+            .old-price {
+                .price-container {
+                    .price,
+                    .price-label {
+                        @apply text-gray-500 font-normal inline text-base;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.catalog-product-view {
+    .breadcrumbs {
+        @apply mt-5 mb-6;
+    }
+}
+
+.checkout-cart-index {
+    .breadcrumbs {
+        @apply mt-5 mb-6;
+    }
+}
+
+.top-container {
+    .breadcrumbs {
+        @apply mt-5 mb-6;
+    }
+}
+
+.tab-title {
+    @apply md:text-[28px];
+}
+.catalog-product-view {
+    .page-title {
+        @apply text-left;
+    }
+}
+
+.catalog-product-view {
+    .page-title-wrapper {
+        @apply md:mt-3;
+    }
+}
+
+.pdp-flex-wrapper {
+    @apply grid grid-cols-2;
+}
+.custom-logo-section {
+    .logo-wrapper {
+        @apply lg:my-10;
+    }
+}
+.custom-logo-section {
+    .logo-wrapper {
+        img {
+            @apply lg:mx-4;
+        }
+    }
+}
+.mageplaza-fbt-price-box {
+    @apply w-full px-0;
+}
+
+.mageplaza-fbt-add-to-cart {
+    button{
+        @apply lg:w-[220px];
+    }
+}
+
+.related-p {
+    @apply w-[80%];
+}
+.minicart-list {
+    @apply !m-0;
+}
+.description-sec {
+    @apply lg:w-[580px];
+}
+
+@layer components {
+  .mageplaza-fbt-price-box {
+    @apply !w-full !p-0;
+  }
+
+  .mageplaza-fbt-add-to-cart {
+    @apply !mt-0;
+  }
+}
+
+
+
+@layer utilities {
+ 
+  .mageplaza-fbt-image-box .item.product {
+    @apply border border-black flex relative;
+  }
+ 
+  .mageplaza-fbt-image-box .item.product .related-checkbox {
+    @apply absolute bottom-[20px] left-[45%] outline-none border-0 shadow-none;
+  }
+  .mageplaza-fbt-image-box .item.product .related-checkbox:focus {
+      @apply outline-none border-0 shadow-none;
+    }
+ 
+  .mageplaza-fbt-image-box .item.product .product.actions.product-item-actions,
+  .mageplaza-fbt-image-box .splide__arrow,
+  .mageplaza-fbt-image-box .item.product .rating-summary,
+  .mageplaza-fbt-rows {
+    @apply hidden;
+  }
+
+  
+  .mageplaza-fbt-image-box .item.product .price-box.price-final_price {
+    @apply flex justify-center text-[22px] font-bold text-black;
+  }
+
+ 
+  .mageplaza-fbt-image-box .item.product input.related-checkbox {
+    accent-color: black !important;
+    @apply rounded-none bg-black m-[3px] p-[10px] ;
+  }
+
+   
+  .product-item .old-price .price-container .price {
+    @apply line-through text-[#555] text-base leading-7 font-semibold ml-[10px];
+  }
+
+ 
+  .mageplaza-fbt-price-box .mageplaza-fbt-price {
+    @apply !text-[#00722D];
+  }
+  .mageplaza-fbt-image-box .special-price .price{
+    @apply text-[22px] font-bold text-black; 
+  }
+  .mageplaza-fbt-image-box .old-price .price{
+    @apply text-base font-normal text-black; 
+  }
+
+  .cart-p .cart-price{
+    @apply text-[#3B7E48];
+  }
+
+}
+
+.shiping-bar {
+    @apply bg-[#E3F3E3] h-[6px];
+  }
+
+.shipping-bar-h {
+    @apply bg-[#50B463] h-[6px];
+}
+
+#cart-drawer .freeship-progress {
+    @apply px-8 mt-10;
+}
+#cart-drawer .freeship-progress p{
+    @apply text-base mb-2;
+}
+#cart-drawer .discount-c-slider span{
+    @apply text-lg;
+}
+#cart-drawer header {
+    @apply py-4;
+}
+.pdp-share-i.desktop {
+    @apply md:hidden;
+}
+
+.old-price span.price {
+    @apply text-xl;
+}
+
+.special-price span.price {
+    @apply font-bold text-black text-xl;
+}
+
+.pdp-img-sec {
+    @apply relative;
+}
+.pdp-img-sec .custom-label-image {
+    @apply absolute top-[5px] left-[5px] w-[120px];
+}
+
+
+@layer utilities {
+
+ 
+  @screen md {
+    .mageplaza-fbt-image-box .item.product {
+      @apply !w-[180px] !h-[370px] !p-[8px];
+    }
+
+   .mageplaza-fbt-image-box .item.product .product-image-container {
+      @apply !w-full !inline-block;
+    }
+
+     .mageplaza-fbt-image-box .item.product .product.details.product-item-details {
+      @apply flex flex-col h-[160px] justify-start w-full text-center;
+    }
+    .no_weight {
+        @apply h-4;
+    }
+
+    .product-item .price-container .price {
+        @apply !text-xl;
+    }
+  }
+
+
+@screen lg {
+    .mageplaza-frequently-bought-together-block {
+        @apply w-[570px] ml-[6%];
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .social-share-list{
+        @apply top-[-45px] left-[-45px] right-auto w-[120px] flex items-center justify-center gap-[14px] px-[5px] py-[10px];
+    }
+}
+
+}

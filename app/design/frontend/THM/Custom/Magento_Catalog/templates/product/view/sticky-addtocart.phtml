@@ -1,0 +1,231 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $_product */
+$_product = $block->getProduct();
+
+$imageHelper = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Catalog\Helper\Image::class);
+$imageUrl = $imageHelper->init($_product, 'product_thumbnail_image')->getUrl();
+
+$priceRender = $block->getLayout()->getBlock('product.price.render.default');
+$priceHtml = '';
+if ($priceRender) {
+    $priceHtml = $priceRender->render(
+        \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE,
+        $_product,
+        ['display_minimal_price' => true, 'zone' => \Magento\Framework\Pricing\Render::ZONE_ITEM_LIST]
+    );
+}
+?>
+
+<?php if ($_product): ?>
+<div class="sticky-add-to-cart">
+    <div class="sticky-product-info">
+        <div class="sticky-product-image">
+            <img src="<?php echo $imageUrl; ?>" alt="<?php echo $_product->getName(); ?>" />
+        </div>
+        <div class="sticky-product-details">
+            <h3 class="sticky-product-name"><?php echo $_product->getName(); ?></h3>
+            <div class="sticky-product-price" id="sticky-product-price"><?php echo $priceHtml; ?></div>
+        </div>
+    </div>
+
+    <form action="<?php echo $block->escapeUrl($block->getAddToCartUrl($_product)); ?>" 
+          method="post" enctype="multipart/form-data" class="sticky-form" id="sticky-cart-form">
+        <input type="hidden" name="product" value="<?php echo $_product->getId(); ?>" />
+
+        <?php if ($_product->hasOptions()):
+        $options = $_product->getOptions();
+        foreach ($options as $option):
+            if ($option->getType() == 'drop_down'): ?>
+                <div class="sticky-option-group">
+                    <label class="sticky-option-label"><?php echo $option->getTitle(); ?></label>
+                    <div class="sticky-swatch-wrapper" data-option-id="<?php echo $option->getId(); ?>">
+                        <?php foreach ($option->getValues() as $value): ?>
+                            <div class="sticky-swatch"
+                                 data-type-id="<?php echo $value->getOptionTypeId(); ?>"
+                                 data-price="<?php echo $value->getPrice(true); ?>">
+                                <?php echo $value->getTitle(); ?>
+                                <?php if ($value->getPrice(true) > 0): ?>
+                                    <small>(+<?php echo $value->getPrice(true); ?>)</small>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <input type="hidden" name="options[<?php echo $option->getId(); ?>]" value="" class="selected-option-input" />
+                </div>
+            <?php endif;
+        endforeach;
+    endif; ?>
+
+        
+        <div class="sticky-qty-wrapper">
+        <label for="qty">Qty:</label>
+        <div class="qty-box">
+            <button type="button" class="qty-btn minus">−</button>
+            <input type="number" name="qty" value="1" min="1" class="qty-input" />
+            <button type="button" class="qty-btn plus">+</button>
+        </div>
+    </div>
+        <button type="submit" class="action primary tocart">
+            <?php echo __('Add to Cart'); ?>
+        </button>
+    </form>
+</div>
+<?php endif; ?>
+
+ <style>
+.sticky-add-to-cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 10px 15px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.sticky-product-info { display: flex; align-items: center; flex: 1 1 auto; }
+.sticky-product-image img { width: 50px; height: auto; margin-right: 10px; border-radius: 4px; }
+.sticky-product-details { display: flex; flex-direction: column; }
+.sticky-product-name { font-size: 16px; margin: 0; color: #333; }
+.sticky-product-price { font-size: 14px; color: #666; }
+.sticky-form { margin-left: auto; }
+.sticky-add-to-cart button {
+    background-color: #ff6600; color: #fff;
+    padding: 10px 20px; border: none;
+    cursor: pointer; font-size: 16px; border-radius: 4px;
+}
+.sticky-form select { margin: 10px 0; padding: 5px; font-size: 14px; }
+.sticky-option-group {
+    margin-top: 10px;
+}
+
+.sticky-option-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.sticky-swatch-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sticky-swatch {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #f7f7f7;
+    font-size: 14px;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.sticky-swatch:hover {
+    background-color: #eee;
+}
+
+.sticky-swatch.active {
+    background-color: #ff6600;
+    color: #fff;
+    border-color: #ff6600;
+}
+.sticky-qty-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.sticky-qty-wrapper label {
+    margin-right: 10px;
+}
+
+.qty-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.qty-btn {
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    width: 32px;
+}
+
+.qty-btn:hover {
+    background-color: #ddd;
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    font-size: 14px;
+}
+</style> 
+
+<script>
+require(['jquery'], function ($) {
+    $(document).ready(function () {
+        var basePrice = <?php echo (float)$_product->getFinalPrice(); ?>;
+
+        function updateTotalPrice() {
+            var totalExtra = 0;
+
+            $('.selected-option-input').each(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue) {
+                    var price = $('.sticky-swatch[data-type-id="' + selectedValue + '"]').data('price');
+                    totalExtra += parseFloat(price || 0);
+                }
+            });
+
+            var newPrice = basePrice + totalExtra;
+            $('#sticky-product-price').html('₹' + newPrice.toFixed(2));
+        }
+
+        $('.sticky-swatch').on('click', function () {
+            var $swatch = $(this);
+            var optionId = $swatch.closest('.sticky-swatch-wrapper').data('option-id');
+            var typeId = $swatch.data('type-id');
+
+            // Deselect other swatches
+            $swatch.siblings().removeClass('active');
+            $swatch.addClass('active');
+
+            // Set selected option in hidden input
+            $swatch.closest('.sticky-option-group')
+                   .find('.selected-option-input')
+                   .val(typeId);
+
+            // Update price
+            updateTotalPrice();
+        });
+
+        $('.qty-btn.plus').on('click', function () {
+            let $input = $(this).siblings('.qty-input');
+            let val = parseInt($input.val()) || 1;
+            $input.val(val + 1);
+        });
+
+        $('.qty-btn.minus').on('click', function () {
+            let $input = $(this).siblings('.qty-input');
+            let val = parseInt($input.val()) || 1;
+            if (val > 1) $input.val(val - 1);
+        });
+    });
+});
+</script>

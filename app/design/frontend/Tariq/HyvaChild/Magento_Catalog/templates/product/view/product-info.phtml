@@ -1,0 +1,188 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductAttributes;
+use Hyva\Theme\ViewModel\ProductCompare;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\Wishlist;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+/** @var ProductAttributes $attributesViewModel */
+$attributesViewModel = $viewModels->require(ProductAttributes::class);
+/** @var Product $product */
+$product = $productViewModel->getProduct();
+$productType = $product->getTypeId();
+
+?>
+<div class="w-full md:mb-6">
+    
+     <!-- Social share -->
+     <div class="pdp-share-i relative">
+    <?php echo $block->getLayout()
+            ->createBlock(\Magento\Framework\View\Element\Template::class)
+            ->setTemplate('Magento_Catalog::product/view/socialshare.phtml')
+            ->toHtml();
+        ?>
+    </div>
+        <div class="hidden md:block my-6 md:mt-0 w-full flex border border-[#ededed]">
+        <?= $block->getChildHtml('product.info.review') ?>
+    </div>
+     <div class="inline-block w-auto" role="group" aria-label="<?= $escaper->escapeHtmlAttr('Price') ?>">
+            <?= $block->getChildHtml("product.info.price") ?>
+        </div>
+         <?php $specialPrice = $product->getSpecialPrice();
+         $regularPrice =$product->getPrice();
+         $specialFromDate =$product->getSpecialFromDate();
+         $specialToDate =$product->getSpecialToDate();
+         $todayDate = new \DateTime();
+        $specialFrom = $specialFromDate ? new \DateTime($specialFromDate) : null;
+        $specialTo   = $specialToDate ? new \DateTime($specialToDate) : null;
+     if (
+      $specialPrice && (!$specialFrom || $specialFrom <= $todayDate) && (!$specialTo || $specialTo >= $todayDate) &&
+     $specialPrice < $regularPrice
+          ) {
+    $discount = round(100 - ($specialPrice / $regularPrice) * 100);
+    echo '<div class="pdp-discount-badge bg-[#E63833] inline-block text-white text-sm w-[55px] text-center rounded-[4px] py-1 align-top mt-1">-' . $discount . '%</div>';
+    } ?>
+<div class="vip-points text-xs text-[#5A3E00] font-normal block md:float-right mt-2">
+    Get <strong>2</strong> VIP Points
+</div>
+
+
+
+ <!-- <dl id="product-details">
+        <//?php foreach ($block->getAttributes() as $attributeConfig):
+            $attribute = $attributesViewModel->getAttributeFromLayoutConfig($attributeConfig); 
+            if ($value = $attribute['value'] ?? null): ?>
+                <div class="flex border-t border-gray-300 py-2 last:mb-6 last:border-b attribute-<//?=/* @noEscape */ $attribute['code'] ?: "" ?>">
+                    <dt class="w-1/2 text-left text-gray-700 product-detail-label">
+                        <//?= $escaper->escapeHtml($attribute['label']) ?>
+                    </dt>
+                    <dd class="w-1/2 ml-2 text-left text-gray-900 product-detail-value">
+                        <//?= $escaper->escapeHtml($value) ?>
+                    </dd>
+                </div>
+        <//?php endif; endforeach; ?>
+    </dl> -->
+
+    <?= $block->getChildHtml('product.info.form') ?>
+
+    <div class="flex flex-col sm:flex-row md:items-end my-4">
+
+        <?php if ($productType === 'bundle'): ?>
+            <span class="sr-only">
+                <?= $escaper->escapeHtml(__('The price depends on the chosen options')) ?>
+            </span>
+        <?php endif; ?>
+
+        <div class="px-0">
+               <?php if ($product->isSaleable()): ?>
+            <label class="w-full text-base lg:text-[17px] font-bold text-black mb-2 block">
+            <?= $escaper->escapeHtml(__('Quantity')) ?>
+        </label>
+            <?php endif; ?>
+        <div class="pdp-button-sec flex gap-4 mt-4 ml-0 sm:mt-0">
+            <?php if ($product->isSaleable()): ?>
+                <?= $block->getChildHtml("product.info.quantity") ?>
+            <?php endif; ?>
+               <?php if ($product->isSaleable()): ?>
+                <?= $block->getChildHtml("product.info.addtocart") ?>
+            <?php endif; ?>
+            <?php echo $block->getLayout()
+            ->createBlock(\Magento\Framework\View\Element\Template::class)
+            ->setTemplate('Magento_Catalog::product/view/addtowishlist.phtml')
+            ->toHtml();
+        ?>
+         
+        </div>
+
+        <div class="md:hidden pdp-sticky-btn flex gap-4 px-4 py-4">
+         
+        <?php if ($product->isSaleable()): ?>
+                <?= $block->getChildHtml("product.info.addtocart") ?>
+            <?php endif; ?>
+        <?php echo $block->getLayout()
+            ->createBlock(\Magento\Framework\View\Element\Template::class)
+            ->setTemplate('Magento_Catalog::product/view/addtowishlist.phtml')
+            ->toHtml();
+        ?>
+         
+        <?php echo $block->getLayout()
+            ->createBlock(\Magento\Framework\View\Element\Template::class)
+            ->setTemplate('Magento_Catalog::product/view/socialshare.phtml')
+            ->toHtml();
+        ?>
+         
+        </div>
+
+    </div>
+        
+    <?php if ($additionalActions = $block->getChildHtml('product.info.additional.actions')): ?>
+        <div class="flex mt-0 justify-end">
+            <?= /** @noEscape */ $additionalActions; ?>
+        </div>
+    <?php endif; ?>
+
+    </div>
+   
+    <div class="pdp-stock flex flex-col sm:flex-row justify-between bg-black my-4 text-white text-[17px] leading-[21px] w-full inline-block py-4 px-4 mt-10 mb-2">
+        <div class="inline-flex flex-wrap items-center gap-x-6">
+            <?= $block->getChildHtml("product.info.stockstatus") ?>
+            <?= $block->getChildHtml("product.info.stockqty") ?>
+        </div>
+        <?= $block->getChildHtml("alert.urls") ?>
+    </div>
+
+    <!-- Payment Logo Section -->
+    <div class="pdp-payment flex items-center bg-[#FFF5F5] py-4 px-4 gap-4">
+        <span class="text-sm font-normal text-black">Guaranteed safe checkout</span>
+        <img src="<?= $block->getViewFileUrl('images/strip-logo.png') ?>" 
+     alt="Strip" 
+     class="strip-img" 
+     width="65"
+     height="18"
+     />
+     <span class="w-[1px] h-[17px] bg-[#989898] mx-2"></span>
+  <img src="<?= $block->getViewFileUrl('images/payment_detail_img.png') ?>" 
+     alt="Payment logo" 
+     class="payment-img"
+     width="223"
+     height="23" 
+     />
+     </div>
+     <!-- <div>
+        <a href="<?//php echo $block->getBaseUrl()."ramadan.html" ?>">
+        <img src="<?//php echo $block->getBaseUrl(); ?>pub/media/wysiwyg/ramadhan-product.png" alt="PDP Banner" />
+    </a> 
+</div> -->
+    <?php if ($product->isSaleable() && $block->getChildHtml('addtocart.shortcut.buttons')): ?>
+        <div class="flex mt-4 justify-end">
+            <?= $block->getChildHtml('addtocart.shortcut.buttons') ?>
+        </div>
+    <?php endif; ?>
+ 
+
+    <?php if ($tierPriceBlock = $block->getChildHtml("product.price.tier")): ?>
+        <div class="py-4 my-2 tier-price-container">
+            <?= /** @noEscape */ $tierPriceBlock ?>
+        </div>
+    <?php endif; ?>
+
+    <?= $block->getChildHtml("product.info.additional") ?>
+</div>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Google Consent Mode
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <block ifconfig="amasty_gdprcookie/consent_mode/enable" name="amasty.consent.gtm" template="Amasty_GoogleConsentMode::gtm/consent.phtml">
+        <arguments>
+            <argument name="view_model" xsi:type="object">Amasty\GoogleConsentMode\ViewModel\GtmViewModel</argument>
+        </arguments>
+    </block>
+    <referenceContainer name="before.body.end">
+        <block ifconfig="amasty_gdprcookie/consent_mode/enable" name="amasty.consent.footer"
+               template="Amasty_GoogleConsentMode::gtm/bind-events.phtml">
+        </block>
+    </referenceContainer>
+</page>

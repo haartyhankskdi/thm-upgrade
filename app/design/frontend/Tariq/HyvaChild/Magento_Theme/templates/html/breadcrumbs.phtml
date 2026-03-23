@@ -1,0 +1,38 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php 
+$urlInterface = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$currenturl= $urlInterface->getCurrentPageUrl();
+if($currenturl!=$block->getBaseUrl().'recipes'){?>
+<?php if ($crumbs && is_array($crumbs)) : ?>
+<div class="breadcrumbs">
+    <ul class="items text-sm font-medium text-black flex">
+        <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+            <li class="item <?= $block->escapeHtmlAttr($crumbName) ?>">
+            <?php if ($crumbInfo['link']) : ?>
+                <a href="<?= $block->escapeUrl($crumbInfo['link']) ?>"
+                   title="<?= $block->escapeHtml($crumbInfo['title']) ?>">
+                    <?= $block->escapeHtml($crumbInfo['label']) ?>
+                </a>
+            <?php elseif ($crumbInfo['last']) : ?>
+                <strong class="font-normal text-[#C2185B]"><?= $block->escapeHtml($crumbInfo['label']) ?></strong>
+            <?php else : ?>
+                <?= $block->escapeHtml($crumbInfo['label']) ?>
+            <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
+<?php }?>
+<style>
+    .breadcrumbs .item:not(:last-child)::after {
+    content: " /";
+    padding: 0 5px;
+    color: #666;
+}
+</style>

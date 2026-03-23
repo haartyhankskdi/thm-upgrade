@@ -1,0 +1,29 @@
+{
+    "name": "ebizmarts/sagepaysuitefailedpaymentemail",
+    "version": "101.0.0",
+    "description": "Opayo failed payement email integration for Magento 2.",
+    "require": {
+        "magento/framework": ">=101.0.6 || >=102.0.0 || >=103.0.0"
+    },
+    "type": "magento2-module",
+    "autoload": {
+        "psr-4": {"Ebizmarts\\SagePaySuiteFailedPaymentEmail\\":""},
+        "files": ["registration.php"]
+    },
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "support": {
+        "email": "sagepay@ebizmarts-desk.zendesk.com",
+        "wiki": "http://wiki.ebizmarts.com",
+        "forum": "http://ebizmarts.com/forums/view/2"
+    },
+    "authors": [
+        {
+            "name": "Ebizmarts Corp",
+            "email": "info@ebizmarts.com",
+            "homepage": "http://ebizmarts.com"
+        }
+    ]
+}

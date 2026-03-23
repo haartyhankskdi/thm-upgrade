@@ -1,0 +1,33 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="brippo_payments_card_fingerprints" resource="default" engine="innodb">
+        <column xsi:type="int" name="id" padding="10" nullable="false" unsigned="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="customer_id" nullable="false" unsigned="false"/>
+        <column xsi:type="varchar" name="card_fingerprints" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="brippo_uncaptured_payments" resource="default" engine="innodb">
+        <column xsi:type="int" name="id" padding="10" nullable="false" unsigned="false" identity="true" comment="ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" padding="5" default="0" comment="Store ID"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" padding="5" default="0" comment="Store ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="BRIPPO_UNCAPTURED_PAYMENTS_STORE_ID_STORE_STORE_ID"
+                    table="brippo_uncaptured_payments" column="store_id" referenceTable="store"
+                    referenceColumn="store_id" onDelete="CASCADE"/>
+
+        <constraint xsi:type="unique" referenceId="BRIPO_UNCAPTURED_PAYMENTS_STORE_ID_UNIQUE">
+            <column name="store_id"/>
+        </constraint>
+
+    </table>
+
+    <table name="quote">
+        <column xsi:type="mediumtext" name="brippo_quote_hash" nullable="true" comment="Quote validation hash" />
+    </table>
+</schema>

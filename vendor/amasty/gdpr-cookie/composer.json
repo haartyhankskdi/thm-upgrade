@@ -1,0 +1,27 @@
+{
+    "name": "amasty/gdpr-cookie",
+    "description": "Cookie Consent by Amasty",
+    "require": {
+        "php": ">=7.4",
+        "amasty/base": ">=1.21.1",
+        "amasty/gdpr-frontend-ui": ">=1.5.2",
+        "amasty/geoip": "*"
+    },
+    "suggest": {
+        "amasty/gdpr-cookie-facebook-pixel-sample-data": "Please install Gdpr Cookie Facebook Pixel sample data module to add sample data.",
+        "amasty/module-graphql-application-server-compatibility": "Install this package for compatibility with GraphQL Application Server."
+    },
+    "type": "magento2-module",
+    "version": "2.16.1",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\GdprCookie\\": ""
+        }
+    }
+}

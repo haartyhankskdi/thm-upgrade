@@ -1,0 +1,240 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$layout = $block->getLayout();
+$baseUrl = $block->getBaseUrl();
+
+/** Get Blog Posts */
+$blogBlock = $layout->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+$postCollection = $blogBlock->getPostCollection()
+    ->addFieldToFilter('enabled', 1)
+    ->setOrder('publish_date', 'DESC')
+    ->setCurPage(1);
+
+$posts_video = [];
+foreach ($postCollection as $post) {
+    if ($post->getShortDescription()) {
+        $posts_video[] = $post;
+    }
+    if (count($posts_video) >= 2) break;
+}
+
+/** Get Categories */
+$categoryBlock = $layout->createBlock(\Mageplaza\Blog\Block\Category\Widget::class);
+$cat_collection = $categoryBlock->getTree();
+
+$categoryImages = [
+    'chicken' => 'images/chicken.jpg',
+    'beef'    => 'images/beef.jpg',
+    'lamb'    => 'images/chicken.jpg',
+    'turkey'  => 'images/beef.jpg',
+    'burgers' => 'images/chicken.jpg',
+    'goat'    => 'images/beef.jpg',
+    'mutton'  => 'images/chicken.jpg',
+    'offal'   => 'images/beef.jpg',
+];
+?>
+
+<!-- Recipe Banner Section -->
+<section class="recipe_banners_section top-div w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-start mx-auto py-1 md:p-0">
+  <div class="recipe_left_section left_section space-y-4 lg:space-y-6 flex flex-col items-start justify-center   sm:h-[400px] lg:h-[450px] lg:ml-16">
+    <div class="breadcrumbs">
+     <ul class="items text-sm font-medium text-black flex justify-center md:justify-start">
+        <li class="item home"><a href="<?php echo $baseUrl?>" class="hover:text-gray-700">Home</a></li>
+        <span class="mx-1"></span>
+        <li class="item"><span class="font-normal text-[#E63833]">Recipes</span></li>
+    </ul>
+
+    <!-- Page Title -->
+    <div class="page-title-wrapper text-4xl font-semibold text-gray-900 mb-4 mt-4">
+    <h1 class="page-title category-tilte text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">Recipes</h1>
+    </div>
+  </div>
+
+  <div class="category-description max-w-4xl pt-0 !mt-0 hidden md:block">
+    <p class="text-base font-normal text-black lg:text-[17px]">
+      <span class="font-semibold mb-2 inline-block">From Our Kitchen to Yours</span><br> 
+Easy-to-follow recipes made for everyday cooking and great taste. Our recipes help you turn quality halal meat into meals that feel comforting, familiar, and worth sitting down for.
+    </p>
+  </div>
+
+  <div class="hidden md:block">
+    <!-- Rating -->
+    <?= $layout->createBlock("Magento\Framework\View\Element\Template")
+      ->setTemplate("Magento_Catalog::category/google-review.phtml")->toHtml(); ?>
+      </div>
+  </div>
+ <div class="recipe_right_section right-section flex justify-center items-center  hidden md:block">
+  <div class="h-full flex justify-center">
+     <img src="<?php $block->getBaseUrl()?>/pub/media/wysiwyg/recipes.png" alt="recipes" class="recipe-main-img">
+  </div>
+  </div>
+</section>
+
+<div class="container py-4">
+<!-- Latest Added Recipe Section -->
+<section class="recipe_section py-8 md:py-12 bg-gray-50 mb-0">
+   <div class="section-title text-center mb-6">
+        <h2 class="text-2xl md:text-[38px] font-normal text-black">
+        <strong>Latest</strong> Added to List
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+           Fresh halal inspiration, straight from our kitchen.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div>
+
+
+  <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
+    <?php foreach ($posts_video as $post): ?>
+      <div class="bg-white p-0 transition duration-150">
+        <p class="text-base md:text[17px] text-black mb-2"><?= $post->getShortDescription(); ?></p>
+        <h3 class="w-full text-black text-lg lg:text-[28px] font-bold p-0 text-left mt-6 mb-4">
+          <!-- <a href="<?//= $post->getUrl(); ?>" class="hover:underline cursor-pointer"><?//= $post->getName(); ?></a> -->
+          <a href="#" class="hover:underline cursor-pointer"><?= $post->getName(); ?></a>
+        </h3>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-16 px-0 grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+  <div class="feature">
+    <img src="<?= $block->getViewFileUrl('images/delicious-recipes.png'); ?>" alt="Delicious Recipes" class="mx-auto mb-4 w-16">
+    <h3 class="text-lg font-normal mb-2 leading-snug text-black lg:text-[28px]"><strong>Easy, Delicious</strong><br> Recipes Await!</h3>
+    <span class="block w-10 h-0.5 bg-red-600 mx-auto my-4"></span>
+    <p class="text-sm text-black leading-relaxed font-normal lg:text-[17px]">Simple recipes that do not require fancy skills or hours in the kitchen. Just clear steps, great flavour, and meals you will want to make again.</p>
+  </div>
+  <div class="feature">
+    <img src="<?= $block->getViewFileUrl('images/culinary.png'); ?>" alt="Culinary" class="mx-auto mb-4 w-16">
+    <h3 class="text-lg font-normal mb-2 leading-snug text-black lg:text-[28px]">Created by <br><strong>Culinary Experts</strong></h3>
+    <span class="block w-10 h-0.5 bg-red-600 mx-auto my-4"></span>
+    <p class="text-sm text-black leading-relaxed font-normal lg:text-[17px]">Every recipe is developed by people who understand meat, flavour, and how food is actually cooked at home. That means reliable results and balanced taste.</p>
+  </div>
+  <div class="feature">
+    <img src="<?= $block->getViewFileUrl('images/ready-cook.png'); ?>" alt="Group" class="mx-auto mb-4 w-28">
+    <h3 class="text-lg font-normal mb-2 leading-snug text-black lg:text-[28px]">Ready-to-cook &<br> <strong>Marinated Options</strong></h3>
+    <span class="block w-10 h-0.5 bg-red-600 mx-auto my-4"></span>
+    <p class="text-sm text-black leading-relaxed font-normal lg:text-[17px]">Short on time? Our recipes make great use of ready-to-cook and marinated products, helping you get a delicious meal on the table faster without compromising on taste.</p>
+  </div>
+</section>
+
+<!-- Searchbar Section -->
+<section class="lg:max-w-[1100px] mx-auto bg-black text-white py-12 px-6 md:px-16 my-10">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="text-center md:text-left">
+      <h2 class="text-2xl md:text-[38px] md:leading-[44px] font-light mb-4">What are you <strong class="font-bold">cooking today?</strong></strong></h2>
+      <p class="text-white text-sm leading-[22px] md:text-[17px] md:leading-[26px]">
+        Get inspired with recipes tailored to your favourite halal cuts.
+      </p>
+    </div>
+
+    <div class="lg:w-[480px] inline-block">
+        <?= $layout->createBlock("Mageplaza\Blog\Block\Sidebar\Search")
+      ->setTemplate("Mageplaza_Blog::hyva/sidebar/search.phtml")->toHtml(); ?>
+    </div>
+</div>
+</section>
+
+
+<!-- Category List Section -->
+<section class="recipe-category py-16 px-0">
+  <div class="section-title text-center mb-8">
+        <h2 class="text-2xl md:text-[38px] font-normal text-black">
+        Recipe <strong class="font-bold">Category</strong>
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+          Discover dishes by cuisine, cooking style, or occasion
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-4"></span>
+    </div>
+ 
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <?php foreach ($cat_collection as $category): ?>
+      <?php if ($category['enabled'] == "1"): 
+        $imagePath = $categoryImages[$category['url']] ?? 'images/default.jpg'; ?>
+        <div class="mb-8">
+        <!--   <a href="<?//= $baseUrl . "recipe/category/" . $category['url']; ?>" class="block relative overflow-hidden transition cursor-pointer"> -->
+        <a href="#" class="block relative overflow-hidden transition cursor-pointer">
+          <img src="<?= $block->getViewFileUrl($imagePath); ?>" alt="<?= $category['text']; ?>" class="object-cover w-full h-60">
+          <div class="text-black text-lg lg:text-[28px] font-bold p-0 text-center mt-4">
+            <p><?= $category['text']; ?></p>
+            <!-- <span class="text-2xl">&#8594;</span> -->
+          </div>
+        </a>
+      </div>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<!-- Ready in 20min Section -->
+<section class="py-10 bg-white px-0">
+  <div class="section-title text-center mb-8">
+        <h2 class="text-2xl md:text-[38px] font-normal text-black">
+        <strong class="font-bold">Ready in</strong> 20min
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+         Quick, tasty halal meals for busy days.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-4"></span>
+    </div> 
+
+ <div class="container flex flex-wrap justify-center gap-8 pb-10 px-0">
+  <!-- Product 1 -->
+  <div class="flex-1 max-w-sm text-center p-0">
+     <a href="#" class="block cursor-pointer">
+    <img src="<?= $block->getViewFileUrl('images/pot-chicken.jpg'); ?>" alt="Pot Chicken" class="mx-auto w-full mb-4">
+    <h4 class="text-lg font-bold text-black lg:text-[28px]">One-Pot Chicken Dinner</h4>
+    </a>
+  </div>
+
+  <!-- Product 2 -->
+  <div class="flex-1 max-w-sm text-center p-0">
+    <a href="#" class="block cursor-pointer">
+    <img src="<?= $block->getViewFileUrl('images/lamb-souvlaki.jpg'); ?>" alt="Lamb Souvlaki" class="mx-auto w-full mb-4">
+    <h4 class="text-lg font-bold text-black lg:text-[28px]">Lamb Souvlaki Wraps</h4>
+   </a>
+  </div>
+
+  <!-- Product 3 -->
+  <div class="flex-1 max-w-sm text-center p-0">
+    <a href="#" class="block cursor-pointer">
+    <img src="<?= $block->getViewFileUrl('images/chicken-curry.jpg'); ?>" alt="Chicken Curry" class="mx-auto w-full mb-4">
+    <h4 class="text-lg font-bold text-black lg:text-[28px]">Chicken Curry Recipe</h4>
+  </a>
+  </div>
+</div>
+
+</section>
+
+<!-- Recipes for Every Feeling Section -->
+<section class="feeling_section py-16 text-center px-6">
+
+  <div class="section-title text-center mb-8">
+        <h2 class="text-2xl md:text-[38px] font-normal text-black">
+        Recipes for <strong class="font-bold">Every Feeling</strong>
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+         From cosy to adventurous – halal recipes to match your vibe.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-4"></span>
+    </div>   
+
+  <div class="recipes-feeling grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="recipes-feeling-item text-xl font-bold md:text-[25px] bg-black text-white px-6 py-20 hover:bg-black cursor-pointer flex flex-col items-center justify-center">Happiness</div>
+    <div class="recipes-feeling-item text-xl font-bold md:text-[25px] bg-black text-white px-6 py-20 hover:bg-black cursor-pointer flex flex-col items-center justify-center">Excitement</div>
+    <div class="recipes-feeling-item text-xl font-bold md:text-[25px] bg-black text-white px-6 py-20 hover:bg-black cursor-pointer flex flex-col items-center justify-center">Love</div>
+    <div class="recipes-feeling-item text-xl font-bold md:text-[25px] bg-black text-white px-6 py-20 hover:bg-black cursor-pointer flex flex-col items-center justify-center">Joy</div>
+  </div>
+</section>
+
+<!-- Lates trends stories Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate('Magento_Theme::html/latest-trends-post.phtml')
+    ->toHtml();
+?>
+
+</div>

@@ -1,0 +1,294 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Widgets\Block\Widgets\Banner;
+use Magento\Framework\Escaper;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Banner $block */
+/** @var Escaper $escaper */
+
+$bannerImage = $block->getData('hyva_banner_image');
+$bannerImageWidth = $block->getData('hyva_banner_image_width');
+$bannerImageHeight = $block->getData('hyva_banner_image_height');
+$bannerMargin = $block->getData('hyva_banner_margin');
+$bannerTitle = $block->getData('hyva_banner_title');
+$bannerText = $block->getData('hyva_banner_text');
+$bannerShading = $block->getData('hyva_banner_shading');
+$bannerShadingColor = $block->getData('hyva_banner_shading_color');
+$buttonLabel = $block->getData('hyva_banner_button_label');
+$buttonUrl = $block->getData('hyva_banner_button_url');
+$contentAlignment = $block->getData('hyva_banner_content_alignment');
+$textColor = $block->getData('hyva_banner_content_text_color');
+$contentContainerClasses = $block->getData('hyva_banner_content_container') ? 'container mx-auto' : '';
+$innerContentContainerClasses = $block->getData('hyva_banner_inner_content_container') ? 'container mx-auto' : '';
+$containerBackground = $block->getData('hyva_banner_container_background') ?: '';
+
+if ($fadeAnimations = $block->getData('hyva_banner_fade_animations')) {
+    $animationClasses = 'transform ease-in-out transition';
+    $animationClassesStart = 'duration-300 ';
+    $animationClassesEnd = 'duration-500 ';
+
+    if ($fadeAnimations) {
+        if (strpos($fadeAnimations, 'fade') !== false) {
+            $animationClassesStart .= 'opacity-0';
+            $animationClassesEnd .= 'opacity-100';
+        }
+
+        if (strpos($fadeAnimations, 'up') !== false) {
+            $animationClassesStart .= ' translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'right') !== false) {
+            $animationClassesStart .= ' -translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+
+        if (strpos($fadeAnimations, 'down') !== false) {
+            $animationClassesStart .= ' -translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'left') !== false) {
+            $animationClassesStart .= ' translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+    }
+}
+?>
+<div class="overflow-hidden -m-4 p-4">
+    <section
+        <?php if ($fadeAnimations): ?>
+            x-data="{ intersecting: false }"
+            x-intersect:enter.half="intersecting = true"
+            x-intersect:leave="intersecting = false"
+            :class="{
+                '<?= $escaper->escapeHtmlAttr($animationClassesEnd) ?>' : intersecting,
+                '<?= $escaper->escapeHtmlAttr($animationClassesStart) ?>' : !intersecting
+            }"
+        <?php endif; ?>
+        class="hyva-banner section
+        <?= $escaper->escapeHtmlAttr($fadeAnimations ? $animationClasses . ' ' . $animationClassesStart . '' : '') ?>
+        <?= $escaper->escapeHtmlAttr($bannerMargin) ?>"
+    >
+        <div class="<?= $escaper->escapeHtmlAttr($contentContainerClasses) ?>">
+
+            <?php if ($block->getData('hyva_banner_layout') === 'full-width'): ?>
+                <main>
+                    <div class="relative">
+                        <div>
+                            <div class="relative shadow-xl sm:rounded-2xl sm:overflow-hidden"
+                                <?php if (!$bannerImage && $containerBackground): ?>
+                                    style="background-color: <?= $escaper->escapeHtmlAttr($containerBackground) ?>;"
+                                <?php endif ?>
+                            >
+                                <?php if ($bannerImage): ?>
+                                    <div class="absolute inset-0">
+                                        <?php if ($bannerShading): ?>
+                                            <div class="absolute inset-0 z-10 opacity-50"
+                                                 style="background: <?= $escaper->escapeHtmlAttr($bannerShadingColor); ?>"></div>
+                                        <?php endif; ?>
+                                        <img class="object-cover w-full h-full"
+                                             loading="lazy"
+                                             <?php if ($bannerImageWidth): ?>width="<?= $escaper->escapeHtmlAttr($bannerImageWidth) ?>"<?php endif; ?>
+                                             <?php if ($bannerImageHeight): ?>height="<?= $escaper->escapeHtmlAttr($bannerImageHeight) ?>"<?php endif; ?>
+                                             src="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($bannerImage)) ?>"
+                                             alt="<?= $escaper->escapeHtmlAttr($bannerTitle); ?>">
+                                    </div>
+                                <?php else: ?>
+                                    <div
+                                        class="absolute inset-x-0 bottom-0 h-1/2 bg-black opacity-5 mix-blend-darken"></div>
+                                <?php endif; ?>
+                                <div
+                                    class="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 z-20
+                                        <?= $escaper->escapeHtmlAttr($innerContentContainerClasses) ?>"
+                                >
+                                    <?php if ($bannerTitle): ?>
+                                        <h1
+                                            <?php if ($textColor): ?>
+                                                style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"
+                                            <?php endif ?>
+                                            class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl
+                                                <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                        >
+                                            <span class="block">
+                                                <?= $escaper->escapeHtml($bannerTitle) ?>
+                                            </span>
+                                        </h1>
+                                    <?php endif; ?>
+                                    <?php if ($bannerText): ?>
+                                        <p
+                                            <?php if ($textColor): ?>
+                                                style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"
+                                            <?php endif ?>
+                                            class="mt-6 text-xl
+                                            <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                        >
+                                            <?= $escaper->escapeHtml($bannerText) ?>
+                                        </p>
+                                    <?php endif; ?>
+                                   <?php if ($buttonLabel && $buttonUrl): ?>
+                                    <div class="mt-10 sm:flex <?= $escaper->escapeHtmlAttr($contentAlignment) ?> ">
+                                        <a href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($buttonUrl)) ?>"
+                                           class="inline-flex btn btn-primary">
+                                            <?= $escaper->escapeHtml($buttonLabel) ?>
+                                        </a>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+            <?php elseif ($block->getData('hyva_banner_layout') === 'half-left-caption'): ?>
+
+                <div class="relative">
+                    <main class="lg:relative">
+                        <div class="pt-16 pb-20 mx-auto w-full max-w-7xl text-center lg:py-48 lg:text-left"
+                            <?php if ($containerBackground): ?>
+                                style="background-color: <?= $escaper->escapeHtmlAttr($containerBackground) ?>;"
+                            <?php endif ?>
+                        >
+                            <div class="px-4 lg:w-1/2 sm:px-8 xl:pr-16">
+                                <?php if ($bannerTitle): ?>
+                                    <h1
+                                        <?php if ($textColor): ?>
+                                            style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"
+                                        <?php endif ?>
+                                        class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl
+                                            <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                    >
+                                        <span class="block xl:inline">
+                                            <?= $escaper->escapeHtml($bannerTitle); ?>
+                                        </span>
+                                    </h1>
+                                <?php endif; ?>
+                                <?php if ($bannerText): ?>
+                                    <p
+                                        <?php if ($textColor): ?>
+                                            style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"
+                                        <?php endif ?>
+                                        class="mt-3 mx-auto text-lg text-gray-500 sm:text-xl md:mt-5
+                                            <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                    >
+                                        <?= $escaper->escapeHtml($bannerText) ?>
+                                    </p>
+                                <?php endif; ?>
+                                <?php if ($buttonLabel): ?>
+                                    <div
+                                        class="mt-10 <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                    >
+                                        <a href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($buttonUrl)) ?>"
+                                           class="inline-flex btn btn-primary"
+                                        >
+                                            <?= $escaper->escapeHtml($buttonLabel) ?>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div
+                            class="relative w-full h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full">
+                            <?php if ($block->getData('hyva_banner_shading')): ?>
+                                <div class="absolute top-0 right-0 bottom-0 left-0 z-10 opacity-50"
+                                     style="background: <?= $escaper->escapeHtmlAttr($bannerShadingColor); ?>"></div>
+                            <?php endif; ?>
+                            <img class="object-cover absolute inset-0 w-full h-full"
+                                 loading="lazy"
+                                 <?php if ($bannerImageWidth): ?>width="<?= $escaper->escapeHtmlAttr($bannerImageWidth) ?>"<?php endif; ?>
+                                 <?php if ($bannerImageHeight): ?>height="<?= $escaper->escapeHtmlAttr($bannerImageHeight) ?>"<?php endif; ?>
+                                 src="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($bannerImage)) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($bannerTitle) ?>">
+                        </div>
+                    </main>
+                </div>
+
+            <?php else: ?>
+
+                <div class="relative">
+                    <main class="lg:relative">
+                        <div
+                            class="grid pt-16 pb-20 mx-auto w-full max-w-7xl text-center lg:py-48 lg:text-left lg:grid-cols-2"
+                            <?php if ($containerBackground): ?>
+                                style="background-color: <?= $escaper->escapeHtmlAttr($containerBackground) ?>;"
+                            <?php endif ?>
+                        >
+                            <div class="px-4 sm:px-8 xl:pl-16 lg:col-start-2">
+                                <?php if ($bannerTitle): ?>
+                                    <h1
+                                        <?php if ($textColor): ?>style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"<?php endif ?>
+                                        class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl
+                                            <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                    >
+                                        <span
+                                            class="block xl:inline">
+                                            <?= $escaper->escapeHtml($bannerTitle) ?>
+                                        </span>
+                                    </h1>
+                                <?php endif; ?>
+
+                                <?php if ($bannerText): ?>
+                                    <p
+                                        <?php if ($textColor): ?>style="color: <?= $escaper->escapeHtmlAttr($textColor) ?>;"<?php endif ?>
+                                        class="mt-3 mx-auto text-lg text-gray-500 sm:text-xl md:mt-5
+                                            <?= $escaper->escapeHtmlAttr($contentAlignment) ?>"
+                                    >
+                                        <?= $escaper->escapeHtml($bannerText) ?>
+                                    </p>
+                                <?php endif; ?>
+                                <?php
+                                $alignment = $block->getData('hyva_banner_content_alignment');
+                                switch ($alignment) {
+                                    case 'sm:text-left':
+                                        $buttonAlignment = 'justify-start';
+                                        break;
+                                    case 'sm:text-center':
+                                        $buttonAlignment = 'justify-start sm:justify-center';
+                                        break;
+                                    case 'sm:text-right':
+                                        $buttonAlignment = 'justify-start sm:justify-end';
+                                        break;
+                                    default:
+                                        $buttonAlignment = 'justify-start';
+                                }
+                                ?>
+                                <?php if ($buttonLabel && $buttonUrl): ?>
+                                <div class="mt-10 sm:flex <?= $escaper->escapeHtmlAttr($buttonAlignment) ?>">
+                                    <a href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($buttonUrl)) ?>"
+                                       class="inline-flex btn btn-primary"
+                                    >
+                                        <?= $escaper->escapeHtml($buttonLabel) ?>
+                                    </a>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div
+                            class="relative w-full h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:left-0 lg:w-1/2 lg:h-full">
+                            <?php if ($bannerShading): ?>
+                                <div class="absolute top-0 right-0 bottom-0 left-0 z-10 opacity-50"
+                                     style="background: <?= $escaper->escapeHtmlAttr($bannerShadingColor) ?>"></div>
+                            <?php endif; ?>
+                            <img class="object-cover absolute inset-0 w-full h-full"
+                                 loading="lazy"
+                                 <?php if ($bannerImageWidth): ?>width="<?= $escaper->escapeHtmlAttr($bannerImageWidth) ?>"<?php endif; ?>
+                                 <?php if ($bannerImageHeight): ?>height="<?= $escaper->escapeHtmlAttr($bannerImageHeight) ?>"<?php endif; ?>
+                                 src="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($bannerImage)) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($bannerTitle); ?>"
+                            >
+                        </div>
+                    </main>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+</div>

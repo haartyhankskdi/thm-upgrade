@@ -1,0 +1,556 @@
+//
+//  Store Locator
+//  ____________________________________________
+
+//
+//  Variables
+//  ____________________________________________
+@amlocator__location__background-grey: #fbfbfb;
+@amlocator__location__separator-color: #d2dde5;
+@amlocator__location__accent-color: #2d93e2;
+@amlocator__location__map-placemark: #1978c3;
+@amlocator__location__link-color: #6b8fab;
+@amlocator__location__multiselect-color: #363636;
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .amlocator-description-grey {
+        background: @amlocator__location__background-grey;
+        padding: 0 15px;
+        word-break: break-word;
+    }
+
+    .amlocator-location-container {
+        & {
+            .lib-vendor-prefix-display(flex);
+            .lib-vendor-prefix-flex-direction(column);
+        }
+
+        .amlocator-column,
+        .amlocator-block {
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .amlocator-column > .amlocator-block {
+            padding: 0 15px;
+        }
+
+        .amlocator-block.-route {
+            padding: 20px 15px 25px;
+        }
+
+        .amlocator-block.-map {
+            height: 170px;
+            margin-bottom: 15px;
+        }
+
+        .amlocator-block.-separator {
+            box-sizing: border-box;
+            margin: 15px 0;
+        }
+
+        .amlocator-block.-separator > .hr {
+            border-top: 1px solid @amlocator__location__separator-color;
+            margin: 0;
+        }
+
+        .amlocator-block > .amlocator-title {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .amlocator-directions-container {
+            max-height: 500px;
+            overflow: auto !important; // overwriting slideToggle hidden overflow
+        }
+
+        .amlocator-text.-bold {
+            font-weight: 600;
+        }
+
+        .amlocator-button {
+            background: @color-blue1;
+            border: 1px solid @color-blue1;
+            border-radius: 2px;
+            box-sizing: border-box;
+            color: @color-white;
+            font-weight: inherit;
+            min-height: 40px;
+        }
+
+        .amlocator-button:hover {
+            background-color: lighten(@color-blue1, 5%);
+        }
+    }
+
+    .amlocator-route-creator {
+        & {
+            .lib-vendor-prefix-display(flex);
+            .lib-vendor-prefix-flex-direction(column);
+            background: @color-blue1;
+            box-sizing: border-box;
+        }
+
+        .amlocator-modes {
+            -ms-flex-pack: center;
+            -webkit-box-pack: center;
+            .lib-vendor-prefix-display(flex);
+            justify-content: center;
+        }
+
+        .amlocator-travel-mode {
+            background-color: transparent;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 3.5rem;
+            height: 3.5rem;
+            opacity: .6;
+            transition: all .3s ease;
+            width: 3.5rem;
+
+            &:not(:last-of-type) {
+                margin-right: 5px;
+            }
+
+            &:focus {
+                border: 1px solid @color-white;
+            }
+
+            &.radio-checked,
+            &:focus,
+            &:hover {
+                background-color: @amlocator__location__accent-color;
+                opacity: 1;
+            }
+
+            &.-driving {
+                .lib-css(background-image, @amlocator-travel-mode-driving__background);
+            }
+
+            &.-transit {
+                .lib-css(background-image, @amlocator-travel-mode-transit__background);
+            }
+
+            &.-walking {
+                .lib-css(background-image, @amlocator-travel-mode-walking__background);
+            }
+
+            &.-bicycling {
+                .lib-css(background-image, @amlocator-travel-mode-bicycling__background);
+            }
+        }
+
+
+        .amlocator-addresses {
+            -ms-flex-pack: justify;
+            -webkit-box-pack: justify;
+            .lib-vendor-box-align(center);
+            .lib-vendor-prefix-display(flex);
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .amlocator-inputs {
+            flex: 1;
+            margin: 0 25px;
+        }
+
+        .amlocator-address {
+            border: none;
+            height: 35px;
+
+            &:focus {
+                box-shadow: 0 0 3px 1px @color-white;
+            }
+        }
+
+        .amlocator-address.-end {
+            background: @color-gray95;
+            color: @color-gray-darken4;
+        }
+
+        .amlocator-address:not(:last-of-type) {
+            margin-bottom: 15px;
+        }
+
+        .amlocator-swap {
+            .lib-css(background-image, @amlocator-swap-icon__background);
+            background-color: transparent;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            height: 33px;
+            opacity: .6;
+            padding: 0;
+            transition: all .3s ease;
+            width: 20px;
+
+            &:hover,
+            &:focus {
+                opacity: 1;
+            }
+
+            &:focus {
+                .lib-css(box-shadow, 0 0 3px 1px @color-white);
+            }
+        }
+    }
+
+    .amlocator-route-icon {
+        & {
+            -ms-flex-pack: justify;
+            -webkit-box-pack: justify;
+            .lib-vendor-box-align(center);
+            .lib-vendor-prefix-display(flex);
+            .lib-vendor-prefix-flex-direction(column);
+            height: 65px;
+            justify-content: space-between;
+            width: 13px;
+        }
+
+        .amlocator-icon {
+            box-sizing: border-box;
+        }
+
+        .amlocator-icon.-start {
+            border: 3px solid @color-white;
+            border-radius: 10px;
+            height: 12px;
+            width: 12px;
+        }
+
+        .amlocator-icon.-dot {
+            background: @amlocator__location__accent-color;
+            border-radius: 10px;
+            height: 4px;
+            width: 4px;
+        }
+
+        .amlocator-icon.-end {
+            .lib-css(background, @amlocator-destination-icon__background);
+            height: 18px;
+            width: 13px;
+        }
+    }
+
+    .amlocator-collapse-title {
+        .lib-vendor-box-align(center);
+        .lib-vendor-prefix-display(flex);
+        box-sizing: border-box;
+        color: @color-black;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 5px 0 10px 0;
+    }
+
+    .amlocator-directions-container {
+        //  overwriting google maps directions + magento table styles
+        table.adp-placemark {
+            background: @amlocator__location__map-placemark;
+            color: @color-white;
+        }
+
+        td.adp-text {
+            font-weight: 600;
+            vertical-align: middle;
+        }
+    }
+
+    .amlocator-location-info {
+        & {
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        .amlocator-block {
+            margin-bottom: 10px;
+        }
+
+        .amlocator-link {
+            color: @color-black;
+            cursor: pointer;
+        }
+    }
+
+    .amlocator-location-info .amlocator-icon {
+        & {
+            background-color: @color-blue1;
+            border-radius: 10px;
+            display: inline-block;
+            height: 20px;
+            margin-right: 15px;
+            vertical-align: middle;
+            width: 20px;
+        }
+
+        &.-website {
+            .lib-css(background-image, @amlocator-icon-website__background);
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &.-phone {
+            .lib-css(background-image, @amlocator-icon-phone__background);
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &.-email {
+            .lib-css(background-image, @amlocator-icon-email__background);
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    }
+
+    .amlocator-location-container .amlocator-schedule-container {
+        .amlocator-today {
+            background: none;
+            cursor: pointer;
+            padding-left: 30px;
+            padding-right: 0;
+        }
+
+        .amlocator-today:before {
+            .lib-css(background, @amlocator-icon-clock__background);
+            height: 20px;
+            left: 0;
+            top: 5px;
+            width: 20px;
+        }
+    }
+
+    .amlocator-location-container .amlocator-schedule-table {
+        .amlocator-cell.-day {
+            padding-left: 10px;
+        }
+
+        .amlocator-cell.-time {
+            padding-right: 8px;
+        }
+    }
+
+    .amlocator-location-gallery {
+        & {
+            padding: 0 15px;
+        }
+
+        > .amlocator-wrapper {
+            height: 80px;
+            padding: 0 25px;
+        }
+
+        .slick-slide {
+            margin: .2rem;
+        }
+
+        .amlocator-link {
+            height: 80px;
+            text-align: center;
+        }
+
+        .amlocator-image {
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+        .amlocator-wrapper .slick-list .slick-track .slick-slide {
+            display: inline-block;
+        }
+
+        .slick-arrow {
+            &:focus {
+                .lib-css(box-shadow, @focus__box-shadow);
+            }
+        }
+    }
+
+    .fancybox-button,
+    .fancybox-button:hover {
+        box-shadow: none !important; // overwrite magento button box-shadow
+    }
+
+    .amlocator-location-reviews {
+        & {
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        .amlocator-items {
+            list-style: none none;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .amlocator-reviews-general {
+        & {
+            .lib-vendor-box-align(center);
+            .lib-vendor-prefix-display(flex);
+            .lib-vendor-prefix-flex-wrap(wrap);
+        }
+
+        .amlocator-value {
+            font-size: 50px;
+            font-weight: 400;
+            margin-right: 10px;
+        }
+
+        .amlocator-wrapper {
+            margin-right: 20px;
+        }
+    }
+
+    .amlocator-location-review {
+        & {
+            padding: 10px 0 0;
+        }
+
+        .amlocator-name {
+            font-weight: bold;
+        }
+
+        .amlocator-message {
+            margin-top: 10px;
+            max-height: 1000px;
+            overflow: auto;
+            transition: all .3s ease;
+            word-break: break-word;
+            word-wrap: break-word;
+        }
+
+        .amlocator-message.-collapsed {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .amlocator-footer {
+            .lib-vendor-prefix-display(flex);
+        }
+
+        .amlocator-link.-full {
+            &,
+            &:visited,
+            &:active,
+            &:hover {
+                color: @amlocator__location__link-color;
+                cursor: pointer;
+                font-size: 12px;
+                margin-right: 14px;
+                position: relative;
+            }
+        }
+
+        .amlocator-date {
+            color: @color-gray-darken3;
+            font-size: 12px;
+            margin-left: auto;
+            margin-right: 5px;
+        }
+    }
+
+    .amlocator-attributes-container {
+        display: none;
+        padding: 30px 20px;
+    }
+
+    .amlocator-location-attribute {
+        &:not(:first-of-type) {
+            margin-top: 25px;
+        }
+
+        .amlocator-values {
+            display: inline-block;
+        }
+
+        .amlocator-value {
+            border-radius: 2px;
+            /* phpcs:ignore Magento2.Less.ZeroUnits.ZeroUnitFound */
+            box-shadow: 0 2px 4px rgba(45, 147, 226, 0.1);
+            display: inline-block;
+            margin: 0 10px 5px 0;
+            padding: 5px 10px;
+        }
+
+        .amlocator-value.-multiselect {
+            background: @color-white;
+            color: @amlocator__location__multiselect-color;
+        }
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .loading-mask {
+        z-index: 100001 !important;
+    }
+}
+
+//
+//  Tablet +
+//  --------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amlocator-location-main .amlocator-location-container {
+        & {
+            .lib-vendor-prefix-flex-direction(row);
+        }
+
+        > .amlocator-column.-left,
+        .amlocator-block.-grey {
+            background: @amlocator__location__background-grey;
+        }
+
+        > .amlocator-column.-left {
+            width: 33%;
+        }
+
+        > .amlocator-column.-right {
+            display: block;
+            padding-left: 15px;
+            width: 67%;
+        }
+
+        .amlocator-block.-map {
+            height: 60vh;
+        }
+
+        .amlocator-location-reviews .amlocator-wrapper {
+            margin-right: auto;
+        }
+
+        .amlocator-attributes-wrapper .amlocator-collapse-title {
+            display: none;
+        }
+    }
+
+    .amlocator-location-main .amlocator-location-attribute {
+        & {
+            margin-bottom: 10px;
+            width: 50%;
+        }
+
+        &:not(:first-of-type) {
+            margin-top: 0;
+        }
+
+        &:nth-of-type(odd) {
+            float: left;
+        }
+
+        &:nth-of-type(even) {
+            float: right;
+        }
+    }
+
+    .amlocator-attributes-container {
+        display: block;
+    }
+}

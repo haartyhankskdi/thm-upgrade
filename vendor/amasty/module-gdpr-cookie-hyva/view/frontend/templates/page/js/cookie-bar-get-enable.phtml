@@ -1,0 +1,33 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\CookieBar;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var ViewModelRegistry $viewModels */
+
+$cookieBar = $viewModels->require(CookieBar::class);
+?>
+
+<script>
+    'use strict';
+
+    (function () {
+        window.amGdprCookieBar = {
+            isEnabled: <?= (int)$cookieBar->isCookieBarEnabled() ?>,
+
+            /**
+             * @public
+             * @returns {int}
+             */
+            getIsEnabled() {
+                return this.isEnabled;
+            }
+        }
+    })();
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript(); ?>

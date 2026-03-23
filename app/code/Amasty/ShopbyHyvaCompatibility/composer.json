@@ -1,0 +1,29 @@
+{
+    "name": "amasty/module-shopby-hyva-compatibility",
+    "description": "This module makes Amasty Improved Layered Navigation by Amasty compatible with Hyv\u00e4 Themes",
+    "type": "magento2-module",
+    "version": "1.1.10",
+    "require": {
+        "php": ">=7.4.0",
+        "magento/framework": ">=102.0.0",
+        "amasty/shopby": ">=4.0.0",
+        "amasty/module-shop-by-brand-hyva-compatibility": ">=1.1.6",
+        "amasty/module-shop-by-base-hyva-compatibility": ">=1.0.5",
+        "hyva-themes/magento2-theme-module": ">=1.2",
+        "hyva-themes/magento2-compat-module-fallback": ">=1.1.2",
+        "amasty/base": ">=1.21.0"
+    },
+    "suggest": {
+        "amasty/module-shopby-grouped-options-hyva": "When using Hyva, this module ensures compatibility between Amasty Shopby and Grouped Options.",
+        "amasty/module-shop-by-filter-highlight-hyva": "Install module-shop-by-filter-highlight-hyva module to activate the integration Filter Highlight module with Hyva Theme."
+    },
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\ShopbyHyvaCompatibility\\": ""
+        }
+    }
+}

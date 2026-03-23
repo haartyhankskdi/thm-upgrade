@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>        
+        <referenceContainer name="page.main">
+            <block class="RM\Homeproductcoll\Block\Products" name="groceries_product" template="groceries.phtml" />
+            <block class="RM\Homeproductcoll\Block\Products" name="freshmeat_product" template="freshmeat.phtml" />
+        </referenceContainer>    
+    </body>
+</page>

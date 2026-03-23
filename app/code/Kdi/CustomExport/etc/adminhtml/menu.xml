@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="Kdi_CustomExport::customexport" title="Custom Report" module="Kdi_CustomExport" sortOrder="51" resource="Kdi_CustomExport::customexport"/>
+        <add id="Kdi_CustomExport::customexportpost" title="Manage Custom Report" module="Kdi_CustomExport" sortOrder="10" action="customexport/customexport/index" resource="Kdi_CustomExport::customexport" parent="Kdi_CustomExport::customexport"/>
+    </menu>
+</config>

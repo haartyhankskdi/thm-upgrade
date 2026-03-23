@@ -1,0 +1,56 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+/**
+ * @var \Amasty\Storelocator\Block\View\Schedule $block
+ * @var \Amasty\Storelocator\Model\Location $location
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$location = $block->getData('location');
+$schedule = $block->getSchedule($location);
+$workingTimeToday = $location->getWorkingTimeToday();
+?>
+
+<?php if ($schedule): ?>
+    <div class="amlocator-week"
+         data-amlocator-js="collapse-content"
+         id="schedule<?= (int)$location->getId() ?>">
+        <div class="amlocator-schedule-table">
+            <?php foreach ($schedule->getBusinessHours() as $businessHours): ?>
+                <div class="amlocator-row">
+                    <span class="amlocator-cell -day">
+                        <?php $dayName = $block->getDayName($businessHours->getWeekday()); ?>
+
+                        <?php if ($dayName): ?>
+                            <?= $escaper->escapeHtml($dayName) ?>
+                        <?php endif; ?>
+                    </span>
+
+                    <?php if ($businessHours->isOpen()): ?>
+                        <span class="amlocator-cell -time">
+                            <?= $escaper->escapeHtml($block->formatOpeningHours($businessHours)) ?>
+                        </span>
+
+                        <?php if ($businessHours->getBreakFrom() && $businessHours->getBreakTo()): ?>
+                            <span class="amlocator-cell -day">
+                                <?= $escaper->escapeHtml($block->getBreakText()) ?>
+                            </span>
+
+                            <span class="amlocator-cell -time">
+                                <?= $escaper->escapeHtml($block->formatBreakPeriod($businessHours)) ?>
+                            </span>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <span class="amlocator-cell -time">
+                            <?= $escaper->escapeHtml($block->getClosedText()) ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif ?>

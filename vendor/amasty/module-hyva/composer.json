@@ -1,0 +1,20 @@
+{
+    "name": "amasty/module-hyva",
+    "version": "1.2.0",
+    "description": "Hyva theme compatibilities with Amasty's modules and improvements",
+    "type": "magento2-module",
+    "require": {
+        "php": ">=7.4",
+        "magento/framework": "*",
+        "amasty/base": ">=1.19.0"
+    },
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\Hyva\\": ""
+        }
+    }
+}

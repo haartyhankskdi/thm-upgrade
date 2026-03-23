@@ -1,0 +1,129 @@
+/* .page-header {} */
+
+
+.cms-home {
+	.header-sec {
+	  @apply lg:absolute lg:top-0 lg:left-0;
+	  background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+	}
+}
+.cms-home {
+  .columns {
+    @apply md:mx-auto md:px-0 lg:max-w-full;
+  }
+}
+
+.header-search-bg{
+	background-color: rgba(52, 52, 52, 0.64);
+}
+
+.menu-vid-sec {
+	@apply lg:w-[590px];
+ }
+
+.submenu-1 {
+	@apply md:w-[17%];
+}
+.search-img {
+	@apply md:h-[150px];
+}
+
+.amsearch-full-width .amsearch-button {
+	@apply hidden;
+} 
+ 
+.advance-search {
+	@apply md:w-[500px] lg:w-[670px] lg:mr-[35px];
+}
+
+
+.mini-search .product-item .price-container .price {
+	@apply !text-base !font-normal;
+} 
+
+.am-search-content {
+	@apply lg:pr-2;
+}
+.product-item.list-view {
+	@apply py-2;
+}
+
+.checkout-index-index .breadcrumbs a {
+	@apply text-[#E63833];
+}
+
+ 
+.mobile-menu-item {
+  @apply p-4 border-b border-gray-200 flex justify-between items-center text-base;
+}
+ 
+.mobile-menu-item span {
+  @apply cursor-pointer;
+}
+ 
+.mobile-menu-overlay {
+  @apply fixed inset-0 z-50 bg-white backdrop-blur overflow-hidden;
+}
+
+ 
+.menu-panel {
+  @apply flex h-full bg-white !w-full;
+  will-change: transform; 
+}
+
+ 
+.menu-panel > ul {
+  @apply flex-none w-full overflow-y-auto;
+}
+
+ 
+[x-cloak] {
+  @apply hidden !important;
+}
+
+
+
+
+@media screen and (max-width: 767px) {
+	.cms-home {
+	  .columns {
+	    @apply mx-auto px-0 max-w-full;
+	  	}
+	  }
+	  .cms-home {
+			.header-sec {
+			  @apply absolute top-0 left-0;
+			}
+		}
+
+		.mobile-sec-top {
+			@apply absolute top-[26px] right-[15px];
+		}
+		.block-search {
+			#search_mini_form {
+				@apply !w-full;
+			}
+		}
+
+		.header-search-bg {
+			@apply border border-gray-300 h-[40px];
+		}
+		.header-sec {
+        @apply pb-4;
+    }
+    .am-autoserch-container .product-info button {
+    	@apply !px-0;
+    }
+    .action-addtocart {
+    	@apply !mb-1;
+    }
+	
+}
+
+/*.insights-img {
+	@apply relative bg-[url('/pub/media/wysiwyg/insights-img.jpg')] bg-no-repeat bg-left bg-center bg-cover;
+}
+.insights-img::before {
+    content: "";
+    @apply absolute inset-0 bg-black/50;
+}*/

@@ -1,0 +1,40 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+
+<?php
+/** @var Mageplaza\FrequentlyBought\Block\Product\View\Type\Configurable $block */
+$product = $block->getProduct();
+$helper = $this->helper(\Mageplaza\FrequentlyBought\Helper\Data::class);
+?>
+<div class="swatch-opt" data-role="swatch-options-<?= /* @noEscape */ $product->getId() ?>"></div>
+
+<script type="text/x-magento-init">
+    {
+        "[data-role=swatch-options-<?= /* @noEscape */ $product->getId() ?>]": {
+            "FbtSwatchRenderer": {
+                "jsonConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonConfig() ?>,
+                "jsonSwatchConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonSwatchConfig() ?>,
+                "usePopup": "<?= /* @noEscape */ $helper->usePopup() ?>"
+            }
+        }
+    }
+</script>

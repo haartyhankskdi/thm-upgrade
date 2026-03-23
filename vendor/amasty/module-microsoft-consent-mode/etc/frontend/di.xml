@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\Response\Http">
+        <plugin name="Amasty_MicrosoftConsentMode::updateScriptTag"
+                type="Amasty\MicrosoftConsentMode\Plugin\Framework\App\Response\Http\UpdateScriptTag"/>
+    </type>
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_MicrosoftConsentMode::addConsentScript"
+                type="Amasty\MicrosoftConsentMode\Plugin\Framework\View\Page\Config\Renderer\AddConsentScript"/>
+    </type>
+    <type name="Amasty\PixelBing\ViewModel\InitBingViewModel">
+        <plugin name="Amasty_MicrosoftConsentMode::addDependencyMicrosoftCookie"
+                type="Amasty\MicrosoftConsentMode\Plugin\PixelBing\ViewModel\InitBingViewModel\AddDependencyMicrosoftCookie"/>
+    </type>
+</config>

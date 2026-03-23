@@ -1,0 +1,14 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    window.amastyCookieManager = window.amastyCookieManager || {};
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

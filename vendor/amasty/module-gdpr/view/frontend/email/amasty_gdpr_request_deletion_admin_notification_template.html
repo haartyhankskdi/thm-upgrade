@@ -1,0 +1,8 @@
+<!--@subject New personal data deletion request @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hello"}},</p>
+<p>{{trans "You have received a new personal data deletion request from the customer - %customer_name" customer_name=$customerName|escape}}.
+    <br>{{trans "Please, visit the request deletion grid."}}</p>
+
+{{template config_path="design/email/footer_template"}}

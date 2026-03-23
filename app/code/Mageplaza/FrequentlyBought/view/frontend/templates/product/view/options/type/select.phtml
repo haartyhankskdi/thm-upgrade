@@ -1,0 +1,40 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Select $block */
+$_option     = $block->getOption();
+$_optionType = $_option->getType();
+$class       = $_option->getIsRequire() ? ' required' : '';
+$productId   = $block->getProduct()->getId();
+?>
+<div class="field<?php /* @escapeNotVerified */ echo $class; ?>">
+    <label class="label" for="select_<?php /* @escapeNotVerified */ echo $productId . '_' . $_option->getId() ?>">
+        <span><?php echo  $block->escapeHtml($_option->getTitle()) ?></span>
+    </label>
+    <div class="control">
+        <?php echo $block->getValuesHtml() ?>
+        <?php if ($_option->getIsRequire()): ?>
+            <?php if ($_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_RADIO || $_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_CHECKBOX): ?>
+                <span id="options-<?php /* @escapeNotVerified */ echo $productId . '-' . $_option->getId() ?>-container"></span>
+            <?php endif; ?>
+        <?php endif;?>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+#description .referral, .description .customer {
+    padding: 5px 0;
+}
+
+#mp_section {
+    margin-top: 20px;
+}
+
+.url_and_code > .box-content > div {
+    margin: 10px 0;
+}
+
+.mp-content {
+    float: left;
+}
+
+.invite-friend {
+    margin-top: 20px;
+}
+
+.send-from {
+    height: 35px;
+}
+
+.invite-friend {
+    margin-top: 26px;
+}
+
+.invite-friend .comment {
+    background: #f5f5f5;
+}
+
+.bt-send {
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.invite-message {
+    margin-top: 40px;
+}
+
+.url_and_code .copy {
+    background: #FFFFFF;
+    width: 45px;
+    height: 30px;
+    display: block;
+    text-align: center;
+    line-height: 30px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    cursor: pointer;
+}
+
+.mp_email, .mp_code, .mp_url, .mp_input {
+    position: relative;
+}
+
+.mp-label {
+    font-weight: 600;
+}
+
+.mp-invitee {
+    margin-top: 60px;
+}
+
+/* css tooltip */
+.mp-copied-tooltip {
+    visibility: hidden;
+    font-size: 1rem;
+    line-height: 2rem;
+    width: 40px;
+    background-color: #1979C3;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    margin-left: -15px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.mp-copied-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1979C3 transparent transparent transparent;
+}
+/* end css tooltip*/
+
+.mp-refer-rule-des {
+    margin: 1rem 0 4rem 0;
+}
+
+#mp_reward_referral {
+    position: relative;
+    top: -25px;
+}

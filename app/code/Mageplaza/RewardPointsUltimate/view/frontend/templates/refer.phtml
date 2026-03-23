@@ -1,0 +1,34 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+$helperPoints   = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+$hyvaClass      = $helperPoints->isEnabledHyvaTheme() ? 'field-reserved' : '';
+$hyvaInputClass = $helperPoints->isEnabledHyvaTheme() ? 'form-input' : 'input-text';
+?>
+<div class="field <?= $hyvaClass ?> mp_refer pt-2 md:pt-0">
+    <label class="label">
+        <span><?= $block->escapeHtml(__('Refer Email Or Code')) ?></span>
+    </label>
+    <div class="control">
+        <input type="text"
+               value="<?= /** @noEscape */ $this->helper(\Mageplaza\RewardPointsUltimate\Helper\Cookie::class)->get() ?>"
+               name="mp_refer" class="<?= $hyvaInputClass ?> w-full bg-[#E4F0E8] border-[#E4F0E8] rounded-none h-12"/>
+    </div>
+</div>

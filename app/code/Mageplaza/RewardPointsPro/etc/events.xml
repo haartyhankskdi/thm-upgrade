@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="mpreward_spending_points_before">
+        <observer name="mageplaza_reward_points" instance="Mageplaza\RewardPointsPro\Observer\CalculatePointsSpending"/>
+    </event>
+    <event name="mpreward_calculate_item_earning_points">
+        <observer name="mageplaza_reward_earning_rule_item" instance="Mageplaza\RewardPointsPro\Observer\CatalogRuleEarning"/>
+    </event>
+    <event name="mpreward_earning_points_before">
+        <observer name="mageplaza_reward_earning_rule_before" instance="Mageplaza\RewardPointsPro\Observer\ShoppingCartEarning"/>
+    </event>
+    <event name="mpreward_last_item_earning_points">
+        <observer name="mageplaza_reward_last_item_earning_rule" instance="Mageplaza\RewardPointsPro\Observer\LastItemCatalogRuleEarning"/>
+    </event>
+    <event name="mp_reward_hold">
+        <observer name="mageplaza_reward_holding_points" instance="Mageplaza\RewardPointsPro\Observer\HoldingPoints"/>
+    </event>
+    <event name="mageplaza_rewardpoints_transaction_created">
+        <observer name="mageplaza_reward_holding_date" instance="Mageplaza\RewardPointsPro\Observer\HoldingDate"/>
+    </event>
+</config>

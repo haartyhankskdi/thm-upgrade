@@ -1,0 +1,40 @@
+parameters:
+    checkExplicitMixedMissingReturn: true
+    checkPhpDocMissingReturn: true
+    scanDirectories:
+        - %rootDir%/../../../dev/tests/static/framework/tests/unit/testsuite/Magento
+        - %rootDir%/../../../dev/tests/integration/framework/tests/unit/testsuite/Magento
+        - %rootDir%/../../../dev/tests/api-functional/_files/Magento
+    bootstrapFiles:
+        - %rootDir%/../../../dev/tests/static/framework/autoload.php
+        - %rootDir%/../../../dev/tests/integration/framework/autoload.php
+        - %rootDir%/../../../dev/tests/api-functional/framework/autoload.php
+        - %rootDir%/../../../dev/tests/setup-integration/framework/autoload.php
+        - %rootDir%/../../../dev/tests/static/framework/Magento/PhpStan/autoload.php
+    ignoreErrors:
+        # Optional module deps
+        -
+            message: '#^Method.*has invalid return type Amasty\\GdprCookieFacebookPixelSampleData\\Setup\\SampleData\\Installer.#'
+            paths:
+                - Setup/Patch/Data/InstallFbSampleData
+        -
+            message: '#^Class Amasty\\GdprCookieFacebookPixelSampleData\\Setup\\SampleData\\Installer not found.#'
+            paths:
+                - Setup/Patch/Data/InstallFbSampleData
+        -
+            message: '#^Method.*should return mixed but return statement is missing.#'
+            paths:
+                - Ui/DataProvider/Listing/CookieDataProvider
+        -
+            message: '#^Parameter \$subject of method.*has invalid type Amasty\\FacebookPixelPro\\Plugin\\FacebookPixel\\Model\\EventProcessor\\ProcessServerSideEvents.#'
+            paths:
+                - Plugin/FacebookPixelPro/Plugin/FacebookPixel/Model/EventProcessor/ProcessServerSideEvents/ProcessServerSideEventsPlugin
+services:
+    -
+        class: Magento\PhpStan\Reflection\Php\DataObjectClassReflectionExtension
+        tags: {phpstan.broker.methodsClassReflectionExtension: {priority: 100}}
+
+    errorFormatter.filtered:
+        class: Magento\PhpStan\Formatters\FilteredErrorFormatter
+        arguments:
+            tableErrorFormatter: @errorFormatter.table

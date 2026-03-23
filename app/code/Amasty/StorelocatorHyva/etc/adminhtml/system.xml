@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */-->
+<config 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd"
+>
+    <system>
+        <section id="amlocator">
+            <group id="general">
+                <field id="add_to_toolbar_menu" translate="label comment" type="select">
+                    <comment>Please note that Hyvä Theme does not provide this functionality.</comment>
+                </field>
+                <field id="add_to_footer_menu" translate="label comment" type="select">
+                    <comment>Please note that Hyvä Theme does not provide this functionality.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

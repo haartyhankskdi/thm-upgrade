@@ -1,0 +1,51 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\JsLayout;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+$jsLayout = $viewModels->require(JsLayout::class);
+$policyText = $jsLayout->getPolicyText();
+$isAllowCustomersCloseBar = $jsLayout->isAllowCustomersCloseBar();
+?>
+
+<span tabindex="0" class="focus:outline-hidden"></span>
+<div class="flex flex-col max-w-[740px] justify-center">
+    <div class="flex w-full justify-center flex-col">
+        <?php if ($policyText): ?>
+            <div class="w-full">
+                <p id="amcookie-bar-content" class="text-ambar-policy-text">
+                    <?= $escaper->escapeHtml($policyText, $jsLayout->getAllowedPolicyTextTags()) ?>
+                </p>
+            </div>
+        <?php endif; ?>
+        <div class="flex flex-wrap w-full justify-center gap-2 mt-4">
+            <?= $block->getChildHtml('amasty.cookie.cookiebar.buttons') ?>
+        </div>
+    </div>
+    <div class="flex w-full justify-end">
+        <?php if ($isAllowCustomersCloseBar): ?>
+            <button @click="closeCookieBarHandler"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Close Cookie Bar')) ?>"
+                    class="absolute right-2 top-2 text-black transition
+                        hover:text-black focus:drop-shadow-md hover:drop-shadow-md"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        <?php endif; ?>
+    </div>
+</div>
+

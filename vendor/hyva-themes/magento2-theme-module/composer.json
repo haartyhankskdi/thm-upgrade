@@ -1,0 +1,35 @@
+{
+  "name": "hyva-themes/magento2-theme-module",
+  "description": "Hyva Themes companion module",
+  "type": "magento2-module",
+  "require": {
+    "ext-simplexml": "*",
+    "hyva-themes/magento2-mollie-theme-bundle": "^1.0.1",
+    "magento/framework": "*",
+    "magento/module-catalog": ">=103.0.0",
+    "magento/module-checkout": ">=100.3.0",
+    "magento/module-cms": ">=103.0.0",
+    "magento/module-customer": ">=102.0.0",
+    "magento/module-quote-graph-ql": "*",
+    "magento/module-theme": ">=101.0.0",
+    "magento/module-wishlist": ">=101.0.0"
+  },
+  "require-dev": {
+    "hyva-themes/magento2-reset-theme":  "*",
+    "hyva-themes/magento2-default-theme":  "*",
+    "tddwizard/magento2-fixtures": "^1.0"
+  },
+  "authors": [{
+    "name": "Hyvä Themes B.V.",
+    "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\Theme\\": ["src/", "tests/src/"]
+    }
+  }
+}

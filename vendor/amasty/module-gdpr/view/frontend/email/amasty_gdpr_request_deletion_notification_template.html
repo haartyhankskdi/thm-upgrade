@@ -1,0 +1,8 @@
+<!--@subject Your delete request was denied @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hello %customer_name" customer_name=$customerName|escape}},</p>
+
+<p>{{trans "Your delete request was denied at this time due to the following reason: %comment" comment=$comment|escape}}</p>
+
+{{template config_path="design/email/footer_template"}}

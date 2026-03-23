@@ -1,0 +1,47 @@
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+
+<!--@subject {{trans "Welcome to our Milestone program"}} @-->
+
+{{template config_path="design/email/header_template"}}
+<div style="border:1px solid #BEBCB7; padding:13px 18px; background:#F8F7F5; line-height: 20px;">
+    <h4>{{trans "Congratulations,"}}</h4>
+    <br/>
+    <span>{{trans "You become a "}}{{var tier_name}}{{trans " member and own "}}{{var current_point}}{{trans " reward points."}}</span>
+    <br/>
+    <span>{{trans "Here are your "}}{{var tier_name}}{{trans " benefits:"}} </span>
+    <br/>
+    <ul style="margin: 25px 20px">
+        <li>{{trans "For 'Earn Rate', 'Catalog Rules', 'Shopping Cart Rules', you will be increased "}} {{var benefits_rate}}
+            {{trans " percent to earning"}}
+        </li>
+        <li>
+            {{trans "For 'Behavior Rules', you will be plus "}} {{var benefits_rule}}
+            {{trans " point to earning"}}
+        </li>
+        <li>
+            {{trans "You will receive a "}} {{var benefits_spent}} {{trans "% discount for your spending reward points."}}
+        </li>
+    </ul>
+    <span>{{trans "Attain more points to reach more benefits at higher tiers."}}</span>
+</div>
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* @var \Magento\Wishlist\Block\Link $block */
+$customerSession = $block->getLayout()->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+?>
+<div class="buy-again">
+<a href="<?= $block->getBaseUrl() ?>sales/order/history/">
+                <img src="<?= $block->getViewFileUrl('images/buy-again.svg'); ?>" alt="buy-again" />
+            </a>
+        </div>
+        
+<div class="link wishlist" data-bind="scope: 'wishlist'">
+    <a <?= /* @noEscape */ $block->getLinkAttributes() ?>>
+          <img src="<?php echo $block->getViewFileUrl('images/heart.svg'); ?>" alt="heart" /> 
+        <!--?= $block->escapeHtml($block->getLabel()) ?-->
+        <!-- ko if: wishlist().counter -->
+        <span data-bind="text: wishlist().counter" class="counter qty"></span>
+        <!-- /ko -->
+    </a>
+</div>
+<div class="my-account-link">
+ <a href="<?= $this->getUrl('customer/account') ?>">
+    <img src="<?php echo $block->getViewFileUrl('images/myaccount.svg'); ?>" alt="myaccount" />
+   </a>
+<?php if ($customerSession->getCustomerData()->isLoggedIn()): ?>
+    <li class="authorization-link">
+        <a href="<?= $block->getUrl('customer/account/logout') ?>">Logout</a>
+    </li>
+<?php endif; ?></div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "wishlist": {
+                        "component": "Magento_Wishlist/js/view/wishlist"
+                    }
+                }
+            }
+        }
+    }
+</script>

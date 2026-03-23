@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceBlock name="topmenu_desktop">
+            <arguments>
+                <argument name="max_level" xsi:type="number">4</argument> <!-- Max Menu depth to show -->
+            </arguments>
+            <block
+                name="topmenu_desktop_item"
+                template="Magento_Theme::html/header/menu/desktop-item.phtml"
+            />
+        </referenceBlock>
+    </body>
+</page>

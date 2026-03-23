@@ -1,0 +1,60 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\RewardPointsUltimate\Block\Category\View;
+
+/** @var $block View */
+$helperPoint = $block->getHelperPoint();
+?>
+<button type="submit" title="Add Product by Points" class="action to_cart_by_points">
+    <img src="<?= $block->escapeHtmlAttr($helperPoint->getIconUrl()) ?>" alt="<?= $block->escapeHtml(__('Add Product by Points')) ?>" />
+</button>
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        var products = $('.item.product.product-item');
+
+        products.each(function () {
+            var product           = $(this),
+                addByPointsBtn    = product.find('button.to_cart_by_points'),
+                addCartBtn        = product.find('button.tocart'),
+                inputSellByPoints = '<input type="hidden" name="mp_sell_product_by" value="1">',
+                inputSellByPrice  = '<input type="hidden" name="mp_sell_product_by" value="0">',
+                form              = product.find('.actions-primary form');
+
+            if (form.length) {
+                addByPointsBtn.appendTo(form);
+                addByPointsBtn.on('click', function (e) {
+                    $('input[name="mp_sell_product_by"]').remove();
+                    form.append(inputSellByPoints);
+                });
+
+                addCartBtn.on('click', function () {
+                    $('input[name="mp_sell_product_by"]').remove();
+                    form.append(inputSellByPrice);
+                });
+            } else {
+                addByPointsBtn.hide();
+            }
+        })
+    });
+</script>

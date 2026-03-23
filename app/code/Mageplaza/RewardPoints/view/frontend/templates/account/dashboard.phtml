@@ -1,0 +1,108 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\RewardPoints\Block\Account\Dashboard $block */
+
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+?>
+<div class="block-reward-dashboard">
+    <div class="block reward-balance row-mp">
+        <div class="col-mp mp-4 mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance available">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Available Balance')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */ $block->getAvailableBalance() ?></strong>
+                </span>
+            </div>
+        </div>
+        <div class="col-mp mp-4 mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance earned">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Total Earned')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */ $block->getTotalEarnedPoints() ?></strong>
+                </span>
+            </div>
+        </div>
+        <div class="col-mp mp-4 mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance paid">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Total Spent')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */ $block->getTotalSpentPoints() ?></strong>
+                </span>
+            </div>
+        </div>
+        <div class="mp-clear"></div>
+    </div>
+    <?php if (!$block->isRewardAccountActive()) : ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Your Account is currently inactive.')) ?></span>
+        </div>
+    <?php endif ?>
+
+    <?= /** @noEscape */ $block->getChildHtml() ?>
+</div>
+<!-- Compatible with Hyva theme -->
+<?php if ($helperPoints->checkHyvaTheme()) : ?>
+<style>
+    .box-balance {
+        border-radius: 5px;
+        height: 65px;
+    }
+
+    .available {
+        background: #39E070;
+    }
+
+    .earned {
+        background: #0249D3;
+    }
+
+    .paid {
+        background: #5865F2;
+    }
+
+    .item-balance {
+        padding: 0 20px;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .item-balance span strong{
+        line-height: 65px;
+        color: #ffffff;
+        font-size: 20px;
+    }
+
+    .label {
+        padding-top: 5px
+    }
+
+    table.data.table  {
+        word-break: break-all;
+    }
+</style>
+<?php endif; ?>

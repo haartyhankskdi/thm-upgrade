@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Hyva Theme Base Package (System)
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="page.wrapper">
+            <block name="am-hyva-top-links-container"
+                   as="am.hyva.top-links.container"
+                   template="Amasty_Hyva::container.phtml"
+                   before="-" />
+        </referenceContainer>
+    </body>
+</page>

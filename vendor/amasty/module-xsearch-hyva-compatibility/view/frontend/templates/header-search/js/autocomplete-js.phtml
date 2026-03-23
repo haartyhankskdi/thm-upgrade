@@ -1,0 +1,553 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Amasty\XsearchHyvaCompatibility\ViewModel\ComponentsRegistry;
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopup;
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopupQueries;
+use Hyva\GraphqlViewModel\ViewModel\GraphqlViewModel;
+use Hyva\Theme\ViewModel\ThemeLibrariesConfig;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Store as StoreViewModel;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var ComponentsRegistry $viewModelPosts */
+
+$componentRegistry = $viewModels->require(ComponentsRegistry::class);
+
+/** @var GraphqlViewModel $viewModelGraphQl */
+$viewModelGraphQl = $viewModels->require(GraphqlViewModel::class);
+/** @var StoreViewModel $viewModelStore */
+$viewModelStore = $viewModels->require(StoreViewModel::class);
+/** @var SearchPopupQueries $searchPopupQueriesViewModel */
+$searchPopupQueriesViewModel = $viewModels->require(SearchPopupQueries::class);
+/** @var SearchPopupQueries $searchPopupQueriesViewModel */
+$popupViewModel = $viewModels->require(SearchPopup::class);
+/** @var ThemeLibrariesConfig $themeLibrary */
+$themeLibrary = $viewModels->require(ThemeLibrariesConfig::class);
+$alpineVersion = $themeLibrary->getVersionIdFor('intersect-plugin')
+    ?: $themeLibrary->getVersionIdFor('alpine') ?: '2';
+
+$enabledComponents = [];
+if ($popupViewModel->isBestsellersEnabled()) {
+    $enabledComponents[] = 'bestsellers';
+}
+if ($popupViewModel->isRecentlyViewedEnabled()) {
+    $enabledComponents[] = 'recentlyViewed';
+}
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    'use strict';
+
+    window._amXSearchConfigFetcher = null;
+
+    function amXsearchAutocompleteComponent() {
+        const browserCache = {
+            set(key, value, ttl = 5 * 60 * 1000) {
+                const expiry = Date.now() + ttl;
+                localStorage.setItem(key, JSON.stringify({value, expiry}));
+            },
+
+            get(key) {
+                const item = JSON.parse(localStorage.getItem(key) || "null");
+                if (!item || Date.now() > item.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return item.value;
+            }
+        };
+
+        const INITIAL_QUERY_CACHE_KEY = 'x.InitialQuery';
+        const CONFIG_QUERY_CACHE_KEY = 'x.ConfigQuery';
+        const PREV_QUERY_CACHE_KEY = 'x.PrevQuery';
+        // TODO: Possible it will needs to change after the configurations are added to Admin
+        const HEADER_TYPE = '<?= $escaper->escapeJs($popupViewModel->getHyvaUIHeaderVariant()) ?>';
+
+        const cache = {};
+        const dataSections = {
+            products: false,
+            category: false,
+            page: false,
+            faq: false,
+            landingPage: false,
+            browsingHistory: false,
+            popularSearches: false,
+            bestsellers: false,
+            recentSearches: false,
+            recentlyViewed: false,
+            brand: false,
+            blog: false
+        };
+
+        return {
+            isLoading: false,
+            searchInitialized: false,
+            latestQuery: '',
+            productNameMaxLength: <?= $escaper->escapeJs($popupViewModel->getProductNameMaxLength()) ?>,
+            resultPageUrl: '<?= $escaper->escapeUrl($popupViewModel->getResultsPageUrl()) ?>',
+            minSearchLength: <?= $escaper->escapeJs($popupViewModel->getMinQueryLength() ?: 3) ?>,
+            maxSearchLength: <?= $escaper->escapeJs($popupViewModel->getMaxQueryLength() ?: 10) ?>,
+            isDefaultSearchInput: <?= $escaper->escapeJs($popupViewModel->isDefaultSearchInput() ? 'true' : 'false') ?>,
+            isFullWidthSearch: <?= $escaper->escapeJs($popupViewModel->isFullWidthSearch() ? 'true' : 'false') ?>,
+            searchPopupWidth: <?= $escaper->escapeJs($popupViewModel->getPopupWidth()) ?>,
+            showOverlay: false,
+            config: {},
+            slider: {
+                bestsellers: false,
+                recentlyViewed: false
+            },
+            isHorizontalView: true,
+            noResultsFound: false,
+            errorMessage: null,
+            // sections
+            sections: Object.create(dataSections),
+            searchQuery: '',
+
+            isHyvaUiHeader() {
+                return HEADER_TYPE.length && HEADER_TYPE !== 'default';
+            },
+
+            checkHyvaUiHeaderVariant(needle) {
+                return this.isHyvaUiHeader() && needle === HEADER_TYPE;
+            },
+
+            dynamicLayout($el) {
+                const matchMedia = window.matchMedia('(max-width: 768px)');
+                const isHorizontalViewPopupWidth = this.searchPopupWidth < 700 && !this.isDefaultSearchInput && !this.isFullWidthSearch;
+                // Fix cms preview
+                this.normalizeBaseUrl();
+
+                this.isHorizontalView = !matchMedia.matches ? isHorizontalViewPopupWidth : true;
+                matchMedia.addEventListener('change', event => {
+                    this.isHorizontalView = !matchMedia.matches ? isHorizontalViewPopupWidth : true;
+                })
+
+                if (!window._amXSearchConfigFetcher) {
+                    window._amXSearchConfigFetcher = new Promise(async resolve => {
+                        const cachedData = browserCache.get(CONFIG_QUERY_CACHE_KEY);
+
+                        if (cachedData) {
+                            return resolve(cachedData);
+                        }
+
+                        const query = `<?= /** @noEscape */ $viewModelGraphQl->query('amasty_xsearch_config', "query {{$searchPopupQueriesViewModel->queryStoreConfig()}}") ?>`;
+                        const response = await this.fetch(query, {}, CONFIG_QUERY_CACHE_KEY, false);
+                        if (response.errors && response.errors.length > 0) {
+                            console.error(response.errors);
+                        }
+
+                        response.data.config = this.mapGraphAliases(response.data.config)
+
+                        browserCache.set(CONFIG_QUERY_CACHE_KEY, response);
+                        resolve(response);
+                    });
+                }
+
+                _amXSearchConfigFetcher.then(response => {
+                    if (!response?.data?.config) {
+                        return;
+                    }
+
+                    this.config = response.data.config;
+                    this.processCustomLayoutStyles($el);
+                });
+
+                if (typeof this.searchOpen !== "undefined") {
+                    this.$watch('searchOpen', val => {
+                        if (!val) {
+                            return;
+                        }
+
+                        requestAnimationFrame(() => {
+                            const searchInput = document.querySelector('#search');
+                            searchInput && searchInput.focus();
+                        });
+                    });
+                }
+
+                if (typeof this.showOverlay !== "undefined") {
+                    this.$watch('showOverlay', val => {
+                        if (!val) {
+                            return;
+                        }
+
+                        this.applyHyvaUiHeaderConfig()
+                    });
+                }
+
+                <?php if (!empty($popupViewModel->getHyvaUIHeaderVariant())): ?>
+                this.applyHeaderTypeToContainers();
+                <?php endif ?>
+            },
+
+            isSidebarSectionsDisabled() {
+                if (!this.isHorizontalView) {
+                    return !Object.entries(this.sections).some(([key, value]) =>
+                        key !== 'products' && key !== 'bestsellers' && key !== 'recentlyViewed' && value.total_count > 0
+                    );
+                }
+            },
+
+            showSideBar() {
+                const recentlyViewed = this.sections?.recentlyViewed;
+                return this.latestQuery.length >= 3
+                    || (recentlyViewed && recentlyViewed?.items?.length);
+            },
+
+
+            showOnFirstClick(blockName) {
+                const sectionsToCheck = [
+                    'popularSearches',
+                    'browsingHistory',
+                    'recentSearches'
+                ];
+
+                if (!sectionsToCheck.includes(blockName)) {
+                    return false;
+                }
+
+                return this.latestQuery.length < this.minSearchLength
+                    && this.config[`amasty_xsearch_${blockName}_first_click`]
+                    && this.sections[blockName]?.items?.length;
+            },
+
+            processCustomLayoutStyles() {
+                const conf = key => this.config[`amasty_xsearch_layout_${key}`];
+
+                if (!conf("enabled")) {
+                    return "";
+                }
+
+                const styles = [
+                    "border",
+                    "hover",
+                    "highlight",
+                    "background",
+                    "text",
+                    "hover_text",
+                    'search_button',
+                    'search_button_text'
+                ];
+
+                const cachedConf = styles.reduce((acc, key) => {
+                    acc[key] = conf(key);
+                    return acc;
+                }, {});
+
+                const getDarken = (color, amount) => {
+                    const hex = parseInt(color.slice(1), 16);
+                    const r = Math.min(255, Math.max(0, ((hex >> 16) & 0xff) + amount));
+                    const g = Math.min(255, Math.max(0, ((hex >> 8) & 0xff) + amount));
+                    const b = Math.min(255, Math.max(0, (hex & 0xff) + amount));
+
+                    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+                };
+
+                const prefix = "--amsearch-color-";
+                styles.forEach((key) => {
+                    const color = cachedConf[key];
+
+                    document.body.style.setProperty(prefix + key, `#${color}`);
+                    document.body.style.setProperty(`${prefix + key}-focus`, getDarken(`#${color}`, -12));
+                    document.body.style.setProperty(`${prefix + key}-hover`, getDarken(`#${color}`, -16));
+                });
+            },
+
+            canShowSection(sectionData) {
+                return sectionData && sectionData.items && sectionData.items.length > 0;
+            },
+
+            initialSectionLoad() {
+                const req = this.fetch(`<?= /** @noEscape */ $viewModelGraphQl->query(
+                    'ampromo_xsearch_query_initial',
+                    $searchPopupQueriesViewModel->getInitialQueries()
+                ) ?>`, {}, INITIAL_QUERY_CACHE_KEY);
+                req.then(response => {
+                    if (response.errors && response.errors.length > 0) {
+                        console.error(response.errors);
+                    }
+
+                    this.searchInitialized = true;
+                    this.processResponse(response);
+                });
+            },
+
+            encodeHtml(html) {
+                const txt = document.createElement('textarea');
+                txt.textContent = html;
+                return txt.innerHTML;
+            },
+
+            sanitize(value) {
+                if (typeof DOMPurify === 'function') {
+                    return DOMPurify.sanitize(value)
+                } else {
+                    return this.encodeHtml(value)
+                }
+            },
+
+            doSearch() {
+                this.sections = Object.create(dataSections);
+
+                const {searchInput} = this.$refs;
+                const {latestQuery, minSearchLength} = this;
+                const inputText = this.sanitize(searchInput.value);
+
+                this.searchQuery = inputText;
+
+                if (inputText !== latestQuery && cache[PREV_QUERY_CACHE_KEY]) {
+                    delete cache[PREV_QUERY_CACHE_KEY];
+                }
+
+                this.latestQuery = this.sanitize(searchInput.value);
+
+                if (inputText.length < minSearchLength) {
+                    this.initialSectionLoad();
+                    return;
+                }
+
+                this.noResultsFound = null;
+                this.errorMessage = null;
+
+                const query = `<?= /** @noEscape */ $viewModelGraphQl->query('am_xsearch_query', $searchPopupQueriesViewModel->getAllQueries()) ?>`;
+                const req = this.fetch(query, {inputText}, PREV_QUERY_CACHE_KEY);
+
+                req.then(response => {
+                    if (response.errors && response.errors.length > 0) {
+                        this.errorMessage = response.errors[0].message;
+                        console.error(this.errorMessage);
+
+                        response.data.popularSearches = null;
+                    }
+
+                    this.searchInitialized = true;
+                    this.processResponse(response);
+                });
+            },
+
+            fetch(query, variables = {}, cacheKey = null, useLoading = true) {
+                if (cacheKey && cache[cacheKey]) {
+                    return Promise.resolve(cache[cacheKey]);
+                }
+
+                if (useLoading) {
+                    this.isLoading = true;
+                }
+
+                const req = fetch(`${BASE_URL}graphql`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Store': '<?= $escaper->escapeJs($viewModelStore->getStoreCode()) ?>'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({query, variables}),
+                });
+
+                return req.then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
+                    }
+
+                    const body = response.json();
+                    if (cacheKey) {
+                        cache[cacheKey] = body;
+                    }
+
+                    return body;
+                })
+                    .catch(reason => {
+                        console.error(reason);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            },
+
+            checkSearchInput() {
+                if (this.$refs.searchInput.value === '') {
+                    this.clear();
+                }
+            },
+
+            redirect() {
+                this.isLoading = true;
+                const {searchInput} = this.$refs;
+                const inputText = this.sanitize(searchInput.value);
+
+                const products = this.sections.products;
+                if (products && products.items.length === 1 && this.config.isRedirectToSingleProductEnabled) {
+                    location.href = this.getProductUrl(products.items[0]);
+                    return;
+                }
+
+                const url = '<?= $escaper->escapeUrl($popupViewModel->getResultsPageUrl()) ?>';
+                location.href = url + encodeURI(inputText);
+            },
+
+            focusElement(element) {
+                if (element && element.nodeName === "DIV") {
+                    element.focus();
+                    return true;
+                }
+                return false;
+            },
+
+            processResponse(response) {
+                this.updateSections(response.data);
+            },
+
+            clear() {
+                const initialQueryCache = cache[INITIAL_QUERY_CACHE_KEY];
+                if (!initialQueryCache) {
+                    return;
+                }
+
+                initialQueryCache.then(result => {
+                    this.updateSections(result.data ?? {});
+                });
+            },
+
+            clearSearchQuery() {
+                this.searchQuery = '';
+                this.$refs.searchInput.value = '';
+                this.$refs.searchInput.focus();
+            },
+
+            closeSearch() {
+                if (this.searchOpen) {
+                    this.searchOpen = false;
+                }
+
+                this.$nextTick(() => {
+                    this.showOverlay = false;
+                    this.searchInitialized = false;
+                })
+
+                if (this.checkHyvaUiHeaderVariant('c')) {
+                    this.$refs.searchContainerDesktop.classList.remove(HEADER_TYPE + '-header-type');
+                }
+            },
+
+            processItemsWithRating(value) {
+                if (value?.items) {
+                    value.items = value.items.map(this.getRating);
+                }
+                return value;
+            },
+
+            processSection(key, value) {
+                if (!value) return value;
+
+                let processedValue = {...value};
+
+                switch (key) {
+                    case 'recentlyViewed':
+                    case 'bestsellers':
+                        processedValue = this.processItemsWithRating(processedValue);
+                        processedValue.items = (processedValue.items || []).map(item => ({
+                            ...item,
+                            isSliderItem: true,
+                        }));
+                        break;
+                    case 'products':
+                        processedValue = this.processItemsWithRating(processedValue);
+                        processedValue = this.processProductName(processedValue);
+                        break;
+                    default:
+                        break;
+                }
+
+                processedValue.title = this.config[`amasty_xsearch_${key}_title`] || 'Default Title';
+                return processedValue;
+            },
+
+            updateSections(rows) {
+                if (!this.showOverlay) this.showOverlay = true;
+
+                this.isLoading = false;
+
+                this.noResultsFound = !rows.products?.total_count && this.latestQuery.length >= this.minSearchLength;
+                if (!this.noResultsFound) this.errorMessage = null;
+
+                Object.keys(rows).forEach(key => {
+                    const data = rows[key];
+                    this.sections[key] = data?.items?.length ? this.processSection(key, data) : {
+                        items: [],
+                        total_count: 0
+                    };
+                });
+
+                if (this.latestQuery.length >= this.minSearchLength) return;
+
+                Object.keys(this.slider).forEach(key => {
+                    const items = rows[key]?.items;
+
+                    if (items?.length && !this.slider[key]) {
+                        this.slider[key] = this.amXsearchCarouselComponent(key, items.length);
+                    }
+                });
+
+                window.dispatchEvent(new CustomEvent('amxsearch-updated-sections'));
+            },
+
+            getBlockOrder() {
+                const enabled = <?= /** @noEscape */ json_encode($enabledComponents) ?>;
+                const order = (this.config.amasty_xsearch_bestsellers_position === '1')
+                    ? ['bestsellers', 'recentlyViewed']
+                    : ['recentlyViewed', 'bestsellers'];
+                return order.filter(item => enabled.includes(item));
+            },
+
+            shouldRenderComponent(component) {
+                const enabledComponents = {
+                    bestsellers: <?= /** @noEscape */ json_encode($popupViewModel->isBestsellersEnabled()) ?>,
+                    recentlyViewed: <?= /** @noEscape */ json_encode($popupViewModel->isRecentlyViewedEnabled()) ?>
+                };
+
+                return enabledComponents[component] && this.slider[component];
+            },
+            mapGraphAliases(config) {
+                const aliasMap = {
+                    amasty_xsearch_product_reviews: 'isProductReviewsBlockEnabled',
+                    amasty_xsearch_product_add_to_cart: 'isProductAddToCartBlockEnabled',
+                    amasty_xsearch_product_redirect_single_product: 'isRedirectToSingleProductEnabled',
+                    amasty_xsearch_general_full_screen: 'isFullScreenMode',
+                    amasty_xsearch_product_popup_display: 'isGridView',
+                    amasty_xsearch_product_show_sku: 'isShowSku',
+                    amasty_xsearch_product_desc_length: 'shortDescriptionLength',
+                    secure_base_media_url: 'customMediaUrl',
+                    amasty_xsearch_product_title: 'amasty_xsearch_products_title',
+                    amasty_xsearch_popular_searches_title: 'amasty_xsearch_popularSearches_title',
+                    amasty_xsearch_browsing_history_title: 'amasty_xsearch_browsingHistory_title',
+                    amasty_xsearch_recent_searches_title: 'amasty_xsearch_recentSearches_title',
+                    amasty_xsearch_recently_viewed_title: 'amasty_xsearch_recentlyViewed_title',
+                    amasty_xsearch_landing_page_title: 'amasty_xsearch_landingPage_title',
+                    amasty_xsearch_popular_searches_first_click: 'amasty_xsearch_popularSearches_first_click',
+                    amasty_xsearch_browsing_history_first_click: 'amasty_xsearch_browsingHistory_first_click',
+                    amasty_xsearch_recent_searches_first_click: 'amasty_xsearch_recentSearches_first_click'
+                };
+                const result = {};
+
+                for (let key in config) {
+                    const newKey = aliasMap[key] ? aliasMap[key] : key;
+                    result[newKey] = config[key];
+                }
+
+                return result;
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

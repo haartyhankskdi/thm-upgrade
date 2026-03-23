@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Mageplaza\RewardPointsPro\Model\ResourceModel\CatalogRule\AssociatedEntityMap" type="Magento\Framework\DataObject">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="website" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_catalogrule_website</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">website_id</item>
+                </item>
+                <item name="customer_group" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_catalogrule_customer_group</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">customer_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Mageplaza\RewardPointsPro\Model\ResourceModel\ShoppingCart\AssociatedEntityMap" type="Magento\Framework\DataObject">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="website" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_shopping_cart_website</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">website_id</item>
+                </item>
+                <item name="customer_group" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_shopping_cart_customer_group</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">customer_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Catalog\Block\Product\AbstractProduct">
+        <plugin name="mp_catalogrule_earning" type="Mageplaza\RewardPointsPro\Plugin\Catalog\Earning"/>
+    </type>
+    <type name="Mageplaza\RewardPoints\Helper\Calculation">
+        <plugin name="mp_shopping_cart_spending_rule" type="Mageplaza\RewardPointsPro\Plugin\Helper\Calculation"/>
+    </type>
+
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\CatalogRuleInterface" type="Mageplaza\RewardPointsPro\Model\CatalogRule"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\CatalogRuleSearchResultInterface" type="Mageplaza\RewardPointsPro\Model\ResourceModel\CatalogRule\Collection"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\CatalogRuleRepositoryInterface" type="Mageplaza\RewardPointsPro\Model\CatalogRuleRepository"/>
+
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\SCEarningRuleInterface" type="Mageplaza\RewardPointsPro\Model\ShoppingCartEarningRule"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\SCEarningSearchResultInterface" type="Mageplaza\RewardPointsPro\Model\ResourceModel\ShoppingCartEarningRule\Collection"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\SCEarningRuleRepositoryInterface" type="Mageplaza\RewardPointsPro\Model\SCEarningRuleRepository"/>
+
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\SCSpendingRuleInterface" type="Mageplaza\RewardPointsPro\Model\ShoppingCartSpendingRule"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\SCSpendingSearchResultInterface" type="Mageplaza\RewardPointsPro\Model\ResourceModel\ShoppingCartSpendingRule\Collection"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\SCSpendingRuleRepositoryInterface" type="Mageplaza\RewardPointsPro\Model\SCSpendingRuleRepository"/>
+    <preference for="Mageplaza\RewardPointsPro\Api\Data\RuleLabelInterface" type="Mageplaza\RewardPointsPro\Model\RuleLabel"/>
+
+    <preference for="Mageplaza\RewardPointsPro\Api\CartRepositoryInterface" type="Mageplaza\RewardPointsPro\Model\CartRepository"/>
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="mp_reward_add_earning_point" type="Mageplaza\RewardPointsPro\Plugin\Product\ProductRepository"/>
+    </type>
+
+    <type name="Mageplaza\RewardPoints\Model\ActionFactory">
+        <arguments>
+            <argument name="map" xsi:type="array">
+                <item name="holding_points" xsi:type="string">Mageplaza\RewardPointsPro\Model\Action\Earning\Hold</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Mageplaza\RewardPoints\Block\Account\Dashboard\Exchange" type="Mageplaza\RewardPointsPro\Block\Account\Dashboard\Hold"/>
+</config>

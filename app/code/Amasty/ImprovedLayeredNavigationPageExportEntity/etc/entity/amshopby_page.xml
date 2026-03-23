@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Improved Layered Navigation Page Export Entity
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_ExportCore:etc/am_export.xsd">
+    <entity code="amshopby_page">
+        <name>Amasty Improved Layered Navigation Page</name>
+        <group>Amasty Improved Layered Navigation</group>
+        <description>Amasty Improved Layered Navigation Page Export Entity</description>
+        <enabledChecker class="Amasty\ExportCore\Export\Config\IsModuleEnabled">
+            <arguments>
+                <argument name="moduleName" xsi:type="string">Amasty_ShopbyPage</argument>
+            </arguments>
+        </enabledChecker>
+        <collectionFactory class="Amasty\ShopbyPage\Model\ResourceModel\Page\CollectionFactory"/>
+        <fieldsConfig>
+            <fieldsClass class="Amasty\ExportCore\Export\FieldsClass\Describe"/>
+            <fields>
+                <field name="position">
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Amasty\ShopbyPage\Model\Config\Source\Position</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="top_block_id">
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Magento\Catalog\Model\Category\Attribute\Source\Page</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="bottom_block_id">
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Magento\Catalog\Model\Category\Attribute\Source\Page</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="tag_robots">
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Amasty\ShopbyPage\Model\Config\Source\Robots</class>
+                        </options>
+                    </filter>
+                </field>
+            </fields>
+        </fieldsConfig>
+    </entity>
+</config>

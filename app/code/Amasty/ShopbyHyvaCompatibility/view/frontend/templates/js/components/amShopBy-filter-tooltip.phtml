@@ -1,0 +1,67 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function initFilterTooltip() {
+        return {
+            showTooltip: false,
+            tooltipLoaded: false,
+            top: 0,
+            left: 0,
+            selectors: {
+                filter: '.filter-option',
+                filterTitle: '.filter-options-title'
+            },
+
+            init() {
+                this.$watch('showTooltip', value => {
+                    if (value) {
+                        setTimeout(() => {
+                            const tooltip = this.$refs.tooltip;
+                            if (tooltip) {
+                                const tooltipRect = tooltip.getBoundingClientRect();
+                                const elementRect = this.$el.getBoundingClientRect();
+
+                                if (tooltipRect.height && tooltipRect.width) {
+                                    this.top = elementRect.top - tooltipRect.height;
+                                    this.left = elementRect.left - ((tooltipRect.width / 10) * 3.2);
+                                }
+                            }
+                        }, 200);
+                    }
+                });
+            },
+
+            /**
+             *
+             * @param element
+             */
+            moveToTitle(element) {
+                const fragment = document.createDocumentFragment();
+                const target = element.closest(this.selectors.filter).querySelector(this.selectors.filterTitle);
+                fragment.appendChild(element);
+                target.prepend(fragment);
+            },
+
+            loadTooltip() {
+                if (!this.tooltipLoaded) {
+                    this.tooltipLoaded = true;
+                }
+            }
+        }
+    }
+</script>

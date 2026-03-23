@@ -1,0 +1,39 @@
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+
+<!--@subject Happy Birthday! @-->
+
+{{template config_path="design/email/header_template"}}
+<table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+    <tr>
+        <td valign="top">
+            <p>
+                <strong>{{trans "Dear %name," name=$customer_name}}</strong><br/>
+                <span>{{trans "%storeName would like to wish you good health, luck and success on the occasion of your birthday!" storeName=$store_name}}</span>&nbsp;
+                <span>{{trans "By the way, please receive our small gift which is %pointAmount to spend at " pointAmount=$point_amount}}</span>
+                <a href="{{store url=""}}">{{var store_name}}.</a><br/>
+                <span>{{trans "Happy Birthday!"}}</span>
+            </p>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

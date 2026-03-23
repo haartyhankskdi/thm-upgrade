@@ -1,0 +1,391 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Template $block */
+
+$isHaveCsp = class_exists(\Hyva\Theme\ViewModel\HyvaCsp::class);
+$hyvaCsp   = '';
+if ($isHaveCsp) {
+    $hyvaCsp = $viewModels->require(\Hyva\Theme\ViewModel\HyvaCsp::class);
+}
+?>
+<script>
+    function spendPoints () {
+        return {
+            expand: true,
+            isLoading: false,
+            points: [],
+            spendingConfig: null,
+            rules: [],
+            selectedRule: {},
+            pointSpent: [],
+            canVisibleSpendPoints: true,
+            isDisplaySlider: true,
+            useMaxPoint: false,
+            pauseSubscribe: false,
+            slider: null,
+            oldValue: null,
+            isChangeRule: false,
+            dispatch: null,
+            selectedRuleId: null,
+            maxPointInput: null,
+
+            /**
+             * initial function
+             *
+             */
+            init () {
+                this.points         = JSON.parse(JSON.stringify(this.$wire.entangle('points').initialValue));
+                this.pointSpent     = JSON.parse(JSON.stringify(this.$wire.entangle('points').initialValue));
+                this.rules          = this.points.spending.rules || [];
+                this.spendingConfig = this.points.spending;
+                this.dispatch       = this.$dispatch;
+                this.maxPointInput  = document.getElementById('reward-use-max-point');
+                this.initData();
+                this.$nextTick(() => {
+                    this.initSlider();
+                    if (Number(this.pointSpent) === Number(this.selectedRule?.max)) {
+                        this.useMaxPoint           = true;
+                        this.maxPointInput.checked = true;
+                    } else {
+                        this.useMaxPoint = false;
+                        if (this.maxPointInput) {
+                            this.maxPointInput.checked = false;
+                        }
+                    }
+                });
+                this.$watch('pointSpent', (value) => {
+                    if (Number(value) === Number(this.selectedRule?.max)) {
+                        this.useMaxPoint           = true;
+                        this.maxPointInput.checked = true;
+                    } else {
+                        this.useMaxPoint = false;
+                        if (this.maxPointInput) {
+                            this.maxPointInput.checked = false;
+                        }
+                    }
+                });
+
+                if (this.selectedRule) {
+                    this.selectedRuleId = this.selectedRule.id;
+                }
+                window.addEventListener('checkout:shipping:method-activate', (e) => {
+                    this.reFreshPoints();
+                });
+                window.addEventListener('checkout:payment:method-activate', (e) => {
+                    this.reFreshPoints();
+                });
+            },
+
+            /**
+             * refresh point rules when change shipping method or payment method
+             */
+            reFreshPoints: function () {
+                this.$wire.call('refresh').then(() => {
+                    this.points = JSON.parse(JSON.stringify(this.$wire.entangle('points').initialValue));
+                    this.rules  = this.points.spending.rules || [];
+
+                    if (this.points.spending.ruleApplied) {
+                        let found = this.rules.find(r => r.id === this.points.spending.ruleApplied);
+                        if (found) {
+                            this.selectedRule = found;
+                        } else {
+                            this.selectedRule = this.rules[0] || null;
+                        }
+                    } else {
+                        this.selectedRule = this.rules[0] || null;
+                    }
+
+                    this.selectedRuleId = this.selectedRule ? this.selectedRule.id : null;
+                });
+            },
+            /**
+             *
+             * @returns {boolean}
+             */
+            hasRules: function () {
+                return this.rules.length > 0;
+            },
+            /**
+             *
+             * @returns {boolean}
+             */
+            hasOneRule: function () {
+                return this.rules.length === 1;
+            },
+            /**
+             *
+             * @returns {boolean}
+             */
+            hasMoreRules: function () {
+                return this.rules.length > 1;
+            },
+
+            /**
+             *
+             * @returns {boolean}
+             */
+            toggleExpand: function () {
+                return this.expand = !this.expand;
+            },
+
+            applyDownRotateClass: function () {
+                return {
+                    'transform rotate-180': this.expand
+                }
+            },
+
+            /**
+             * update spent point action
+             *
+             * @param pointSpent
+             * @param ruleId
+             */
+            spendingPoints: async function (pointSpent, ruleId) {
+                this.$wire.call('setPointSpent', pointSpent, ruleId);
+            },
+            /**
+             *
+             * @returns {string}
+             */
+            balanceFormatted: function () {
+                let label = 'You have %s';
+                return label.replace('%s', '<strong>' + this.format(this.points.balance) + '</strong>');
+            },
+
+            /**
+             * format
+             *
+             * @param point
+             * @returns {*|string}
+             */
+            format: function (point) {
+                if (parseInt(point) > 1) {
+                    return this.points.pattern.plural.replace('{point}', point);
+                }
+
+                return this.points.pattern.single.replace('{point}', point);
+            },
+
+            /**
+             * init data
+             */
+            initData: function () {
+                let slidePoint;
+                slidePoint = this.spendingConfig.pointSpent;
+                if (this.selectedRule &&
+                    Number(slidePoint) > Number(this.selectedRule.max) &&
+                    this.selectedRule.isDisplaySlider
+                ) {
+                    slidePoint = this.selectedRule.max;
+                }
+
+                if (this.selectedRule &&
+                    this.selectedRule.isDisplaySlider
+                ) {
+                    this.isDisplaySlider = this.selectedRule.isDisplaySlider;
+                }
+                this.pointSpent = slidePoint;
+                if (this.spendingConfig.ruleApplied) {
+                    this.rules.forEach(rule => {
+                        if (rule.id === this.spendingConfig.ruleApplied) {
+                            this.selectedRule = rule;
+                            return false;
+                        }
+                    });
+                }
+                if (this.rules.length === 1 && typeof this.rules[0]['id'] !== 'undefined' && this.rules[0]['id'] === 'rate') {
+                    this.spendingConfig.ruleApplied = this.rules[0]['id'];
+                }
+                this.initSelectedRule(this.spendingConfig.ruleApplied);
+            },
+
+            /**
+             * change point spent
+             *
+             * @param event
+             */
+            changePointSpent: function (event) {
+                let rule,
+                    value,
+                    newValue;
+
+                rule            = this.selectedRule;
+                this.pointSpent = event.target.value;
+
+                if (this.pointSpent && parseInt(this.pointSpent)) {
+                    value = parseInt(this.pointSpent);
+
+                    if (value < rule.min) {
+                        newValue = rule.min;
+                    } else if (value > rule.max) {
+                        newValue = rule.max;
+                    } else {
+                        newValue = value;
+                    }
+                } else {
+                    newValue = rule.min;
+                }
+
+                const inputSlider = document.querySelector(".reward-range-slider");
+                if (newValue !== inputSlider.value) {
+                    this.updateValueOnSlider(newValue);
+                }
+            },
+
+            /**
+             * update max point
+             *
+             * @param event
+             */
+            changeMaxPoint: function (event) {
+                let newValue = 0;
+
+                if (event) {
+                    newValue = !this.useMaxPoint ? this.selectedRule.max : this.selectedRule.min;
+                    this.updateValueOnSlider(newValue);
+                }
+            },
+
+            /**
+             * update point on range slider
+             *
+             * @param newValue
+             */
+            updateValueOnSlider: function (newValue) {
+                this.pointSpent = newValue;
+                this.spendingPoints(this.pointSpent, this.selectedRule.id);
+            },
+
+            /**
+             * change rule action
+             */
+            changeRule: function (e) {
+                if (e.target.value) {
+                    this.isChangeRule = true;
+                    this.initSelectedRule(e.target.value);
+                }
+            },
+
+            /**
+             *
+             * @param ruleId
+             * @returns {*}
+             */
+            initSelectedRule: function (ruleId) {
+                let selectedRule;
+
+                if (this.rules && this.rules.length) {
+                    if (ruleId) {
+                        this.rules.forEach(rule => {
+                            if (rule.id === ruleId) {
+                                selectedRule = rule;
+                            }
+                        });
+                    }
+                    if (ruleId === 'no_apply' || !selectedRule) {
+                        this.selectedRule    = this.rules[0];
+                        this.isDisplaySlider = false;
+                    }
+                    if (JSON.stringify(selectedRule) !== JSON.stringify(this.selectedRule)) {
+                        this.pointSpent   = 0;
+                        this.selectedRule = selectedRule;
+                    }
+                } else {
+                    this.selectedRule    = null;
+                    this.isDisplaySlider = false;
+                }
+                this.isDisplaySlider = selectedRule?.isDisplaySlider ?? false;
+                if (this.selectedRule) {
+                    this.selectedRuleId = this.selectedRule.id;
+                    this.spendingPoints(this.pointSpent, this.selectedRule.id);
+                }
+
+                return this;
+            },
+
+            /**
+             * init range slider
+             */
+            initSlider: function () {
+                window.mpRewardPoints  = 0;
+                let isUseMaxPointByDefault;
+                isUseMaxPointByDefault = (this.pointSpent === null || this.pointSpent === '0') && this.spendingConfig.useMaxPoints;
+                if (isUseMaxPointByDefault) {
+                    this.pointSpent = this.selectedRule.max;
+                    this.updateSlider();
+                }
+            },
+
+            /**
+             * update range slider
+             */
+            updateSlider: function () {
+                let rule          = this.selectedRule;
+                const inputSlider = document.querySelector(".reward-range-slider");
+                if (rule) {
+                    inputSlider.max  = rule.max;
+                    inputSlider.min  = rule.min;
+                    inputSlider.step = rule.step;
+                }
+            },
+
+            /**
+             * send update spent points
+             */
+            sendUpdateSpentPoints: function () {
+                if (this.pointSpent !== this.oldValue || this.isChangeRule) {
+                    this.updateSpendPoints();
+                    this.oldValue = this.pointSpent;
+                }
+            },
+
+            /**
+             * check max points
+             */
+            checkMaxPointByAction: function () {
+                this.useMaxPoint = parseInt(this.pointSpent) === parseInt(this.selectedRule.max);
+            },
+
+            /**
+             * update spent points
+             */
+            updateSpendPoints: function () {
+                if (isNaN(this.pointSpent)) {
+                    this.pointSpent = 0;
+                }
+                this.spendingPoints(this.pointSpent, this.selectedRule.id);
+            }
+        }
+    }
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('spendPoints', spendPoints)
+    }, {once: true})
+</script>
+<?= $block->getChildHtml('after') ?>
+<?php if ($isHaveCsp) {
+    $hyvaCsp->registerInlineScript();
+} ?>

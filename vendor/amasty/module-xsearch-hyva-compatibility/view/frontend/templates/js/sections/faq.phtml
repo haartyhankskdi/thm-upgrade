@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchFaq() {
+        return {
+            faqItems() {
+                return this.sections.faq.items
+            },
+            faqItemUrl() {
+                return window.BASE_URL + this.item.url
+            },
+            faqItemName() {
+                return this.item.name
+            },
+            faqTitle() {
+                return this.sections.faq.title
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

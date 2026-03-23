@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="MY_CompleteSurvey::completesurvey" title="Post Sales Customer Survey" module="MY_CompleteSurvey" sortOrder="51" resource="MY_CompleteSurvey::completesurvey"/>
+        <add id="MY_CompleteSurvey::completesurveypost" title="Manage Post Sales Customer Survey" module="MY_CompleteSurvey" sortOrder="10" action="completesurvey/completesurvey/index" resource="MY_CompleteSurvey::completesurvey" parent="MY_CompleteSurvey::completesurvey"/>
+    </menu> -->
+</config>

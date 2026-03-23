@@ -1,0 +1,32 @@
+{
+  "name": "mageplaza/module-frequently-bought-together-mkp",
+  "description": "Mageplaza Frequently Bought Together Extension",
+  "require": {
+    "mageplaza/module-core": "^1.5.13"
+  },
+  "type": "magento2-module",
+  "version": "4.2.4",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Mageplaza",
+      "email": "support@mageplaza.com",
+      "homepage": "https://www.mageplaza.com",
+      "role": "Technical Support"
+    }
+  ],
+  "keywords": [
+    "magento 2",
+    "mageplaza",
+    "Frequently Bought Together",
+    "magento 2 Frequently Bought Together"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Mageplaza\\FrequentlyBought\\": ""
+    }
+  }
+}

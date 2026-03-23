@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/** @var Amasty\Gdpr\Block\PolicyPopup $block */
+/** @var Magento\Framework\Escaper $escaper */
+?>
+<?php if ($block->showOnPageLoad()): ?>
+    <!-- ko scope: 'gdpr-privacy-container' -->
+    <div data-role="gdpr-privacy-container" class="amgdpr-privacy-policy">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+
+    <script data-cfasync="false" type="text/x-magento-init">
+    {
+        "[data-role=gdpr-privacy-container]": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "gdpr-privacy-container": {
+                        "component": "Amasty_Gdpr/js/policy-popup",
+                        "template": "Amasty_Gdpr/policy-popup",
+                        "textUrl": "<?= $escaper->escapeUrl($block->getTextUrl()); ?>",
+                        "acceptUrl": "<?= $escaper->escapeUrl($block->getAcceptUrl()); ?>",
+                        "popupDataUrl": "<?= $escaper->escapeUrl($block->getPopupDataUrl()); ?>",
+                        "notificationText": "<?= $escaper->escapeUrl($block->getPolicyNotificationText()); ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>
+<?php endif; ?>

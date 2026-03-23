@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ebizmarts_BrippoPayments::css/admin-style.css"/>
+        <script src="Ebizmarts_BrippoPayments::js/brippo-admin.js"/>
+    </head>
+    <body>
+        <container name="brippo_admin_container" as="brippo_admin_container" htmlTag="div" htmlClass="brippo-admin">
+            <block class="Ebizmarts\BrippoPayments\Block\Adminhtml\BrippoAdmin" name="ebizmarts_brippo_admin" template="Ebizmarts_BrippoPayments::brippo_admin.phtml"/>
+        </container>
+    </body>
+</page>

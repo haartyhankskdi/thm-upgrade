@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="mp_reward_customer_birthday" instance="Mageplaza\RewardPointsUltimate\Cron\Birthday" method="execute">
+            <schedule>0 1 * * *</schedule>
+        </job>
+        <job name="mp_reward_customer_up_tier" instance="Mageplaza\RewardPointsUltimate\Cron\UpTier" method="execute">
+            <schedule>0 2 * * *</schedule>
+        </job>
+        <job name="mp_reward_points_allocation" instance="Mageplaza\RewardPointsUltimate\Cron\PointsAllocation" method="execute">
+            <schedule>0 0 * * *</schedule>
+        </job>
+    </group>
+</config>

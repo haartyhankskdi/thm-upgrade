@@ -1,0 +1,22 @@
+{
+  "name": "hyva-themes/magento2-compat-module-fallback",
+  "description": "Allow templates to be overridden by Hyvä Themes compatibility modules without layout XML.",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "hyva-themes/magento2-theme-module": "*"
+  },
+  "authors": [{
+      "name": "Hyvä Themes B.V.",
+      "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\CompatModuleFallback\\": "src/"
+    }
+  }
+}

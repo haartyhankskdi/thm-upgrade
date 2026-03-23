@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Magento\Framework\Escaper;
+
+/** @var Location $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    (function () {
+        let amGoogleApiProcessed = false;
+
+        window.addEventListener('load-google-api', () => {
+            if (amGoogleApiProcessed) {
+                window?.google && window.dispatchEvent(new CustomEvent('google-api-loaded', {}));
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js'
+                + '?libraries=places,marker&loading=async&callback=amLocatorAdminInit&v=3&key='
+                + '<?= $escaper->escapeHtml($block->configProvider->getApiKey()); ?>';
+            script.async = true;
+            document.body.appendChild(script);
+
+            amGoogleApiProcessed = true;
+
+            script.onload = () => {
+                window.dispatchEvent(new CustomEvent('google-api-loaded', {}));
+            }
+        });
+    }());
+</script>

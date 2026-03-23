@@ -1,0 +1,39 @@
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+
+<!--@subject {{trans "Invitation from %store_name" store_name=$store.getFrontendName()}} @-->
+
+{{template config_path="design/email/header_template"}}
+<div style="border:1px solid #BEBCB7; padding:13px 18px; background:#F8F7F5; line-height: 20px;">
+    <span>{{trans "Please accept this invitation to join "}}</span>
+    <a href="{{store url=""}}">{{var store.getFrontendName()}}.</a>
+    <br/>
+    <div class="link">
+        <strong>{{trans "Link:"}}</strong> <a href="{{var url}}">{{var url}}</a>
+    </div>
+    <div class="message">
+        {{if message}}
+        <strong>{{trans "Message:"}}</strong> <span>{{var message}}</span> <br/>
+        {{/if}}
+    </div>
+</div>
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,54 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var Mageplaza\RewardPointsUltimate\Block\Socials\Facebook $block */
+?>
+<?php if ($block->isEnabled()) : ?>
+    <div class="mp-rw-social facebook-earning">
+        <div id="fb-root"></div>
+        <?= /** @noEscape */
+        $block->getHelperUltimate()->getFacebookScript() ?>
+        <div class="fb-like"
+             data-href="<?= /** @noEscape */ $block->getCurrentUrl() ?>"
+             data-layout="<?= /** @noEscape */ $block->isDisplayButtonCount() ? 'button_count' : 'button' ?>"
+             data-action="like" data-show-faces="true" data-share="false">
+        </div>
+    </div>
+<?php endif; ?>
+<script>
+
+    window.oldFbAsyncInit = window.fbAsyncInit || function () {
+    };
+    window.fbAsyncInit    = function () {
+        var likeUrl   = '<?= /** @noEscape */ $block->getUrl('customer/socials_facebook/like') ?>';
+        var unlikeUrl = '<?= /** @noEscape */ $block->getUrl('customer/socials_facebook/unlike') ?>';
+        FB.Event.subscribe('edge.create',
+            function (response) {
+                mpSocials.sendAjax(likeUrl, response);
+            }
+        );
+        FB.Event.subscribe('edge.remove',
+            function (response) {
+                mpSocials.sendAjax(unlikeUrl, response);
+            }
+        );
+    };
+</script>

@@ -1,0 +1,70 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+
+use Amasty\Storelocator\Block\Location as LocationBlock;
+use Amasty\Storelocator\Model\Location;
+use Magento\Framework\Escaper;
+
+/** @var LocationBlock $block */
+/** @var Location $location */
+/** @var Escaper $escaper */
+
+$locations = $block->getLocationCollection();
+?>
+<div class="amlocator-wrapper">
+    <div class="amlocator-stores-wrapper">
+        <?php foreach ($locations as $location): ?>
+            <div class="amlocator-store-container">
+                <div class="amlocator-store-desc" name="leftLocation"
+                     data-mapid="<?= $escaper->escapeHtmlAttr($block->getMapId()); ?>"
+                     data-amid="<?= (int)$location['id']; ?>">
+                    <div class="amlocator-block">
+                        <?php if ($baseImage = $block->getLocationImage($location)): ?>
+                            <div class="amlocator-image"
+                                 style="background-image:
+                                     url('<?= $escaper->escapeUrl($baseImage) ?>')">
+                            </div>
+                        <?php endif; ?>
+                        <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>
+                            <div style="display: none;" class="amasty_distance"
+                                 id="amasty_distance_<?= (int)$location['id'] ?>"><?= $escaper->escapeHtml(__('Distance:')) ?>
+                                <span class="amasty_distance_number"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php if ($location->getShowSchedule() && !empty($location->getWorkingTimeToday())): ?>
+                    <div class="amlocator-schedule-container"
+                         data-mage-init='{"Amasty_Storelocator/js/collapsible-schedule": {}}'>
+                        <a href="<?= $escaper->escapeUrl($block->getLocationScheduleUrl($location->getId())) ?>"
+                           data-ajax="true"
+                           aria-hidden="true"
+                           tabindex="-1"></a>
+                        <div>
+                            <div class="amlocator-today" data-role="title">
+                                <strong><?= $escaper->escapeHtml(__('Work Time Today:')); ?></strong>
+                                <span class="amlocator-time">
+                                    <span class="amlocator-today-opening-hours">
+                                        <?= $block->escapeHtml($location->getWorkingTimeToday()); ?>
+                                    </span>
+                                    <span class="amlocator-arrow -down" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div data-role="content" class="amlocator-week-container">
+                            <div class="load indicator"></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if ($pager = $block->getPagerHtml()): ?>
+        <div class="amlocator-pager-container"><?= /** @escapeNotVerified */ $pager; ?></div>
+    <?php endif; ?>
+</div>

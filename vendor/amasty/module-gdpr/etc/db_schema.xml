@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="amasty_gdpr_consent_log" resource="default" engine="innodb" comment="Amasty GDPR Table with consent customers">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Id"/>
+    <column xsi:type="timestamp" name="date_consented" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Date of consent"/>
+    <column xsi:type="varchar" name="policy_version" nullable="false" length="255" comment="Policy Version"/>
+    <column xsi:type="text" name="got_from" nullable="true" comment="Place where got consent"/>
+    <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="true" identity="false" comment="Website ID"/>
+    <column xsi:type="text" name="ip" nullable="true" comment="Remote IP Address"/>
+    <column xsi:type="boolean" name="action" nullable="true" default="true" comment="Customer Action"/>
+    <column xsi:type="text" name="consent_code" nullable="false" comment="Consent Code"/>
+    <column xsi:type="text" name="logged_email" nullable="true" comment="Logged Email"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="amasty_gdpr_delete_request" resource="default" engine="innodb" comment="Amasty GDPR Delete Request Table">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Request Id"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Id"/>
+    <column xsi:type="text" name="got_from" nullable="true" comment="Initiator of deletion"/>
+    <column xsi:type="boolean" name="approved" nullable="false" comment="Approved"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_DELETE_REQUEST_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="amasty_gdpr_delete_request" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_gdpr_privacy_policy" resource="default" engine="innodb" comment="Amasty GDPR Table with consent customers">
+    <column xsi:type="smallint" name="id" padding="5" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+    <column xsi:type="varchar" name="policy_version" nullable="false" length="10" comment="Policy Version"/>
+    <column xsi:type="text" name="content" nullable="false" comment="Policy Content"/>
+    <column xsi:type="int" name="last_edited_by" padding="10" unsigned="true" nullable="true" identity="false" comment="Last Edited By"/>
+    <column xsi:type="varchar" name="comment" nullable="false" length="255" comment="Comment"/>
+    <column xsi:type="smallint" name="status" padding="6" unsigned="false" nullable="false" identity="false" comment="Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_PRIVACY_POLICY_LAST_EDITED_BY_ADMIN_USER_USER_ID" table="amasty_gdpr_privacy_policy" column="last_edited_by" referenceTable="admin_user" referenceColumn="user_id" onDelete="SET NULL"/>
+  </table>
+  <table name="amasty_gdpr_privacy_policy_content" resource="default" engine="innodb" comment="Amasty GDPR Privacy Policy Content">
+    <column xsi:type="smallint" name="id" padding="5" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="smallint" name="policy_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Policy Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="text" name="content" nullable="false" comment="Policy Content"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_PRIVACY_POLICY_CONTENT_STORE_ID_STORE_STORE_ID" table="amasty_gdpr_privacy_policy_content" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_3A168A3756B28BECE41DBE5C4D5A611A" table="amasty_gdpr_privacy_policy_content" column="policy_id" referenceTable="amasty_gdpr_privacy_policy" referenceColumn="id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_gdpr_consent_queue" resource="default" engine="innodb" comment="Amasty GDPR Table with consent email queue">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Id"/>
+    <column xsi:type="smallint" name="status" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_CONSENT_QUEUE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="amasty_gdpr_consent_queue" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="AMASTY_GDPR_CONSENT_QUEUE_CUSTOMER_ID">
+      <column name="customer_id"/>
+    </constraint>
+  </table>
+  <table name="amasty_gdpr_action_log" resource="default" engine="innodb" comment="Amasty GDPR Table with consent customers">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Customer Id"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Date of logging"/>
+    <column xsi:type="varchar" name="ip" nullable="false" length="127" comment="Remote Ip Address"/>
+    <column xsi:type="varchar" name="action" nullable="false" length="255" comment="Performed Action"/>
+    <column xsi:type="text" name="comment" nullable="true" comment="Action Comment"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_ACTION_LOG_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="amasty_gdpr_action_log" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_gdpr_consents" resource="default" engine="innodb" comment="Amasty GDPR. Consent settings">
+    <column xsi:type="int" name="consent_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Consent_id"/>
+    <column xsi:type="varchar" name="name" nullable="false" length="255" default="" comment="Name"/>
+    <column xsi:type="varchar" name="consent_code" nullable="false" length="255" comment="Consent_code"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="consent_id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="AMASTY_GDPR_CONSENTS_CONSENT_CODE">
+      <column name="consent_code"/>
+    </constraint>
+  </table>
+  <table name="amasty_gdpr_consents_scope" resource="default" engine="innodb" comment="Amasty GDPR. Consent settings by store view">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Table ID"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store id relation"/>
+    <column xsi:type="int" name="consent_entity_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Consent entity id"/>
+    <column xsi:type="boolean" name="is_enabled" nullable="true" comment="Is consent enabled"/>
+    <column xsi:type="boolean" name="is_required" nullable="true" comment="Is_required"/>
+    <column xsi:type="boolean" name="log_the_consent" nullable="true" comment="Customer&#x2019;s Consent will be saved to the &#x2018;Consent Log&#x2019; grid if enabled"/>
+    <column xsi:type="boolean" name="hide_the_consent_after_user_left_the_consent" nullable="true" comment="The system will not display a Consent to customers if they left their consents"/>
+    <column xsi:type="varchar" name="consent_location" nullable="true" length="255" comment="Serialized conditions where to show consent consents"/>
+    <column xsi:type="smallint" name="link_type" padding="6" unsigned="false" nullable="true" identity="false" comment="Link type"/>
+    <column xsi:type="smallint" name="cms_page_id" padding="6" unsigned="false" nullable="true" identity="false" comment="Cms page ID"/>
+    <column xsi:type="text" name="consent_text" nullable="true" comment="Consent text"/>
+    <column xsi:type="text" name="countries" nullable="true" comment="Show for specific countries"/>
+    <column xsi:type="smallint" name="visibility" padding="6" unsigned="false" nullable="true" identity="false" comment="Regions where consents would be visible"/>
+    <column xsi:type="smallint" name="sort_order" padding="5" unsigned="true" nullable="true" identity="false" comment="Sort order"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_CONSENTS_SCOPE_STORE_ID_STORE_STORE_ID" table="amasty_gdpr_consents_scope" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_CONSENTS_SCOPE_CMS_PAGE_ID_CMS_PAGE_PAGE_ID" table="amasty_gdpr_consents_scope" column="cms_page_id" referenceTable="cms_page" referenceColumn="page_id" onDelete="SET NULL"/>
+    <constraint xsi:type="foreign" referenceId="FK_3F7A2E8CA3767682E7B4AA4EF3A7311D" table="amasty_gdpr_consents_scope" column="consent_entity_id" referenceTable="amasty_gdpr_consents" referenceColumn="consent_id" onDelete="CASCADE"/>
+    <index referenceId="AMASTY_GDPR_CONSENTS_SCOPE_CONSENT_ENTITY_ID_STORE_ID" indexType="btree">
+      <column name="consent_entity_id"/>
+      <column name="store_id"/>
+    </index>
+  </table>
+  <table name="amasty_gdpr_visitor_consent_log" resource="default" engine="innodb" comment="Amasty GDPR Table consent visitors">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Customer Id"/>
+    <column xsi:type="varchar" name="session_id" nullable="true" length="64" comment="Session Id"/>
+    <column xsi:type="timestamp" name="date_consented" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Date of consent"/>
+    <column xsi:type="varchar" name="policy_version" nullable="false" length="255" comment="Policy Version"/>
+    <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="true" identity="false" comment="Website ID"/>
+    <column xsi:type="varchar" name="ip" nullable="true" length="127" comment="Remote IP Address"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_VISITOR_CONSENT_LOG_CSTR_ID_CSTR_ENTT_ENTT_ID" table="amasty_gdpr_visitor_consent_log" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPR_VISITOR_CONSENT_LOG_WS_ID_STORE_WS_WS_ID" table="amasty_gdpr_visitor_consent_log" column="website_id" referenceTable="store_website" referenceColumn="website_id" onDelete="SET NULL"/>
+  </table>
+</schema>

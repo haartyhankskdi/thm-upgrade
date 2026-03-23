@@ -1,0 +1,37 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+
+$urlPath = $block->getData('path') ?? 'wishlist';
+?>
+<a class="hidden md:block md:ml-4" href="<?= $block->getUrl('sales/order/history/'); ?>">
+<!-- <img src="<?//= $this->getViewFileUrl('pub/media/wysiwyg/refresh-icon.svg') ?>" alt="refresh-icon" /> -->
+<img src="<?= $block->getBaseUrl() . 'pub/media/wysiwyg/refresh-icon.svg' ?>" alt="refresh-icon" width="25" height="23" />
+
+
+</a>
+<a
+    id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+    class="hidden relative flex items-center px-1 py-2 text-white md:block md:ml-4"
+    href="<?= $escaper->escapeUrl($block->getUrl($urlPath)) ?>"
+    title="<?= $escaper->escapeHtmlAttr(__('My Wish List')) ?>"
+    x-data="{ itemCount: 0 }"
+    @private-content-loaded.window="itemCount = parseInt($event.detail.data.wishlist.counter)"
+>
+    <!-- Heart Icon -->
+    <img src="<?= $this->getViewFileUrl('images/wishlist-icon-h.svg') ?>" alt="wishlist" width="27" height="24" />
+
+    <!-- Badge Counter -->
+    <template x-if="itemCount">
+        <span
+            class="absolute -top-1.5 -right-1.5 w-[23px] h-[23px] flex items-center justify-center px-2 py-1 rounded-full bg-[#E63833] text-white
+                        text-xs font-normal leading-none text-center uppercase ">
+            <span x-text="itemCount"></span>
+        </span>
+    </template>
+</a>

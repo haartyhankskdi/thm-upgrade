@@ -1,0 +1,35 @@
+<?php 
+ $block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+ $postCollection = $block->getPostCollection(); 
+ $baseUrl = $block->getBaseUrl();
+ $postCollection->addFieldToFilter('enabled', 1);
+ $postCollection->setOrder('publish_date', 'DESC');
+/* $postCollection->setPageSize(10);*/
+ $postCollection->setCurPage(1);
+ $posts_video= [];
+foreach ($postCollection as $post) {
+    if ($post->getShortDescription()) {
+        $posts_video[] = $post;
+    }
+    if (count($posts_video) >= 2) break; 
+}
+
+ ?>
+<div class="home-recipes">
+        <span class="main-title">
+            <strong>Watch. Learn. Cook</strong> with Confidence.</span>
+        <p class="subtitle">
+            From mouth-watering halal recipes to expert butchery tips - discover the secrets behind every cut.
+        </p>
+
+        <div class="video-grid">
+            <?php foreach ($posts_video as $post){?>
+            <div class="video-card">
+
+                <?php echo $post->getShortDescription()?>
+                <span><?php echo $post->getName()?></span>
+                <p><a href="<?php echo $baseUrl?>recipes" class="view-reipies">View All Insights by Tariq Halal</a></p>
+            </div>
+            <?php }?>
+        </div>
+    </div>

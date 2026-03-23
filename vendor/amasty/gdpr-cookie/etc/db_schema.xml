@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="amasty_gdprcookie_cookie" resource="default" engine="innodb" comment="Amasty GDPR Cookie Table with created cookies">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="varchar" name="name" nullable="false" length="225" comment="Cookie Name"/>
+    <column xsi:type="text" name="description" nullable="false" comment="Cookie Description"/>
+    <column xsi:type="varchar" name="cookie_lifetime" nullable="false" length="255" default="" comment="Cookie Lifetime" disabled="true"/>
+    <column xsi:type="smallint" name="is_enabled" padding="6" unsigned="false" nullable="true" identity="false" default="1" comment="Is Enabled"/>
+    <column xsi:type="varchar" name="provider" nullable="false" length="127" comment="Cookie Provider"/>
+    <column xsi:type="smallint" name="type" padding="5" unsigned="true" nullable="true" identity="false" comment="Cookie Type"/>
+    <column xsi:type="varchar" name="lifetime" nullable="true" length="255" comment="Cookie Lifetime" onCreate="migrateDataFrom(cookie_lifetime)"/>
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Group Id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="AMASTY_GDPRCOOKIE_COOKIE_NAME">
+      <column name="name"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPRCOOKIE_COOKIE_GROUP_ID_AMASTY_GDPRCOOKIE_GROUP_ID" table="amasty_gdprcookie_cookie" column="group_id" referenceTable="amasty_gdprcookie_group" referenceColumn="id" onDelete="SET NULL"/>
+  </table>
+  <table name="amasty_gdprcookie_group" resource="default" engine="innodb" comment="Amasty GDPR Cookie Table with created cookie groups">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="text" name="name" nullable="false" comment="Cookie Name"/>
+    <column xsi:type="text" name="description" nullable="false" comment="Cookie Description"/>
+    <column xsi:type="boolean" name="is_essential" nullable="true" comment="Is Group Essential"/>
+    <column xsi:type="boolean" name="is_enabled" nullable="true" comment="Is Group Enabled"/>
+    <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="amasty_gdprcookie_cookie_store_data" resource="default" engine="innodb" comment="Amasty GDPR Cookie Store Table">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="cookie_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Cookie Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="text" name="description" nullable="true" comment="Cookie Description"/>
+    <column xsi:type="smallint" name="is_enabled" padding="6" unsigned="false" nullable="true" identity="false" default="1" comment="Is Enabled"/>
+    <column xsi:type="varchar" name="lifetime" nullable="true" length="255" comment="Cookie Lifetime"/>
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Group Id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPRCOOKIE_COOKIE_STORE_DATA_STORE_ID_STORE_STORE_ID" table="amasty_gdprcookie_cookie_store_data" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_4AB35A6CA89885ABC6BC8854410F0F40" table="amasty_gdprcookie_cookie_store_data" column="cookie_id" referenceTable="amasty_gdprcookie_cookie" referenceColumn="id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_D3C67C42C86EC6996D297B90BCE486AD" table="amasty_gdprcookie_cookie_store_data" column="group_id" referenceTable="amasty_gdprcookie_group" referenceColumn="id" onDelete="SET NULL"/>
+    <constraint xsi:type="unique" referenceId="AMASTY_GDPRCOOKIE_COOKIE_STORE_DATA_COOKIE_ID_STORE_ID">
+      <column name="cookie_id"/>
+      <column name="store_id"/>
+    </constraint>
+  </table>
+  <table name="amasty_gdprcookie_group_store_data" resource="default" engine="innodb" comment="Amasty GDPR Cookie Group Description">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Cookie Group Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="text" name="name" nullable="true" comment="Cookie Group Name"/>
+    <column xsi:type="text" name="description" nullable="true" comment="Cookie Group Description"/>
+    <column xsi:type="smallint" name="is_enabled" padding="6" unsigned="false" nullable="true" identity="false" default="1" comment="Is Enabled"/>
+    <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="true" identity="false" comment="Sort Order"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPRCOOKIE_GROUP_STORE_DATA_STORE_ID_STORE_STORE_ID" table="amasty_gdprcookie_group_store_data" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_C87EA7EBF0C822C21D88190A8C069A2C" table="amasty_gdprcookie_group_store_data" column="group_id" referenceTable="amasty_gdprcookie_group" referenceColumn="id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_gdprcookie_cookie_consents" resource="default" engine="innodb" comment="Amasty GDPR Table with cookie consent customers">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer Id"/>
+    <column xsi:type="timestamp" name="date_recieved" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Date Recieved"/>
+    <column xsi:type="text" name="consent_status" nullable="false" comment="Consent Status"/>
+    <column xsi:type="smallint" name="website" padding="5" unsigned="true" nullable="true" identity="false" comment="Website"/>
+    <column xsi:type="varchar" name="customer_ip" nullable="false" length="45" comment="Customer Ip Address"/>
+    <column xsi:type="smallint" name="groups_status" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Groups Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPRCOOKIE_COOKIE_CONSENTS_CSTR_ID_CSTR_ENTT_ENTT_ID" table="amasty_gdprcookie_cookie_consents" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE" disabled="true"/>
+    <constraint xsi:type="foreign" referenceId="AMASTY_GDPRCOOKIE_COOKIE_CONSENTS_WS_STORE_WS_WS_ID" table="amasty_gdprcookie_cookie_consents" column="website" referenceTable="store_website" referenceColumn="website_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_gdprcookie_cookie_consent_status" resource="default" engine="innodb" comment="Amasty GDPR Table with cookie consent status">
+    <column xsi:type="int" name="cookie_consents_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Cookie Consent Id"/>
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Cookie Group Id"/>
+    <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="false" identity="false" comment="Consent Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="cookie_consents_id"/>
+      <column name="group_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="FK_E1BA44F6400C82ECB37760EE1093D718" table="amasty_gdprcookie_cookie_consent_status" column="cookie_consents_id" referenceTable="amasty_gdprcookie_cookie_consents" referenceColumn="id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_24A6327C3ABA70FD4301DF6D98DFC567" table="amasty_gdprcookie_cookie_consent_status" column="group_id" referenceTable="amasty_gdprcookie_group" referenceColumn="id" onDelete="CASCADE"/>
+  </table>
+</schema>

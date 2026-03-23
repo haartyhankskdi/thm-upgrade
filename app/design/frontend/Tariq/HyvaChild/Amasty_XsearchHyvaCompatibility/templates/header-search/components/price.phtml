@@ -1,0 +1,53 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPrice;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ProductPrice $productPrice */
+/** @var ViewModelRegistry $viewModels */
+
+$productPrice = $viewModels->require(ProductPrice::class);
+?>
+<div class="price-container flex flex-col justify-center items-center"
+     x-data="advancedSearchPriceComponentData">
+    <div class="final-price" x-ref="finalPrice">
+        <template x-if="isDiscounted">
+            <span class="price-label">
+                <?= $escaper->escapeHtml(__('As low as')) ?>
+            </span>
+        </template>
+
+        <span class="price-wrapper title-font font-medium text-2xl text-gray-900">
+            <span class="price" x-html="formattedFinalPrice"></span>
+        </span>
+
+        <template x-if="showOldPrice">
+            <div class="old-price text-grey-900">
+                <span class="price-container">
+                    <span class="price-label"><?= $escaper->escapeHtml(__('Regular Price')) ?>: </span>
+                    <span class="price-wrapper" x-html="formattedRegularPrice"></span>
+                </span>
+            </div>
+        </template>
+    </div>
+
+    <?php if ($productPrice->displayPriceInclAndExclTax()): ?>
+        <template x-if="isPriceInclAndExclTax">
+            <div class="final-price-excl-tax" x-ref="regularPrice">
+                <span class="font-regular text-gray-900">
+                    <span><?= $escaper->escapeHtml(__('Excl. Tax')) ?>:</span>
+                    <span class="price" x-html="formattedExclTaxPrice"></span>
+                </span>
+            </div>
+        </template>
+    <?php endif ?>
+</div>

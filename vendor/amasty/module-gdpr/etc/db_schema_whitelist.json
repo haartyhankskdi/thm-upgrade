@@ -1,0 +1,143 @@
+{
+    "amasty_gdpr_consent_log": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "date_consented": true,
+            "policy_version": true,
+            "got_from": true,
+            "website_id": true,
+            "ip": true,
+            "action": true,
+            "consent_code": true,
+            "logged_email": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_CONSENT_LOG_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "AMASTY_GDPR_CONSENT_LOG_WEBSITE_ID_STORE_WEBSITE_WEBSITE_ID": true
+        }
+    },
+    "amasty_gdpr_delete_request": {
+        "column": {
+            "id": true,
+            "created_at": true,
+            "customer_id": true,
+            "got_from": true,
+            "approved": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_DELETE_REQUEST_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+        }
+    },
+    "amasty_gdpr_privacy_policy": {
+        "column": {
+            "id": true,
+            "created_at": true,
+            "updated_at": true,
+            "policy_version": true,
+            "content": true,
+            "last_edited_by": true,
+            "comment": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_PRIVACY_POLICY_LAST_EDITED_BY_ADMIN_USER_USER_ID": true
+        }
+    },
+    "amasty_gdpr_privacy_policy_content": {
+        "column": {
+            "id": true,
+            "policy_id": true,
+            "store_id": true,
+            "content": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_PRIVACY_POLICY_CONTENT_STORE_ID_STORE_STORE_ID": true,
+            "FK_3A168A3756B28BECE41DBE5C4D5A611A": true
+        }
+    },
+    "amasty_gdpr_consent_queue": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_CONSENT_QUEUE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "AMASTY_GDPR_CONSENT_QUEUE_CUSTOMER_ID": true
+        }
+    },
+    "amasty_gdpr_action_log": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "created_at": true,
+            "ip": true,
+            "action": true,
+            "comment": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_ACTION_LOG_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+        }
+    },
+    "amasty_gdpr_consents": {
+        "column": {
+            "consent_id": true,
+            "name": true,
+            "consent_code": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_CONSENTS_CONSENT_CODE": true
+        }
+    },
+    "amasty_gdpr_consents_scope": {
+        "column": {
+            "id": true,
+            "store_id": true,
+            "consent_entity_id": true,
+            "is_enabled": true,
+            "is_required": true,
+            "log_the_consent": true,
+            "hide_the_consent_after_user_left_the_consent": true,
+            "consent_location": true,
+            "link_type": true,
+            "cms_page_id": true,
+            "consent_text": true,
+            "countries": true,
+            "visibility": true,
+            "sort_order": true
+        },
+        "index": {
+            "AMASTY_GDPR_CONSENTS_SCOPE_CONSENT_ENTITY_ID_STORE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_CONSENTS_SCOPE_STORE_ID_STORE_STORE_ID": true,
+            "AMASTY_GDPR_CONSENTS_SCOPE_CMS_PAGE_ID_CMS_PAGE_PAGE_ID": true,
+            "FK_3F7A2E8CA3767682E7B4AA4EF3A7311D": true
+        }
+    },
+    "amasty_gdpr_visitor_consent_log": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "session_id": true,
+            "date_consented": true,
+            "policy_version": true,
+            "website_id": true,
+            "ip": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPR_VISITOR_CONSENT_LOG_CSTR_ID_CSTR_ENTT_ENTT_ID": true,
+            "AMASTY_GDPR_VISITOR_CONSENT_LOG_WS_ID_STORE_WS_WS_ID": true
+        }
+    }
+}

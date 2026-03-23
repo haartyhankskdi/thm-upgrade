@@ -1,0 +1,31 @@
+//
+//  Amasty GdprCookie Admin Styles
+//  ____________________________________________
+
+//
+//  Variables
+//  --------------------------------------------
+
+@amgdprcookie-colorpicker-button__size: 33px;
+
+//
+//  Common
+//  --------------------------------------------
+
+& when (@media-common = true) {
+    .amgdprcookie-colorpicker-container {
+        & {
+            display: flex;
+            align-items: center;
+        }
+
+        .pickr {
+            margin-right: 5px;
+        }
+
+        .pickr .pcr-button {
+            width: @amgdprcookie-colorpicker-button__size;
+            height: @amgdprcookie-colorpicker-button__size;
+        }
+    }
+}

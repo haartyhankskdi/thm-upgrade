@@ -1,0 +1,72 @@
+/**
+ * Button styles for Hyva theme
+ * This file contains component class for buttons with different styles and sizes.
+ *
+ * Please avoid using `@apply` for the button styles to ensure compatibly for future versions.
+ * Instead, use the component class directly in your HTML.
+ * The `@utility` directive is used, for backwards compatibility, to define button styles.
+ */
+
+@utility btn {
+    --btn-stroke: transparent;
+    --btn-bg: var(--color-gray-500);
+    --btn-color: var(--color-white);
+    @apply flex justify-center items-center gap-1.5 border-2 shadow-md rounded-lg px-4 py-2 text-base font-medium select-none align-middle;
+    border-color: var(--btn-stroke);
+    background-color: var(--btn-bg);
+    color: var(--btn-color);
+
+    &:hover {
+        border-color: var(--btn-hover-stroke, var(--btn-stroke));
+        background-color: var(--btn-hover-bg, var(--btn-bg));
+        color: var(--btn-hover-color, var(--btn-color));
+    }
+
+    &:active {
+        border-color: var(--btn-active-stroke, var(--btn-stroke));
+        background-color: var(--btn-active-bg, var(--btn-bg));
+        color: var(--btn-active-color, var(--btn-color));
+    }
+
+    &:disabled {
+        @apply opacity-70 cursor-not-allowed shadow-none hover:shadow-none;
+        border-color: var(--btn-disabled-stroke, var(--color-gray-200));
+        background-color: var(--btn-disabled-bg, var(--color-white));
+        color: var(--btn-disabled-color, var(--color-gray-600));
+    }
+}
+
+@utility btn-primary {
+    --btn-bg: var(--color-primary);
+    --btn-color: var(--color-white);
+    --btn-hover-bg: var(--color-primary-lighter);
+    --btn-active-bg: var(--color-primary-darker);
+
+    &:hover {
+        @apply shadow-lg;
+    }
+}
+
+@utility btn-secondary {
+    --btn-stroke: var(--color-primary-lighter);
+    --btn-bg: var(--color-white);
+    --btn-color: var(--color-black);
+    --btn-hover-stroke: var(--color-primary-darker);
+
+    &:hover {
+        @apply shadow-lg;
+    }
+}
+
+.btn-size-lg {
+    @apply px-10 py-4 text-lg;
+}
+
+.btn-size-sm {
+    @apply px-2 py-2 text-sm;
+}
+
+/* @deprecated */
+.action.primary {
+    @apply btn btn-primary;
+}

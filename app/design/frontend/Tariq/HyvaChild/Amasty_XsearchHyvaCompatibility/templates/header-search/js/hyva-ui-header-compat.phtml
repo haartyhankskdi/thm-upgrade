@@ -1,0 +1,81 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopup;
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopupQueries;
+use Hyva\GraphqlViewModel\ViewModel\GraphqlViewModel;
+use Hyva\Theme\ViewModel\ThemeLibrariesConfig;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Store as StoreViewModel;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var SearchPopupQueries $searchPopupQueriesViewModel */
+$popupViewModel = $viewModels->require(SearchPopup::class);
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    'use strict';
+
+    function amXsearchAutocompleteHyvaUIHeaderCompat() {
+        const HEADER_TYPE = '<?= $escaper->escapeJs($popupViewModel->getHyvaUIHeaderVariant()) ?>';
+        return HEADER_TYPE ? {
+            applyHyvaUiHeaderConfig() {
+                const searchContent = document.getElementById('search-content');
+
+                if (this.isFullWidthSearch) {
+                    if (!this.isHorizontalView) {
+                        if (this.checkHyvaUiHeaderVariant('b')) {
+                            searchContent.style = 'max-width:none';
+                            searchContent.parentNode.style = 'padding-right:0; padding-left:0;';
+                        }
+
+                        if (this.checkHyvaUiHeaderVariant('c')) {
+                            this.$refs.searchContainerDesktop.classList.add(HEADER_TYPE + '-header-type');
+                            this.$refs.searchForm.style = 'padding-right:0; padding-left:0;';
+                        }
+                    }
+
+                    if (this.checkHyvaUiHeaderVariant('a')) {
+                        searchContent.style = 'max-width: none';
+                    }
+                }
+            },
+
+            applyHeaderTypeToContainers() {
+                const searchHeader = document.getElementById('header');
+                const columnMain = document.querySelector('.column.main');
+                const searchContent = document.getElementById('search-content');
+                const headerTypeClass = HEADER_TYPE + '-header-type';
+
+                if (searchHeader) {
+                    searchHeader.classList.add(headerTypeClass);
+                }
+
+                if (columnMain) {
+                    columnMain.classList.add(headerTypeClass);
+                }
+
+                if (this.checkHyvaUiHeaderVariant('a')) {
+                    searchContent.className = 'container';
+                }
+            },
+
+            normalizeBaseUrl() {
+                let url = new URL(BASE_URL);
+                BASE_URL = url.origin + url.pathname
+            }
+        } : {};
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

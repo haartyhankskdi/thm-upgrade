@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_modal"/>
+
+    <body>
+        <referenceBlock name="amasty_gdprcookie_consent" remove="true"/>
+        <referenceContainer name="after.body.start">
+            <block name="amasty.cookiebar.enable.hyva.compatibility"
+                   template="Amasty_GdprCookieHyva::page/js/cookie-bar-get-enable.phtml"
+                   before="amasty.facebook.pixel.cookie.hyva.compatibility">
+            </block>
+            <block name="amasty.cookie.variables" template="Amasty_GdprCookieHyva::page/js/variables.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block name="amasty.cookie.group_storage"
+                   template="Amasty_GdprCookieHyva::page/js/cookie-group-storage.phtml"/>
+            <block name="amasty.cookie.cookie_manager" template="Amasty_GdprCookieHyva::page/js/cookie-manager.phtml"/>
+            <container name="amasty.cookie.action">
+                <block name="amasty.cookie.action.accept" template="Amasty_GdprCookieHyva::action/cookies/accept.phtml"/>
+                <block name="amasty.cookie.action.allow" template="Amasty_GdprCookieHyva::action/cookies/allow.phtml"/>
+            </container>
+            <container name="amasty.cookie.colors">
+                <block name="amasty.cookie.colors.common" template="Amasty_GdprCookieHyva::page/colors/common.phtml"/>
+            </container>
+            <block name="amasty.cookie.action-dispatcher-btn" template="Amasty_GdprCookieHyva::page/js/action-dispatcher-button.phtml"/>
+            <block name="amasty.cookie.cooke-groups-js" template="Amasty_GdprCookieHyva::page/js/cookie-groups.phtml"/>
+            <block name="amasty.cookie.modal_keydown_overwrite" template="Amasty_GdprCookieHyva::modal-keydown-overwrite.phtml" after="-"/>
+            <block name="amasty.cookie.facebook"
+                   template="Amasty_GdprCookieHyva::compatibility/am-facebook.phtml"
+                   before="fbe.pixel.view_content.init_fb"
+                   ifconfig="amasty_gdprcookie/cookie_policy/bar"/>
+        </referenceContainer>
+
+        <referenceBlock name="google_analytics">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Amasty_GdprCookieHyva::google/ga.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

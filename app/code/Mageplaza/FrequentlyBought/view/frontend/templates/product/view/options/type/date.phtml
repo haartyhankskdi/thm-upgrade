@@ -1,0 +1,69 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Date $block */
+$_option     = $block->getOption();
+$_optionId   = $_option->getId();
+$_optionType = $_option->getType();
+$productId   = $block->getProduct()->getId();
+$class       = $_option->getIsRequire() ? ' required' : '';
+?>
+<div class="field date<?php /* @escapeNotVerified */ echo $class; ?>"
+    data-mage-init='{"priceOptionDate":{"fromSelector":"#product_addtocart_form"}}'>
+    <fieldset class="fieldset fieldset-product-options-inner<?php /* @escapeNotVerified */ echo $class; ?>">
+        <legend class="legend">
+            <span><?php echo  $block->escapeHtml($_option->getTitle()) ?></span>
+            <?php /* @escapeNotVerified */ echo $block->getFormatedPrice() ?>
+        </legend>
+        <div class="control">
+            <?php if ($_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_DATE_TIME
+                || $_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_DATE): ?>
+                <?php echo $block->getDateHtml() ?>
+            <?php endif; ?>
+            <?php if ($_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_DATE_TIME
+                || $_optionType === \Magento\Catalog\Model\Product\Option::OPTION_TYPE_TIME): ?>
+                <?php echo $block->getTimeHtml() ?>
+            <?php endif; ?>
+            <?php if ($_option->getIsRequire()): ?>
+                <input type="hidden"
+                       name="mageplaza-fbt-custom-option-<?php /* @escapeNotVerified */ echo $productId;?>[validate_datetime_<?php /* @escapeNotVerified */ echo $_optionId ?>]"
+                       class="validate-datetime-<?php /* @escapeNotVerified */ echo $_optionId ?>"
+                       value=""
+                       data-validate="{'validate-required-datetime':<?php /* @escapeNotVerified */ echo $_optionId?>}"/>
+            <?php else: ?>
+                <input type="hidden"
+                       name="mageplaza-fbt-custom-option-<?php /* @escapeNotVerified */ echo $productId;?>[validate_datetime_<?php /* @escapeNotVerified */ echo $_optionId ?>]"
+                       class="validate-datetime-<?php /* @escapeNotVerified */ echo $_optionId ?>"
+                       value=""
+                       data-validate="{'validate-optional-datetime':<?php /* @escapeNotVerified */ echo $_optionId?>}"/>
+            <?php endif; ?>
+            <script type="text/x-magento-init">
+            {
+                "#mageplaza-fbt-form": {
+                    "validation": {
+                        "ignore": ":hidden:not(input[name^='validate_datetime_'])"
+                    }
+                }
+            }
+        </script>
+        </div>
+    </fieldset>
+</div>

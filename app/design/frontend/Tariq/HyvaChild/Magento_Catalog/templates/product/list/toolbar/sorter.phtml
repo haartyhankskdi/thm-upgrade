@@ -1,0 +1,122 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ */
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Toolbar $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var Heroiconssolid $heroicons */
+$heroicons = $viewModels->require(HeroiconsSolid::class);
+?>
+
+<?php if ($block->getAvailableOrders()): ?>
+
+<div
+    x-data="{ open: false, id: $id('sorter-option') }"
+    x-defer="intersect"
+    class="filter-option relative"
+>
+
+    <!-- HEADER -->
+    <h3 :id="`${id}-title`">
+        <button
+            type="button"
+            @click="open = !open"
+            class="filter-options-title flex justify-between items-center gap-6 md:gap-4 lg:gap-6 cursor-pointer text-start border md:border-0 border-container w-full font-normal bg-white px-4 py-3 rounded-none md:min-w-48 lg:min-w-58"
+            :class="{ '': open }"
+            :aria-controls="`${id}-content`"
+            :aria-expanded="open"
+        >
+            <span class="title text-sm md:text-[17px] md:leading-6 font-normal">
+                <?= $escaper->escapeHtml(__('Sort By')) ?>
+            </span>
+
+           
+                <span class="py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" stroke-width="0" stroke="currentColor" class="transition-transform transform duration-300 ease-in-out rotate-180" width="12" height="12" :class="{ 'rotate-180': open }" role="img">
+  <path d="M5.629 8.25L0 0H11.258L5.629 8.25Z" fill="currentColor"></path>
+<title>chevron-down</title></svg>
+            
+            </span>
+        </button>
+    </h3>
+
+    <!-- CONTENT -->
+    <template x-if="open">
+        <div :id="`${id}-content`" class="filter-options-content absolute right-0 top-full z-10 p-4 bg-[#e4f0e8] w-full md:min-w-48 lg:min-w-58 border-container">
+
+            <!-- SORT OPTIONS LIST -->
+            <div class="space-y-0">
+
+                <?php foreach ($block->getAvailableOrders() as $orderCode => $orderLabel): ?>
+                    <button
+                        type="button"
+                        class="w-full text-left flex justify-between items-center bg-white !p-4 border-b border-gray-300 last:border-b-0 cursor-pointer"
+                        @click="changeUrl(
+                            'product_list_order',
+                            '<?= $escaper->escapeHtmlAttr($orderCode) ?>',
+                            options.orderDefault
+                        )"
+                    >
+
+                        <span
+                            class="<?=
+                                $block->isOrderCurrent($orderCode)
+                                ? 'font-semibold'
+                                : ''
+                            ?>"
+                        >
+                            <?= $escaper->escapeHtml(__($orderLabel)) ?>
+                        </span>
+
+                        <?php if ($block->isOrderCurrent($orderCode)): ?>
+                            <span class="">
+                                <?= $heroicons->checkHtml('', 20, 20) ?>
+                            </span>
+                        <?php endif; ?>
+                    </button>
+                <?php endforeach; ?>
+
+            </div>
+
+            <!-- SORT DIRECTION BUTTON -->
+            <!-- <div class="mt-4 flex items-center gap-3">
+
+                <?php if ($block->getCurrentDirection() === 'desc'): ?>
+
+                    <button
+                        type="button"
+                        class="action sorter-action sort-desc border border-container p-2 rounded"
+                        title="<?= $escaper->escapeHtmlAttr(__('Set Ascending Direction')) ?>"
+                        @click="changeUrl('product_list_dir', 'asc', options.directionDefault)"
+                    >
+                        <?= $heroicons->sortAscendingHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
+                    </button>
+
+                <?php else: ?>
+
+                    <button
+                        type="button"
+                        class="action sorter-action sort-asc border border-container p-2 rounded"
+                        title="<?= $escaper->escapeHtmlAttr(__('Set Descending Direction')) ?>"
+                        @click="changeUrl('product_list_dir', 'desc', options.directionDefault)"
+                    >
+                        <?= $heroicons->sortDescendingHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
+                    </button>
+
+                <?php endif; ?>
+
+            </div> -->
+
+        </div>
+    </template>
+</div>
+
+<?php endif; ?>

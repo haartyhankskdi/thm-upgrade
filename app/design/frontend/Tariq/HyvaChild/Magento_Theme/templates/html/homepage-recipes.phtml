@@ -1,0 +1,132 @@
+<?php 
+$block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+$postCollection = $block->getPostCollection(); 
+$baseUrl = $block->getBaseUrl();
+$postCollection->addFieldToFilter('enabled', 1);
+$postCollection->setOrder('publish_date', 'DESC');
+$postCollection->setCurPage(1);
+
+$posts_video = [];
+foreach ($postCollection as $post) {
+    if ($post->getShortDescription()) {
+        $posts_video[] = $post;
+    }
+    if (count($posts_video) >= 2) break; 
+}
+?>
+
+<div class="home-recipes pt-16 pb-6 md:pb-16 px-0 mx-auto scroll-item">
+    <div class="section-title text-center mb-8">
+        <h2 class="text-3xl md:text-[38px] font-light text-black">
+            <span class="font-bold">Watch. Learn. Cook</span> <br class="md:hidden">with Confidence.
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+            From mouth-watering halal recipes to expert butchery tips - discover the secrets behind every cut.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div>
+
+
+    <!-- MOBILE SLIDER -->
+    <div 
+        x-data="recipeSlider()" 
+        x-init="init()" 
+        class="block md:hidden relative overflow-hidden w-full touch-pan-x"
+    >
+        <!-- Slider inner -->
+        <div class="flex transition-transform duration-500 ease-out"
+             :style="`transform: translateX(-${active * 100}%);`"
+             x-ref="slider"
+             @touchstart="touchStart($event)"
+             @touchmove="touchMove($event)"
+             @touchend="touchEnd()"
+        >
+
+            <?php foreach ($posts_video as $post) { ?>
+                <div class="w-full shrink-0 px-0 text-center">
+                    <div class="mb-4">
+                        <?php echo $post->getShortDescription(); ?>
+                    </div>
+
+                    <h3 class="text-black text-xl lg:text-[28px] lg:leading-[34px] font-bold p-0 text-center md:text-left mt-6 mb-4">
+                        <?php echo $post->getName(); ?>
+                    </h3>
+
+                   <!--  <a href="<?//php echo $baseUrl ?>recipes" 
+                       class="text-[#E63833] hover:underline text-sm md:text-base uppercase font-bold">
+                       View All Insights by Tariq Halal →
+                    </a> -->
+                </div>
+            <?php } ?>
+
+        </div>
+
+        <!-- Slider dots -->
+        <div class="flex justify-center gap-3 mt-6 mb-4">
+            <template x-for="(dot, index) in total">
+                <div 
+                    @click="active = index"
+                    class="w-3 h-3 rounded-full cursor-pointer"
+                    :class="active === index ? 'bg-red-600' : 'bg-gray-300'"
+                ></div>
+            </template>
+        </div>
+    </div>
+
+
+    <!-- DESKTOP GRID (unchanged) -->
+    <div class="hidden md:grid gap-6 grid-cols-2">
+        <?php foreach ($posts_video as $post) { ?>
+            <div class="bg-white p-0 shadow-sm transition duration-150">
+                <div class="text-gray-800 mb-1 text-sm md:text-base">
+                    <?php echo $post->getShortDescription(); ?>
+                </div>
+
+                <h3 class="w-full text-black text-xl lg:text-[28px] lg:leading-[34px] font-bold p-0 text-left mt-6 mb-4">
+                    <?php echo $post->getName(); ?>
+                </h3>
+
+              <!--   <a href="<?//php echo $baseUrl ?>recipes" 
+                   class="text-[#E63833] hover:underline text-base uppercase font-bold">
+                    View All Insights by Tariq Halal →
+                </a> -->
+            </div>
+        <?php } ?>
+    </div>
+
+</div>
+
+
+<script>
+function recipeSlider() {
+    return {
+        active: 0,
+        total: <?php echo count($posts_video); ?>,
+
+        startX: 0,
+        endX: 0,
+
+        init() {}, // No auto-slide
+
+        touchStart(e) {
+            this.startX = e.touches[0].clientX;
+        },
+
+        touchMove(e) {
+            this.endX = e.touches[0].clientX;
+        },
+
+        touchEnd() {
+            let diff = this.startX - this.endX;
+
+            if (Math.abs(diff) > 60) {
+                if (diff > 0 && this.active < this.total - 1) {
+                    this.active++;
+                } else if (diff < 0 && this.active > 0) {
+                    this.active--;
+                }
+            }
+        }
+    }
+}
+</script>

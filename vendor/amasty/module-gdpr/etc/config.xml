@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <amasty_gdpr>
+            <general>
+                <enabled>1</enabled>
+                <display_pp_popup>0</display_pp_popup>
+                <country_restrictions>0</country_restrictions>
+                <log_guest>1</log_guest>
+                <avoid_anonymisation>0</avoid_anonymisation>
+                <auto_cleaning>0</auto_cleaning>
+                <auto_cleaning_days>180</auto_cleaning_days>
+            </general>
+            <customer_access_control>
+                <privacy_settings_tab_name>Privacy Settings</privacy_settings_tab_name>
+                <policies_text_section>1</policies_text_section>
+                <download>1</download>
+                <anonymize>1</anonymize>
+                <delete>1</delete>
+                <consent_opting>1</consent_opting>
+                <skip_empty_fields>0</skip_empty_fields>
+                <display_dpo_info>0</display_dpo_info>
+                <dpo_section_name>Data Protection Officer</dpo_section_name>
+                <dpo_email>privacy@example.com</dpo_email>
+                <dpo_info>If you have any questions or suggestions, please contact our Data Protection Officer.</dpo_info>
+            </customer_access_control>
+            <deletion_notification>
+                <enable_admin_notification>0</enable_admin_notification>
+                <admin_sender>general</admin_sender>
+                <admin_template>amasty_gdpr_email_notification_deletion_notification_manager_notification_admin_template</admin_template>
+                <enable_approve_deletion_notification>1</enable_approve_deletion_notification>
+                <sender>general</sender>
+                <template>amasty_gdpr_email_notification_deletion_notification_approve_notification_template</template>
+                <enable_deny_deletion_notification>1</enable_deny_deletion_notification>
+                <deny_sender>general</deny_sender>
+                <deny_template>amasty_gdpr_email_notification_deletion_notification_deny_notification_deny_template</deny_template>
+            </deletion_notification>
+            <anonymisation_notification>
+                <enable_anonymization_notification>1</enable_anonymization_notification>
+                <sender>general</sender>
+                <template>amasty_gdpr_email_notification_anonymization_notification_template</template>
+            </anonymisation_notification>
+            <policy_change_notification>
+                <enable_policy_change_notification>0</enable_policy_change_notification>
+                <sender>general</sender>
+                <template>amasty_gdpr_email_notification_policy_change_notification_template</template>
+            </policy_change_notification>
+            <privacy_checkbox>
+                <eea_only>0</eea_only>
+                <eea_countries>AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IS,IE,IT,LV,LI,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,GB,CH</eea_countries>
+                <consent_text><![CDATA[I have read and accept the <a href="#">privacy policy</a>]]></consent_text>
+                <display_at_registration>1</display_at_registration>
+                <display_at_checkout>1</display_at_checkout>
+                <display_at_contact>0</display_at_contact>
+                <display_at_newsletter>0</display_at_newsletter>
+            </privacy_checkbox>
+            <personal_data>
+                <automatic_personal_data_deletion>
+                    <personal_data_deletion>1</personal_data_deletion>
+                    <personal_data_deletion_days>3650</personal_data_deletion_days>
+                </automatic_personal_data_deletion>
+                <anonymization_data>
+                    <personal_data_stored>0</personal_data_stored>
+                    <personal_data_stored_days>180</personal_data_stored_days>
+                </anonymization_data>
+            </personal_data>
+        </amasty_gdpr>
+    </default>
+</config>

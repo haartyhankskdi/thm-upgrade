@@ -1,0 +1,26 @@
+<div id="configsagepaysuite" class="admin__page-section-item" style="display:none;"
+     data-mage-init='{"sagepayconfig":{
+     "registerUrl": "<?= $block->escapeHtml($block->getUrl('sagepaysuite/config/RegisterLicense'));?>",
+     "needToRegister": "<?= $block->escapeHtml($block->needToRegister()); ?>",
+     "scope": "<?= $block->escapeHtml($block->getScope()); ?>",
+     "scopeId": "<?= $block->escapeHtml($block->getScopeId()); ?>",
+     "prefix": "<?= $block->escapeHtml($block->getPrefix()) ?>",
+     "configurationGuideUrl": "<?= $block->escapeHtml($block->getConfigurationUrl()) ?>"
+     }}'>
+</div>
+
+<?php
+    $needToRegister = $block->needToRegister();
+?>
+<?php
+if ($needToRegister):
+    ?>
+<div class="actions actions-sagepaysuite-register">
+    <div id="validation_result" class="message-validation hidden"></div>
+    <button class="action-sagepaysuite-register" type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()) ?>">
+        <span><?= $block->escapeHtml($block->getButtonLabel()) ?></span>
+    </button>
+    <br>
+    <span style="color: red">ebizmarts Payment Suite 10 License Key not activated! Please click the button.</span>
+</div>
+<?php endif; ?>

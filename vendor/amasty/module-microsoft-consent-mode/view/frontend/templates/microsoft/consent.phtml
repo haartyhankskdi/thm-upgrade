@@ -1,0 +1,135 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */
+
+use Amasty\MicrosoftConsentMode\ViewModel\MicrosoftViewModel;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+
+/** @var Template $block */
+/** @var SecureHtmlRenderer $secureRenderer */
+
+/** @var MicrosoftViewModel $microsoftViewModel */
+$microsoftViewModel = $block->getViewModel();
+
+$script = <<<SCRIPT
+    window.amMicrosoftConsentManager = window.amMicrosoftConsentManager || {
+        microsoftPixels: [],
+        consentStates: {
+            denied: 'denied',
+            granted: 'granted'
+        },
+        storageName: 'amMicrosoftConsentMode',
+        gdprCookie: {
+            cookieGroupName: 'amcookie_allowed',
+            allCookiesAllowed: '0'
+        },
+        defaultConsentTypesData: {$microsoftViewModel->getConsentTypesData()},
+        currentStoreId: {$microsoftViewModel->getStoreId()},
+        init: function () {
+            this.microsoftPixels = window.amPixelManager?.getActivePixels('bing') ?? [];
+            this.initStorage();
+            this.setDefaultConsent();
+        },
+        initStorage: function () {
+            const persistedConsentTypes = this.getPersistedConsentTypeState();
+
+            if (Object.keys(persistedConsentTypes).length !== 0 && !this.shouldResetConsentState(persistedConsentTypes)) {
+                return;
+            }
+
+            let consentState = {};
+            for (const [type, data] of Object.entries(this.defaultConsentTypesData)) {
+                consentState[type] = {
+                    group: data.group,
+                    status: data.default === '1' ? this.consentStates.granted : this.consentStates.denied
+                };
+            }
+
+            this.resetAllowedCookiesGroups();
+            this.persistConsentTypeState(consentState);
+        },
+        setDefaultConsent: function () {
+            this.microsoftPixels.forEach(pixel => {
+                window[pixel.globalEventVariable]?.push('consent', 'default', this.getPersistedConsentTypeStateForUETtag());
+            });
+        },
+        updateConsent: function (consent) {
+            const storageConsent = this.getPersistedConsentTypeState();
+            const consentState = {...storageConsent, ...consent};
+
+            this.persistConsentTypeState(consentState);
+
+            this.microsoftPixels.forEach(pixel => {
+                window[pixel.globalEventVariable]?.push('consent', 'default', this.getPersistedConsentTypeStateForUETtag());
+            });
+        },
+        getConsentTypeStateByGroupIds: function (groups) {
+            let consentTypeState = {};
+
+            for (const [type, data] of Object.entries(this.defaultConsentTypesData)) {
+                consentTypeState[type] = {
+                    group: data.group,
+                    status: (groups.includes(data.group) || groups.includes(this.gdprCookie.allCookiesAllowed))
+                        ? this.consentStates.granted
+                        : this.consentStates.denied
+                }
+            }
+
+            return consentTypeState;
+        },
+        persistConsentTypeState: function (consentTypeState) {
+            let persistedState = this.getPersistedConsentTypeState(false);
+            persistedState[this.currentStoreId] = consentTypeState;
+            localStorage.setItem(this.storageName, JSON.stringify(persistedState));
+        },
+        getPersistedConsentTypeState: function (forCurrentStore = true) {
+            let persistedStates = JSON.parse(localStorage.getItem(this.storageName)) ?? {};
+
+            if (forCurrentStore) {
+                return persistedStates?.[this.currentStoreId] ?? {};
+            }
+
+            return persistedStates;
+        },
+        getPersistedConsentTypeStateForUETtag: function () {
+            let consentTypeState = {};
+            let persistedState = this.getPersistedConsentTypeState();
+
+            for (const [type, data] of Object.entries(persistedState)) {
+                consentTypeState[type] = data.status;
+            }
+
+            return consentTypeState;
+        },
+        shouldResetConsentState: function (persistedConsentTypes) {
+            if (Object.keys(persistedConsentTypes).length != Object.keys(this.defaultConsentTypesData).length
+                || !document.cookie.includes(this.gdprCookie.cookieGroupName)
+            ) {
+                return true;
+            }
+
+            for (const [type, data] of Object.entries(persistedConsentTypes)) {
+                if (data.group !== this.defaultConsentTypesData[type].group) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        resetAllowedCookiesGroups: function () {
+            document.cookie = this.gdprCookie.cookieGroupName + '=0;max-age=-1;domain=' + location.hostname;
+        }
+    };
+
+    window.addEventListener('am-pixel-bing-init', () => {
+        window.amMicrosoftConsentManager?.init();
+    });
+SCRIPT;
+
+$script = $secureRenderer->renderTag('script', ['type' => 'text/javascript'], $script, false);
+?>
+<?= /** @noEscape */ $microsoftViewModel->replaceTags($script) ?>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="before.body.end">
+            <block name="amasty.cookie.cookiebar" template="Amasty_GdprCookieHyva::cookiebar.phtml">
+                <arguments>
+                    <argument name="overlay_enabled" xsi:type="boolean">true</argument>
+                    <argument name="overlay_classes" xsi:type="string">
+                        overflow-y-hidden overflow-x-hidden fixed z-40 inset-0 !bg-black/50 am-cookie-sidebar
+                    </argument>
+                    <argument name="container_classes" xsi:type="string">
+                        fixed left-0 top-0 flex h-full max-w-md min-w-[360px] w-[20%]
+                        border-t border-b border-container-darker bg-container-darker shadow 
+                    </argument>
+                    <argument name="dialog_classes" xsi:type="string">
+                        max-h-full w-full visible p-4 pt-2 pb-6 bg-[#f7efef]
+                    </argument>
+                </arguments>
+
+                <block name="amasty.cookie.cookiebar.content"
+                       template="Amasty_GdprCookieHyva::cookiebar/sidebar.phtml">
+                    <block name="amasty.cookie.cookiebar.groups"
+                           template="Amasty_GdprCookieHyva::cookiebar/cookie-groups.phtml">
+                        <arguments>
+                            <argument name="group_info_prefix" xsi:type="string">sidebar-</argument>
+                        </arguments>
+                        <block name="amasty.cookie.cookiebar.groups.info"
+                               template="Amasty_GdprCookieHyva::modal/cookie-group-info.phtml"/>
+                    </block>
+                    <block name="amasty.cookie.cookiebar.buttons"
+                           template="Amasty_GdprCookieHyva::cookiebar/buttons.phtml">
+                        <block name="amasty.cookie.cookiebar.buttons.accept"
+                               template="Amasty_GdprCookieHyva::button/action-button.phtml">
+                            <arguments>
+                                <argument name="data_js" xsi:type="string">accept</argument>
+                                <argument name="button_classes" xsi:type="string">
+                                    ambar-btn-accept ambar-action-btn w-full justify-center mt-2
+                                </argument>
+                                <argument name="dispatch_action" xsi:type="string">cookiebar-action-accept</argument>
+                                <argument name="dispatch_payload" xsi:type="array">
+                                    <item name="include_checked_groups" xsi:type="boolean">true</item>
+                                </argument>
+                            </arguments>
+                        </block>
+                        <block name="amasty.cookie.cookiebar.buttons.decline"
+                               template="Amasty_GdprCookieHyva::button/action-button.phtml">
+                            <arguments>
+                                <argument name="data_js" xsi:type="string">decline</argument>
+                                <argument name="button_classes" xsi:type="string">
+                                    ambar-btn-decline ambar-action-btn w-full justify-center mt-2
+                                </argument>
+                                <argument name="dispatch_action" xsi:type="string">cookiebar-action-accept</argument>
+                                <argument name="dispatch_payload" xsi:type="null" />
+                            </arguments>
+                        </block>
+                        <block name="amasty.cookie.cookiebar.buttons.allow"
+                               template="Amasty_GdprCookieHyva::button/action-button.phtml">
+                            <arguments>
+                                <argument name="data_js" xsi:type="string">allow</argument>
+                                <argument name="button_classes" xsi:type="string">
+                                    ambar-btn-allow ambar-action-btn w-full justify-center mt-2
+                                </argument>
+                                <argument name="dispatch_action" xsi:type="string">cookiebar-action-allow</argument>
+                                <argument name="dispatch_payload" xsi:type="null"/>
+                            </arguments>
+                        </block>
+                    </block>
+                </block>
+            </block>
+        </referenceBlock>
+
+        <referenceContainer name="amasty.cookie.colors">
+            <block name="amasty.cookie.colors.sidebar" template="Amasty_GdprCookieHyva::page/colors/sidebar.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

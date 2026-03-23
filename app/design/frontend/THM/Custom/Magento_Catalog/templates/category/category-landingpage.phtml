@@ -1,0 +1,96 @@
+<!-- Child Category Section -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Catalog::category/featured-category.phtml")
+    ->toHtml(); ?>
+<!-- After Category Section -->
+<?php echo $block
+    ->getLayout()
+    ->createBlock(\Magento\Cms\Block\Block::class)
+    ->setBlockId("category_premium_block")
+    ->toHtml(); ?>
+<!-- Tender Lamb Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("tender_lamb_section")
+    ->toHtml(); ?>
+<!-- Top Deals Section -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Catalog::category/top-deals.phtml")
+    ->toHtml(); ?>
+<!-- Newsletter Subscription Section -->
+  <?php echo $this->getLayout()
+      ->createBlock(\Magento\Framework\View\Element\Template::class)
+      ->setTemplate("Magento_Catalog::category/newsletter-subscription.phtml")
+      ->toHtml(); ?>
+<!-- Review Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("review_section_category")
+    ->toHtml(); ?>
+<!-- No Mess No Fuss Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("no_mess_category")
+    ->toHtml(); ?>
+
+<!-- Recipe Video Section -->
+<?//php echo $this->getLayout()
+    //->createBlock(\Magento\Framework\View\Element\Template::class)
+    //->setTemplate("Magento_Theme::html/category-page-recipes.phtml")
+    //->toHtml(); ?>
+<!-- The Great British BBQ Section -->
+<?= $this->getLayout()
+    ->createBlock("RM\Homeproductcoll\Block\Products")
+    ->setTemplate("Magento_Catalog::category/great-british.phtml")
+    ->toHtml() ?>
+
+<!-- Tag List Section -->
+<div class="tag-list">
+  <div class="tag">1kg Chicken</div>
+  <div class="tag">Beef Burgers</div>
+  <div class="tag">Chicken Breakfast Sausages</div>
+  <div class="tag">Wagyu Gold Burger</div>
+  <div class="tag">Boneless Mutton</div>
+</div>
+
+<!-- Trends & Stories Section --> 
+ <?php echo $this->getLayout()
+     ->createBlock(\Magento\Framework\View\Element\Template::class)
+     ->setTemplate("Magento_Catalog::category/latest-post.phtml")
+     ->toHtml(); ?>
+<!-- Convenient Online Ordering Home Delivery Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("online_ordering")
+    ->toHtml(); ?>
+<!-- Delivery Partners Section -->
+  <?php echo $this->getLayout()
+      ->createBlock("Magento\Cms\Block\Block")
+      ->setBlockId("delivery_partners")
+      ->toHtml(); ?>
+<style>
+.tag-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+.tag {
+  background-color: #f8fafa; /* very light gray */
+  color: #222;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  border: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.tag:hover {
+  background-color: #eaeaea;
+  cursor: pointer;
+}
+</style>

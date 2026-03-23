@@ -1,0 +1,83 @@
+<?php
+/** @var \Haartyhanks\AutoRelated\ViewModel\RelatedProduct $viewModel */
+$viewModel = $viewModels->require(\Haartyhanks\AutoRelated\ViewModel\RelatedProduct::class);
+$relatedProducts = $viewModel->getRelatedProducts();
+?>
+
+<?php if (!empty($relatedProducts)) : ?>
+<div 
+    x-data="{
+        current: 0,
+        total: <?= count($relatedProducts) ?>,
+        next() { if (this.current < this.total - 1) this.current++; },
+        prev() { if (this.current > 0) this.current--; }
+    }"
+    class="minicart-related mt-6 relative w-full max-w-4xl mx-auto"
+>
+<div class="minicart-related-sec bg-[#F5F9F7] p-4 lg:px-8 my-10">
+    <h4 class="text-lg font-semibold mb-4 text-left w-auto inline-block">
+        Recommended <span x-text="current + 1"></span> of <span><?= count($relatedProducts) ?></span>
+    </h4>
+
+<div class="w-[50px] relative float-right">
+    <!-- Navigation Arrows -->
+    <button 
+        @click="prev" 
+        class="text-black text-xl md:text-[30px] font-normal px-2 z-10"
+        aria-label="Previous"
+    >
+        ‹
+    </button>
+
+    <button 
+        @click="next" 
+        class="text-black text-xl md:text-[30px] font-normal px-2 z-10"
+        aria-label="Next"
+    >
+        ›
+    </button></div>
+
+    <!-- Slider Wrapper -->
+    <div class="overflow-hidden relative">
+        <div 
+            class="flex transition-transform duration-500 ease-in-out"
+            :style="`transform: translateX(-${current * 50}%); width: <?= count($relatedProducts) * 50 ?>%;`"
+        >
+            <?php foreach ($relatedProducts as $related) : ?>
+                <div class="flex-shrink-0 w-1/2 p-2">
+                    <div class="related-p p-2 text-left transition">
+                        <a href="<?= $related['url'] ?>" class="block">
+                            <div class="minicart-related-img w-[60px] h-full float-left mr-4">
+                            <img 
+                                src="<?= $related['image'] ?>" 
+                                alt="<?= $block->escapeHtml($related['name']) ?>" 
+                                class="mx-auto object-contain mb-2"
+                            /></div>
+                            <div class="text-lg font-semibold text-black"><?= $block->escapeHtml($related['name']) ?></div></a>
+                            <div class="flex justify-between mt-2">
+                            <div class="text-lg font-semibold text-[#3B7E48] mt-1"><?= $block->escapeHtml(number_format($related['price'], 2)) ?></div>
+                        
+                        <form 
+                            data-role="tocart-form" 
+                            action="<?= $block->getUrl('checkout/cart/add') ?>" 
+                            method="post" 
+                            class="mt-3"
+                        >
+                            <input type="hidden" name="product" value="<?= $related['id'] ?>" />
+                            <?= $block->getBlockHtml('formkey') ?>
+                            <button 
+                                type="submit" 
+                                class="text-red text-sm px-0 py-0 hover:text-black transition uppercase"
+                            >
+                                + Add to Basket
+                            </button>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+</div>
+<?php endif; ?>

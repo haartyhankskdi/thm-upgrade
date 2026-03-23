@@ -1,0 +1,145 @@
+<?php
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+$heroicons  = $viewModels->require(HeroiconsOutline::class);
+$navigation = $viewModels->require(Navigation::class);
+
+// Dynamic menu: store root category (null = all categories)
+$menuTree = $navigation->getNavigation(null);
+$uid = uniqid();
+
+/**
+ * Recursive formatter for Hyvä menu
+ */
+function formatMenuItem($item)
+{
+    return [
+        'id' => $item['id'] ?? uniqid(),
+        'name' => $item['name'] ?? '',
+        'url' => $item['url'] ?? '#',
+        'hasChildren' => !empty($item['childData']),
+        'children' => array_map('formatMenuItem', $item['childData'] ?? [])
+    ];
+}
+
+$menuJson = json_encode(array_map('formatMenuItem', $menuTree));
+?>
+ 
+
+<nav x-data="mobileMenu<?= $uid ?>()" class="lg:hidden">
+
+    <!-- MENU ICON -->
+   
+    <button @click="open = true" class="p-3 absolute top-5 left-2 md:left-2 md:top-[16px] text-white">
+        <!-- <?= $heroicons->menuHtml('w-7 h-7', 24, 24) ?> -->
+        <img src="/media/logo/burger-menu.svg" class="w-6 h-4" alt="burger-menu">
+    </button>
+
+    <!-- SLIDE PANEL -->
+    <div
+    x-cloak
+    x-show="open"
+    x-transition:enter="transition-transform duration-300 ease-out"
+    x-transition:enter-start="-translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition-transform duration-300 ease-in"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="-translate-x-full"
+    class="fixed inset-0 z-50 mobile-menu-overlay overflow-hidden"
+>
+
+
+
+        <!-- HEADER -->
+        <div class="flex items-center gap-3 p-4 border-b">
+            <button x-show="canGoBack" @click="goBack()">
+                <?= $heroicons->chevronLeftHtml('w-6 h-6', 24, 24) ?>
+            </button>
+
+            <h2 class="text-lg font-semibold" x-text="title"></h2>
+
+            <button class="ml-auto" @click="open = false">
+                <?= $heroicons->xHtml('w-6 h-6', 24, 24) ?>
+            </button>
+        </div>
+
+        <!-- PANELS -->
+   <!-- PANELS -->
+<div class="relative h-full overflow-hidden">
+    <div
+        class="menu-panel transition-transform duration-300 ease-out"
+        :style="`
+            width: ${panels.length * 100}%; 
+    transform: translateX(-${currentLevel * 100}%);
+        `"
+    >
+        <template x-for="(level, index) in panels" :key="index">
+            <ul class="w-full flex-none">
+                <template x-for="item in level" :key="item.id">
+                    <li class="mobile-menu-item">
+                        <span @click="goTo(item)" x-text="item.name"></span>
+
+                        <button
+                            x-show="item.hasChildren"
+                            @click.stop="openChildren(item)"
+                        >
+                            <?= $heroicons->chevronRightHtml('w-5 h-5', 20, 20) ?>
+                        </button>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</div>
+
+
+    </div>
+</nav>
+
+<script>
+function mobileMenu<?= $uid ?>() {
+    return {
+        open: false,
+        title: 'Shop',
+        direction: 'forward',
+
+        // Dynamic panels from PHP
+        panels: [<?= $menuJson ?>],
+        currentLevel: 0,
+        titles: ['Shop'],
+
+        get canGoBack() {
+            return this.currentLevel > 0;
+        },
+
+        goTo(item) {
+            window.location.href = item.url;
+        },
+
+        openChildren(item) {
+            if (!item.children || item.children.length === 0) return;
+
+            this.direction = 'forward';
+            this.panels.push(item.children);
+            this.titles.push(item.name);
+            this.currentLevel++;
+            this.title = item.name;
+        },
+        goBack() {
+            if (this.currentLevel === 0) return;
+
+            this.direction = 'back';
+            this.panels.pop();
+            this.titles.pop();
+            this.currentLevel--;
+            this.title = this.titles[this.currentLevel];
+        }
+    }
+}
+</script>

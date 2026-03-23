@@ -1,0 +1,281 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+$helper = $this->helper(\Magento\Search\Helper\Data::class);
+
+/**
+ * @var $better Nilesh\BetterSearch\Helper\Data
+ */
+$betterSearchHelper = $this->helper(\Nilesh\BetterSearch\Helper\Data::class);
+
+?>
+<div class="block block-search">
+    <div class="block block-title"><strong><?= $block->escapeHtml(__('Search')) ?></strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form" action="<?= $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </label>
+                <div class="control">
+                    <select name="cat" id="catalog_serch">
+                        <option value="">Select Category</option>
+                        <?php
+                            foreach ($betterSearchHelper->getSearchOptionCategory() as $cat) {
+                                ?>
+                                    <option value="<?php echo $cat['value']; ?>"><?php echo $cat['name'] ?></option>
+                                <?php
+                            }
+                        ?>
+                    </select>
+                    <!--
+                        data-mage-init='{"quickSearch":{
+                                "formSelector":"#search_mini_form",
+                                "url":"<?= $block->escapeUrl($helper->getSuggestUrl())?>",
+                                "destinationSelector":"#search_autocomplete"}
+                           }'
+                     -->
+                    <input id="search"
+                           type="text"
+                           name="<?= $block->escapeHtmlAttr($helper->getQueryParamName()) ?>"
+                           value="<?= $block->escapeHtmlAttr($helper->getEscapedQueryText()) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Search entire store here...')) ?>"
+                           class="input-text"
+                           maxlength="<?= $block->escapeHtmlAttr($helper->getMaxQueryLength()) ?>"
+                           role="combobox"
+                           aria-haspopup="false"
+                           aria-autocomplete="both"
+                           autocomplete="off"
+                           aria-expanded="false" />
+                    <div id="search_autocomplete" class="search-autocomplete" style="display:none"></div>
+                    <div class="autocomplete-suggestions" style="display:none; position: absolute; max-height: 2000px; z-index: 9999; width: 374px;">
+                        <div class="inner-bound-row-one">
+                            <div id="productSection"></div>
+                            <div id="footerProductSection">
+                                <div class="resultCount">Total Results: <span class="count">0</span></div>
+                                <div class="paginationDiv"></div>
+                            </div>
+                        </div>
+                        <div class="inner-bound-row-one" id="resourceSection"></div>
+                    </div>
+                    <?= $block->getChildHtml() ?>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                    title="<?= $block->escapeHtml(__('Search')) ?>"
+                    class="action search"
+                    aria-label="Search"
+                >
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php
+    $mediaUrl = $betterSearchHelper->mediaUrl();
+    $foldername = $betterSearchHelper->foldername();
+    $storeCode = $betterSearchHelper->storeCode();
+    $getPlaceholderImage = $betterSearchHelper->getPlaceholderImage();
+    // echo $this->getRequest()->getFullActionName();
+    // if ($this->getRequest()->getFullActionName() != 'cms_index_index') {
+    //you are on the homepage
+?>
+
+<script async src="<?php echo $mediaUrl.$foldername.'/'.$storeCode.'.js'; ?>"></script>
+
+<script>
+    requirejs(['jquery'], function($) {
+
+        $(".autocomplete-suggestions").hide();
+
+        // Actions
+        /* serchField.focus(function (e) {
+            e.preventDefault();
+            $(this).val('');
+            productSection.html('');
+            footerProductSection.find('.paginationDiv').html('');
+            // autocomplete_suggestions.show().addClass('active');
+        }); */
+
+        /* serchField.blur(function (e) {
+            e.preventDefault();
+            // autocomplete_suggestions.hide().removeClass('active');
+            // productSection.html('');
+            footerProductSection.find('.paginationDiv').html('');
+        }); */
+
+        $(".autocomplete-suggestions").on("click", ".pagination", function (e) {
+            e.preventDefault();
+            let self = $(this);
+            $(".pagination").removeClass('active');
+            self.addClass('active');
+            var getActive = self.data('pageactive');
+            $(".search-productListItem").removeClass('active');
+            $("."+getActive).addClass('active');
+        });
+
+        $("#search").keyup(function (e) {
+            e.preventDefault();
+            serchMe();
+        });
+
+        $("#catalog_serch").change(function (e) {
+            e.preventDefault();
+            serchMe();
+        });
+
+        function serchMe() {
+
+            // Property
+            var autocomplete_suggestions = $(".autocomplete-suggestions");
+            var serchField = $("#search");
+            var productSection = $("#productSection");
+            var footerProductSection = $("#footerProductSection");
+            var resourceSection = $("#resourceSection");
+            var mediaUrl = "<?php echo $mediaUrl; ?>";
+            // serch property
+            var query = serchField.val();
+            var productCount = 0;
+            var pagination = 0;
+            var paginationButton = 0;
+            var activeClass = '';
+            var category_id = $("#catalog_serch").val();
+
+            // Reset
+            productSection.html('');
+            footerProductSection.find('.paginationDiv').html('');
+            // alert(query);
+            // alert(bs_product_search);
+            if(query.length > 1){
+
+            $.map(bs_product_search, function (element, index) {
+
+                // prepare a regex object for search
+                // let searchMe = new RegExp(query.toLowerCase(), 'i');
+
+                var placeholderImg = mediaUrl+'catalog/product/placeholder/<?php echo $getPlaceholderImage; ?>';
+                /* element.pn.toLowerCase().startsWith(query.toLowerCase()) */
+                    let catAssume = element.cname.filter(item => {
+                                        if(item.toLowerCase().startsWith(query.toLowerCase())) return item;
+                                        let newItem = item.split(" ");
+                                        for (let index = 0; index < newItem.length; index++) {
+                                            if((newItem[index]).toLowerCase().startsWith(query.toLowerCase())){
+                                                return (newItem[index]).toLowerCase();
+                                            }
+                                        }
+                                    });
+
+                // if(element.pn.toLowerCase().includes(query.toLowerCase()) || element.cname.filter(item => searchMe.test(item)) != ''){
+                if(element.pn.toLowerCase().includes(query.toLowerCase()) || catAssume.length > 0){
+
+                    // console.log(catAssume);
+
+                    // catwise Filter
+                    var catArr = element.cids;
+                    var catFlag = false;
+
+                    if(category_id != '' && catArr.includes(category_id)){
+                        catFlag = true;
+                    }else if(category_id == ''){
+                        catFlag = true;
+                    }
+
+
+                    if( catFlag == true ){
+
+                        // pagination
+                        productCount = productCount + 1;
+                        pagination = Math.ceil(productCount / 3);
+
+                        // Check if Image is empty or not
+                        if(element.img.length !== 0){
+                            if(!element.img.includes("productno_selection")){
+                                // set Image url
+                                placeholderImg = mediaUrl+element.img;
+                            }
+                            // console.log(placeholderImg);
+                        }
+                        // Product Section come here
+
+                        if(pagination === 1){
+                            activeClass = 'active';
+                        }else{
+                            activeClass = '';
+                        }
+
+                        if(pagination < 6){
+                            productSection.append(`
+                                <div class="search-productListItem ${activeClass} active-${pagination}">
+                                    <a class="search-productItem-link" href="${element.pu}">
+                                    <img class="Search-productItemImage" src="${placeholderImg}" alt="${element.pn}">
+                                        <div class="Search-productItemContent">
+                                            <p class="Search-productItemTitle">${element.pn}</p>
+                                            <div class="Search-productItemActions">
+                                                <div class="Search-productItemBtn-shop">
+                                                    <a href="${element.pu}" class="button button--primary-light button--size-small ">
+                                                        <span class="button__content">View More</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            `);
+
+                            if(pagination !== paginationButton){
+                                let pagiActive = (pagination == 1)?"active":"";
+                                footerProductSection.find('.paginationDiv').append(`
+                                    <button type="button" class="pagination ${pagiActive}" data-pageactive="active-${pagination}">${pagination}</button>
+                                `);
+                            }
+                            // console.log(paginationButton+' = '+pagination);
+
+                            paginationButton = pagination;
+
+                        }
+                    }
+                }
+            });
+
+            // Footer section serch count
+            footerProductSection.find('.resultCount').find('.count').html(productCount);
+
+            // Resource come here
+
+            // Activing tab
+            autocomplete_suggestions.show().addClass('active');
+
+            }else{
+                // Sachin bol kya dalu yaha PlaceHolder Image Or OOp wala message
+                // please input more then one letter
+                productSection.html('');
+                autocomplete_suggestions.hide().removeClass('active');
+            }
+
+         }
+
+         $('body').on('click', function(e) {
+            var searchBox = $('#search_mini_form');
+            if(!searchBox.is(e.target) &&  searchBox.has(e.target).length === 0) {
+                $(".autocomplete-suggestions").hide();
+            }
+        });
+
+    });
+</script>
+
+<?php
+// }
+?>
+

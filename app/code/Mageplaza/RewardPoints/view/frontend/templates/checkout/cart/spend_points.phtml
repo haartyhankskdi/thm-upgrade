@@ -1,0 +1,409 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Mageplaza\RewardPoints\Helper\Calculation;
+use Mageplaza\RewardPoints\Helper\Data;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+/** @var Data $helper */
+$helper          = $this->helper(Data::class);
+$calculation     = $this->helper(Calculation::class);
+$shippingAddress = $helper->getQuote()->getShippingAddress();
+$address         = [
+        'countryId' => $shippingAddress->getCountryId(),
+        'region'    => $shippingAddress->getRegion(),
+        'regionId'  => $shippingAddress->getRegionId(),
+        'postcode'  => $shippingAddress->getPostcode()
+];
+
+$isDisabledSpending = $helper->isDisabledSpending();
+$spentPoints        = $helper->getQuote()->getMpRewardSpent();
+$maxSpendingByRate  = 0;
+$maxSpendingPoint   = 0;
+$minSpendingPoint   = 0;
+if ($helper->getQuote()->getCustomerId()) {
+    $maxSpendingByRate = $calculation->getMaxSpendingPointsByRate($helper->getQuote());
+    $maxSpendingPoint  = $calculation->getMaxSpendingPoints($maxSpendingByRate);
+    $rate              = $calculation->getSpendingRateByQuote($helper->getQuote());
+    $minSpendingPoint  = $rate->getMinPoint();
+}
+?>
+<?php if (!$isDisabledSpending) : ?>
+    <div id="rewardpoints" data-bind="scope: 'rewardpoints'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "#rewardpoints": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "rewardpoints": {
+                            "component": "Mageplaza_RewardPoints/js/view/spending-points"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!--Compatible with Hyva theme-->
+    <?php if ($helper->checkHyvaTheme()) : ?>
+        <div id="rewardpoints" x-data="rewardPoints()"
+             @private-content-loaded.window="initData($event.detail.data)"
+             x-init="init($dispatch)">
+            <div x-show="rules() != 0 && rules().length"
+                 class="payment-option _collapsible opc-payment-additional reward"
+                 style="text-align: center">
+                <div class="payment-option-title field choice" data-role="title">
+                    <span class="action action-toggle" id="block-discount-heading" role="heading" aria-level="2">
+                        <span
+                                style="font-size: 1.75rem"><?= $escaper->escapeHtml(__('Spend Your Points')) ?></span><br></br>
+                    </span>
+                </div>
+                <div class="payment-option-content reward-points-payment-content"
+                     data-role="content">
+                    <div class="reward-box">
+                        <div class="points">
+                            <span x-html="balanceFormatted()"></span>
+                        </div>
+                        <div class="reward-rule-select">
+                            <div class="label">
+                                <strong><?= $escaper->escapeHtml(__('Choose how many points to spend')) ?></strong>
+                            </div>
+                            <div class="content">
+                                <template x-if="rules().length == 1">
+                                    <span x-html="selectedRule.label"></span>
+                                </template>
+                                <template x-if="rules().length > 1">
+                                    <select x-model="selectedRuleId" name="reward-rules" id="reward-spending-rules"
+                                            x-on:change="changeRule(selectedRuleId)">
+                                        <template x-for="rule in rules()" :key="rule.id">
+                                            <option
+                                                    :value="rule.id"
+                                                    :selected="rule.id === selectedRule.id"
+                                                    x-text="rule.label"
+                                            ></option>
+                                        </template>
+                                    </select>
+                                </template>
+                            </div>
+                        </div>
+                        <template x-if="isDisplaySlider">
+                            <div class="reward-slider-content">
+                                <div class="reward-spending-slider">
+                                    <div class="range">
+                                        <div class="field">
+                                            <div class="value left" x-text="selectedRule.min"></div>
+                                            <input type="range" class="reward-range-slider"
+                                                   min="<?= /* @noEscape */
+                                                   $minSpendingPoint ?>" max="<?= /* @noEscape */
+                                            $maxSpendingPoint ?>"
+                                                   value="<?= /* @noEscape */
+                                                   $spentPoints ? $spentPoints : 0 ?>" steps="1"
+                                                   x-model="pointSpent"
+                                                   x-on:change.debounce="initSlider()"
+                                            >
+                                            <div class="value right" x-text="selectedRule.max"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="extra-controls" style="text-align: left">
+                                    <span><?= $escaper->escapeHtml(__('You will spend')) ?></span>
+                                    <span>
+                                        <input type="text" class="mp-spent" style="width: 55px; height: 30px"
+                                               @keyup="changePointSpent($event)" x-model="pointSpent"/>
+                                    </span>
+                                </div>
+                                <div class="field choice">
+                                    <span style="margin-left: -30%;margin-right: 1%;">
+                                        <input type="checkbox" name="max-point" id="reward-use-max-point"
+                                               x-model="useMaxPoint" @click="changeMaxPoint($event)"/>
+                                    </span>
+                                    <label><?= $escaper->escapeHtml(__('Maximize my discount with points')) ?></label>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function rewardPoints () {
+                var points = JSON.parse(window.checkoutConfig.totalsData.extension_attributes.reward_points);
+
+                return {
+                    open: false,
+                    isLoading: false,
+                    cart: {},
+                    totalsData: window.checkoutConfig.totalsData,
+                    quoteData: window.checkoutConfig.quoteData,
+                    customerData: window.checkoutConfig.customerData,
+                    spendingConfig: points.spending,
+                    isCheckoutCart: points.isCheckoutCart,
+                    rules: function () {
+                        return points.spending.rules ?? 0;
+                    },
+                    selectedRule: {},
+                    pointSpent: null,
+                    canVisibleSpendPoints: true,
+                    isDisplaySlider: true,
+                    useMaxPoint: false,
+                    pauseSubscribe: false,
+                    slider: null,
+                    oldValue: null,
+                    isChangeRule: false,
+                    dispatch: null,
+                    selectedRuleId: null,
+                    spendingPoints: function (pointSpent, ruleId) {
+                        debugger
+
+                        this.dispatch('update-totals-start', {});
+                        var earningPoint,
+                            payload = {
+                                points: pointSpent || 0,
+                                ruleId: ruleId || '',
+                                addressInformation: {}
+                            };
+
+                        const selectedShippingMethod = window.checkoutConfig.selectedShippingMethod;
+                        payload.addressInformation   = {address: <?= /* @noEscape */ $helper::jsonEncode($address) ?>};
+                        if (selectedShippingMethod && selectedShippingMethod.method_code) {
+                            payload.addressInformation['shipping_method_code']  = selectedShippingMethod.method_code;
+                            payload.addressInformation['shipping_carrier_code'] = selectedShippingMethod.carrier_code;
+                        }
+                        fetch(BASE_URL + 'rest/' + CURRENT_STORE_CODE + '/V1/carts/mine/mpreward' + '?form_key=' + hyva.getFormKey(), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(payload)
+                        }).then(response => response.json())
+                        .then((result) => {
+                            const browserStorage = hyva.getBrowserStorage();
+                            if (browserStorage) {
+                                browserStorage.removeItem('mage-cache-storage');
+                            }
+                            this.dispatch('update-totals', {data: result});
+                            earningPoint = result.total_segments.find((segment) => segment.code === 'mp_reward_earn');
+                            if (earningPoint && earningPoint.value) {
+                                this.cart.rewardEarn = this.format(earningPoint.value);
+                            } else {
+                                this.cart.rewardEarn = 0;
+                            }
+                        }).catch(function (error) {
+                            console.log(error.message);
+                            typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                                [{type: "error", text: error}], 3000
+                            );
+                        }).finally(() => {
+                                this.dispatch('update-totals-end', {});
+                            }
+                        );
+                    },
+
+                    balanceFormatted: function () {
+                        var label = 'You have %s';
+                        return label.replace('%s', '<strong>' + this.format(points.balance) + '</strong>');
+                    },
+
+                    format: function (point) {
+                        if (parseInt(point) > 1) {
+                            return points.pattern.plural.replace('{point}', point);
+                        }
+
+                        return points.pattern.single.replace('{point}', point);
+                    },
+
+                    init ($dispatch) {
+                        this.dispatch = $dispatch;
+                    },
+
+                    initData: function (data) {
+                        var slidePoint;
+                        slidePoint = this.spendingConfig.pointSpent;
+                        if (data.cart) {
+                            this.cart = data.cart;
+                        }
+                        if (this.selectedRule &&
+                            Number(slidePoint) > Number(this.selectedRule.max) &&
+                            this.selectedRule.isDisplaySlider
+                        ) {
+                            slidePoint = this.selectedRule.max;
+                        }
+
+                        if (this.selectedRule &&
+                            this.selectedRule.isDisplaySlider
+                        ) {
+                            this.isDisplaySlider = this.selectedRule.isDisplaySlider;
+                        }
+                        this.pointSpent = slidePoint;
+                        if (this.spendingConfig.ruleApplied) {
+                            this.rules().forEach(rule => {
+                                if (rule.id === this.spendingConfig.ruleApplied) {
+                                    this.selectedRule = rule;
+                                    return false;
+                                }
+                            });
+                        }
+                        if (this.rules().length === 1 && typeof this.rules()[0]['id'] !== 'undefined' && this.rules()[0]['id'] === 'rate') {
+                            this.spendingConfig.ruleApplied = this.rules()[0]['id'];
+                        }
+                        this.initSelectedRule(this.spendingConfig.ruleApplied);
+                    },
+
+                    changePointSpent: function (event) {
+                        var rule,
+                            value,
+                            newValue;
+
+                        if (event) {
+                            rule = this.selectedRule;
+
+                            if (this.pointSpent && parseInt(this.pointSpent)) {
+                                value = parseInt(this.pointSpent);
+
+                                if (value < rule.min) {
+                                    newValue = rule.min;
+                                } else if (value > rule.max) {
+                                    newValue = rule.max;
+                                } else {
+                                    newValue = value;
+                                }
+                            } else {
+                                newValue = rule.min;
+                            }
+
+                            const inputSlider = document.querySelector(".reward-range-slider");
+                            if (newValue !== inputSlider.value) {
+                                this.updateValueOnSlider(newValue);
+                            }
+                        }
+                    },
+
+                    changeMaxPoint: function (event) {
+                        var newValue = 0;
+
+                        if (event) {
+                            newValue = !this.useMaxPoint ? this.selectedRule.max : this.selectedRule.min;
+                            this.updateValueOnSlider(newValue);
+                        }
+                    },
+
+                    updateValueOnSlider: function (newValue) {
+                        this.pointSpent = newValue;
+                        this.spendingPoints(this.pointSpent, this.selectedRule.id);
+                    },
+
+                    changeRule: function (ruleId) {
+                        if (ruleId) {
+                            this.initSelectedRule(ruleId);
+                            this.isChangeRule = true;
+                        }
+                    },
+
+                    initSelectedRule: function (ruleId) {
+                        var selectedRule;
+
+                        if (this.rules() && this.rules().length) {
+                            if (ruleId) {
+                                this.rules().forEach(rule => {
+                                    if (rule.id === ruleId) {
+                                        selectedRule = rule;
+                                        return false;
+                                    }
+                                });
+                            }
+                            if (ruleId === 'no_apply' || !selectedRule) {
+                                this.selectedRule    = this.rules()[0];
+                                this.isDisplaySlider = false;
+                            }
+                            if (JSON.stringify(selectedRule) !== JSON.stringify(this.selectedRule)) {
+                                this.pointSpent   = 0;
+                                this.selectedRule = selectedRule;
+                            }
+                            this.isDisplaySlider = selectedRule.isDisplaySlider;
+
+                        } else {
+                            this.selectedRule    = null;
+                            this.isDisplaySlider = false;
+                        }
+                        if (this.selectedRule && selectedRule){
+                            this.spendingPoints(this.pointSpent, this.selectedRule.id);
+                        }
+
+                        return this;
+                    },
+
+                    initSlider: function () {
+                        window.mpRewardPoints = 0;
+                        var isUseMaxPointByDefault;
+
+                        this.isLoading = true;
+                        this.checkMaxPointByAction();
+                        this.sendUpdateSpentPoints();
+                        this.updateSlider();
+                        isUseMaxPointByDefault = this.pointSpent === null && this.spendingConfig.useMaxPoints;
+                        if (isUseMaxPointByDefault) {
+                            this.pointSpent = this.selectedRule.max;
+                            this.updateSlider();
+                        }
+                    },
+
+                    updateSlider: function () {
+                        var rule          = this.selectedRule;
+                        const inputSlider = document.querySelector(".reward-range-slider");
+                        if (rule) {
+                            inputSlider.max  = rule.max;
+                            inputSlider.min  = rule.min;
+                            inputSlider.step = rule.step;
+                        }
+                    },
+
+                    sendUpdateSpentPoints: function () {
+                        if (this.pointSpent !== this.oldValue || this.isChangeRule) {
+                            this.updateSpendPoints();
+                            this.oldValue = this.pointSpent;
+                        }
+                    },
+
+                    checkMaxPointByAction: function () {
+                        this.useMaxPoint = parseInt(this.pointSpent) === parseInt(this.selectedRule.max);
+                    },
+
+                    updateSpendPoints: function () {
+                        if (isNaN(this.pointSpent)) {
+                            this.pointSpent = 0;
+                        }
+                        this.spendingPoints(this.pointSpent, this.selectedRule.id);
+                    },
+
+                    getCollapsible: function () {
+                        return this.isCheckoutCart ? '' : {'collapsible': {'openedState': '_active'}};
+                    }
+                }
+            };
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

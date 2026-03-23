@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="MY_CustomerSurvey::customersurvey" title="Customer Survey" module="MY_CustomerSurvey" sortOrder="51" resource="MY_CustomerSurvey::customersurvey"/>
+        <add id="MY_CustomerSurvey::customersurveypost" title="Manage Customer Survey" module="MY_CustomerSurvey" sortOrder="10" action="customersurvey/customersurvey/index" resource="MY_CustomerSurvey::customersurvey" parent="MY_CustomerSurvey::customersurvey"/>
+    </menu>
+</config>

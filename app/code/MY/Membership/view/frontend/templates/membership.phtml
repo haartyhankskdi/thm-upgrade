@@ -1,0 +1,126 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \MY\Membership\Block\Membership $block */
+?>
+<?php 
+$custVipGroupId = $block->getVipGroupId();
+?>
+<div class="membership-details">
+	<label>Membership Status: <span class="<?= ($custVipGroupId) ? __("VIP_Member") : __("Regular_Member") ?>"><?= ($custVipGroupId) ? __("VIP Member") : __("Regular") ?></span></label>
+</div>
+<form class="form form-membership-manage" action="<?= $block->escapeUrl($block->getAction()) ?>" method="post" id="form-validate">
+    <fieldset class="fieldset">
+        <?= $block->getBlockHtml('formkey') ?>
+        <!-- <div class="field choice">
+            <input type="checkbox" name="is_subscribed" id="subscription" value="1" title="<?= $block->escapeHtmlAttr(__('VIP Membership Subscription')) ?>"<?php if ($custVipGroupId) : ?> checked="checked"<?php endif; ?> class="checkbox">
+            <label for="subscription" class="label"><span><?//= $block->escapeHtml(__('VIP Membership Subscription')) ?></span></label>
+        </div> -->
+        <input type="hidden" name="vipcustomergroup" value="vipcustomergroup">                
+        <?php if(!$custVipGroupId) {?>
+            <input type="password" name="vip_cpass" id="c_pass" placeholder="Enter your current password" data-validate="{required:true}">
+        <?php } ?>
+        <!-- <div>
+            <a href="#" id="upgradevip">Upgrade to VIP</a>
+        </div>
+         -->
+         <!-- <div id="popup-modal" style="visibility:hidden">
+            
+        </div> -->
+    </fieldset>
+    <?php if(!$custVipGroupId) {?>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" id="upgradevip" title="<?= $block->escapeHtmlAttr(__('Upgrade to VIP')) ?>" class="action save primary">
+                <span><?= $block->escapeHtml(__('Upgrade to VIP')) ?></span>
+            </button>
+        </div>
+    </div>
+    <?php } ?>
+</form>
+
+<!-- <script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Enter password to confirm',
+                buttons: [{
+                    text: $.mage.__('Confirm'),
+                    class: '',
+                    click: function () {
+                        var pass = $('#c_pass').val();
+
+                        //$('#form-validate').submit();
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+            $("#upgradevip").on('click',function(){
+                $("#popup-modal").modal("openModal");
+                $("#popup-modal").css('visibility', 'visible');
+            });
+
+        }
+    );
+    </script> -->
+
+
+
+    <style type="text/css">
+        .membership-details label{
+            font-size: 17px !important;
+              color: #000;
+              font-weight: 400 !important;
+              line-height: 30px;
+              font-family: 'Lato', sans-serif; 
+        }
+        .membership-details label span{
+            color: #EF0000;
+        }
+        .membership-details label span.VIP_Member{
+            color: #D29A48;
+        }
+        .account.membership-manage-index.page-layout-2columns-left .column.main .page-title-wrapper .page-title{
+            font-size: 25px !important;
+              color: #000;
+              font-weight: 400 !important;
+              line-height: 46px;
+              font-family: 'Lato', sans-serif; 
+              margin-bottom: 0;
+        }
+        .account.membership-manage-index.page-layout-2columns-left .column.main .page-title-wrapper .page-title::after{
+            display: none;
+        }
+
+        .form-membership-manage button.action{
+             background-image: linear-gradient(to right, rgba(245,193,97,1), rgba(168,105,40,1)) !important;
+             padding-left: 55px !important;
+             padding-right: 55px !important;
+        }
+        .form-membership-manage button.action span{
+            background:url('/pub/media/wysiwyg/membership-icon2.png') left center no-repeat;
+            padding-left: 50px;
+            font-size: 22px;
+              color: #000;
+              font-weight: 400 !important;
+              line-height: 72px;
+              font-family: 'Lato', sans-serif;
+              letter-spacing: 0.30px;
+        }
+    </style>

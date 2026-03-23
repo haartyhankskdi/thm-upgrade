@@ -1,0 +1,61 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php /** @var Mageplaza\FrequentlyBought\Block\Product\View\Type\Bundle $block */ ?>
+<?php
+$product = $block->getProduct();
+$helper = $this->helper(\Mageplaza\FrequentlyBought\Helper\Data::class);
+?>
+<?php $options = $block->decorateArray($block->getOptions()); ?>
+<?php if ($product->isSaleable()):?>
+    <div class="bundle-options-container">
+        <?php if (!empty($options)): ?>
+        <div class="bundle-options-wrapper">
+            <div class="product-options-wrapper" id="product-options-wrapper" data-hasrequired="* Required Fields">
+                <div class="fieldset" tabindex="0">
+                    <script type="text/x-magento-init">
+                        {
+                            ".mageplaza-fbt-option-wrapper-<?= /* @noEscape */ $product->getId(); ?>": {
+                                "FbtPriceBundle": {
+                                    "optionConfig": <?= /* @noEscape */ $block->getJsonConfig()?>,
+                                    "controlContainer": ".field.option",
+                                    "usePopup": "<?= /* @noEscape */ $helper->usePopup() ?>"
+                                }
+                            }
+                        }
+                    </script>
+                    <fieldset class="fieldset fieldset-bundle-options">
+                        <?php foreach ($options as $option): ?>
+                            <?php if (!$option->getSelections()): ?>
+                                <?php continue; ?>
+                            <?php endif; ?>
+                            <?= /* @noEscape */ $block->getChildBlock($option->getType())->setProduct($product)->setOption($option)->toHtml(); ?>
+                        <?php endforeach; ?>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="mp-clear"></div>
+        <?php else: ?>
+            <p class="empty"><?= /* @noEscape */ __('No options of this product are available.') ?></p>
+        <?php endif; ?>
+    </div>
+<?php endif;?>

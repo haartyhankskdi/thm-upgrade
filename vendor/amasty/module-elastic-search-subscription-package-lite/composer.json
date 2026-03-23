@@ -1,0 +1,29 @@
+{
+    "name": "amasty/module-elastic-search-subscription-package-lite",
+    "description": "Elastic Search Subscription Package Lite by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.21.1",
+        "amasty/module-elastic-search-lite": ">=1.27.0"
+    },
+    "suggest": {
+        "amasty/module-elastic-search-graphql": "Install amasty/module-elastic-search-graphql module to activate Graphql and Advanced Search integration.",
+        "amasty/module-xsearch-hyva-compatibility": "Install this package to insure Autocomplite popup works with Hyv\u00e4 Theme.",
+        "amasty/module-search-rate-limiter": "Install this package in order to use the DDos guard functionality",
+        "amasty/module-advanced-search-subscription-functionality": "Install this package in order to use the Date filter functionality for the Most Wanted Search Terms.",
+        "amasty/module-advanced-search-multi-store": "Install this package for Multi-Store Search compatibility.",
+        "amasty/module-advanced-search-categories": "This package allows searching for products based on their category name."
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.27.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\ElasticSearchSubscriptionPackageLite\\": ""
+        }
+    }
+}

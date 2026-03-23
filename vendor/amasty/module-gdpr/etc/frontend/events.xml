@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_register_success">
+        <observer name="amasty_gdpr" instance="Amasty\Gdpr\Observer\Customer\Registration" />
+    </event>
+    <event name="controller_action_predispatch_contact_index_post">
+        <observer name="amasty_gdpr" instance="Amasty\Gdpr\Observer\Customer\ConfirmedCustomerActions" />
+    </event>
+    <event name="newsletter_subscriber_save_after">
+        <observer name="amasty_gdpr" instance="Amasty\Gdpr\Observer\Customer\ConfirmedCustomerActions"/>
+    </event>
+    <event name="custom_checkbox_confirm_log">
+        <observer name="amasty_gdpr" instance="Amasty\Gdpr\Observer\Customer\ConfirmedCustomerActions"/>
+    </event>
+    <event name="amasty_gdpr_consent_accept">
+        <observer name="amasty_gdpr_accept_consents" instance="Amasty\Gdpr\Observer\AcceptConsents"/>
+    </event>
+    <event name="paypal_express_place_order_success">
+        <observer name="amasty_gdpr_paypal_express_place_order_success" instance="Amasty\Gdpr\Observer\Customer\ConfirmedCustomerActions"/>
+    </event>
+
+    <event name="amasty_gdpr_get_checkbox">
+        <observer name="amasty_gdpr_custom_checkbox_provider" instance="Amasty\Gdpr\Observer\CustomCheckboxProvider"/>
+    </event>
+
+    <event name="customer_session_init">
+        <observer name="amasty_gdpr" instance="Amasty\Gdpr\Observer\Customer\SessionInit" />
+    </event>
+
+    <!-- Allow update internal policy compliance records because the session ID is updated on checkout -->
+    <!-- See comment: generate session ID only if connection is unsecure according to issues in session_regenerate_id function. -->
+    <event name="controller_action_predispatch_checkout_index_index">
+        <observer name="amasty_gdpr_checkout_index_action" instance="Amasty\Gdpr\Observer\Checkout\IndexAction" />
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="amasty_gdpr_checkout_compatibility" instance="Amasty\Gdpr\Observer\Checkout\Compatibility" />
+    </event>
+</config>

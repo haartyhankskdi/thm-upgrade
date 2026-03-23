@@ -1,0 +1,351 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function dataShowButton() {
+        return {
+            selectors: {
+                button: '.am_shopby_apply_filters'
+            },
+            isOneColumn: false,
+            layout: '1column',
+            ajaxEnabled: 0,
+            navigationSelector: '',
+            clearUrl: '',
+            buttonPosition: '',
+            element: null,
+            showButton: false,
+            disabledButton: true,
+            count: 0,
+            itemsCount: '',
+            reset: true,
+
+            /**
+             *
+             */
+            initShowButton() {
+                window.onresize = () => {
+                    if (window.innerWidth > 767) {
+                        this.showButton = false;
+                    }
+                };
+
+                let lastScrollTop = 0;
+                document.addEventListener('scroll', () => {
+                    if (this.element instanceof HTMLElement && this.showButton) {
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                        if (Math.abs(scrollTop - lastScrollTop) >= 10) {
+                            lastScrollTop = scrollTop;
+                            this.changePositionOnScroll();
+                        }
+                    }
+                });
+
+                this.$watch('count', value => {
+                    this.disabledButton = !value;
+                });
+            },
+
+            /**
+             *
+             * @param e
+             */
+            applyFilter(e) {
+                window.dispatchEvent(new CustomEvent('amApplyButton', {
+                    detail: {
+                        element: e.target,
+                        navigationSelector: this.navigationSelector
+                    }
+                }));
+            },
+
+            /**
+             *
+             * @param el
+             * @returns {*}
+             */
+            offsetTop(el) {
+                const rect = el.getBoundingClientRect(),
+                    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                return rect.top + scrollTop;
+            },
+
+            /**
+             *
+             * @param el
+             * @returns {*}
+             */
+            offsetLeft(el) {
+                const rect = el.getBoundingClientRect(),
+                    scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+                return rect.left + scrollLeft;
+            },
+
+            /**
+             *
+             */
+            setButtonPosition() {
+                this.resetButtonPosition();
+
+                setTimeout(() => {
+                    const button = document.querySelector(this.selectors.button);
+                    if (!button) return;
+
+                    const section = this.isOneColumn
+                        ? document.querySelector(this.selectors.topNav)
+                        : document.querySelector(this.navigationSelector);
+
+                    if (!section) return;
+
+                    const isTopNav = this.element.closest(this.selectors.topNav);
+
+                    if (document.body.clientWidth > 767) {
+                        const elementRect = this.element.getBoundingClientRect();
+                        const sectionRect = section.getBoundingClientRect();
+                        const elementTopPos = elementRect.top - sectionRect.top;
+                        const flyout = this.element.closest('.flyout-element');
+                        let sectionWidth = section.offsetWidth;
+                        button.style.marginLeft = '';
+
+                        if (flyout && flyout.closest('ul.items-children')) {
+                            let flyoutParent = flyout.closest('ul.items-children');
+
+                            while (typeof (flyoutParent) != 'undefined' && flyoutParent != null) {
+                                if (flyoutParent) {
+                                    sectionWidth += flyoutParent.offsetWidth - 24;
+                                    flyoutParent = flyoutParent.closest('li').closest('ul.items-children');
+                                }
+                            }
+                        }
+
+                        if (isTopNav) {
+                            let content = this.element.closest(this.selectors.filterOptionsItem);
+                            const state = this.element.closest(this.selectors.filterState);
+
+                            if (this.isOneColumn) {
+                                this.buttonPosition = state ? 'left' : 'top';
+                            } else {
+                                content = this.element.closest(this.selectors.filterOptionsContent);
+                                this.buttonPosition = 'top';
+                            }
+
+                            if (!state) {
+                                let contentTop;
+                                let contentLeft;
+                                const filterItem = content.closest(this.selectors.filter).querySelector(this.selectors.filterTitle);
+                                if (!filterItem) return;
+
+                                const filterItemRect = filterItem.getBoundingClientRect();
+                                const sidebar = !this.isOneColumn
+                                    ? document.querySelector(this.selectors.sidebar)
+                                    : document.querySelector(this.selectors.topNav);
+
+                                if (!sidebar) return;
+
+                                const filterContent = sidebar.querySelector(this.selectors.filterContent);
+                                if (!filterContent) return;
+
+                                const filterContentRect = filterContent.getBoundingClientRect();
+                                const filterState = sidebar.querySelector(this.selectors.filterState);
+
+                                contentTop = filterContentRect.top;
+                                contentLeft = filterContentRect.left;
+
+                                if (filterState) {
+                                    const filterStateRect = filterState.getBoundingClientRect();
+                                    contentTop = filterStateRect.top;
+                                }
+
+                                const topOffset = (this.buttonPosition === 'top') ? 10 : 0;
+                                const buttonTop = filterItemRect.top - contentTop - topOffset;
+                                const buttonLeft = elementRect.left - contentLeft + 20 - (button.offsetWidth / 2);
+
+                                button.style.right = '';
+                                button.style.top = `${buttonTop}px`;
+                                button.style.left = `${buttonLeft}px`;
+                                button.style.marginLeft = '0';
+                            } else {
+                                sectionWidth = state.offsetWidth;
+                                button.style.right = '';
+                                button.style.top = `${elementTopPos}px`;
+                                button.style.left = `${sectionWidth}px`;
+                            }
+                        } else {
+                            if (this.layout.includes('left') || this.layout.includes('3columns') || this.layout.includes('category-full-width')) {
+                                button.style.right = '';
+                                button.style.left = `${sectionWidth}px`;
+                                this.buttonPosition = 'left';
+                            } else {
+                                button.style.left = '';
+                                button.style.right = `${sectionWidth}px`;
+                                this.buttonPosition = 'right';
+                            }
+                            button.style.top = `${elementTopPos}px`;
+                        }
+                    } else {
+                        button.style.right = '';
+                        button.style.top = 'auto';
+                        button.style.left = '0';
+                    }
+                    this.showButton = true;
+                }, 300);
+            },
+
+            /**
+             *
+             */
+            changePositionOnScroll() {
+                if (!this.showButton || typeof document.body.clientWidth === 'undefined' || document.body.clientWidth <= 767) {
+                    return;
+                }
+
+                let element = this.element;
+
+                if (!(element instanceof HTMLElement)) {
+                    this.showButton = false;
+                    return false;
+                }
+
+                const catalogTopNav = element.closest('.catalog-topnav');
+                if (catalogTopNav) {
+                    element = catalogTopNav;
+                }
+
+                const leftPositionElements = document.querySelectorAll('.sidebar-main, .catalog-topnav');
+                const shopByApply = document.querySelector(this.selectors.button);
+                if (!shopByApply) return;
+
+                const buttonTop = parseFloat(shopByApply.style.top);
+                const windowHeight = window.innerHeight;
+                const buttonContainer = document.querySelector(this.selectors.button);
+                if (!buttonContainer) return;
+
+                const filterLeft = leftPositionElements.length ? this.offsetLeft(leftPositionElements[0]) : buttonTop;
+                const filterWidth = leftPositionElements.length ? leftPositionElements[0].getBoundingClientRect().width : windowHeight;
+                const scrollTop = window.pageYOffset;
+                const scrollBottom = this.offsetTop(element) - scrollTop;
+
+                const amShowButton = document.querySelector('.am-show-button');
+                if (!amShowButton) return;
+
+                const shopByApplyHeight = amShowButton.offsetHeight;
+
+                if (scrollTop <= this.offsetTop(element) - (windowHeight - shopByApplyHeight)) {
+                    buttonContainer.style.top = 'auto';
+                    buttonContainer.style.bottom = '5px';
+                    this.setButtonClasses(buttonContainer, filterLeft, filterWidth);
+                    this.reset = true;
+                } else if (scrollBottom - shopByApplyHeight <= 0) {
+                    buttonContainer.style.bottom = 'auto';
+                    buttonContainer.style.top = '20px';
+                    this.setButtonClasses(buttonContainer, filterLeft, filterWidth);
+                    this.reset = true;
+                } else if (buttonContainer.classList.contains('md:fixed')) {
+                    if (this.reset) {
+                        this.reset = false;
+                        this.setButtonPosition();
+                    }
+                }
+            },
+
+            /**
+             *
+             */
+            resetButtonPosition() {
+                const buttonContainer = document.querySelector(this.selectors.button),
+                    shopByApply = document.querySelector(this.selectors.button),
+                    buttonTop = parseFloat(shopByApply.style?.top || 0),
+                    buttonLeft = parseFloat(shopByApply.style?.left || 0);
+
+                buttonContainer.classList.remove(
+                    'md:fixed',
+                    'md:ml-0',
+                    'transition-all',
+                    'duration-300',
+                    'ease-in-out',
+                    'delay-600'
+                );
+                buttonContainer.classList.add('md:ml-6', 'md:absolute');
+
+                buttonContainer.style.top = buttonTop;
+                buttonContainer.style.left = buttonLeft;
+
+                if (document.body.clientWidth > 767) {
+                    buttonContainer.style.width = 'inherit';
+                } else {
+                    buttonContainer.style.width = '100%';
+                }
+
+                buttonContainer.querySelector('svg').classList.add('md:block');
+            },
+
+            /**
+             *
+             * @param container
+             * @param left
+             * @param width
+             */
+            setButtonClasses(container, left, width) {
+                container.classList.remove('md:absolute', 'md:ml-6');
+                container.classList.add(
+                    'md:fixed',
+                    'md:ml-0',
+                    'transition-all',
+                    'duration-300',
+                    'ease-in-out',
+                    'delay-600'
+                );
+                container.style.left = left + 'px';
+                container.style.width = width + 'px';
+
+                container.querySelector('svg').classList.remove('md:block');
+            },
+
+            eventListeners: {
+                ['@amApplyButtonData.window'](event) {
+                    let count = event.detail.count;
+                    this.count = count;
+                    if (count !== 1) {
+                        count = count + ' <?= $escaper->escapeJs(__('Items')) ?>'
+                    } else if (count === 1) {
+                        count = count + ' <?= $escaper->escapeJs(__('Item')) ?>'
+                    }
+
+                    this.itemsCount = count;
+                    this.showButton = !event.detail.disabled;
+                },
+                ['@amSetButtonPosition.window'](event) {
+                    this.element = event.detail.element;
+                    if (this.element instanceof HTMLElement) {
+                        this.setButtonPosition();
+
+                        if (this.element.closest(this.selectors.topNav)) {
+                            this.changePositionOnScroll();
+                        }
+                    }
+                },
+                ['@amClearButtonText.window']() {
+                    this.itemsCount = '';
+                    this.count = 0;
+                }
+            }
+        }
+    }
+</script>

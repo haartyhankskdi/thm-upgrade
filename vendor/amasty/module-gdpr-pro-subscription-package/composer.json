@@ -1,0 +1,35 @@
+{
+    "name": "amasty/module-gdpr-pro-subscription-package",
+    "description": "GDPR Pro Subscription Package by Amasty",
+    "require": {
+        "php": ">=7.4",
+        "amasty/module-gdpr-pro": ">=2.17.1",
+        "amasty/base": ">=1.21.1"
+    },
+    "suggest": {
+        "amasty/module-gdpr-hyva": "Install this package to insure Amasty GDPR extension works with Hyv\u00e4 Theme.",
+        "amasty/module-gdpr-cookie-hyva": "Install this package to insure Amasty Cookie extension works with Hyv\u00e4 Theme.",
+        "amasty/module-gdpr-cookie-graphql": "Install this package to insure Amasty Cookie Consent extension works with GraphQL.",
+        "amasty/module-google-consent-mode": "Install this package for Google Consent Mode compatibility.",
+        "amasty/module-microsoft-consent-mode": "Install this package for compatibility with Microsoft UET Consent Mode.",
+        "amasty/module-microsoft-consent-mode-hyva": "Install this package for compatibility with Microsoft UET Consent Mode with Hyv\u00e4 Theme.",
+        "amasty/module-gdpr-hyva-checkout": "Install this package to ensure the GDPR Pro extension works with Hyv\u00e4 Checkout.",
+        "amasty/module-gdpr-subscription-functionality": "Install this package for compatibility with subscription features.",
+        "amasty/module-clarity-consent-mode": "Install this package for compatibility with Microsoft Clarity consent mode.",
+        "amasty/module-clarity-consent-mode-hyva": "Install this package for compatibility with Microsoft Clarity consent mode with Hyv\u00e4 Theme."
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "2.16.2",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\GdprProSubscriptionPackage\\": ""
+        }
+    }
+}

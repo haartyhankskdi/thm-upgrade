@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form_data_source</item>
+            <item name="deps" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form_data_source</item>
+        </item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="component" xsi:type="string">Amasty_Gdpr/js/form/form</item>
+            <item name="namespace" xsi:type="string">amasty_gdpr_consents_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Edit Checkbox</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="array">
+                <item name="name" xsi:type="string">back</item>
+                <item name="label" xsi:type="string" translate="true">Back</item>
+                <item name="class" xsi:type="string">back</item>
+                <item name="url" xsi:type="string">*/*/</item>
+            </item>
+            <item name="delete" xsi:type="string">Amasty\Gdpr\Block\Adminhtml\Consent\Edit\DeleteButton</item>
+
+            <item name="save" xsi:type="array">
+                <item name="name" xsi:type="string">save</item>
+                <item name="label" xsi:type="string" translate="true">Save Checkbox</item>
+                <item name="class" xsi:type="string">save primary</item>
+            </item>
+
+            <item name="save_and_continue" xsi:type="array">
+                <item name="name" xsi:type="string">save_and_continue</item>
+                <item name="label" xsi:type="string" translate="true">Save and Continue Edit</item>
+                <item name="class" xsi:type="string">save_and_continue</item>
+            </item>
+        </item>
+    </argument>
+
+    <dataSource name="amasty_gdpr_consents_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Amasty\Gdpr\Ui\DataProvider\Form\ConsentsDataProvider</argument>
+            <argument name="name" xsi:type="string">amasty_gdpr_consents_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">consent_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="general">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">General</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="opened" xsi:type="boolean">true</item>
+                <item name="dataScope" xsi:type="string">consent</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">name</item>
+                    <item name="label" xsi:type="string" translate="true">Checkbox Name</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="sortOrder" xsi:type="string">0</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="consent_code">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">consent_code</item>
+                    <item name="label" xsi:type="string" translate="true">Checkbox Code</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="sortOrder" xsi:type="string">5</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="is_enabled">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Enabled</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">is_enabled</item>
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="default" xsi:type="number">1</item>
+                    <item name="sortOrder" xsi:type="string">10</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="is_required">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Confirmation Required</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">is_required</item>
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="default" xsi:type="number">1</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string" translate="true">If enabled, a customer will have to give the consent to submit an action.</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="string">20</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="hide_the_consent_after_user_left_the_consent">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Hide the Checkbox after User Gave the Consent</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">hide_the_consent_after_user_left_the_consent</item>
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="notice" xsi:type="string" translate="true">According to the rules of the GDPR, we recommend you leave this setting enabled.</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string" translate="true">If enabled, the system will always log consents to the checkbox. Moreover, the checkbox will be also added to customer account under the section 'Given Consent' to opt in or opt out from consent.</item>
+                    </item>
+                    <item name="default" xsi:type="number">1</item>
+                    <item name="sortOrder" xsi:type="string">30</item>
+                    <item name="switcherConfig" xsi:type="array">
+                        <item name="enabled" xsi:type="boolean">true</item>
+                        <item name="rules" xsi:type="array">
+                            <item name="0" xsi:type="array">
+                                <item name="value" xsi:type="number">0</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.log_the_consent</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">true</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="1" xsi:type="array">
+                                <item name="value" xsi:type="number">1</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.log_the_consent</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">false</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="log_the_consent">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Log the Consent</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">log_the_consent</item>
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string" translate="true">In this way, the company will be able to save all consents received, maintain a register of them and process user requests when they withdraw their consent.</item>
+                    </item>
+                    <item name="notice" xsi:type="string" translate="true">According to the rules of the GDPR, we recommend you leave this setting enabled.</item>
+                    <item name="default" xsi:type="number">1</item>
+                    <item name="sortOrder" xsi:type="string">40</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="sort_order">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">sort_order</item>
+                    <item name="label" xsi:type="string" translate="true">Checkbox Position</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataType" xsi:type="string">number</item>
+                    <item name="sortOrder" xsi:type="string">45</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="integer" xsi:type="boolean">true</item>
+                        <item name="validate-zero-or-greater" xsi:type="boolean">true</item>
+                        <item name="validate-digits" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string" translate="true">The feature helps to set the order of several checkboxes in case they are displayed in one place. 0 is the highest priority.</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="consent_location">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Checkbox Location</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">multiselect</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="source" xsi:type="string">consent_location</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="string">50</item>
+                </item>
+                <item name="options" xsi:type="object">Amasty\Gdpr\Model\Source\CheckboxLocationCombine</item>
+            </argument>
+        </field>
+
+        <field name="consent_text">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="source" xsi:type="string">consent_text</item>
+                    <item name="label" xsi:type="string" translate="true">Checkbox Text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="notice" xsi:type="string" translate="true"><![CDATA[You can use the <a> tag in the text and also the {link} variable to insert the privacy policy link into the checkbox text. Example: I have read and accept the <a href="{link}">privacy policy</a>]]></item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="link_type">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Amasty\Gdpr\Model\Source\ConsentLinkType</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Consent Link Type</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">link_type</item>
+                    <item name="sortOrder" xsi:type="string">70</item>
+                    <item name="switcherConfig" xsi:type="array">
+                        <item name="enabled" xsi:type="boolean">true</item>
+                        <item name="rules" xsi:type="array">
+                            <item name="0" xsi:type="array">
+                                <item name="value" xsi:type="number">0</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.cms_page_id</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">false</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="1" xsi:type="array">
+                                <item name="value" xsi:type="number">1</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.cms_page_id</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">true</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="cms_page_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Amasty\Gdpr\Model\Source\LinkToPolicy</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">CMS Page</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">cms_page_id</item>
+                    <item name="sortOrder" xsi:type="string">75</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="visibility">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Amasty\Gdpr\Model\Source\CountriesRestrictment</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Countries Restrictment</item>
+                    <item name="source" xsi:type="string">visibility</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="string">80</item>
+                    <item name="switcherConfig" xsi:type="array">
+                        <item name="enabled" xsi:type="boolean">true</item>
+                        <item name="rules" xsi:type="array">
+                            <item name="0" xsi:type="array">
+                                <item name="value" xsi:type="number">0</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.countries</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">false</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="1" xsi:type="array">
+                                <item name="value" xsi:type="number">1</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.countries</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">false</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="2" xsi:type="array">
+                                <item name="value" xsi:type="number">2</item>
+                                <item name="actions" xsi:type="array">
+                                    <item name="0" xsi:type="array">
+                                        <item name="target" xsi:type="string">amasty_gdpr_consents_form.amasty_gdpr_consents_form.general.countries</item>
+                                        <item name="callback" xsi:type="string">visible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="0" xsi:type="boolean">true</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="countries">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Display for Specific Countries</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="size" xsi:type="number">6</item>
+                    <item name="dataType" xsi:type="string">multiselect</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="source" xsi:type="string">specific_countries</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="string">90</item>
+                </item>
+                <item name="options" xsi:type="object">Amasty\Gdpr\Model\Config\Source\Countries</item>
+            </argument>
+        </field>
+
+    </fieldset>
+</form>

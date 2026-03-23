@@ -1,0 +1,189 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var Mageplaza\SocialLogin\Block\Popup\Social $block */
+
+$availableSocials = $block->getAvailableSocials();
+$childBlock       = $block->getChildBlock('request.info');
+$position         = $block->getData('position');
+
+$helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+
+if ($block->canShow($position) && sizeof($availableSocials) && $helperData->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel account-social-login">
+        <div class="block-content">
+            <?php foreach ($availableSocials as $key => $social): ?>
+                <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= /* @noEscape */ $key ?>-login">
+                    <a class="btn btn-block btn-social btn-<?= /* @noEscape */$block->getBtnKey($key) ?>"
+                       data-mage-init='{"socialProvider": {"url": "<?= /* @noEscape */$social['login_url'] ?>", "label": "<?= /* @noEscape */__('Login By %1', $social['label']) ?>"}}'
+                       onclick='clickLoginSocial("<?= /* @noEscape */$social['login_url'] ?>","<?= /* @noEscape */$social['label'] ?>")'
+                    >
+                        <span class="fa fa-<?= /* @noEscape */ $block->getBtnKey($key) ?>"></span>
+                        <?= /* @noEscape */ __('Sign in with %1', $social['label']) ?>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if ($childBlock && $childBlock->isRequireMoreInfo()): ?>
+    <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide"
+         data-mage-init='{"Mageplaza_SocialLogin/js/popup":<?= /* @noEscape */ $childBlock->getFormParams() ?>}'>
+        <?= $block->getChildHtml('request.info') ?>
+    </div>
+<?php endif; ?>
+<style type="text/css">
+    .request-popup{
+        overflow-y: unset;
+        max-width: 800px;
+        left: 30%;
+    }
+    .request-popup .modal-header{
+        padding: 0;
+    }
+    .request-popup .modal-header button.action-close{
+        color: white;
+        z-index: 100;
+    }
+    .request-popup .modal-content{
+        padding: 0;
+    }
+</style>
+<script type="text/javascript">
+    function getPopupParams(w, h, l, t) {
+        var screenX = typeof window.screenX !== 'undefined' ? window.screenX : window.screenLeft;
+        var screenY = typeof window.screenY !== 'undefined' ? window.screenY : window.screenTop;
+        var outerWidth = typeof window.outerWidth !== 'undefined' ? window.outerWidth : document.body.clientWidth;
+        var outerHeight = typeof window.outerHeight !== 'undefined' ? window.outerHeight : (document.body.clientHeight - 22);
+        var width = w ? w : 500;
+        var height = h ? h : 420;
+        var left = l ? l : parseInt(screenX + ((outerWidth - width) / 2), 10);
+        var top = t ? t : parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+
+        return (
+            'width=' + width +
+            ',height=' + height +
+            ',left=' + left +
+            ',top=' + top
+        );
+    }
+    function clickLoginSocial(login_url, label) {
+        var date = new Date();
+        var currentTime = date.getTime();
+        window.open(login_url + '?' + currentTime, label, getPopupParams());
+    }
+
+</script>
+
+
+<style>
+    .btn-social > :first-child{
+        position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translatey(-50%);
+    bottom: 0;
+    width: 28px;
+    line-height: 28px;
+    font-size: 1.6em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .social-btn .btn-social{
+        display: block;
+    -webkit-text-decoration: none;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    margin-bottom: 0;
+    font-size: 17px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 28px;
+    padding: 16px 12px 16px 60px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+    .btn-facebook {
+    color: #fff;
+    background-color: #507EC2;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-facebook:hover {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-google {
+    color: #fff;
+    background-color: #DD4830;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-google:hover {
+    color: #fff;
+    background-color: #c23321;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-twitter {
+    color: #fff;
+    background-color: #65CEF3;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-twitter:hover {
+    color: #fff;
+    background-color: #2795e9;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.account-social-login .actions-toolbar.social-btn {
+    width: calc(50% - 8px);
+    margin: 0 !important;
+    padding: 0;
+    border: 0;
+    display: inline-block;
+}
+.block.social-login-authentication-channel.account-social-login .block-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 640px) {
+    .block.social-login-authentication-channel.account-social-login .block-content {
+        flex-direction: column;
+    }
+}
+</style>

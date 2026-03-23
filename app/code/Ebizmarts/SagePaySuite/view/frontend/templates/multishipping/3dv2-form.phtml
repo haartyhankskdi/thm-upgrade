@@ -1,0 +1,21 @@
+<?php
+/**
+ * Copyright © 2020 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+?>
+
+<?php
+/**
+ * @var $block \Ebizmarts\SagePaySuite\Block\Multishipping\ThreeDSecure
+ */
+?>
+
+<form id="sca_form" name="sca_form" method="post" action="<?= $block->escapeHtmlAttr($block->getAscUrl()) ?>">
+    <input type="hidden" name="creq" value="<?= $block->escapeHtmlAttr($block->getCreq())?>">
+    <input type="hidden" name="Md" value="<?= $block->escapeHtmlAttr($block->getMd()) ?>">
+</form>
+
+<script>
+    document.sca_form.submit();
+</script>

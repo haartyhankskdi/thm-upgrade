@@ -1,0 +1,103 @@
+<div role="dialog"
+     class="modal-<%- data.type %> <%- data.modalClass %>"
+     <% if(data.title){ %> aria-labelledby="modal-title-<%- data.id %>"<% } %>
+     data-role="modal"
+     data-type="<%- data.type %>"
+>
+<div data-role="focusable-start" tabindex="0"></div>
+<div class="modal-inner-wrap"
+     data-role="focusable-scope">
+    <header class="modal-header">
+        <% if(data.title || data.subTitle){ %>
+        <p id="modal-title-<%- data.id %>" class="amgdprcookie-description"
+            data-role="title">
+            <% if(data.title){ %>
+            <%= data.title %>
+            <% } %>
+
+            <% if(data.subTitle){ %>
+            <span class="modal-subtitle"
+                  data-role="subTitle">
+                    <%= data.subTitle %>
+                </span>
+            <% } %>
+        </p>
+        <% } %>
+        <button
+            class="action-close"
+            data-role="closeBtn"
+            type="button">
+            <span><%= data.closeText %></span>
+        </button>
+    </header>
+    <div id="modal-content-<%- data.id %>"
+         class="modal-content"
+         data-role="content"></div>
+</div>
+<div data-role="focusable-end" tabindex="0"></div>
+</div>
+
+<style>
+    <% if(data.settings.backgroundColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap {
+            background-color: <%= data.settings.backgroundColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.groupTitleTextColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-caption {
+            color: <%= data.settings.groupTitleTextColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.groupDescriptionTextColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-text,
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-description {
+            color: <%= data.settings.groupDescriptionTextColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.groupLinksColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-options {
+            color: <%= data.settings.groupLinksColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.doneButtonColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-done {
+            background-color: <%= data.settings.doneButtonColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.doneButtonTextColor) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-done {
+            color: <%= data.settings.doneButtonTextColor %>;
+        }
+    <% } %>
+
+    <% if(data.settings.doneButtonColorHover) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-done:hover {
+            background-color: <%= data.settings.doneButtonColorHover %>;
+        }
+    <% } %>
+
+    <% if(data.settings.doneButtonTextColorHover) { %>
+        .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-done:hover {
+            color: <%= data.settings.doneButtonTextColorHover %>;
+        }
+    <% } %>
+
+    <% if(data.settings.toggleActiveColor) { %>
+    .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-toggle-cookie .amgdprcookie-input:checked:not([disabled]) + .amgdprcookie-label,
+    [data-role="gdpr-cookie-widget-container"] .amgdprcookie-toggle-cookie .amgdprcookie-input:checked:not([disabled]) + .amgdprcookie-label {
+        background-color: <%= data.settings.toggleActiveColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.toggleInActiveColor) { %>
+    .amgdprcookie-cookie-settings-modal .modal-inner-wrap .amgdprcookie-toggle-cookie .amgdprcookie-input:not(:checked) + .amgdprcookie-label,
+    [data-role="gdpr-cookie-widget-container"] .amgdprcookie-toggle-cookie .amgdprcookie-input:not(:checked) + .amgdprcookie-label {
+        background-color: <%= data.settings.toggleInActiveColor %>;
+    }
+    <% } %>
+</style>

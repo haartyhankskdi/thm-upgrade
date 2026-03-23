@@ -1,0 +1,71 @@
+{
+    "sales_order_payment": {
+        "column": {
+            "last_trans_id": true,
+            "total_released": true
+        }
+    },
+    "sagepaysuite_token": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "token": true,
+            "cc_last_4": true,
+            "cc_exp_month": true,
+            "cc_type": true,
+            "cc_exp_year": true,
+            "vendorname": true,
+            "created_at": true,
+            "store_id": true,
+            "payment_method": true,
+            "vault_id": true,
+            "migrated": true
+        },
+        "index": {
+            "SAGEPAYSUITE_TOKEN_CUSTOMER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "sagepaysuite_sca_params": {
+        "column": {
+            "id": true,
+            "quote_id": true,
+            "js_enabled": true,
+            "java_enabled": true,
+            "color_depth": true,
+            "screen_height": true,
+            "screen_width": true,
+            "time_zone": true,
+            "accept_header": true,
+            "language": true,
+            "user_agent": true
+        }
+    },
+    "sales_payment_transaction": {
+        "column": {
+            "sagepaysuite_fraud_check": true
+        }
+    },
+    "sagepaysuite_synced_orders": {
+        "column": {
+            "id": true,
+            "order_id": true,
+            "status_code": true,
+            "status_detail": true,
+            "sync_attempts": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        },
+        "index": {
+            "SAGEPAYSUITE_TABLE_ORDER_ID": true
+        }
+    },
+    "vault_payment_token": {
+        "column": {
+            "sagepaysuite_vendorname": true
+        }
+    }
+}

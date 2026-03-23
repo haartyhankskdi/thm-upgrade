@@ -1,0 +1,98 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['franchise_form'])) {
+    $name = htmlspecialchars(trim($_POST['name']));
+    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+    $contact = htmlspecialchars(trim($_POST['contact']));
+
+    if ($email) {
+        $to = "franchise@tariqhalalmeats.com";
+        $subject = "New Franchise Enquiry from";
+
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type:text/html; charset=UTF-8\r\n";
+        $headers .= "From: Franchise Form <info@tariqhalalmeats.com>\r\n";
+        $headers .= "Reply-To: {$email}\r\n";
+
+        $message = "
+            <html>
+            <head><title>Franchise Enquiry</title></head>
+            <body>
+                <h2>Franchise Enquiry Received</h2>
+                <p><strong>Name:</strong> {$name}</p>
+                <p><strong>Email:</strong> {$email}</p>
+                <p><strong>Contact Number:</strong> {$contact}</p>
+            </body>
+            </html>
+        ";
+
+        if (mail($to, $subject, $message, $headers)) {
+            // Redirect without showing any message
+            header("Location: /thank-you");
+            exit;
+        }
+    }
+}
+?>
+
+<section class="py-10 md:py-16">
+  <div class="container">
+  <div
+    class="px-6 lg:pl-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-[#fdeeee] "
+  >
+    <!-- LEFT CONTENT -->
+    <div class="py-8">
+        <h2 class="text-2xl md:text-4xl font-bold mb-4">Download Our Franchise Brochure</h2>
+        <p class="text-base text-black mb-6">
+            Enter your details below to get instant access to our franchise brochure and explore exciting opportunities to grow our brand.
+        </p>
+
+        <form method="POST" action="" class="franchise-form" onsubmit="return validateForm();">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 ">
+                <input type="text" name="name" placeholder="Name" class="w-full px-4 py-3 bg-white border border-gray-400" required />
+             
+                <input type="text" name="contact" id="contact" placeholder="Contact" class="w-full px-4 py-3 bg-white border border-gray-400" required pattern="\d{11}" maxlength="11" />
+             
+                <input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-3 bg-white border border-gray-400" required />
+            </div>
+            <div class="form-group-btn">
+                <input type="submit" name="franchise_form" class="inline-block bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs md:text-base  font-normal px-8 py-3 rounded-full transition duration-400 uppercase transition" value="Submit & Download Brochure">
+            </div>
+        </form>
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="relative hidden md:block">
+      <img
+        src="/media/wysiwyg/franchise-brochure-img.jpg"
+        alt="Franchise Brochure"
+        class="w-full ml-auto"
+      />
+    </div>
+</div>
+</div>
+</section>
+ 
+
+
+<script>
+function validateForm() {
+    const contact = document.getElementById("contact").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    const contactValid = /^\d{11}$/.test(contact);
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!contactValid) {
+        alert("Please enter a valid 11-digit UK contact number.");
+        return false;
+    }
+
+    if (!emailValid) {
+        alert("Please enter a valid email address.");
+        return false;
+    }
+
+    return true;
+}
+</script>
+ 

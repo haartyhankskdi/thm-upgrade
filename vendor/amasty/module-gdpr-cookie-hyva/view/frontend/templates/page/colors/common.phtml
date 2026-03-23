@@ -1,0 +1,79 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\Settings;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+$settings = $viewModels->require(Settings::class);
+?>
+
+<style>
+    :root {
+        /* Bar Color Settings */
+        --ambar-background: <?= $escaper->escapeHtml($settings->getBackgroundColor()) ?>;
+        --ambar-links-color: <?= $escaper->escapeHtml($settings->getLinksColor()) ?>;
+        --ambar-policy-text: <?= $escaper->escapeHtml($settings->getPolicyTextColor()) ?>;
+        --ambar-toggle-active-color: <?= $escaper->escapeHtml($settings->getToggleActiveStateColor()) ?>;
+        --ambar-toggle-inactive-color: <?= $escaper->escapeHtml($settings->getToggleInActiveStateColor()) ?>;
+
+        /* Buttons Color Settings */
+        --ambar-button-accept-color: <?= $escaper->escapeHtml($settings->getAcceptButtonColor()) ?>;
+        --ambar-button-accept-hover-color: <?= $escaper->escapeHtml($settings->getAcceptButtonColorHover()) ?>;
+        --ambar-button-accept-text: <?=  $escaper->escapeHtml($settings->getAcceptTextColor()) ?>;
+        --ambar-button-accept-hover-text: <?= $escaper->escapeHtml($settings->getAcceptTextColorHover()) ?>;
+
+        --ambar-button-allow-color: <?= $escaper->escapeHtml($settings->getSettingsButtonColor()) ?>;
+        --ambar-button-allow-hover-color: <?= $escaper->escapeHtml($settings->getSettingsButtonColorHover()) ?>;
+        --ambar-button-allow-text: <?= $escaper->escapeHtml($settings->getSettingsTextColor()) ?>;
+        --ambar-button-allow-hover-text: <?= $escaper->escapeHtml($settings->getSettingsTextColorHover()) ?>;
+
+        --ambar-button-decline-color: <?= $escaper->escapeHtml($settings->getDeclineButtonColor()) ?>;
+        --ambar-button-decline-hover-color: <?= $escaper->escapeHtml($settings->getDeclineButtonColorHover()) ?>;
+        --ambar-button-decline-text: <?= $escaper->escapeHtml($settings->getDeclineTextColor()) ?>;
+        --ambar-button-decline-hover-text: <?= $escaper->escapeHtml($settings->getDeclineTextColorHover()) ?>;
+
+        --ambar-button-settings-color: <?= $escaper->escapeHtml($settings->getSettingsButtonColor()) ?>;
+        --ambar-button-settings-hover-color: <?= $escaper->escapeHtml($settings->getSettingsButtonColorHover()) ?>;
+        --ambar-button-settings-text: <?= $escaper->escapeHtml($settings->getSettingsTextColor()) ?>;
+        --ambar-button-settings-hover-text: <?= $escaper->escapeHtml($settings->getSettingsTextColorHover()) ?>;
+
+        /* Buttons Order Settings */
+        --ambar-button-accept-order: <?= /** @noEscape */ $settings->getAcceptButtonOrder() ?>;
+        --ambar-button-allow-order: <?= /** @noEscape */ $settings->getSettingsButtonOrder() ?>;
+        --ambar-button-settings-order: <?= /** @noEscape */ $settings->getSettingsButtonOrder() ?>;
+        --ambar-button-decline-order: <?= /** @noEscape */ $settings->getDeclineButtonOrder() ?>;
+
+        /* Cookie Information Bar Color Settings */
+        --ambar-information-background: <?= $escaper->escapeHtml($settings->getCookieInformationBarBackgroundColor()) ?>;
+        --ambar-information-title: <?= $escaper->escapeHtml($settings->getCookieInformationBarTitleColor()) ?>;
+        --ambar-information-description: <?= $escaper->escapeHtml($settings->getCookieInformationBarDescriptionColor()) ?>;
+        --ambar-information-table-header: <?= $escaper->escapeHtml($settings->getCookieInformationBarTableHeaderColor()) ?>;
+        --ambar-information-table-content: <?= $escaper->escapeHtml($settings->getCookieInformationBarTableContentColor()) ?>;
+
+        /* Cookie Information Bar Done Button Settings */
+        --ambar-information-button-color: <?= $escaper->escapeHtml($settings->getCookieInformationBarDoneButtonColor()) ?>;
+        --ambar-information-button-hover-color: <?= $escaper->escapeHtml($settings->getCookieInformationBarDoneButtonColorHover()) ?>;
+        --ambar-information-button-text: <?= $escaper->escapeHtml($settings->getCookieInformationBarDoneButtonTextColor()) ?>;
+        --ambar-information-button-hover-text: <?= $escaper->escapeHtml($settings->getCookieInformationBarDoneButtonTextColorHover()) ?>;
+
+        /* Settings Bar Done Button Settings */
+        --ambar-setting-button-color: <?= $escaper->escapeHtml($settings->getCookieSettingsBarDoneButtonColor()) ?>;
+        --ambar-setting-button-hover-color: <?= $escaper->escapeHtml($settings->getCookieSettingsBarDoneButtonColorHover()) ?>;
+        --ambar-setting-button-text: <?= $escaper->escapeHtml($settings->getCookieSettingsBarDoneButtonTextColor()) ?>;
+        --ambar-setting-button-hover-text: <?= $escaper->escapeHtml($settings->getCookieSettingsBarDoneButtonTextColorHover()) ?>;
+
+        /* cookie_settings_bar_customisation */
+        --ambar-setting-bar-group-background: <?= $escaper->escapeHtml($settings->getCookieSettingsBarBackgroundColor()) ?>;
+        --ambar-setting-bar-group-title: <?= $escaper->escapeHtml($settings->getCookieSettingsBarGroupTitleTextColor()) ?>;
+        --ambar-setting-bar-group-description: <?= $escaper->escapeHtml($settings->getCookieSettingsBarGroupDescriptionTextColor()) ?>;
+        --ambar-setting-bar-group-links: <?= $escaper->escapeHtml($settings->getCookieSettingsBarGroupLinksColor()) ?>;
+    }
+</style>

@@ -1,0 +1,59 @@
+/* Custom styles for installed hyva ui module */
+
+/* TODO: Possible it will needs to change selector for header type after it is configured in Admin    */
+
+#header {
+    &.a-header-type {
+        #search-content {
+            @apply z-110;
+
+            @media (min-width: 768px) {
+                @apply px-0;
+            }
+        }
+
+        #menu-search-icon {
+            @apply inline-block;
+        }
+
+        #header-notification {
+            @apply z-9;
+        }
+
+        #search_mini_form {
+            button[type="submit"] {
+                &[disabled] {
+                    @apply opacity-100 bg-indigo-500 text-slate-300;
+                }
+            }
+        }
+    }
+
+    &.b-header-type {
+        #search-content {
+            @media (min-width: 768px) {
+                @apply px-0;
+            }
+        }
+    }
+
+    &.c-header-type {
+        [x-ref="searchContainerDesktop"] {
+            &.c-header-type {
+                @apply absolute left-0 w-full mx-0;
+
+                [x-ref="searchForm"] {
+                    @apply max-w-none;
+                }
+            }
+        }
+    }
+}
+
+.column.main {
+    &.a-header-type {
+        section {
+            @apply z-8;
+        }
+    }
+}

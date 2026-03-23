@@ -1,0 +1,74 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchBestsellers() {
+        return {
+            bestsellersGoToItemAriaLabel() {
+                return `${this.$el.dataset.label} ` + (this.index + 1)
+            },
+            bestsellersPreviousClass() {
+                return {
+                    'opacity-25 pointer-events-none': this.slider.bestsellers.active === 0
+                }
+            },
+            bestsellersGoToItemClass() {
+                return {
+                    'bg-opacity-100': this.slider.bestsellers.isActive(this.index),
+                    'bg-opacity-25': !this.slider.bestsellers.isActive(this.index),
+                    'hidden': (this.slider.bestsellers.pageSize !== 1 && !!(this.index % this.slider.bestsellers.pageSize))
+                }
+            },
+            bestsellersNextClass() {
+                return {
+                    'opacity-25 pointer-events-none':
+                        this.slider.bestsellers.active >= this.slider.bestsellers.itemCount - this.slider.bestsellers.pageSize
+                }
+            },
+            bestsellersPreviousEvent() {
+                return this.slider.bestsellers.prev()
+            },
+            bestsellersGoToItemEvent() {
+                return this.slider.bestsellers.scrollTo(this.index)
+            },
+            bestsellersNextEvent() {
+                return this.slider.bestsellers.next()
+            },
+            bestsellersEnterOnceEvent() {
+                return this.slider.bestsellers.init(this.$refs)
+            },
+            bestsellersItems() {
+                return this.sections.bestsellers.items
+            },
+            bestsellersItemCount() {
+                return this.slider.bestsellers.itemCount
+            },
+            isBestsellersPages() {
+                return this.slider.bestsellers.itemCount > this.slider.bestsellers.pageSize
+            },
+            bestsellersResizeWindowEvent() {
+                return this.slider.bestsellers.onResize()
+            },
+            bestsellersScrollEvent() {
+                return this.slider.bestsellers.calcActive()
+            },
+            bestsellersTitle() {
+                return this.sections.bestsellers.title
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

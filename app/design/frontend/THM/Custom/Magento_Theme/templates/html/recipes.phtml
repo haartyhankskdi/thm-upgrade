@@ -1,0 +1,447 @@
+<!--Recipe Content & Banner Image Section -->
+<div class="recipe_banners_section">
+<p class="text-gray-600 mb-6">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut massa eget eros 
+        fringilla sagittis non vitae leo. Sed quis porttitor eros. Vivamus accumsan odio mi.
+      </p>
+
+      <!-- Rating -->
+     <?php echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Magento_Catalog::category/google-review.phtml")->toHtml();?>
+
+    </div>
+
+    <!-- Right Image -->
+    <div class="h-full">
+      <img src="<?php $block->getBaseUrl()?>/pub/media/wysiwyg/recipes.png" alt="recipes" class="recipe-main-img">
+    </div>
+  </div>
+<?php 
+ $block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+ $postCollection = $block->getPostCollection(); 
+ $baseUrl = $block->getBaseUrl();
+ $postCollection->addFieldToFilter('enabled', 1);
+ $postCollection->setOrder('publish_date', 'DESC');
+/* $postCollection->setPageSize(10);*/
+ $postCollection->setCurPage(1);
+ $posts_video= [];
+foreach ($postCollection as $post) {
+    if ($post->getShortDescription()) {
+        $posts_video[] = $post;
+    }
+    if (count($posts_video) >= 2) break; 
+}
+
+ ?>
+ 
+ <div class="recipe_section">
+<!-- Latest Added Recipe Section -->
+<div class="latest-added">
+  <h2><strong>Latest</strong> Added to List</h2>
+  <p class="subtext">Fresh halal inspiration, straight from our kitchen.</p>
+    <div class="underline"></div>
+  <div class="card-container">
+    <div class="card">
+      <div class="card-content">
+        <?php foreach ($posts_video as $post): ?>
+        <p><?php echo $post->getShortDescription()?></p>
+        <h3><a href="<?php echo $post->getUrl()?>"><?php echo $post->getName()?></a></h3>
+          <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+  <div class="feature">
+     <img src="<?= $block->getViewFileUrl('images/delicious-recipes.png'); ?>" alt="Delicious Recipes" />
+    <h3>Easy, Delicious<br>
+    Recipes Await! </h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut massa eget eros fringilla sagittis non vitae leo.</p>
+  </div>
+  <div class="feature">
+    <img src="<?= $block->getViewFileUrl('images/culinary.png'); ?>" alt="Culinary" />
+    <h3>Created by<br>Culinary Experts</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut massa eget eros fringilla sagittis non vitae leo.</p>
+  </div>
+  <div class="feature">
+    <img src="<?= $block->getViewFileUrl('images/group.png'); ?>" alt="Group" />
+    <h3>Ready-to-cook & <br>
+    Marinated Options
+    </h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut massa eget eros fringilla sagittis non vitae leo.</p>
+  </div>
+</div>
+
+<!-- Searchbar Section -->
+<div class="recipe-search-section">
+  <div class="search-container">
+    <h2>What are you cooking today</h2>
+     <p>Get inspired with recipes tailored to your favourite halal cuts.</p>
+     <?= $this->getLayout()->createBlock("Mageplaza\Blog\Block\Sidebar\Search")->setTemplate("Mageplaza_Blog::sidebar/search.phtml")->toHtml() ?>
+  </div>
+</div>
+
+<!-- Catgory list Section -->
+<div class="recipe-category">
+   <h2>Recipe <strong>Category</strong></h2>
+   <p>Discover dishes by cuisine, cooking style, or occasion</p>  
+
+   <?php 
+   $block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Category\Widget::class);
+   $cat_collection = $block->getTree();
+
+   $categoryImages = [
+       'chicken' => 'images/chicken.jpg',
+       'beef'    => 'images/beef.jpg',
+       'lamb'   => 'images/chicken.jpg',
+       'turkey' => 'images/beef.jpg',
+       'burgers'   => 'images/chicken.jpg',
+       'goat' => 'images/beef.jpg',
+       'mutton'   => 'images/chicken.jpg',
+       'offal' => 'images/beef.jpg',
+   ];
+   ?>
+
+   <div class="grid">
+   <?php foreach ($cat_collection as $category){ ?>
+      <?php if($category['enabled'] == "1"){ 
+         $imagePath = isset($categoryImages[$category['url']]) 
+            ? $categoryImages[$category['url']] 
+            : 'images/default.jpg'; 
+      ?>
+      <div class="item">
+        <a href="<?php echo $block->getBaseUrl()."recipe/category/".$category['url']?>" >
+         <img src="<?= $block->getViewFileUrl($imagePath); ?>" alt="<?= $category['text']; ?>" />
+       </a>
+         
+         <a href="<?php echo $block->getBaseUrl()."recipe/category/".$category['url']?>" >
+            <div class="category-label">
+               <p><?php echo $category['text']?></p>
+               <span class="arrow">&#8594;</span>
+            </div>
+         </a>
+      </div>
+      <?php } 
+   } ?> 
+   </div> 
+</div>
+
+
+<!-- Ready 20min recipe Section -->
+<div class="section-title">Ready in 20min</div>
+
+    <div class="recipe-container">
+        <div class="recipe-card">
+          <a href="<?php echo $block->getBaseUrl()."recipe/category/chicken";?>" >
+             <img src="<?= $block->getViewFileUrl('images/pot-chicken.jpg'); ?>" alt="Pot Chicken" />
+           </a>
+           
+            <a href="<?php echo $block->getBaseUrl()."recipe/category/chicken";?>" >
+          <div class="recipe-title">One-Pot Chicken Dinner</div>
+        </a>
+        </div>
+        <div class="recipe-card">
+           <a href="<?php echo $block->getBaseUrl()."recipe/category/lamb";?>" >
+               <img src="<?= $block->getViewFileUrl('images/lamb-souvlaki.jpg'); ?>" alt="Lamb Souvlaki" />
+             </a>
+            <a href="<?php echo $block->getBaseUrl()."recipe/category/lamb";?>" >
+              <div class="recipe-title">Lamb Souvlaki Wraps</div>
+              </a>
+        </div>
+        <div class="recipe-card">
+           <a href="<?php echo $block->getBaseUrl()."recipe/category/chicken";?>" >
+               <img src="<?= $block->getViewFileUrl('images/chicken-curry.jpg'); ?>" alt="Chicken Curry" />
+             </a>
+            <a href="<?php echo $block->getBaseUrl()."recipe/category/chicken";?>" >
+            <div class="recipe-title">
+            Chicken Curry Recipe</div>
+            </a>
+        </div>
+        
+    </div>
+
+    <!-- Recipes for Every Feeling Section -->
+
+    <div class="feeling_section">
+    <h2>Recipes for <span>Every Feeling</span></h2>
+    <p class="subtext">From cosy to adventurous – halal recipes to match your vibe.</p>
+    <div class="underline"></div>
+
+    <div class="recipes-feeling">
+    <div class="recipes-feeling-item">Happiness</div>
+    <div class="recipes-feeling-item">Excitement</div>
+    <div class="recipes-feeling-item">Love</div>
+    <div class="recipes-feeling-item">Joy</div>
+  </div>
+  </div>
+  </div>
+</div>
+
+<style>
+.latest-added {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.latest-added h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.card {
+  display: flex;
+  background-color: #f4f4f4;
+  width: calc(50% - 1rem);
+  min-height: 200px;
+}
+
+.card-content {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+}
+
+.card-content h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.view-details {
+  color: #d32f2f;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.view-details span {
+  margin-left: 5px;
+  font-size: 1rem;
+}
+
+.card-video {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e5e5;
+  width: 150px;
+}
+
+.play-button {
+  width: 40px;
+  height: 40px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.features-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  text-align: center;
+  font-family: sans-serif;
+  flex-wrap: wrap;
+}
+
+.feature {
+  flex: 1;
+  min-width: 250px;
+  max-width: 30%;
+}
+
+.feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature p {
+  font-size: 0.95rem;
+  color: #444;
+}
+.recipe-search-section {
+  background-color: #eeeeee;
+  padding: 3rem 1rem;
+  font-family: sans-serif;
+}
+
+.search-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.search-container h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 0;
+  overflow: hidden;
+  width: 300px;
+}
+
+.search-form input {
+  border: none;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  flex: 1;
+  outline: none;
+}
+
+.search-form button {
+  background: none;
+  border: none;
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.recipe-category {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.recipe-category h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.category-image {
+  background-color: #e0e0e0;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Makes it a square */
+}
+
+.category-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.category-label .arrow {
+  color: #d32f2f;
+  font-size: 1.1rem;
+}
+
+  .feeling-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+
+    .recipe-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .recipe-card {
+        background-color: white;
+        border-radius: 4px;
+        padding: 0;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 200px;
+        background-color: #f0f0f0;
+    }
+
+    .recipe-title {
+        font-size: 14px;
+        padding: 10px;
+        color: #222;
+    }
+
+        .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+    }
+    .item {
+      text-align: center;
+    }
+    .item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    .item p {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .recipes-feeling {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .recipes-feeling-item {
+      background: #000;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      border-radius: 8px;
+    }   
+</style>

@@ -1,0 +1,26 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */
+/** @var \Amasty\GdprCookie\Block\Color $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+
+<div class="amgdprcookie-colorpicker-container">
+    <div id="<?= $escaper->escapeHtmlAttr($block->getColorPickerId()) ?>"></div>
+    <?= /* @noEscape */ $block->getColorPickerHtml() ?>
+</div>
+
+<script type ="text/x-magento-init">
+    {
+        "*": {
+            "Amasty_GdprCookie/js/color": {
+                "htmlId":"<?= $escaper->escapeHtml($block->getHtmlId()) ?>",
+                "colorPickerId": "<?= $escaper->escapeHtml($block->getColorPickerId()) ?>",
+                "elData": "<?= $escaper->escapeHtml($block->getColorPickerValue()) ?>"
+            }
+        }
+    }
+</script>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Mageplaza_RewardPointsPro::earning_behavior" title="Behavior Rules" module="Mageplaza_RewardPointsUltimate" sortOrder="40" action="mprewardultimate/earning_behavior/" resource="Mageplaza_RewardPoints::earning_behavior" parent="Mageplaza_RewardPoints::earning"/>
+        <add id="Mageplaza_RewardPoints::referrals" title="Referrals" module="Mageplaza_RewardPointsUltimate" sortOrder="25" resource="Mageplaza_RewardPoints::referrals" parent="Mageplaza_RewardPoints::reward_points"/>
+        <add id="Mageplaza_RewardPoints::referral_rules" title="Rules" module="Mageplaza_RewardPointsUltimate" sortOrder="10" action="mprewardultimate/referral/" resource="Mageplaza_RewardPoints::referral_rules" parent="Mageplaza_RewardPoints::referrals"/>
+        <add id="Mageplaza_RewardPoints::referral_invitation" title="Invitation History" module="Mageplaza_RewardPointsUltimate" sortOrder="20" action="mprewardultimate/invitation/history" resource="Mageplaza_RewardPoints::referral_invitation" parent="Mageplaza_RewardPoints::referrals"/>
+        <add id="Mageplaza_RewardPoints::reports" title="Reward Points Reports" module="Mageplaza_RewardPoints" sortOrder="90" resource="Mageplaza_RewardPoints::reports" parent="Magento_Reports::report"/>
+        <add id="Mageplaza_RewardPoints::reports_earned" title="Earned" module="Mageplaza_RewardPointsUltimate" sortOrder="10" action="mprewardultimate/reports/earned" resource="Mageplaza_RewardPoints::reports_earned" parent="Mageplaza_RewardPoints::reports"/>
+        <add id="Mageplaza_RewardPoints::reports_spent" title="Spent" module="Mageplaza_RewardPointsUltimate" sortOrder="20" action="mprewardultimate/reports/spent" resource="Mageplaza_RewardPoints::reports_spent" parent="Mageplaza_RewardPoints::reports"/>
+        <add id="Mageplaza_RewardPoints::milestone" title="Milestones" module="Mageplaza_RewardPointsUltimate" sortOrder="25" action="mprewardultimate/milestone/index" resource="Mageplaza_RewardPoints::milestone" parent="Mageplaza_RewardPoints::reward_points"/>
+    </menu>
+</config>

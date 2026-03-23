@@ -1,0 +1,112 @@
+@theme {
+    --color-ambar-background: var(--ambar-background);
+    --color-ambar-links-color: var(--ambar-links-color);
+    --color-ambar-policy-text: var(--ambar-policy-text);
+    --color-ambar-info-bar-background: var(--ambar-information-background);
+    --color-ambar-info-bar-title: var(--ambar-information-title);
+    --color-ambar-info-bar-description: var(--ambar-information-description);
+    --color-ambar-info-bar-table-header: var(--ambar-information-table-header);
+    --color-ambar-info-bar-table-content: var(--ambar-information-table-content);
+    --color-ambar-info-bar-button: var(--ambar-information-button-color);
+    --color-ambar-info-bar-button-hover: var(--ambar-information-button-hover-color);
+    --color-ambar-info-bar-button-text: var(--ambar-information-button-text);
+    --color-ambar-info-bar-button-hover-text: var(--ambar-information-button-hover-text);
+    --color-ambar-settings-bar-button: var(--ambar-setting-button-color);
+    --color-ambar-settings-bar-button-hover: var(--ambar-setting-button-hover-color);
+    --color-ambar-settings-bar-button-text: var(--ambar-setting-button-text);
+    --color-ambar-settings-bar-button-hover-text: var(--ambar-setting-button-hover-text);
+    --color-ambar-settings-bar-group-background: var(--ambar-setting-bar-group-background);
+    --color-ambar-settings-bar-group-title: var(--ambar-setting-bar-group-title);
+    --color-ambar-settings-bar-group-description: var(--ambar-setting-bar-group-description);
+    --color-ambar-settings-bar-group-links: var(--ambar-setting-bar-group-links);
+}
+
+.text-ambar-policy-text a {
+    color: var(--ambar-links-color);
+
+    &:hover {
+        @apply opacity-75;
+        text-decoration: underline;
+    }
+}
+
+.ambar-sidebar-group-list {
+    .ambar-group-title {
+        color: var(--ambar-sidebar-group-title-text);
+    }
+
+    .ambar-group-description {
+        color: var(--ambar-sidebar-group-description-text);
+    }
+
+    [data-dispatch-action="sidebar-open-am-cookie-group-info"] {
+        color: var(--ambar-links-color);
+    }
+}
+
+@layer components {
+    .ambar-btn-accept {
+        @apply rounded-sm text-center text-sm transition-colors focus:drop-shadow hover:drop-shadow px-2 py-4;
+        color: var(--ambar-button-accept-text);
+        background-color: var(--ambar-button-accept-color);
+        order: var(--ambar-button-accept-order);
+
+        &:hover {
+            color: var(--ambar-button-accept-hover-text);
+            background-color: var(--ambar-button-accept-hover-color);
+        }
+    }
+
+    .ambar-btn-allow {
+        @apply rounded-sm text-center text-sm transition-colors focus:drop-shadow hover:drop-shadow px-2 py-4;
+        color: var(--ambar-button-allow-text);
+        background-color: var(--ambar-button-allow-color);
+        order: var(--ambar-button-allow-order);
+
+        &:hover {
+            color: var(--ambar-button-allow-hover-text);
+            background-color: var(--ambar-button-allow-hover-color);
+        }
+    }
+
+    .ambar-btn-decline {
+        @apply rounded-sm text-center text-sm transition-colors focus:drop-shadow hover:drop-shadow px-2 py-4;
+        color: var(--ambar-button-decline-text);
+        background-color: var(--ambar-button-decline-color);
+        order: var(--ambar-button-decline-order);
+
+        &:hover {
+            color: var(--ambar-button-decline-hover-text);
+            background-color: var(--ambar-button-decline-hover-color);
+        }
+    }
+
+    .ambar-btn-settings {
+        @apply rounded-sm text-center text-sm transition-colors focus:drop-shadow hover:drop-shadow px-2 py-4;
+        color: var(--ambar-button-settings-text);
+        background-color: var(--ambar-button-settings-color);
+        order: var(--ambar-button-settings-order);
+
+        &:hover {
+            color: var(--ambar-button-settings-hover-text);
+            background-color: var(--ambar-button-settings-hover-color);
+        }
+    }
+
+    .am-cookie-bar-settings input[type='checkbox'].amsettings-bar-input-toggle:not([disabled]):checked {
+        background-color: var(--ambar-toggle-active-color);
+    }
+
+    .am-cookie-bar-settings input[type='checkbox'].amsettings-bar-input-toggle:not([checked]) {
+        background-color: var(--ambar-toggle-inactive-color);
+    }
+
+    .am-cookie-sidebar input[type='checkbox'].amsettings-bar-input-toggle:not([disabled]):checked {
+         background-color: var(--ambar-sidebar-toggle-active-color);
+    }
+
+    .am-cookie-sidebar input[type='checkbox'].amsettings-bar-input-toggle:not([checked]) {
+        background-color: var(--ambar-sidebar-toggle-inactive-color);
+    }
+}
+

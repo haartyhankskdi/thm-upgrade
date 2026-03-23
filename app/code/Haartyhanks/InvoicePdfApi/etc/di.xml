@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+      <type name="Haartyhanks\InvoicePdfApi\Model\CustomerInvoicePdf">
+        <arguments>
+            <argument name="response" xsi:type="object">Magento\Framework\App\Response\Http</argument>
+        </arguments>
+    </type>
+    <preference for="Haartyhanks\InvoicePdfApi\Api\CustomerInvoicePdfInterface" type="Haartyhanks\InvoicePdfApi\Model\CustomerInvoicePdf" />
+    
+</config>

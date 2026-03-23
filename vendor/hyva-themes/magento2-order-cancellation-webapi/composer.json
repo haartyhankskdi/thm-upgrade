@@ -1,0 +1,27 @@
+{
+  "name": "hyva-themes/magento2-order-cancellation-webapi",
+  "description": "REST API for magento/module-order-cancellation.",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "magento/module-webapi": "*",
+    "magento/module-customer": "*",
+    "magento/module-sales": "*"
+  },
+  "suggest": {
+    "magento/module-order-cancellation": "^100.4.0-beta3"
+  },
+  "authors": [{
+    "name": "Hyvä Themes B.V.",
+    "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\OrderCancellationWebapi\\": ["src/"]
+    }
+  }
+}

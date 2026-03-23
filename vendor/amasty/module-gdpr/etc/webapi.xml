@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/amasty_gdpr/approveDeleteRequest" method="POST">
+        <service class="Amasty\Gdpr\Api\RequestInterface" method="approveDeleteRequest"/>
+        <resources>
+            <resource ref="Amasty_Gdpr::requests" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_gdpr/denyDeleteRequest" method="POST">
+        <service class="Amasty\Gdpr\Api\RequestInterface" method="denyDeleteRequest"/>
+        <resources>
+            <resource ref="Amasty_Gdpr::requests" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_gdpr/getUnprocessedRequests" method="GET">
+        <service class="Amasty\Gdpr\Api\RequestInterface" method="getUnprocessedRequests"/>
+        <resources>
+            <resource ref="Amasty_Gdpr::requests" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_gdpr/getConsentLog" method="GET">
+        <service class="Amasty\Gdpr\Api\WithConsentRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Amasty_Gdpr::requests"/>
+        </resources>
+    </route>
+</routes>

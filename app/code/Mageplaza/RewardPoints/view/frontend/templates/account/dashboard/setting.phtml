@@ -1,0 +1,66 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\RewardPoints\Helper\Email $helper */
+/** @var \Mageplaza\RewardPoints\Block\Account\Dashboard\Setting $block */
+$helper = $block->getEmailHelper();
+$formKey = $helper->getObject(\Magento\Framework\Data\Form\FormKey::class)->getFormKey();
+if ($helper->enableEmailNotification()) :?>
+<div class="block-container block reward-setting mp-clear">
+    <form class="form form-rewards-setting"
+          method="post"
+          action="<?= /** @noEscape */
+          $block->escapeUrl($block->getUrl('customer/rewards/settingPost') . '?form_key=' . $formKey)?>"
+          id="form-validate" enctype="multipart/form-data" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+          autocomplete="off">
+        <fieldset class="fieldset email-notification">
+            <div class="block-title order pb-4 mb-6 flex justify-between !mt-0"><strong><?= $block->escapeHtml(__('Email Notification')) ?></strong></div>
+            
+            <?php if ($helper->isEmailEnable($helper::XML_PATH_UPDATE_TRANSACTION_EMAIL_TYPE)) : ?>
+                <div class="field choice">
+                    <input type="checkbox" name="notification_update" id="notification-update" value="1"
+                           title="<?= $block->escapeHtmlAttr(__('Subscribe to balance update')) ?>"
+                        <?= $block->getNotificationUpdate() ? 'checked="checked"' : '' ?>
+                           class="checkbox"/>
+                    <label class="label"
+                           for="notification-update"><span><?= $block->escapeHtml(__('Subscribe to balance update')) ?></span></label>
+                </div>
+            <?php endif; ?>
+            <?php if ($helper->isEmailEnable($helper::XML_PATH_EXPIRE_EMAIL_TYPE)) : ?>
+                <div class="field choice">
+                    <input type="checkbox" name="notification_expire" id="notification-expire" value="1"
+                           title="<?= $block->escapeHtmlAttr(__('Subscribe to points expiration notification')) ?>"
+                        <?= $block->getNotificationExpire() ? 'checked="checked"' : '' ?>
+                           class="checkbox"/>
+                    <label class="label"
+                           for="notification-expire"><span><?= $block->escapeHtml(__('Subscribe to points expiration notification')) ?></span></label>
+                </div>
+            <?php endif; ?>
+        </fieldset>
+        <div class="actions-toolbar py-6  !border-0">
+           
+                <button type="submit" class="bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base font-normal px-2 py-3 rounded-full transition duration-400 uppercase px-8 order-1" title="<?= $block->escapeHtmlAttr(__('Save')) ?>">
+                    <span><?= $block->escapeHtml(__('Save')) ?></span></button>
+           
+        </div>
+    </form>
+</div>
+<?php endif; ?>

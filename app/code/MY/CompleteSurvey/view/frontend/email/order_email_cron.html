@@ -1,0 +1,85 @@
+<!--@subject Happy with your Shopping? | Let us know how you feel @-->
+ 
+ <table class="wrapper" width="100%">
+    <tr>
+        <td class="wrapper-inner 1" align="center">
+            <table class="main" align="center">
+                <tr>
+                    <td class="header test" align="center" style="text-align: center; padding-bottom: 20px;">
+                        <a class="logo" href="{{store url=""}}">
+                            <img
+                                {{if logo_width}}
+                                    width="329"
+                                {{else}}
+                                    width="329"
+                                {{/if}}
+
+                                {{if logo_height}}
+                                    height="{{var logo_height}}"
+                                {{/if}}
+
+                                src="{{var logo_url}}"
+                                alt="{{var logo_alt}}"
+                                border="0"
+                            />
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="main-content" style="background-color: transparent;">
+<table style="float:left; margin-right: 0px; " class="fue-abc-items"  >
+   <tr>
+       <td style="background: #fff; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">           
+                           
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "Hi "}}{{var custname}},</p>
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "We hope you’re enjoying your recent purchase from "}}{{config path="general/store_information/name"}}.</p>  
+              <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "You’ve been selected based on your purchase to give valuable feedback about your online experience by filling out a short survey that will help us to improve our services. Will you take part? 5 minutes of your time can lead to streamlined shopping and user-friendly initiatives you may notice the next time you visit."}}</p>  
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;"><a style="color:#e63832;" href="{{store url=''}}completesurvey/manage/index?cid={{var custid}}&cemail={{var custemail}}">{{store url="completesurvey/manage"}}</a></p>
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "Your insights are valuable and help companies like us who strive for customer satisfaction reach their objectives with you in mind. Your input will be used to ensure we continue to meet your needs."}}</p>        
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">As a bonus for submitting your completed survey, we are delighted to award registered account users of Tariq halal meats, <strong>10 points</strong> towards becoming eligible for our new and exclusive VIP Membership Club.</p>
+               <ol style="margin-left: 15px;">
+                   <li style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "The information gathered will be used for quality assurance only."}}</li>
+                   <li style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "Your privacy is valued. Be assured that none of your personal information is sold to third parties."}}</li>
+                   <li style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "10 point VIP Rewards redemption is valid for a single registered user one time only."}}</li>                   
+               </ol>
+               <p style="font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">{{trans "Your trust is appreciated. We look forward to receiving your feedback and continuing to provide a service you are pleased with. For any questions, please do contact our "}}{{config path="trans_email/ident_general/email"}}.</p>
+            
+       </td>
+   </tr>
+</table>
+
+</td>
+                </tr>
+                <tr>
+                    <td class="footer">
+                        <table>
+                            <tr>
+                               
+                                <td>
+                                    {{depend store_phone}}
+                                    <p style="margin-bottom: 0; font-family: 'Open Sans', sans-serif; font-size: 13px; padding: 0px 0; margin: 0 0 10px 0; color: #333; line-height: 20px;">Regards,<br/><br/>Tariq Halal<br/>United Kingdom</p>
+                                        <!-- <p class="phone" style="font-size: 14px;">
+                                            {{trans 'T. %store_phone' store_phone=$store_phone |raw}}
+                                        </p> 
+                                    {{/depend}}
+                                    {{depend store_hours}}-->
+                                        <!-- <p class="hours">
+                                            {{trans 'Hours of Operation:<br /><span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
+                                        </p> 
+                                    {{/depend}}-->
+                                </td>
+                                <td>
+                                    <!-- <p class="address">
+                                        {{var store.formatted_address|raw}}
+                                    </p> -->
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+ 

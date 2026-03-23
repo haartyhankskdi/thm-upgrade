@@ -1,0 +1,48 @@
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Mageplaza\RewardPointsUltimate\Block\Adminhtml\Milestone\Edit" name="mageplaza_rw_milestone_tier_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Mageplaza\RewardPointsUltimate\Block\Adminhtml\Milestone\Edit\Tabs" name="mageplaza_rw_milestone_tier_tabs">
+                <block class="Mageplaza\RewardPointsUltimate\Block\Adminhtml\Milestone\Edit\Tab\General" name="mageplaza_rw_milestone_tier_tab_general"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">general</argument>
+                    <argument name="block" xsi:type="string">mageplaza_rw_milestone_tier_tab_general</argument>
+                </action>
+                <block class="Mageplaza\RewardPointsUltimate\Block\Adminhtml\Milestone\Edit\Tab\Benefit" name="mageplaza_rw_milestone_tier_tab_benefit"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">benefit</argument>
+                    <argument name="block" xsi:type="string">mageplaza_rw_milestone_tier_tab_benefit</argument>
+                </action>
+                <block class="Mageplaza\RewardPointsUltimate\Block\Adminhtml\Milestone\Edit\Tab\Customer" name="mageplaza_rw_milestone_tier_tab_customer"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">customer</argument>
+                    <argument name="block" xsi:type="string">mageplaza_rw_milestone_tier_tab_customer</argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

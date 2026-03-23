@@ -1,0 +1,159 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+use Magento\Cms\Block\BlockByIdentifier as CmsBlock;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $viewModelNavigation */
+$viewModelNavigation = $viewModels->require(Navigation::class, $block);
+
+/** @var HeroiconsSolid $heroiconsSolid */
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+
+$maxLevel = $block->getmaxLevel() ?: 3;
+
+// Order is important here: 1. build the menu data, 2. then set the cache tags from the view model identities
+$menu = $viewModelNavigation->getNavigation(2 + $maxLevel);
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+?>
+
+<nav
+    class="navigation hidden lg:flex gap-1 items-center flex-wrap py-1"
+    aria-label="<?= $escaper->escapeHtmlAttr(__('Main menu')) ?>"
+    data-max-level="<?= $maxLevel ?>"
+    x-data="initMenuDesktop"
+    x-ref="nav-desktop"
+    @load.window="setActiveMenu"
+>
+    <div
+        @click.outside="close"
+        @keydown.escape.stop="close"
+    >
+        <?php
+            $menuId = 'desktop-menu-panel';
+            $cmsBlockHtml = $this->getLayout()
+                ->createBlock(CmsBlock::class)
+                ->setIdentifier($menuId)
+                ->toHtml();
+        ?>
+        <button
+            type="button"
+            class="group btn py-2 px-3 border-0 bg-blue-50 text-blue-800 hover:shadow-none hover:bg-blue-100 active:bg-blue-100 disabled:bg-slate-50 disabled:text-slate-600 disabled:opacity-70"
+            @click="toggle"
+            aria-expanded="false"
+            :aria-expanded="open"
+            aria-controls="desktop-menu-panel"
+        >
+            <?= $escaper->escapeHtml(__('Shop')) ?>
+            <?= $heroiconsSolid->chevronDownHtml(
+                'transition group-aria-expanded:rotate-180',
+                24,
+                24,
+                ['aria-hidden' => 'true']
+            ) ?>
+        </button>
+        <div
+            id="desktop-menu-panel"
+            class="z-30 absolute inset-x-6 mt-1 border-t border-slate-100 rounded-b-md bg-white shadow-md
+                overflow-hidden <?= !empty($cmsBlockHtml) ? "grid grid-cols-[minmax(0px,1fr)_theme('spacing.72')]" : '' ?>"
+            x-show="open"
+            x-transition
+            x-cloak
+        >
+            <div class="relative min-h-64 overflow-auto">
+                <ul class="flex flex-col gap-1 py-2.5 px-2 w-72">
+                    <?php foreach ($menu as $item): ?>
+                        <?= $block->getLayout()->getBlock('topmenu_desktop_item')
+                            ->setItem($item)
+                            ->setLevel(0)
+                            ->toHtml() ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php if (!empty($cmsBlockHtml)): ?>
+                <div><?= /** @noEscape */ $cmsBlockHtml ?></div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <a
+        href="<?= $escaper->escapeUrl('#') ?>"
+        class="btn py-2 px-3 border-0 bg-transparent text-current hover:shadow-none hover:bg-blue-100 active:bg-blue-100 disabled:bg-slate-50 disabled:text-slate-600 disabled:opacity-70"
+    >
+        <?= $escaper->escapeHtml(__('Customer Service')) ?>
+    </a>
+</nav>
+<script>
+    function initMenuDesktop() {
+        return {
+            open: false,
+            maxLevel: parseInt(this.$root.dataset.maxLevel),
+            toggle() {
+                this.open = !this.open;
+            },
+            close() {
+                this.open = false;
+            },
+            setActiveMenu() {
+                Array.from(this.$root.querySelectorAll('a'))
+                    .filter(link => link.href === window.location.href.split('?')[0])
+                    .forEach(item => {
+                        item.setAttribute('aria-current', 'page');
+
+                        for (let level = 0; level < this.maxLevel; level++) {
+                            const closestMenu = item.closest(`.level-${level}`);
+
+                            if (closestMenu) {
+                                const button = closestMenu.querySelector('button');
+                                if (button) {
+                                    button.setAttribute('data-has-current', '');
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    }
+
+    function initSubMenuDesktopItem() {
+        return {
+            open: false,
+            toggle() {
+                this.open = !this.open;
+                this.$nextTick(() => {
+                    this.$refs.childmenuViewAll.focus();
+                    this.$refs.childmenuWrapper.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'end'
+                    });
+                });
+            },
+            close() {
+                this.open = false;
+                this.$refs.childmenuToggle.focus();
+            },
+        }
+    }
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('initMenuDesktop', initMenuDesktop);
+        Alpine.data('initSubMenuDesktopItem', initSubMenuDesktopItem);
+    }, { once: true })
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

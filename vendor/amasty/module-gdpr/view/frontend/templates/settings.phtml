@@ -1,0 +1,113 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/** @var $block \Amasty\Gdpr\Block\Settings */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$settings = $block->getPrivacySettings();
+?>
+<div class="amgdpr-settings-container">
+    <?php foreach ($settings as $setting): ?>
+        <div class="amgdpr-checkbox-container" data-amgdpr-js="container">
+            <input class="amgdpr-checkbox"
+                   id="<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>"
+                   type="checkbox">
+            <label class="amgdpr-label <?= $escaper->escapeHtmlAttr($setting['cssModifier']) ?>"
+                   for="<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>">
+                <span class="amgdpr-title"><?= $escaper->escapeHtml($setting['title']) ?></span>
+            </label>
+            <div class="block amgdpr-block">
+                <div class="block-content amgdpr-block-content" data-gdpr-js="content">
+                    <?php if (isset($setting['action'])): ?>
+                        <form method="post"
+                              action="<?= $escaper->escapeUrl($setting['action']) ?>"
+                              data-mage-init='{"validation":{}}'>
+                            <input name="form_key"
+                                   type="hidden"
+                                   value="<?= /* @noEscape */ $block->getFormKey(); ?>">
+                            <p class="policy-content"><?= /* @noEscape */ $setting['content'] ?></p>
+                            <?php if ($setting['hasCheckbox']): ?>
+                                <p class="field control checkbox">
+                                    <input type="checkbox"
+                                           data-gdpr-js="<?= /* @noEscape */ $setting['checkboxName'] ?? 'agree' ?>"
+                                           id="amgdpr-<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>"
+                                        <?= /* @noEscape */ isset($setting['checkboxDataValidate']) ? 'data-validate="' . $setting['checkboxDataValidate'] . '"' : '' ?>
+                                           name="<?= /* @noEscape */ $setting['checkboxName'] ?? 'agree' ?>">
+                                    <label class="accept addon" for="amgdpr-<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>">
+                                        <?= $escaper->escapeHtml($setting['checkboxText']) ?>
+                                    </label>
+                                </p>
+                            <?php endif; ?>
+                            <?php if (isset($setting['additionalBlock'])
+                                && $setting['additionalBlock'] instanceof \Magento\Framework\View\Element\AbstractBlock
+                            ): ?>
+                                <p class="control">
+                                    <?= /* @noEscape */ $setting['additionalBlock']->toHtml(); ?>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ($setting['needPassword']): ?>
+                                <fieldset class="fieldset"
+                                          data-hasrequired="* Required Fields"
+                                          <?php if ($setting['hidePassword']): ?> hidden <?php endif; ?>
+                                          data-gdpr-js="fieldset"
+                                          name="passwordField">
+                                    <div class="field password current required">
+                                        <label class="label" for="current-password-<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>">
+                                            <span><?= $escaper->escapeHtml(__('Current Password')) ?></span>
+                                        </label>
+                                        <div class="control">
+                                            <input type="password"
+                                                   class="input-text"
+                                                   name="current_password"
+                                                   id="current-password-<?= $escaper->escapeHtmlAttr($setting['actionCode']) ?>"
+                                                   data-input="current-password"
+                                                   autocomplete="off"
+                                                   aria-required="true"
+                                                   data-validate="{required:true}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php endif; ?>
+                            <div class="actions-toolbar amgdpr-actions-toolbar">
+                                <button type="submit"
+                                        title="<?= $escaper->escapeHtml($setting['submitText']) ?>"
+                                        aria-label="<?= $escaper->escapeHtml($setting['submitText']) ?>"
+                                        class="action primary">
+                                    <?= $escaper->escapeHtml($setting['submitText']) ?>
+                                </button>
+                            </div>
+                        </form>
+                    <?php elseif (isset($setting['policiesText'])): ?>
+                        <div data-role="amasty-gdpr-consent">
+                            <a href="#" title="<?= $escaper->escapeHtmlAttr(__('Read Privacy Policy')) ?>">
+                                <?= $escaper->escapeHtml(__('Read Privacy Policy')) ?>
+                            </a>
+                        </div>
+                        <?php if ($setting['isCookieEnabled']): ?>
+                            <div class="amgdpr-cookie-link">
+                                <a href="#" class="amgdpr-link"
+                                   data-amgdpr-js="cookie-link"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Read Cookie Policy')) ?>">
+                                    <?= $escaper->escapeHtml(__('Read Cookie Policy')) ?>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <p class="policy-content"><?= /* @noEscape */ $block->stripHtmlTags($setting['content'], ['script']) ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<script data-cfasync="false" type="text/x-magento-init">
+    {"*": {
+            "Amasty_Gdpr/js/show-password": {},
+            "Amasty_Gdpr/js/checkbox": {}
+          }
+    }
+</script>

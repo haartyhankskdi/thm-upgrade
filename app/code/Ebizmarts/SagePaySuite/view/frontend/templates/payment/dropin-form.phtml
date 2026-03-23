@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<script>
+    require([
+        'uiLayout',
+        'jquery'
+    ], function (layout, $) {
+        $(function () {
+            var paymentMethodData = {
+                method: 'sagepaysuitepi'
+            };
+            layout([
+                {
+                    component: 'Ebizmarts_SagePaySuite/js/view/payment/method-renderer/multishipping/pi-ms-method',
+                    name: 'payment_method_sagepaysuitepi',
+                    method: paymentMethodData.method,
+                    item: paymentMethodData
+                }
+            ]);
+
+            $('body').trigger('contentUpdated');
+        })
+    })
+</script>
+<!-- ko template: getTemplate() --><!-- /ko -->

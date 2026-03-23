@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2020 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ebizmarts_SagePaySuite::styles.css"/>
+        <script src="https://sandbox.opayo.eu.elavon.com/api/v1/js/sagepay-dropin.js" src_type="url"/>
+    </head>
+    <body>
+        <referenceBlock name="checkout_billing">
+                <arguments>
+                    <argument name="form_templates" xsi:type="array">
+                        <item name="sagepaysuitepi" xsi:type="string">Ebizmarts_SagePaySuite::payment/dropin-form.phtml</item>
+                    </argument>
+                </arguments>
+        </referenceBlock>
+    </body>
+</page>

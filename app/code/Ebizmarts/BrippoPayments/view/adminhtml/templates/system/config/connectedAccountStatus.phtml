@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\ConnectedAccountStatus;
+use Ebizmarts\BrippoPayments\Helper\PlatformService\PlatformService;
+use Ebizmarts\BrippoPayments\Helper\Stripe;
+use Magento\Store\Model\ScopeInterface;
+
+/** @var ConnectedAccountStatus $block */
+?>
+
+<?php if (!$block->hasAccountId($block->livemode)) { ?>
+    <button
+        class="button primaryBrippo"
+        type="button"
+        id="brippoBtnSetup<?= $block->livemode ? 'Live' : 'Test'?>">
+        <span>Setup Connected Account
+            <?php if ($block->getScope() == ScopeInterface::SCOPE_WEBSITES) {
+                echo " for Website";
+            } elseif ($block->getScope() == ScopeInterface::SCOPE_STORES) {
+                echo " for Store View";
+            }?></span>
+    </button>
+<?php } else { ?>
+    <div class="actions stripeConnectStatus">
+        <?php $accountResponseError = $block->retrieveConnectedAccountStatus($block->livemode);
+        if (empty($accountResponseError)) { ?>
+            <table class="statusTable">
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Account Id'))?></td>
+                    <td><?= $block->escapeHtml($block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_ID])) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Owner\'s Email'))?></td>
+                    <td><?= $block->escapeHtml($block->escapeHtml($block->getConnectedAccountEmail())) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Doing Business As'))?></td>
+                    <td><?= $block->escapeHtml($block->escapeHtml($block->getAccountDoingBusinessAs())) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Base Currency'))?></td>
+                    <td><?= $block->escapeHtml($block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_DEFAULT_CURRENCY])) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Country'))?></td>
+                    <td><?= $block->escapeHtml($block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_COUNTRY])) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Statement Descriptor'))?></td>
+                    <td class="brippoStatementDescriptorValue<?= $block->livemode ? 'LIVE' : 'TEST'?>"><?= $block->escapeHtml($block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_STATEMENT_DESCRIPTOR])) ?></td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Submitted Details'))?></td>
+                    <td><?php
+                        if ($block->stripeConnectedAccount[Stripe::PARAM_DETAILS_SUBMITTED]) { ?>
+                            <span class="greenText">Completed</span>
+                        <?php } else { ?>
+                            <span class="redText">Incomplete</span>
+                            <button class="button primaryBrippo" type="button"
+                                onclick="window.open('<?= $block->escapeHtml(PlatformService::SERVICE_URL) ?>accounts/dashboard/<?= $block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_ID]) ?>', '_blank');">
+                                <span><?= $block->escapeHtml(__('Complete'))?></span>
+                            </button>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Charge Enabled'))?></td>
+                    <td><?= // @codingStandardsIgnoreStart
+                        $block->stripeConnectedAccount[Stripe::PARAM_CHARGES_ENABLED]
+                            ? '<span class="greenText">'.__('Yes').'</span>'
+                            : '<span class="redText">'.__('No').'</span>'
+                        // @codingStandardsIgnoreEnd ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Payouts Enabled'))?></td>
+                    <td><?= // @codingStandardsIgnoreStart
+                        $block->stripeConnectedAccount[Stripe::PARAM_PAYOUTS_ENABLED]
+                            ? '<span class="greenText">'.__('Yes').'</span>'
+                            : '<span class="redText">'.__('No').'</span>'
+                        // @codingStandardsIgnoreEnd ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title"><?= $block->escapeHtml(__('Webhook Mapping'))?></td>
+                    <td><?= // @codingStandardsIgnoreStart
+                        $block->isWebhookMappingComplete()
+                            ? '<span class="greenText">'.__('Completed').'</span>'
+                            : '<span class="redText">' . $block->webhookMappingError . '</span>'
+                        // @codingStandardsIgnoreEnd ?>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <button
+                class="button primaryBrippo"
+                type="button"
+                onclick="window.open('<?= $block->escapeHtml(PlatformService::SERVICE_URL) ?>accounts/dashboard/<?= $block->escapeHtml($block->stripeConnectedAccount[Stripe::PARAM_ID]) ?>', '_blank');">
+                <span><?= $block->escapeHtml(__('Dashboard'))?></span>
+            </button>
+        <?php } else { ?>
+            <p style="color:red;"><?= $block->escapeHtml($accountResponseError); ?></p>
+        <?php } ?>
+        <button
+            class="button secondaryBrippo"
+            type="button"
+            id="brippoBtnReset<?= $block->escapeHtml($block->livemode ? 'Live' : 'Test')?>">
+                <span style="color: red;">Reset
+                    <?php if ($block->getScope() == ScopeInterface::SCOPE_WEBSITES) {
+                        echo " for Website";
+                    } elseif ($block->getScope() == ScopeInterface::SCOPE_STORES) {
+                        echo " for Store View";
+                    } ?></span>
+        </button>
+    </div>
+<?php } ?>

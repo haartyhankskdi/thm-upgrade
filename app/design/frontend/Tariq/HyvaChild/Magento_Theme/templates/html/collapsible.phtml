@@ -1,0 +1,201 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+$blockId = $block->getBlockId() ?: 'collapsible';
+$blockClass = $block->getBlockCss();
+$blockTitle = $block->getBlockTitle() ?: __('Details');
+$isNav = $block->getIsNav() !== null ? $block->getIsNav() : false;
+$urlInterface = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$currenturl = $urlInterface->getCurrentPageUrl();
+$baseUrl = $block->getBaseUrl();
+if ($currenturl == $block->getBaseUrl() . 'customer/rewards/') {?>
+    <div class="breadcrumbs">
+     <ul class="items text-sm font-medium text-black flex justify-center md:justify-start">
+        <li class="item home"><a href="<?php echo $baseUrl?>" class="hover:text-gray-700">Home</a></li>
+       
+        <li class="item"><span class="font-normal text-[#E63833]">My Points and Rewards</span></li>
+    </ul>
+     </div>
+<div class="page-title-wrapper">
+            <div class="custom container px-0">
+                <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                    <span class="base" data-ui-id="page-title-wrapper">My Points and Rewards
+                  </span> 
+                   </h1>
+                </div>
+              </div>
+<?php }
+
+if ($currenturl == $block->getBaseUrl() . 'customer/rewards/transaction/') {?>
+<div class="breadcrumbs">
+     <ul class="items text-sm font-medium text-black flex justify-center md:justify-start">
+        <li class="item home"><a href="<?php echo $baseUrl?>" class="hover:text-gray-700">Home</a></li>
+        <li class="item"><span class="font-normal text-[#E63833]">Transactions</span></li>
+    </ul>
+     </div>
+<div class="page-title-wrapper">
+            <div class="custom container px-0">
+                <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                    <span class="base" data-ui-id="page-title-wrapper">Transactions
+                  </span> 
+                   </h1>
+                </div>
+              </div>
+<?php }
+
+if ($currenturl == $block->getBaseUrl() . 'customer/referral/') {?>
+    <div class="breadcrumbs">
+     <ul class="items text-sm font-medium text-black flex justify-center md:justify-start">
+        <li class="item home"><a href="<?php echo $baseUrl?>" class="hover:text-gray-700">Home</a></li>
+        <li class="item"><span class="font-normal text-[#E63833]">Referral Program</span></li>
+    </ul>
+     </div>
+<div class="page-title-wrapper">
+            <div class="custom container px-0">
+                <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                    <span class="base" data-ui-id="page-title-wrapper">Referral Program
+                  </span> 
+                   </h1>
+                </div>
+              </div>
+<?php }
+
+if ($currenturl == $block->getBaseUrl() . 'customer/milestone/') {?>
+    <div class="breadcrumbs">
+     <ul class="items text-sm font-medium text-black flex justify-center md:justify-start">
+        <li class="item home"><a href="<?php echo $baseUrl?>" class="hover:text-gray-700">Home</a></li>
+        <li class="item"><span class="font-normal text-[#E63833]">My Milestone</span></li>
+    </ul>
+     </div>
+<div class="page-title-wrapper">
+            <div class="custom container px-0">
+                <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                    <span class="base" data-ui-id="page-title-wrapper">My Milestone
+                  </span> 
+                   </h1>
+                </div>
+              </div>
+<?php }?>
+<div class="py-0 px-0 md:mb-6 lg:mt-10 <?= $escaper->escapeHtmlAttr($blockClass) ?>"
+     x-data="initAccountNavigation()"
+     x-init="checkIsMobileResolution()"
+     @resize.window.debounce="checkIsMobileResolution()" 
+     @visibilitychange.window.debounce="checkIsMobileResolution()"
+>
+    <button
+        type="button"
+        id="<?= $escaper->escapeHtmlAttr($blockId) ?>-title"
+        class="group p-2 flex justify-between items-center border border-container w-full md:hidden mt-4"
+        @click="blockOpen = !blockOpen"
+        :aria-expanded="blockOpen"
+        :aria-disabled="!isMobile"
+        :disabled="!isMobile ? '' : null"
+    >
+
+        <span class="text-lg">
+            <?= $escaper->escapeHtml($blockTitle) ?>
+        </span>
+        <span
+            class="px-1 py-1 border rounded border-container md:hidden"
+            x-ref="AccountNavigationMobileToggleIcon"
+        >
+            <?= $heroicons->chevronDownHtml(
+                'transition-transform duration-300 ease-in-out transform group-aria-expanded:rotate-180',
+                24,
+                24,
+                ['aria-hidden' => 'true']
+            ); ?>
+        </span>
+    </button>
+    <?php if ($isNav): ?>
+        <nav
+            id="<?= $escaper->escapeHtmlAttr($blockId) ?>"
+            aria-labelledby="<?= $escaper->escapeHtmlAttr($blockId) ?>-title"
+            class="hidden md:block border-t-2 border-b-2 border-[#3B7E48] "
+            :class="{ 'hidden': !blockOpen }"
+        >
+            <?= $block->getChildHtml() ?>
+        </nav>
+    <?php else: ?>
+       <nav
+            id="<?= $escaper->escapeHtmlAttr($blockId) ?>"
+            class="hidden md:block  pt-0 my-0  "
+            :class="{ 'hidden': !blockOpen }"
+        >
+            <?= $block->getChildHtml() ?>
+        </nav>
+    <?php endif; ?>
+</div>
+<script>
+    function initAccountNavigation() {
+        return {
+            isMobile: false,
+            blockOpen: false,
+            checkIsMobileResolution() {
+                const mobileElement = this.$refs.AccountNavigationMobileToggleIcon;
+                this.isMobile = mobileElement
+                    ? getComputedStyle(mobileElement).display !== 'none'
+                    : window.matchMedia('(max-width: 767px)').matches; // Fallback to `md` breakpoint
+            }
+        }
+    }
+</script>
+
+
+<style>
+
+.block-collapsible-nav nav{
+    border-bottom: 2px solid #3B7E48;
+    border-top: 2px solid #3B7E48;
+}
+.block-collapsible-nav ul li a {
+  display: block !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0.75rem !important;   /* py-3 */
+  padding-bottom: 0.75rem !important;
+  color: #000 !important;
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.block-collapsible-nav ul li.current strong {
+  display: block !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  color: #3B7E48 !important;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.block-collapsible-nav ul li.current {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.block-collapsible-nav ul li.current a {
+  padding: 0 !important;
+}
+
+</style>

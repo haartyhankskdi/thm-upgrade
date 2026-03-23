@@ -1,0 +1,1358 @@
+<form action="<?= $this->getUrl("completesurvey/manage/surveysave") ?>" data-mage-init='{"validation":{}}' method="post" id="complete-survey" class="post-sales-customer-survey-form">
+
+<!-- <h3>Post Sales Customer Survey</h3> -->
+
+ <?= $block->getBlockHtml('formkey'); ?>
+<input type="hidden" name="id" value="<?= $block->getSurveyId() ?>">
+<input type="hidden" name="customer_fname" value="<?= $block->getFirstname() ?>">
+
+<input type="hidden" name="customer_lname" value="<?= $block->getLastname() ?>">
+
+<h4>Considering your complete experience with our company, how likely would you be to recommend us to a friend or colleague? <em>*</em></h4>
+
+<div class="complete-survey-list survey-list-1">
+	<!-- <div class="radio-list">
+	<input type="radio" id="recompexp1" name="recommend_complete_experience" class="required-entry" value="0">
+	<label><span>0</span></label>
+	</div> -->
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp2" name="recommend_complete_experience" value="1">
+	<label><span>1</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp3" name="recommend_complete_experience" value="2">
+	<label><span>2</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp4" name="recommend_complete_experience" value="3">
+	<label><span>3</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp5" name="recommend_complete_experience" value="4">
+	<label><span>4</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp6" name="recommend_complete_experience" value="5">
+	<label><span>5</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp7" name="recommend_complete_experience" value="6">
+	<label><span>6</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp8" name="recommend_complete_experience" value="7">
+	<label><span>7</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp9" name="recommend_complete_experience" value="8">
+	<label><span>8</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp10" name="recommend_complete_experience" value="9">
+	<label><span>9</span></label>
+	</div>
+
+	<div class="radio-list">
+	<input type="radio" id="recompexp11" name="recommend_complete_experience" value="10">
+	<label><span>10</span></label>
+	</div>
+
+
+<div class="label-text">
+	<label>Very Unlikely</label>
+	<label class="right-1">Very Likely</label>
+</div>
+
+
+<!-- <p for="recommend_complete_experience" generated="true" class="mage-error" style="display: none;" id="recompexp11-error" data-was-processed="true">This is a required field.</p> -->
+<p id="recommend_complete_experience" class="error-msg"></p>
+</div>
+
+ <div class="complete-survey-list last-list survey-list-2">
+<h4>How satisfied did you feel based on your overall experience? <em>*</em></h4>
+
+<div class="radio-list-option option-list-1">
+<p>A.	On a scale of 1-10, how likely are you to recommend us to your friend or colleague?</p>
+
+
+
+	<!-- <div class="radio-list">
+	<input type="radio" name="recommend_friend" id="recfriend1" class="required-entry" value="0">
+	<label>
+		<span>0</span>
+	</label>
+	</div> -->
+	
+	<div class="radio-list">
+	<input type="radio" name="recommend_friend" id="recfriend2" value="1">
+	<label>
+		<span>1</span>
+	</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend3" value="2">
+		<label>
+			<span>2</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend4" value="3">
+		<label>
+			<span>3</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend5" value="4">
+		<label>
+			<span>4</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend6" value="5">
+		<label>
+			<span>5</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend7" value="6">
+		<label>
+			<span>6</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend8" value="7">
+		<label>
+			<span>7</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend9" value="8">
+		<label>
+			<span>8</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend10" value="9">
+		<label>
+			<span>9</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="recommend_friend" id="recfriend11" value="10">
+		<label>
+			<span>10</span>
+		</label>
+	</div>
+	
+
+	<div class="label-text">
+	<label>Very Unlikely</label>
+	<label class="right-1">Very Likely</label>
+	</div>
+
+
+<!-- <p for="recommend_friend" generated="true" class="mage-error" style="display: none;" id="recommend_friend-error" data-was-processed="true">This is a required field.</p> -->
+<p id="recommend_friend" class="error-msg"></p>
+
+</div>
+
+
+<div class="radio-list-option last option-list-2">
+<p>B. Please let us know how we can improve your experience.</p>
+ 
+ <p>
+ 	<label>Please let us know how we can improve your experience.</label>
+ 	<textarea name="improve_experience" data-validate="{required:true}"></textarea>
+ </p>
+
+ </div> 
+</div>
+
+<h4>How did you learn about our website? <em>*</em></h4>
+	<div class="complete-survey-list survey-list-3">	
+
+	<div class="radio-list2">	
+	<input type="radio" name="learn_website" id="learnweb1" value="TV">
+	<label><span>TV</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb2" value="Radio">
+	<label><span>Radio</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb3" value="Newspaper">
+	<label><span>Newspaper</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb4" value="Social Media">
+	<label><span>Social Media</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb5" value="Search Engine">
+	<label><span>Search Engine</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb6" value="Recommendation from a friend">
+	<label><span>Recommendation From a Friend</span></label>
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="learn_website" id="learnweb7" value="Other">
+	<label><span>Other</span></label>
+</div>
+<div class="other-field">
+	<textarea name="learn_website_text" data-validate="{required:true}" id="learnweb-text" style="display:none"></textarea>
+	<!-- <input type="textarea" name="learn_website_text" data-validate="{required:true}" id="learnweb-text" style="display:none"> -->
+</div>
+
+
+	<!-- <p for="learn_website" generated="true" class="mage-error" style="display: none;" id="learn_website-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="learn_website" class="error-msg"></p>
+</div>
+
+<h4>Who are your shopping for?</h4>
+	<div class="complete-survey-list survey-list-4">
+
+	<div class="radio-list2">	
+	<input type="radio" name="shopping" id="shop1" value="Myself"> 
+	<label><span>Myself</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="shopping" id="shop2" value="Friend"> 
+	<label><span>Friend</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="shopping" id="shop3" value="Parent"> 
+	<label><span>Parent</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="shopping" id="shop4" value="Boss"> 
+	<label><span>Boss</span></label> 
+
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="shopping" id="shop5" value="Colleague"> 
+	<label><span>Colleague</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="shopping" id="shop6" value="Other"> 
+	<label><span>Other</span></label>
+</div>
+<div class="other-field">
+	<textarea name="shopping_text" data-validate="{required:true}" id="shopping-text" style="display:none"></textarea>
+	<!-- <input type="textarea" name="shopping_text" data-validate="{required:true}" id="shopping-text" style="display:none"> -->
+</div>
+
+
+	<!-- <p for="shopping" generated="true" class="mage-error" style="display: none;" id="shopping-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="shopping" class="error-msg"></p>
+</div>
+
+<div class="complete-survey-list textarea-1 survey-list-5">
+<h4>What were you looking for? <em>*</em></h4>
+
+	<textarea name="looking_for" data-validate="{required:true}"></textarea>
+</div>
+
+<div class="complete-survey-list survey-list-6">
+<h4>Did you find what you were looking for? <em>*</em></h4>
+
+
+	<div class="radio-list2">
+	<input type="radio" name="find_looking_for" id="findlookfor1" value="yes"> 
+	<label><span>Yes</span></label> 
+</div>
+<div class="radio-list2">
+	<input type="radio" name="find_looking_for" id="findlookfor2" value="no"> 
+	<label><span>No</span></label> 
+</div>
+
+<p id="find_looking_for" class="error-msg"></p>
+</div>
+
+<h4>What led you to visit our website? <em>*</em></h4>
+<div class="complete-survey-list survey-list-7">
+
+	<div class="radio-list2">
+	<input type="radio" name="visit_website" id="visitweb1" value="Researching product information"> 
+	<label><span>Researching Product Information</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="visit_website" id="visitweb2" value="Interested in buying products"> 
+	<label><span>Interested In Buying Products</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="visit_website" id="visitweb3" value="Looking for contact information"> 
+	<label><span>Looking For contact information</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="visit_website" id="visitweb4" value="Know more about the company"> 
+	<label><span>Know More About The Company</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="visit_website" id="visitweb5" value="Other"> 
+	<label><span>Other</span></label>  
+</div>
+<div class="other-field">
+	<textarea name="visit_website_text" data-validate="{required:true}" id="visitweb-text" style="display:none"></textarea>
+	<!-- <input type="textarea" name="visit_website_text" data-validate="{required:true}" id="visitweb-text" style="display:none"> -->
+</div>
+
+
+	<!-- <p for="visit_website" generated="true" class="mage-error" style="display: none;" id="visit_website-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="visit_website"  class="error-msg"></p>
+</div>
+<h4>Was it easy to navigate through the site? <em>*</em></h4>
+<div class="complete-survey-list survey-list-8">
+
+	<div class="radio-list2">
+	<input type="radio" name="navigate" id="navigate1" value="yes"> 
+	<label><span>Yes</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="navigate" id="navigate2" value="no"> 
+	<label><span>No</span></label>
+	</div> 	
+
+
+	<!-- <p for="navigate" generated="true" class="mage-error" style="display: none;" id="navigate-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="navigate" class="error-msg"></p>
+</div>
+
+<h4>How would you rate your online shopping experience <em>*</em></h4>
+	<div class="complete-survey-list survey-list-9">
+
+	<!-- <div class="radio-list">	
+		<input type="radio" name="rate_experience" id="ratexp1" class="required-entry" value="0">
+		<label>
+			<span>0</span>
+		</label>
+	</div> -->
+	 
+	 <div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp2" value="1">
+		<label>
+			<span>1</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp3" value="2">
+		<label>
+			<span>2</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp4" value="3">
+		<label>
+			<span>3</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp5" value="4">
+		<label>
+			<span>4</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp6" value="5">
+		<label>
+			<span>5</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp7" value="6">
+		<label>
+			<span>6</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp8" value="7">
+		<label>
+			<span>7</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp9" value="8">
+		<label>
+			<span>8</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp10" value="9">
+		<label>
+			<span>9</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="rate_experience" id="ratexp11" value="10">
+		<label>
+			<span>10</span>
+		</label>
+	</div>
+	 
+
+	<div class="label-text">
+	<label>Very Unlikely</label>
+	<label class="right-1">Very Likely</label>
+	</div>
+
+
+
+	<!-- <p for="rate_experience" generated="true" class="mage-error" style="display: none;" id="rate_experience-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="rate_experience" class="error-msg"></p>
+ </div>
+
+<h4>Did you find enough range of products? <em>*</em></h4>
+<div class="complete-survey-list survey-list-10">
+
+	<div class="radio-list2">
+	<input type="radio" name="product_range" id="prorange1" value="yes"> 
+	<label><span>Yes</span></label> 
+</div>
+<div class="radio-list2">
+	<input type="radio" name="product_range" id="prorange2" value="no"> 
+	<label><span>No</span></label>
+</div>
+
+ 	
+ 	<!-- <p for="product_range" generated="true" class="mage-error" style="display: none;" id="product_range-error" data-was-processed="true">This is a required field.</p> -->
+ 	<p id="product_range" class="error-msg"></p>
+</div>
+
+<h4>Did you find enough product details? <em>*</em></h4>
+<div class="complete-survey-list survey-list-11">
+	<div class="radio-list2">
+	<input type="radio" name="product_detail" id="prodetail1" value="yes"> 
+	<label><span>Yes</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="product_detail" id="prodetail2" value="no"> 
+	<label><span>No</span></label>
+</div>
+
+
+	<!-- <p for="product_detail" generated="true" class="mage-error" style="display: none;" id="product_detail-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="product_detail" class="error-msg"></p>
+</div>
+
+
+<h4>Do you generally find various alternatives for the same product? <em>*</em></h4>
+<div class="complete-survey-list survey-list-12">
+
+	<div class="radio-list2">
+	<input type="radio" name="product_alternatives" id="proalt1" value="yes"> 
+	<label><span>Yes</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="product_alternatives" id="proalt2" value="no"> 
+	<label><span>No</span></label>
+</div>
+
+
+	<!-- <p for="product_alternatives" generated="true" class="mage-error" style="display: none;" id="product_alternatives-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="product_alternatives" class="error-msg"></p>
+</div>
+
+
+<h4>How satisfied are you with the quality of products? <em>*</em></h4>
+	<div class="complete-survey-list survey-list-13">
+
+		<div class="radio-list2">
+	<input type="radio" name="product_quality" id="proqual1" value="Very dissatisfied"> 
+	<label><span>Very Dissatisfied</span></label>
+	</div>
+
+	<div class="radio-list2"> 
+	<input type="radio" name="product_quality" id="proqual2" value="Not satisfied"> 
+	<label><span>Not Satisfied</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="product_quality" id="proqual3" value="Neutral"> 
+	<label><span>Neutral</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="product_quality" id="proqual4" value="Satisfied"> 
+	<label><span>Satisfied</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="product_quality" id="proqual5" value="Very satisfied"> 
+	<label><span>Very Satisfied</span></label> 
+</div>
+
+
+	<!-- <p for="product_quality" generated="true" class="mage-error" style="display: none;" id="product_quality-error" data-was-processed="true">This is a required field.</p>  -->
+	<p id="product_quality" class="error-msg"></p>
+</div>
+
+
+<h4>How would you rate the packaging of your order? <em>*</em></h4>
+<div class="complete-survey-list survey-list-14">
+
+	<!-- <div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac1" class="required-entry" value="0">
+		<label>
+			<span>0</span>
+		</label>
+	</div> -->
+	 
+	 <div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac2" value="1">
+		<label>
+				<span>1</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac3" value="2">
+		<label>
+				<span>2</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac4" value="3">
+		<label>
+				<span>3</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac5" value="4">
+		<label>
+				<span>4</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac6" value="5">
+		<label>
+				<span>5</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac7" value="6">
+		<label>
+				<span>6</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac8" value="7">
+		<label>
+				<span>7</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac9" value="8">
+		<label>
+				<span>8</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac10" value="9">
+		<label>
+				<span>9</span>
+		</label>
+	</div>
+
+	<div class="radio-list">
+		<input type="radio" name="order_packaging" id="orderpac11" value="10">
+		<label>
+				<span>10</span>
+		</label>
+	</div>
+	 
+
+	<div class="label-text">
+		<label>Very Unlikely</label>
+		<label class="right-1">Very Likely</label>
+	</div>
+
+
+	<!-- <p for="order_packaging" generated="true" class="mage-error" style="display: none;" id="order_packaging-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="order_packaging" class="error-msg"></p>
+</div>
+
+<h4>How would you rate our delivery service? <em>*</em></h4>
+<div class="complete-survey-list survey-list-15">
+
+	<!-- <div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv1" class="required-entry" value="0">
+	<label>
+				<span>0</span>
+		</label>
+</div> -->
+	 
+	 <div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv2" value="1">
+	<label>
+				<span>1</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv3" value="2">
+	<label>
+				<span>2</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv4" value="3">
+	<label>
+				<span>3</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv5" value="4">
+	<label>
+				<span>4</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv6" value="5">
+	<label>
+				<span>5</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv7" value="6">
+	<label>
+				<span>6</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv8" value="7">
+	<label>
+				<span>7</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv9" value="8">
+	<label>
+				<span>8</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv10" value="9">
+	<label>
+				<span>9</span>
+		</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="delivery_service" id="deliserv11" value="10">
+	<label>
+				<span>10</span>
+		</label>
+</div>
+	 
+
+	<div class="label-text">
+	<label>Very Unlikely</label>
+	<label class="right-1">Very Likely</label>
+	</div>
+
+
+	<!-- <p for="delivery_service" generated="true" class="mage-error" style="display: none;" id="delivery_service-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="delivery_service" class="error-msg"></p>
+</div>
+
+<div class="complete-survey-list textarea-1 survey-list-17">
+<h4>What improvements could be made to our packaging or delivery service? <em>*</em></h4>
+	
+	<textarea name="pack_del_service" data-validate="{required:true}"></textarea>
+	</div>
+<div class="complete-survey-list textarea-1 survey-list-18">
+<h4>What other products would you like to see in our online store? <em>*</em></h4>
+
+	<textarea name="other_product_store" data-validate="{required:true}"></textarea>
+</div>
+
+<h4>How safe did you feel while sharing your card details? <em>*</em></h4>
+<div class="complete-survey-list survey-list-19">
+
+	<div class="radio-list2">
+	<input type="radio" name="share_card_detail" id="sharecardet1" value="Very unsafe"> 
+	<label><span>Very Unsafe</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="share_card_detail" id="sharecardet2" value="Not safe"> 
+	<label><span>Not Safe</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="share_card_detail" id="sharecardet3" value="Neutral"> 
+	<label><span>Neutral</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="share_card_detail" id="sharecardet4" value="Safe"> 
+	<label><span>Safe</span></label> 
+</div>
+
+<div class="radio-list2">
+	<input type="radio" name="share_card_detail" id="sharecardet5" value="Very safe"> 
+	<label><span>Very Safe</span></label>
+</div>
+
+
+	<!-- <p for="share_card_detail" generated="true" class="mage-error" style="display: none;" id="share_card_detail-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="share_card_detail" class="error-msg"></p>
+</div>
+
+
+<h4>On a scale of 0-10, how likely are you to buy from us again? <em>*</em></h4>
+	<div class="complete-survey-list survey-list-20">
+
+<!-- <div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain1" class="required-entry" value="0">
+	<label>
+		<span>0</span>
+	</label>
+</div> -->
+
+
+<div class="radio-list">	
+	<input type="radio" name="buy_again" id="buyagain2" value="1">
+	<label>
+		<span>1</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain3" value="2">
+	<label>
+		<span>2</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain4" value="3">
+	<label>
+		<span>3</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain5" value="4">
+	<label>
+		<span>4</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain6" value="5">
+	<label>
+		<span>5</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain7" value="6">
+	<label>
+		<span>6</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain8" value="7">
+	<label>
+		<span>7</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain9" value="8">
+	<label>
+		<span>8</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain10" value="9">
+	<label>
+		<span>9</span>
+	</label>
+</div>
+
+<div class="radio-list">
+	<input type="radio" name="buy_again" id="buyagain11" value="10">
+	<label>
+		<span>10</span>
+	</label>
+</div>
+	
+
+	<div class="label-text">
+	<label>Very Unlikely</label>
+	<label class="right-1">Very Likely</label>
+	</div>
+
+
+
+	<!-- <p for="buy_again" generated="true" class="mage-error" style="display: none;" id="buy_again-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="buy_again" class="error-msg"></p>
+</div>
+
+<h4>Would you like to enrol in a paid membership to avail priority services? <em>*</em></h4>
+<div class="complete-survey-list survey-list-21">
+	<div class="radio-list2">
+	<input type="radio" name="paid_membership" id="paidmem1" value="yes"> 
+	<label><span>Yes</span></label>
+	</div>
+
+	<div class="radio-list2"> 
+	<input type="radio" name="paid_membership" id="paidmem2" value="no"> 
+	<label><span>No</span></label>
+</div>
+
+
+	<!-- <p for="paid_membership" generated="true" class="mage-error" style="display: none;" id="paid_membership-error" data-was-processed="true">This is a required field.</p> -->
+	<p id="paid_membership" class="error-msg"></p>
+</div>
+
+<div class="submit-btn"><input type="submit" name="survey_sub" id="surveySub" value="Submit"></div>
+
+</form>
+
+<script type="text/javascript">
+	require(['jquery', 'jquery/ui'], function($){
+	$(document).ready(function(){ 
+
+		$('#complete-survey').on('submit', function() {
+          var isrecompexpChecked = $('input[type=radio][name=recommend_complete_experience]').is(':checked');
+          var isrecfriendChecked = $('input[type=radio][name=recommend_friend]').is(':checked');
+          var islearnwebChecked = $('input[type=radio][name=learn_website]').is(':checked');
+          var isshopChecked = $('input[type=radio][name=shopping]').is(':checked');
+          var isfindlookforChecked = $('input[type=radio][name=find_looking_for]').is(':checked');
+          var isnaviChecked = $('input[type=radio][name=navigate]').is(':checked');
+          var isprorangeChecked = $('input[type=radio][name=product_range]').is(':checked');
+          var isprodetailChecked = $('input[type=radio][name=product_detail]').is(':checked');
+          var isproaltChecked = $('input[type=radio][name=product_alternatives]').is(':checked');
+          var issharecardetChecked = $('input[type=radio][name=share_card_detail]').is(':checked');
+          var isproqualChecked = $('input[type=radio][name=product_quality]').is(':checked');
+          var ispaidmemChecked = $('input[type=radio][name=paid_membership]').is(':checked');
+          var isvisitwebChecked = $('input[type=radio][name=visit_website]').is(':checked');
+          var isratexpChecked = $('input[type=radio][name=rate_experience]').is(':checked');
+          var isorderpacChecked = $('input[type=radio][name=order_packaging]').is(':checked');
+          var isdeliservChecked = $('input[type=radio][name=delivery_service]').is(':checked');
+          var isbuyagainChecked = $('input[type=radio][name=buy_again]').is(':checked');
+
+	      if(!isrecompexpChecked){	      	
+	  		$('#recommend_complete_experience').html('This is a required field.');
+	  		$(this).find(":input.error:first").focus();
+	  		event.preventDefault();
+	      }
+	      if(!isrecfriendChecked){	      	
+	  		$('#recommend_friend').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!islearnwebChecked){	      	
+	  		$('#learn_website').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isshopChecked){	      	
+	  		$('#shopping').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isfindlookforChecked){	      	
+	  		$('#find_looking_for').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isnaviChecked){	      	
+	  		$('#navigate').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isprorangeChecked){	      	
+	  		$('#product_range').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isprodetailChecked){	      	
+	  		$('#product_detail').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isproaltChecked){	      	
+	  		$('#product_alternatives').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!issharecardetChecked){	      	
+	  		$('#share_card_detail').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isproqualChecked){	      	
+	  		$('#product_quality').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!ispaidmemChecked){	      	
+	  		$('#paid_membership').html('This is a required field.');
+	  		event.preventDefault();
+	      }  	         
+	      if(!isvisitwebChecked){	      	
+	  		$('#visit_website').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isratexpChecked){	      	
+	  		$('#rate_experience').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isorderpacChecked){	      	
+	  		$('#order_packaging').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isdeliservChecked){	      	
+	  		$('#delivery_service').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+	      if(!isbuyagainChecked){	      	
+	  		$('#buy_again').html('This is a required field.');
+	  		event.preventDefault();
+	      }
+     	});
+
+		$('input[type=radio][name=learn_website]').change(function() {	    
+		   if($('#learnweb7').is(':checked')) { 
+		   	$('#learnweb-text').show();
+		   }else{
+		   	$('#learnweb-text').val('');
+		   	$('#learnweb-text').hide();
+		   }
+		});
+		$('input[type=radio][name=shopping]').change(function() {	    
+		   if($('#shop6').is(':checked')) { 
+		   	$('#shopping-text').show();
+		   }else{
+		   	$('#shopping-text').val('');
+		   	$('#shopping-text').hide();
+		   }
+		});
+		$('input[type=radio][name=visit_website]').change(function() {	    
+		   if($('#visitweb5').is(':checked')) { 
+		   	$('#visitweb-text').show();
+		   }else{
+		   	$('#visitweb-text').val('');
+		   	$('#visitweb-text').hide();
+		   }
+		});		
+	});
+ });
+</script>
+
+
+<style type="text/css">
+	
+
+	.complete-survey-list{
+		width: 100%;
+		float: left;
+		margin-bottom: 25px;
+		border-bottom: 1px solid #ddd;
+    	padding-bottom: 20px;
+	}
+	.radio-list-option{
+		width: 100%;
+		float: left;
+		margin-bottom: 20px;
+	}
+	.post-sales-customer-survey-form h4{
+		width: 100%;
+		float: left;
+		color: #000;
+	  font-size: 17px !important;
+	  font-family: 'Lato', sans-serif !important;
+	  font-weight: 600;
+	  line-height: 24px;
+	  margin: 0 0 15px 0;
+	}
+	.post-sales-customer-survey-form p{
+		width: 100%;
+		float: left;
+		color: #000;
+	  font-size: 14px !important;
+	  font-family: 'Lato', sans-serif !important;
+	  font-weight: 400;
+	  line-height: 22px;
+	}
+	.post-sales-customer-survey-form .complete-survey-list .radio-list{
+		position: relative;
+		width: auto;
+		float: left;
+		margin-right: 4px;
+	}
+	.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"]{
+	  margin: 0px 0 0 0px;
+	  position: absolute;
+	  opacity: 0;
+	  width: 100%;
+	  height: 100%;
+	  z-index: 999;
+	}
+	.post-sales-customer-survey-form .complete-survey-list .radio-list label{
+		width: 100%;
+		float: left;
+	}
+ 
+	.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+	    border-radius:0px;
+	    margin-right:0px;
+	  display: inline-block; 
+	     
+	    height:auto;
+	  position:relative;
+	  background:#FDEDED; 
+	  border:1px solid #FDEDED;
+	  float:left;
+	  color:#313131;
+	  font-size:13px;
+	  line-height:20px;
+	  text-align:center; 
+	  width: auto;
+	  padding:15px 32px; 
+	  cursor: pointer;
+	} 
+	.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"]:checked + label span,
+	.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="checkbox"]:checked + label span{
+	    border: 1px solid #e63832;
+	  background: #e63832;
+	  color:#fff; 
+	  opacity: 1;
+	}
+
+	.label-text{
+		width: 98.5%;
+		float: left;
+	}
+	.label-text label{
+	  color: #000;
+	  font-size: 12px !important;
+	  font-family: 'Lato', sans-serif !important;
+	  font-weight: 400;
+	  line-height: 18px;
+	  float: left;
+	}
+	.label-text label.right-1{
+		float: right;
+	}
+	.post-sales-customer-survey-form p label{
+		font-size: 14px !important;
+		display: inline-block;
+		width: 100%;
+		margin-bottom: 10px !important;
+		color: #000;
+	}
+
+	 :root {
+  --form-control-color: #e63832;
+}
+
+ 
+.radio-list1 {
+  font-family: 'Lato', sans-serif !important;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 20px;
+  /*display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+  margin-bottom: 10px;*/
+  float: left;
+  margin-right: 25px;
+  margin-bottom: 15px;
+}
+
+
+.complete-survey-list .radio-list1 label{
+	line-height:18px !important;
+	float: left;
+	margin-left: 10px;
+}
+.radio-list1 + .radio-list1{
+  margin-top: 0;
+}
+
+.radio-list1:focus-within {
+  color: var(--form-control-color);
+}
+
+.radio-list1 input[type="radio"] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  appearance: none;
+  /* For iOS < 15 */
+  background-color: var(--form-background);
+  /* Not removed via appearance */
+  margin: 0;
+
+  font: inherit;
+  color: currentColor;
+  width: 21px;
+  height: 21px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: translateY(-0.075em);
+
+  /*display: grid;*/
+  place-content: center;
+  float: left;
+}
+
+.radio-list1 input[type="radio"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 0em 0em var(--form-control-color);
+  /* Windows High Contrast Mode */
+  background-color: #e63832;
+  float: left;
+  margin: 3px;
+}
+
+.radio-list1 input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+.radio-list1 input[type="radio"]:focus {
+  outline: max(0px, 0em) solid currentColor;
+  outline-offset: max(2px, 0.15em);
+}
+
+
+
+
+.post-sales-customer-survey-form .complete-survey-list .radio-list2{
+		position: relative;
+		width: auto;
+		float: left;
+		margin-right: 7px;
+		margin-bottom: 10px;
+	}
+	.post-sales-customer-survey-form .complete-survey-list .radio-list2 input[type="radio"]{
+	  margin: 0px 0 0 0px;
+	  position: absolute;
+	  opacity: 0;
+	  width: 100%;
+	  height: 100%;
+	  z-index: 999;
+	}
+	.post-sales-customer-survey-form .complete-survey-list .radio-list2 label{
+		width: 100%;
+		float: left;
+	}
+ 
+	.post-sales-customer-survey-form .complete-survey-list .radio-list2 input[type="radio"] + label span{
+	    border-radius:0px;
+	    margin-right:0px;
+	  display: inline-block; 
+	     
+	    height:auto;
+	  position:relative;
+	  background:#FDEDED; 
+	  border:1px solid #FDEDED;
+	  float:left;
+	  color:#313131;
+	  font-size:13px;
+	  line-height:20px;
+	  text-align:center; 
+	  width: auto; 
+	  cursor: pointer;
+	  border-radius: 30px;
+    width: auto;
+    padding: 13px;
+    min-width: 40px;
+    max-width: 300px;
+	} 
+	.post-sales-customer-survey-form .complete-survey-list .radio-list2 input[type="radio"]:checked + label span,
+	.post-sales-customer-survey-form .complete-survey-list .radio-list2 input[type="checkbox"]:checked + label span{
+	    border: 1px solid #e63832;
+	  background: #e63832;
+	  color:#fff; 
+	  opacity: 1;
+	}
+
+
+	.post-sales-customer-survey-form .submit-btn{
+		width: 100%;
+		float: left;
+		margin-top: 20px;
+	}
+	.post-sales-customer-survey-form .submit-btn input[type="submit"]{
+	    background: #E63832;
+	    font-size: 12px;
+	    color: #fff;
+	    font-weight: 700;
+	    line-height: 48px;
+	    font-family: 'Lato', sans-serif;
+	    text-align: center;
+	    display: inline-block;
+	    padding: 0 45px;
+	    border-radius: 0;
+	    border: 0;
+	    text-transform: uppercase;
+	}
+	.post-sales-customer-survey-form .submit-btn input[type="submit"]:hover {
+	    background: #2a773e;
+	    text-decoration: none;
+	}
+
+	.post-sales-customer-survey-form textarea{
+		background:#FDEDED; 
+		border: 0;
+		height: 90px;
+		font-size: 14px;
+	    color: #000;
+	    font-weight: 400;
+	    line-height: 22px;
+	    font-family: 'Lato', sans-serif;
+	}
+	.radio-list-option p{
+		font-size: 14px !important;
+	    color: #000;
+	    font-weight: 600;
+	    line-height: 22px;
+	    font-family: 'Lato', sans-serif;
+	}
+
+	@media (max-width: 480px) {
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 7px 0px !important;
+			width: 100%;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 0px !important;
+			width: 10%;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list:last-child{
+			margin-right: 0 !important;
+		}
+		.label-text{
+			width: 100% !important;
+		}
+	}
+
+	/*@media only screen and (min-width:360px) and (max-width:375px){
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 7px 10px !important;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 4px !important;
+		}
+	}
+
+	@media only screen and (min-width:380px) and (max-width:395px){
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 7px 10px !important;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 4px !important;
+		}
+	}
+
+	@media only screen and (min-width:380px) and (max-width:411px){
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 7px 11px !important;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 5.8px !important;
+		}
+	}*/
+
+	@media only screen and (min-width:768px) and (max-width:977px){
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 10px 18px !important;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 5px !important;
+		}
+	}
+
+	@media only screen and (min-width:978px) and (max-width:1024px){
+		.post-sales-customer-survey-form .complete-survey-list .radio-list input[type="radio"] + label span{
+			padding: 14px 27px !important;
+		}
+		.post-sales-customer-survey-form .complete-survey-list .radio-list{
+			margin-right: 4.5px !important;
+		}
+	}
+
+	.radio-list-option.last{
+		margin-bottom: 5px;
+	}
+
+	.radio-list-option.last p{
+		margin-bottom: 0;
+	}
+	.complete-survey-list.textarea-1{
+		padding-bottom: 25px;
+	}
+
+	.post-sales-customer-survey-form h4 em{
+		font-style: normal;
+		color: #e02b27;
+	}
+
+	.post-sales-customer-survey-form .other-field{
+		margin-bottom: 15px;
+	}
+
+</style>

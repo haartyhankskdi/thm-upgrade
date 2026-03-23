@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="page.main.title">
+<!--            <block class="Magento\NegotiableQuote\Block\Quote\Info"-->
+<!--                   name="quote.linked.badge"-->
+<!--                   before="quote.date"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::linked-quote/view/linked-badge.phtml"/>-->
+            <referenceBlock name="quote.rename">
+<!--                <arguments>-->
+<!--                    <argument name="restriction" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\LinkedQuote\View\Restriction-->
+<!--                    </argument>-->
+<!--                    <argument name="view_model" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\LinkedQuote\View\Info-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+            </referenceBlock>
+            <referenceBlock name="quote.message">
+<!--                <arguments>-->
+<!--                    <argument name="message_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\LinkedQuote\MessageProvider</argument>-->
+<!--                </arguments>-->
+<!--                <action method="setTemplate">-->
+<!--                    <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/message.phtml</argument>-->
+<!--                </action>-->
+            </referenceBlock>
+            <referenceBlock name="quote.date">
+                <container name="left-column-info" htmlTag="div" htmlClass="left-column-info"/>
+                <container name="right-column-info" htmlTag="div" htmlClass="right-column-info">
+<!--                    <block name="linked.template" before="-"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::linked-quote/view/template-info.phtml">-->
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+                </container>
+<!--                <arguments>-->
+<!--                    <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                </arguments>-->
+            </referenceBlock>
+        </referenceContainer>
+<!--        <move element="quote.references.container" destination="page.main.title"  before="quote.date"/>-->
+<!--        <move element="quote.message" destination="content.top" before="page.main.title" />-->
+        <referenceContainer name="quote.actions.container">
+            <referenceBlock name="negotiable.quote.info.links">
+<!--                <action method="setTemplate">-->
+<!--                    <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/links.phtml</argument>-->
+<!--                </action>-->
+            </referenceBlock>
+<!--            <referenceBlock name="negotiable.quote.info.links.create.template" remove="true"/>-->
+<!--            <referenceBlock name="negotiable.quote.info.links.duplicate" remove="true"/>-->
+        </referenceContainer>
+        <referenceContainer name="content">
+            <referenceBlock name="quote_items">
+                <referenceBlock name="checkout.cart.item.renderers">
+                    <referenceBlock name="checkout.cart.item.renderers.default.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.simple.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.bundle.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.configurable.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.grouped.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.downloadable.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers.giftcard.qty">
+<!--                        <arguments>-->
+<!--                            <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                        </arguments>-->
+<!--                        <action method="setTemplate">-->
+<!--                            <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/item/qty.phtml</argument>-->
+<!--                        </action>-->
+                    </referenceBlock>
+                </referenceBlock>
+            </referenceBlock>
+            <referenceBlock name="negotiable.quote.info.buttons">
+<!--                <arguments>-->
+<!--                    <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                </arguments>-->
+<!--                <action method="setTemplate">-->
+<!--                    <argument name="template" xsi:type="string">Magento_NegotiableQuoteTemplate::linked-quote/view/buttons.phtml</argument>-->
+<!--                </action>-->
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

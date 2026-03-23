@@ -1,0 +1,88 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Amasty\Xsearch\Block\Search\Tab;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Escaper $escaper */
+/** @var Tab $block */
+
+$collection = $block->getTabs();
+?>
+
+<?php if ($block->isTabsEnabled()): ?>
+    <?= $block->getChildHtml('search-tabs-init') ?>
+    <?php if ($collection): ?>
+        <?php $searchResultHtml = $block->getChildHtml('search.result') ?>
+        <div x-data="initTabs" x-init="changeTab" class="amtabs-wrapper">
+            <div class="amtitles flex w-full flex-col md:flex-row" role="tablist">
+                <button type="button"
+                        role="tab"
+                        class="amtitle active block md:flex flex-1 justify-start md:justify-center items-center text-base
+                font-normal border rounded-md shadow-sm p-2 bg-gray-100 text-gray-800 cursor-pointer relative"
+                        data-id="tabs_amasty_search_products_tab">
+                    <span class="mr-1 pointer-events-none">
+                        <?= $escaper->escapeHtml(__('Products')) ?>
+                    </span>
+                    <span class="amsearch-results-count mr-4 md:mr-0 pointer-events-none">
+                        (<?= $escaper->escapeHtmlAttr($block->getProductCount())?>)
+                    </span>
+                    <span class="amsearch-results-icon rotate-90 absolute right-1 md:hidden pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                             class="w-5 h-5" width="25" height="25">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </span>
+                </button>
+                <?php $itemsCount = count($collection) ?>
+                <?php foreach ($collection as $key => $item): ?>
+                    <button type="button"
+                            role="tab"
+                            class="amtitle block md:flex-1 justify-start md:justify-center items-center text-base font-normal
+                                border rounded-md shadow-sm p-2 bg-gray-100 text-gray-800 cursor-pointer relative"
+                            data-id="<?= $escaper->escapeHtmlAttr('tabs_amasty_search_' . $item['block_name'] . '_tab') ?>">
+                        <span class="mr-1 pointer-events-none">
+                            <?= $escaper->escapeHtmlAttr($item['name']) ?>
+                        </span>
+                        <span class="amsearch-results-count mr-4 md:mr-0 pointer-events-none">
+                            (<?= $escaper->escapeHtmlAttr($item['items_count']) ?>)
+                        </span>
+                        <span class="amsearch-results-icon rotate-90 absolute right-1 pointer-events-none md:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor" class="w-5 h-5" width="25" height="25">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </span>
+                    </button>
+                <?php endforeach ?>
+            </div>
+
+            <div class="amcontents">
+                <div class="active amcontent mt-4"
+                     id="tabs_amasty_search_products_tab">
+                    <?= /* @noEscape */ $searchResultHtml ?>
+                </div>
+                <?php foreach ($collection as $item): ?>
+                    <div class="amcontent mt-4 hidden"
+                         id=<?= $escaper->escapeHtmlAttr('tabs_amasty_search_' . $item['block_name'] . '_tab') ?>>
+                        <?= /* @noEscape */ $item['html'] ?>
+                    </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <?= $block->getChildHtml('search.result') ?>
+    <?php endif ?>
+<?php else: ?>
+    <?= $block->getChildHtml('search.result') ?>
+<?php endif ?>

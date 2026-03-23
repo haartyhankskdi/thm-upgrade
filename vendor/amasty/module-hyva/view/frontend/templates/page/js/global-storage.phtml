@@ -1,0 +1,62 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Hyva Theme Base Package (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+
+/**
+ * @deprecated
+ * Use original Alpine.store() functionality
+ */
+?>
+
+<script>
+    (function (hyva) {
+        'use strict';
+        /**
+         * @returns {Object}
+         */
+        function getStoreObject() {
+            return isAlpineV3 ? Alpine : Spruce;
+        }
+
+        hyva.amStorage = {
+            /**
+             * @param {string} key
+             * @param {Object} object
+             * @returns {void}
+             */
+            create: (key, object) => {
+                const eventName = key.toLowerCase() + '-created';
+
+                document.addEventListener('alpine:init', () => {
+                    Alpine.store(key, object);
+                    document.dispatchEvent(new Event(eventName));
+                });
+            },
+
+            /**
+             * @param {string} key
+             * @returns {Object}
+             */
+            getStorage: (key) => {
+                return Alpine.store(key);
+            },
+
+            /**
+             * @param {string} key
+             * @param {Object} object
+             * @returns {void}
+             */
+            reInit: (key, object) => {
+                Alpine.store(key, object);
+            }
+        };
+
+
+    }(window.hyva = window.hyva || {}));
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

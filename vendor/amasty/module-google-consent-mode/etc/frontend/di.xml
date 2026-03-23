@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Google Consent Mode
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\GdprCookie\Model\GoogleAnalytics\IsGaCookieAllowed">
+        <plugin name="Amasty_GoogleConsentMode::PreventCookieGtmRemove"
+                type="Amasty\GoogleConsentMode\Plugin\GdprCookie\Model\GoogleAnalytics\IsGaCookieAllowed\PreventCookieGtmRemove"/>
+    </type>
+    <type name="Magento\Framework\App\Response\Http">
+        <plugin name="Amasty_GoogleConsentMode::updateScriptTag"
+                type="Amasty\GoogleConsentMode\Plugin\Framework\App\Response\Http\UpdateScriptTag"/>
+    </type>
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_GoogleConsentMode::AddConsentScript"
+                type="Amasty\GoogleConsentMode\Plugin\Framework\View\Page\Config\Renderer\AddConsentScript"/>
+    </type>
+    <type name="Amasty\GA4\ViewModel\GtmViewModel">
+        <plugin name="Amasty_GoogleConsentMode::ConsentModeConfig"
+                type="Amasty\GoogleConsentMode\Plugin\GA4\ViewModel\GtmViewModel\ConsentModeConfig"/>
+    </type>
+</config>

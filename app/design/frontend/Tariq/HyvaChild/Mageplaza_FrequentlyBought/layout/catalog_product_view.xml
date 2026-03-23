@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Mageplaza_FrequentlyBought::css/style.css"/>
+        <css src="Magento_Swatches::css/swatches.css"/>
+        <css src="Mageplaza_Core::css/magnific-popup.css"/>
+        <css src="Mageplaza_Core::css/font-awesome.min.css"/>
+        <css src="Mageplaza_Core::css/owl.carousel.css"/>
+        <css src="Mageplaza_Core::css/owl.theme.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <container name="mageplaza.frequently.bought.together" htmlTag="div" htmlClass="mageplaza-frequently-bought-together-block" before="product.info.details">
+                <block class="Mageplaza\FrequentlyBought\Block\Product\ProductList\FrequentlyBought" name="mageplaza.frequently.bought.together.catalog.product" ifconfig="frequentlybought/general/enabled">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Magento\Catalog\ViewModel\Product\Listing\PreparePostData</argument>
+                    </arguments>
+                    <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="crosssell.product.addto" as="addto">
+                        <block class="Magento\Catalog\Block\Product\ProductList\Item\AddTo\Compare"
+                               name="crosssell.product.addto.compare" as="compare"
+                               template="Magento_Catalog::product/list/addto/compare.phtml"/>
+                        <block class="Magento\Wishlist\Block\Catalog\Product\ProductList\Item\AddTo\Wishlist"
+                               name="crosssell.product.addto.wishlist" as="wishlist" before="compare"
+                               template="Magento_Wishlist::catalog/product/list/addto/wishlist.phtml"/>
+                    </block>
+                    <block class="Magento\Catalog\Block\Product\View\Options" name="mageplaza.frequently.bought.product.info.options" as="frequently_bought_product_options" template="Mageplaza_FrequentlyBought::product/view/options.phtml">
+                        <block class="Magento\Catalog\Block\Product\View\Options\Type\DefaultType" as="default" template="product/view/options/type/default.phtml"/>
+                        <block class="Magento\Catalog\Block\Product\View\Options\Type\Text" as="text" template="Mageplaza_FrequentlyBought::product/view/options/type/text.phtml"/>
+                        <block class="Magento\Catalog\Block\Product\View\Options\Type\File" as="file" template="Mageplaza_FrequentlyBought::product/view/options/type/file.phtml"/>
+                        <block class="Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Select" as="select" template="Mageplaza_FrequentlyBought::product/view/options/type/select.phtml"/>
+                        <block class="Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Date" as="date" template="Mageplaza_FrequentlyBought::product/view/options/type/date.phtml"/>
+                    </block>
+                    <block class="Mageplaza\FrequentlyBought\Block\Product\View\Type\Bundle" name="mageplaza.fbt.product.info.bundle.options" as="type_bundle_options" template="Mageplaza_FrequentlyBought::product/view/type/bundle/options.phtml" before="-">
+                        <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Select" name="mageplaza.fbt.product.info.bundle.options.select" as="select" template="Mageplaza_FrequentlyBought::product/view/type/bundle/option/select.phtml">
+                            <arguments>
+                                <argument name="validateQuantityViewModel" xsi:type="object">Mageplaza\FrequentlyBought\Model\ViewModel\Product\Bundle\ValidateQuantity</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Multi" name="mageplaza.fbt.product.info.bundle.options.multi" as="multi" template="Mageplaza_FrequentlyBought::product/view/type/bundle/option/multi.phtml"/>
+                        <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Radio" name="mageplaza.fbt.product.info.bundle.options.radio" as="radio" template="Mageplaza_FrequentlyBought::product/view/type/bundle/option/radio.phtml">
+                            <arguments>
+                                <argument name="validateQuantityViewModel" xsi:type="object">Mageplaza\FrequentlyBought\Model\ViewModel\Product\Bundle\ValidateQuantity</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Checkbox" name="mageplaza.fbt.product.info.bundle.options.checkbox" as="checkbox" template="Mageplaza_FrequentlyBought::product/view/type/bundle/option/checkbox.phtml"/>
+                    </block>
+                </block>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,68 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $product */
+$product = $block->getLayout()->getBlock('product.info')->getProduct();
+?>
+
+<div class="social-media-icons">
+    <div class="social-share-label" id="shareToggle">
+        <img src="<?php echo $block->getViewFileUrl('images/socialshere.png'); ?>" alt="Share Icon" class="share-icon">
+        <ul class="social-share-list" id="shareList" style="display: none;">
+            <li>
+                <a class="whatsapp-share-icon" 
+                   href="https://wa.me/?text=<?php echo urlencode($product->getName() . ' - ' . $product->getProductUrl()); ?>" 
+                   target="_blank" 
+                   title="Share on WhatsApp">
+                    <img src="<?php echo $block->getViewFileUrl('images/whatsapp.png'); ?>" alt="WhatsApp" width="20">
+                </a>
+            </li>
+            <li>
+                <a class="insta-share-icon"
+                   href="https://www.instagram.com/yourusername"
+                   onclick="copyAndRedirect('<?php echo $product->getProductUrl(); ?>')"
+                   title="Share on Instagram">
+                    <img src="<?php echo $block->getViewFileUrl('images/instagram.png'); ?>" alt="Instagram" width="20">
+                </a>
+            </li>
+            <li>
+                <a class="fb-share-icon" 
+                   href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($product->getProductUrl()); ?>" 
+                   onclick="window.open(this.href, '', 'width=640,height=480'); return false;" 
+                   title="Share on Facebook">
+                    <img src="<?php echo $block->getViewFileUrl('images/fb.png'); ?>" alt="Facebook" width="20">
+                </a>
+            </li>
+            <li>
+                <a class="tw-share-icon" 
+                   href="https://twitter.com/intent/tweet?text=<?php echo urlencode($product->getName()); ?>&url=<?php echo urlencode($product->getProductUrl()); ?>" 
+                   onclick="window.open(this.href, '', 'width=640,height=480'); return false;" 
+                   title="Share on Twitter">
+                    <img src="<?php echo $block->getViewFileUrl('images/twn3.png'); ?>" alt="Twitter" width="20">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.social-media-icons {
+    position: relative;
+    display: inline-block;
+}
+.social-share-list {
+    background: #fff;
+    padding: 10px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    list-style: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    flex-direction: row;
+    gap: 10px;
+}
+.social-share-list li {
+    display: inline-block;
+}
+</style>

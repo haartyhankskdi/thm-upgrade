@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:helloworld:Magento_Widget:etc/widget.xsd">
+    <widget class="Amasty\Gdpr\Block\Widget\Policy" id="amasty_gdpr_policycontent">
+        <label>Amasty Privacy Policy</label>
+        <description>Privacy Policy Content</description>
+    </widget>
+</widgets>

@@ -1,0 +1,53 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\ProductCompare;
+use Hyva\Theme\ViewModel\ProductPrice;
+use Hyva\Theme\ViewModel\Wishlist;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Wishlist $wishlistViewModel */
+$wishlistViewModel = $viewModels->require(Wishlist::class);
+/** @var ProductCompare $compareViewModel */
+$compareViewModel = $viewModels->require(ProductCompare::class);
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+/** @var ProductPrice $productPrice */
+$productPrice = $viewModels->require(ProductPrice::class);
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<div class="w-full" data-amsearch-analytics="block">
+    <div class="flex row justify-between w-full mb-2 p-2 pt-0 items-center">
+        <h3 class="text-xl font-bold">
+           <span x-text="productsTitle"></span>
+        </h3>
+
+        <div class="am-search-view-all" x-show="isShowResultProducts">
+            <a
+                :href="latestQueryUrl"
+                class="inline-flex px-4 py-1 bg-[#E63833] hover:bg-red-500 text-white rounded-full uppercase text-sm"
+            >
+                <?= $escaper->escapeHtml(__('View All')) ?> <span x-show="isShowResultProducts"> (+<span x-text="getResultProductsCount"></span>)</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="relative flex flex-wrap w-full px-3 lg:px-4 bg-white">
+        <template x-for="(product, index) in productsItems" :key="index">
+            <?= /** @noEscape  */ $block->fetchView(
+                $block->getTemplateFile('Amasty_XsearchHyvaCompatibility::header-search/components/product.phtml')
+            ) ?>
+        </template>
+    </div>
+</div>

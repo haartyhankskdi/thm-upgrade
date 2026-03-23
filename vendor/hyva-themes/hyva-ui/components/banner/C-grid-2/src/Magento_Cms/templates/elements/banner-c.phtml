@@ -1,0 +1,64 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+/**
+ * Or, get an image from `web/images/` in your theme:
+ * $escaper->escapeHtmlAttr($block->getViewFileUrl('images/banner.jpg'));
+ */
+$imageUrl1 = "https://unsplash.com/photos/F7D7oWb8aO0/download?force=true&auto=format&fit=crop&w=800&q=80";
+$imageUrl2 = "https://unsplash.com/photos/6zO5VKogoZE/download?force=true&auto=format&fit=crop&w=800&q=80";
+
+?>
+<div class="grid md:grid-cols-2 my-2 gap-4">
+    <figure class="group relative grid overflow-hidden bg-container-darker text-white isolate">
+        <img
+            src="<?= $escaper->escapeHtmlAttr($imageUrl1) ?>"
+            alt="<?= $escaper->escapeHtml(__('Tennis player laying on the court')) ?>"
+            width="600"
+            height="600"
+            loading="lazy"
+            class="col-start-1 row-start-1 w-full h-[576px] object-cover group-hover:opacity-70 transition-opacity duration-500"
+        >
+        <figcaption class="z-10 col-start-1 row-start-1 self-end p-6 pt-28 bg-gradient-to-t from-gray-800/75 text-2xl font-medium">
+            <p class="mb-4 text-6xl font-bold text-balance"><?= $escaper->escapeHtml(__('Hit the court in style')) ?>.</p>
+            <p>
+                <a
+                    href="<?= $escaper->escapeUrl($block->getUrl('home')) ?>"
+                    class="before:absolute before:inset-0"
+                ><?= $escaper->escapeHtml(__('Shop our tennis gear')) ?></a>
+            </p>
+        </figcaption>
+    </figure>
+    <figure class="group relative grid overflow-hidden bg-container-darker text-white isolate">
+        <img
+            src="<?= $escaper->escapeHtmlAttr($imageUrl2) ?>"
+            alt="<?= $escaper->escapeHtml(__('Close up photo of a shoe')) ?>"
+            width="600"
+            height="600"
+            loading="lazy"
+            class="col-start-1 row-start-1 w-full h-[576px] object-cover group-hover:opacity-70 transition-opacity duration-500"
+        >
+        <figcaption class="z-10 col-start-1 row-start-1 self-end p-6 pt-28 bg-gradient-to-t from-gray-800/75 text-2xl font-medium">
+            <p class="mb-4 text-6xl font-bold text-balance"><?= $escaper->escapeHtml(__('Tread lightly')) ?>.</p>
+            <p>
+                <a
+                    href="<?= $escaper->escapeUrl($block->getUrl('home')) ?>"
+                    class="before:absolute before:inset-0"
+                ><?= $escaper->escapeHtml(__('Shop our footwear')) ?></a>
+            </p>
+        </figcaption>
+    </figure>
+</div>

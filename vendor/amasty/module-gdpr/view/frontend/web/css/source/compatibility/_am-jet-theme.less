@@ -1,0 +1,116 @@
+//
+// Compatibility with Amasty Jet Theme
+// _____________________________________________
+
+//
+//  Variables
+//  ---------------------------------------------
+
+@gdpr-modal-desktop__width: 700px;
+
+//
+//  Common
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+    .amasty-jet-theme.gdpr-customer-settings {
+        .amgdpr-actions-toolbar {
+            margin-top: 0;
+        }
+
+        .amgdpr-block-content {
+            margin-bottom: 20px;
+        }
+    }
+
+    .amasty-jet-theme {
+        .amtheme-form .field .amgdpr-label {
+            color: #fff;
+            margin-bottom: 0;
+        }
+
+        .footer.content .amtheme-form .field .amgdpr-label {
+            color: #4a4948;
+        }
+
+        .amtheme-newsletter-block .amtheme-form .amtheme-label .mage-error,
+        .amtheme-newsletter-block .amtheme-form .amgdpr-checkbox .mage-error {
+            width: 100%;
+            display: block;
+            position: static;
+            margin: 0;
+        }
+
+        .amtheme-newsletter-block .amtheme-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .amtheme-form .amgdpr-checkbox {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .amtheme-form .amgdpr-checkbox:after {
+            display: none;
+        }
+
+        .amtheme-form .amgdpr-checkbox.required .amgdpr-text:after {
+            position: absolute;
+            margin-left: 2px;
+            color: #c01313;
+            content: '*';
+            vertical-align: top;
+            font-size: 1.3rem;
+        }
+
+        .amtheme-field.newsletter {
+            margin-bottom: 8px;
+            width: 100%;
+        }
+    }
+
+    .amgdpr-modal-container {
+        .amgdpr-privacy-policy,
+        .amgdpr-html-content {
+            overflow: unset;
+            max-height: unset;
+        }
+
+        .modal-content {
+            overflow-y: auto;
+            margin: 0 30px 15px;
+            padding: 0;
+        }
+    }
+}
+
+//
+//  Mobile
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .amgdpr-modal-container .modal-inner-wrap {
+        margin: 0;
+        max-height: 100%;
+        width: auto;
+        height: 100%;
+    }
+}
+
+//
+//  Desktop
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .modal-popup.amgdpr-modal-container {
+        & {
+            top: 0;
+            transform: translateY(0);
+        }
+
+        .modal-inner-wrap {
+            width: @gdpr-modal-desktop__width;
+        }
+    }
+}

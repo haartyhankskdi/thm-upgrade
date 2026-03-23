@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <block class="Amasty\ShopByBrandSubscriptionFunctionality\Block\Product\BrandInfo"
+           name="ambrand.brand_info.product_tab" after="-"
+           template="Amasty_ShopByBrandSubscriptionFunctionality::product/brand_info.phtml">
+        <arguments>
+            <argument name="brand_info_view_model"
+                      xsi:type="object">Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\BrandInfoProductPageInfoTab</argument>
+            <argument name="brand_listing_view_model"
+                      xsi:type="object">Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\Product\BrandListing</argument>
+        </arguments>
+    </block>
+</page>

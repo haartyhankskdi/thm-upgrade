@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+	<route url="/V1/haartyhanks-career/carrer" method="POST">
+		<service class="Haartyhanks\Career\Api\CarrerRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Haartyhanks_Career::Carrer_save"/>
+		</resources>
+	</route>
+	<route url="/V1/haartyhanks-career/carrer/search" method="GET">
+		<service class="Haartyhanks\Career\Api\CarrerRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="Haartyhanks_Career::Carrer_view"/>
+		</resources>
+	</route>
+	<route url="/V1/haartyhanks-career/carrer/:carrerId" method="GET">
+		<service class="Haartyhanks\Career\Api\CarrerRepositoryInterface" method="get"/>
+		<resources>
+			<resource ref="Haartyhanks_Career::Carrer_view"/>
+		</resources>
+	</route>
+	<route url="/V1/haartyhanks-career/carrer/:carrerId" method="PUT">
+		<service class="Haartyhanks\Career\Api\CarrerRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Haartyhanks_Career::Carrer_update"/>
+		</resources>
+	</route>
+	<route url="/V1/haartyhanks-career/carrer/:carrerId" method="DELETE">
+		<service class="Haartyhanks\Career\Api\CarrerRepositoryInterface" method="deleteById"/>
+		<resources>
+			<resource ref="Haartyhanks_Career::Carrer_delete"/>
+		</resources>
+	</route>
+</routes>

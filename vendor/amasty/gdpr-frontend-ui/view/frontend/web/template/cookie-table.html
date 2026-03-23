@@ -1,0 +1,25 @@
+<div css="modalClass">
+    <p class="amgdprcookie-description" if="$data.description" data-bind="html: $data.description"></p>
+    <table class="amgdprcookie-table">
+        <thead>
+            <tr>
+                <th class="amgdprcookie-title" data-bind="i18n: 'Cookie Name'"></th>
+                <th class="amgdprcookie-title" data-bind="i18n: 'Cookie Provider'"></th>
+                <th class="amgdprcookie-title -wide" data-bind="i18n: 'Cookie Description'"></th>
+                <th class="amgdprcookie-title" data-bind="i18n: 'Cookie Lifetime'"></th>
+                <th class="amgdprcookie-title" data-bind="i18n: 'Cookie Type'"></th>
+            </tr>
+        </thead>
+        <tbody class="amgdprcookie-tbody" tabindex="0">
+        <!-- ko foreach: items -->
+            <tr class="amgdprcookie-row">
+                <td class="amgdprcookie-cell -name" data-bind="text: $data.name"></td>
+                <td class="amgdprcookie-cell" data-bind="text: $data.provider"></td>
+                <td class="amgdprcookie-cell desc" data-bind="html: $data.description"></td>
+                <td class="amgdprcookie-cell -lifetime" data-bind="text: $data.lifetime"></td>
+                <td class="amgdprcookie-cell" data-bind="text: $data.type"></td>
+            </tr>
+        <!-- /ko -->
+        </tbody>
+    </table>
+</div>

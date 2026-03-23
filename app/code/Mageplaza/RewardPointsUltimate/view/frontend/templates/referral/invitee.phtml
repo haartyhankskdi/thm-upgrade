@@ -1,0 +1,94 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+
+<?php /** @var Mageplaza\RewardPointsUltimate\Block\Referral\Invitee $block */
+$invitees = $block->getInvitees(); ?>
+<?php if (count($invitees)) : ?>
+    <div class="block mp-invitee col-mp mp-12 mp-md-12 mp-sm-12 mp-xs-12">
+        <div class="block-title">
+            <h3><?= $block->escapeHtml(__('Your Invitee')) ?></h3>
+        </div>
+        <div class="box-content">
+            <div class="history">
+                <table class="data table " id="transactions-history">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('ID')) ?></th>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('Receiver')) ?></th>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('Receiver earn')) ?></th>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('Receiver discount')) ?></th>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('You earn')) ?></th>
+                        <th scope="col" class="col"><?= $block->escapeHtml(__('Date')) ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($invitees as $invitee) : ?>
+                        <tr>
+                            <td class="col"><?= $block->escapeHtml($invitee->getId()) ?></td>
+                            <td class="col"><?= $block->escapeHtml($invitee->getInvitedEmail()) ?></td>
+                            <td class="col"><?= $block->escapeHtml($invitee->getInvitedEarn()) ?></td>
+                            <td class="col"><?= $block->formatPrice($invitee->getInvitedDiscount()) ?></td>
+                            <td class="col"><?= $block->escapeHtml($invitee->getReferralEarn()) ?></td>
+                            <td class="col"><?= $block->escapeHtml($block->formatDate($invitee->getCreatedAt())) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                    </tbody>
+                </table>
+                <?= /** @noEscape */ $block->getPagerHtml() ?>
+            </div>
+        </div>
+    </div>
+<?php endif ?>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        max-width: 100%;
+    }
+    table th {
+        text-align: left;
+    }
+    table > tbody > tr > th,
+    table > tfoot > tr > th,
+    table > tbody > tr > td,
+    table > tfoot > tr > td {
+        vertical-align: top;
+    }
+    table > thead > tr > th,
+    table > thead > tr > td {
+        vertical-align: bottom;
+    }
+    table > thead > tr > th,
+    table > tbody > tr > th,
+    table > tfoot > tr > th,
+    table > thead > tr > td,
+    table > tbody > tr > td,
+    table > tfoot > tr > td {
+        padding: 11px 10px;
+    }
+    table > thead > tr
+    {
+        border-bottom: 1px solid #c6c6c6;
+    }
+</style>

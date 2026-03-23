@@ -1,0 +1,21 @@
+{
+    "name": "amasty/module-microsoft-consent-mode",
+    "description": "Microsoft Consent Mode",
+    "require": {
+        "php": ">=8.1",
+        "amasty/base": ">=1.21.0",
+        "amasty/gdpr-cookie": ">=2.14.3"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\MicrosoftConsentMode\\": ""
+        }
+    }
+}

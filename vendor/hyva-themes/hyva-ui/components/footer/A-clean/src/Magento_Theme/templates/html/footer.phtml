@@ -1,0 +1,140 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\PaymentIcons\ViewModel\PaymentIconsLight;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\SvgIcons;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var SvgIcons $hyvaIcons */
+$hyvaIcons = $viewModels->require(SvgIcons::class);
+
+/** @var PaymentIconsLight $paymentIcons */
+$paymentIcons = $viewModels->require(PaymentIconsLight::class);
+
+$paymentIconsWidth = 48;
+$paymentIconsHeight = 32;
+$socialIconsSize = 40;
+
+$footerMenu = [
+    [
+        'url' => $block->getUrl('shop'),
+        'label' => __('Shop')
+    ],
+    [
+        'url' => $block->getUrl('customer-service'),
+        'label' => __('Customer Service')
+    ],
+    [
+        'url' => $block->getUrl('about-us'),
+        'label' => __('Our Company')
+    ],
+    [
+        'url' => $block->getUrl('customer/account'),
+        'label' => __('My Account')
+    ]
+];
+
+?>
+<div class="bg-zinc-50 text-slate-700 text-base leading-6">
+    <div
+        class="container py-8 flex gap-4 flex-wrap justify-center"
+        aria-label="<?= $escaper->escapeHtml(__('Payment Providers')) ?>"
+    >
+        <?= $paymentIcons->idealHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->visaHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->mastercardHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->paypalHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->klarnaHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->applePayHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->googlePayHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+        <?= $paymentIcons->bitcoinHtml('', $paymentIconsWidth, $paymentIconsHeight) ?>
+    </div>
+
+    <div class="bg-zinc-100 pt-7 pb-8 sm:pb-12">
+        <div class="container space-y-12 md:space-y-6">
+            <nav aria-label="<?= $escaper->escapeHtml(__('Footer Menu')) ?>">
+                <ul class="flex flex-col justify-center items-center gap-4 md:flex-row md:flex-wrap font-bold">
+                    <?php foreach($footerMenu as $item): ?>
+                        <li>
+                            <a
+                                href="<?= $escaper->escapeUrl($item['url']) ?>"
+                                class="inline-block py-1 px-2 hover:underline"
+                            ><?= $escaper->escapeHtml($item['label']) ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+            <div class="flex justify-center gap-2">
+                <a
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-slate-700 text-white rounded-full hover:bg-slate-500 transition-colors"
+                >
+                    <?= $hyvaIcons->socialFacebookHtml('', $socialIconsSize, $socialIconsSize, [
+                        'title' => __('Follow us on %1', 'Facebook')
+                    ]) ?>
+                </a>
+                <a
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-slate-700 text-white rounded-full hover:bg-slate-500 transition-colors"
+                >
+                    <?= $hyvaIcons->socialInstagramHtml('', $socialIconsSize, $socialIconsSize, [
+                        'title' => __('Follow us on %1', 'Instagram')
+                    ]) ?>
+                </a>
+                <a
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-slate-700 text-white rounded-full hover:bg-slate-500 transition-colors"
+                >
+                    <?= $hyvaIcons->socialPinterestHtml('', $socialIconsSize, $socialIconsSize, [
+                        'title' => __('Follow us on %1', 'Pinterest')
+                    ]) ?>
+                </a>
+                <a
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-slate-700 text-white rounded-full hover:bg-slate-500 transition-colors"
+                >
+                    <?= $hyvaIcons->socialTwitterHtml('', $socialIconsSize, $socialIconsSize, [
+                        'title' => __('Follow us on %1', 'Twitter')
+                    ]) ?>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-8 bg-zinc-100 border-t border-zinc-200">
+        <div class="container mx-auto px-7 text-center text-sm">
+            <?= $block->getChildHtml('copyright') ?>
+            <nav class="text-slate-600" aria-label="<?= $escaper->escapeHtml(__('Legal Menu')) ?>">
+                <a
+                    href="<?= $escaper->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>"
+                    class="inline-block py-1 px-2 hover:underline"
+                ><?= $escaper->escapeHtml(__('Terms & Conditions')) ?></a>
+                <a
+                    href="<?= $escaper->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>"
+                    class="inline-block py-1 px-2 hover:underline"
+                ><?= $escaper->escapeHtml(__('Privacy Policy')) ?></a>
+            </nav>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+$product = $block->getProduct();
+
+$calories = $product->getData('calories');
+$protein  = $product->getData('protein');
+$sodium   = $product->getData('sodium');
+$satFat   = $product->getData('sat_fat');
+$sugar    = $product->getData('sugar');
+?>
+
+<?php if ($calories || $protein || $sodium || $satFat || $sugar): ?>
+    <div class="product-nutrition mt-10 text-center md:hidden">
+        <h2 class="text-black text-3xl title-font lg:text-[38px] font-light text-center w-full pb-2">
+            <span class="font-bold">Nutritional</span> Information
+        </h2>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-2 mb-6"></span>
+
+        <div class="flex flex-wrap justify-center items-end gap-4">
+            <?php if ($calories): ?>
+                <div class="nutrition-item flex flex-col items-center">
+                    <div class="bg-[#3B7E48] text-white w-24 h-24 rounded-full flex justify-center items-center text-2xl font-normal shadow-md hover:bg-green-800 transition">
+                        <?= $block->escapeHtml($calories) ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-800 mt-2 uppercase tracking-wide">Calories</div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($protein): ?>
+                <div class="nutrition-item flex flex-col items-center">
+                    <div class="bg-[#3B7E48] text-white w-24 h-24 rounded-full flex justify-center items-center text-2xl font-normal shadow-md hover:bg-green-800 transition">
+                        <?= $block->escapeHtml($protein) ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-800 mt-2 uppercase tracking-wide">Protein</div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($sodium): ?>
+                <div class="nutrition-item flex flex-col items-center">
+                    <div class="bg-[#3B7E48] text-white w-24 h-24 rounded-full flex justify-center items-center text-2xl font-normal shadow-md hover:bg-green-800 transition">
+                        <?= $block->escapeHtml($sodium) ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-800 mt-2 uppercase tracking-wide">Sodium</div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($satFat): ?>
+                <div class="nutrition-item flex flex-col items-center">
+                    <div class="bg-[#3B7E48] text-white w-24 h-24 rounded-full flex justify-center items-center text-2xl font-normal shadow-md hover:bg-green-800 transition">
+                        <?= $block->escapeHtml($satFat) ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-800 mt-2 uppercase tracking-wide">Sat. Fat</div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($sugar): ?>
+                <div class="nutrition-item flex flex-col items-center">
+                    <div class="bg-[#3B7E48] text-white w-24 h-24 rounded-full flex justify-center items-center text-2xl font-normal shadow-md hover:bg-green-800 transition">
+                        <?= $block->escapeHtml($sugar) ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-800 mt-2 uppercase tracking-wide">Sugar</div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>

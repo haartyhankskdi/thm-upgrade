@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Improved Layered Navigation Page Import Entity
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_ImportCore:etc/am_import.xsd">
+    <include path="Amasty_ImprovedLayeredNavigationPageImportEntity::entity/amshopby_page.xml"/>
+    <include path="Amasty_ImprovedLayeredNavigationPageImportEntity::entity/amshopby_page_store.xml"/>
+</config>

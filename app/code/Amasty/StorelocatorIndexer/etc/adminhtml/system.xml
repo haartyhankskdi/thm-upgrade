@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Indexer for Magento 2 (System)
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amlocator" translate="label" type="text" sortOrder="192012" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="locator" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="visual_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="template" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <backend_model>Amasty\StorelocatorIndexer\Model\Config\InvalidateIndex</backend_model>
+                    </field>
+                    <field id="store_list_template" translate="label" type="textarea" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <backend_model>Amasty\StorelocatorIndexer\Model\Config\InvalidateIndex</backend_model>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

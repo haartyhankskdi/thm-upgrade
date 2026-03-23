@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<general_section>
+			<general_group>
+				<enable/>
+				<email_identity/>
+				<email_template/>
+				<email_cc/>
+			</general_group>
+		</general_section>
+	</default>
+</config>

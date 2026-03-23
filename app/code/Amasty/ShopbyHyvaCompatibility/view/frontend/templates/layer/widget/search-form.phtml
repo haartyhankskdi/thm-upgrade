@@ -1,0 +1,149 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Amasty\ShopbyBase\Model\FilterSetting;
+
+/** @var FilterSetting $filterCode */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Hyva\Theme\ViewModel\StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(Hyva\Theme\ViewModel\StoreConfig::class);
+$uniqueId = "_" . uniqid();
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<div class="amshopby-search-box mb-4 px-6"
+     x-data="amShopbyFilterSearch<?= $escaper->escapeHtml($uniqueId) ?>()"
+     x-init="getOptions($el)"
+>
+    <label>
+        <input type="text" x-model="search" @input="filterOptions($el)"
+               class="am-search-box-<?= $escaper->escapeHtml($filterCode) ?> w-full p-2 leading-normal transition appearance-none text-grey-800 focus:outline-black"
+               placeholder="<?= $escaper->escapeHtmlAttr(__('Search')) ?>"
+        />
+        <span class="sr-only">
+            <?= $escaper->escapeHtmlAttr(__('Search')) ?>
+        </span>
+    </label>
+</div>
+
+<script>
+    function amShopbyFilterSearch<?= $escaper->escapeHtml($uniqueId)?>() {
+        return {
+            selectors: {
+                filterContent: '.filter-options-content',
+                filterItem: '.item',
+                label: '.label',
+                showMoreWidget: '.am-show-more',
+                filerWrapper: '.am-filter',
+                hiddenClass: 'hidden',
+                childrenItemsClass: 'items-children',
+                collapsedItems: '.item-category .collapsed'
+            },
+            highlightTemplate: "<span class='bg-yellow-300 marked'>$&</span>",
+            options: [],
+            search: '',
+            isCategoryFilter: false,
+
+            getOptions(element) {
+                this.options = element
+                    .closest(this.selectors.filterContent)
+                    .querySelectorAll(this.selectors.filterItem);
+                this.isCategoryFilter = !!this.getIsCategoryFilter(element);
+            },
+
+            filterOptions(element) {
+                this.options.forEach((node) => {
+                    if (node.dataset.label) {
+                        this.highlightSearch(node);
+                    }
+                })
+                if (!!this.getShowMoreWidget(element)) {
+                    this.triggerSearchEvent(element);
+                }
+
+                if (this.isCategoryFilter) {
+                    this.categoryCollapse(element);
+                }
+            },
+
+            getIsCategoryFilter(element) {
+                return element
+                    .closest(this.selectors.filterContent)
+                    .querySelector(this.selectors.filerWrapper).dataset.amshopbyFilterRequestVar === "cat";
+            },
+
+            categoryCollapse(element) {
+                let categoriesButtonsClosed = element.closest(this.selectors.filterContent).querySelectorAll(this.selectors.collapsedItems);
+                const event = new Event('click');
+                if (this.search !== '') {
+                    categoriesButtonsClosed.forEach((button) => {
+                        button.dispatchEvent(event);
+                    })
+                }
+            },
+
+            getShowMoreWidget(element) {
+                return element
+                    .closest(this.selectors.filterContent)
+                    .querySelector(this.selectors.showMoreWidget);
+            },
+
+            highlightSearch(option) {
+                let target = !!option.querySelector('a') ? option.querySelector('a') : option;
+                let label = option.dataset.label;
+                let searchText = this.search.toLowerCase();
+                let newLabel = '';
+                if (searchText.includes('(') || searchText.includes(')')) {
+                    option.classList.add(this.selectors.hiddenClass)
+                } else {
+                    newLabel  = label.replace(new RegExp(searchText, 'gi'), this.highlightTemplate);
+                    target.querySelector(this.selectors.label).innerHTML = newLabel;
+
+                    if (label.toLowerCase().includes(this.search.toLowerCase())) {
+                        option.classList.remove(this.selectors.hiddenClass);
+                    } else {
+                        option.classList.add(this.selectors.hiddenClass);
+                    }
+                }
+
+                /* show parent item in case category filter */
+                if (this.isCategoryFilter && this.search !== '') {
+                    if(!option.classList.contains(this.selectors.hiddenClass)) {
+                        this.showParentItems(option);
+                    }
+                }
+
+            },
+
+            showParentItems(option) {
+                if (!option.parentNode.classList.contains(this.selectors.childrenItemsClass)) {
+                    return;
+                }
+                const parentItem = option.parentNode.closest(this.selectors.filterItem);
+                if(!!parentItem && parentItem.classList.contains(this.selectors.hiddenClass)) {
+                    parentItem.classList.remove(this.selectors.hiddenClass);
+                }
+                this.showParentItems(parentItem);
+            },
+
+            triggerSearchEvent(element) {
+                let eventTarget = this.getShowMoreWidget(element);
+                if (this.search !== '') {
+                    eventTarget.dispatchEvent(new CustomEvent('filter-search-active', {}));
+                } else {
+                    eventTarget.dispatchEvent(new CustomEvent('filter-search-inactive', {}));
+                }
+            }
+        }
+    }
+</script>

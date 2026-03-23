@@ -1,0 +1,664 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Catalog\Block\Product\View\Gallery;
+use Magento\Catalog\Helper\Image;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Gallery $block */
+/** @var HyvaCsp $hyvaCsp */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(StoreConfig::class);
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var HeroiconsSolid $heroiconsSolid */
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+
+$images = $block->getGalleryImages()->getItems();
+$mainImage = current(array_filter($images, [$block, 'isMainImage']));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = reset($images);
+}
+
+/** @var Image $helper */
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage ?
+    $mainImage->getData('medium_image_url') :
+    $helper->getDefaultPlaceholderUrl('image');
+
+$smallWidth = $block->getImageAttribute('product_page_image_small', 'width', 90);
+$smallHeight = $block->getImageAttribute('product_page_image_small', 'height', 90);
+$mediumWidth = $block->getImageAttribute('product_page_image_medium', 'width', 700);
+$mediumHeight = $block->getImageAttribute('product_page_image_medium', 'height', 700);
+
+// Admin Config
+$galleryOptionShowRelated = $storeConfig->getStoreConfig('catalog/product_video/show_related') ?? false;
+$galleryOptionVideoLoop = $storeConfig->getStoreConfig('catalog/product_video/video_auto_restart') ?? false;
+
+// view.xml Config
+$galleryOptionAllowfullscreen = (bool) $block->getVar('gallery/allowfullscreen', 'Magento_Catalog');
+$galleryOptionLoop = (bool) $block->getVar('gallery/loop', 'Magento_Catalog');
+$galleryOptionArrows = $block->getVar('gallery/arrows', 'Magento_Catalog');
+$galleryOptionShowCaption = (bool) $block->getVar('gallery/caption', 'Magento_Catalog');
+$galleryOptionShowThumbs = (string) $block->getVar('gallery/nav', 'Magento_Catalog') === 'counter';
+$galleryOptionShowFullscreenIcon = (bool) $block->getVar('gallery/fullscreenicon', 'Magento_Catalog');
+$galleryOptionMaxImagesToShow = (int) $block->getVar('gallery/maximages', 'Magento_Catalog') ?: 0;
+$galleryOptionColumns = $block->getVar('gallery/columns', 'Magento_Catalog') ?: 1;
+$galleryOptionShowMagnifier = (bool) $block->getVar('gallery/magnifier/enable', 'Magento_Catalog');
+$galleryOptionMagnifierZoom = (int) $block->getVar('gallery/magnifier/zoom', 'Magento_Catalog');
+$galleryOptionAppendOnReceive = (string) $block->getVar('gallery_switch_strategy', 'Magento_ConfigurableProduct') === 'append';
+
+$productName = $block->getProduct()->getName();
+?>
+
+<div class="w-full pt-6 md:pt-0 md:h-auto md:row-start-1 md:row-span-2 md:col-start-1">
+    <section
+        id="gallery"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('%1 Gallery', $productName)) ?>"
+        x-data="initGallery"
+        x-bind="eventListeners"
+    >
+        <div
+            class="flex md:grid md:grid-cols-1 xl:grid-cols-[repeat(var(--gallery-cols),_minmax(0,_1fr))] gap-2 snap overflow-x-auto overscroll-x-contain md:overflow-visible aspect-[var(--gallery-ratio)] md:aspect-auto <?= $galleryOptionColumns === '1' ? ' max-w-[var(--gallery-width)]' : '' ?>"
+            style="
+                --gallery-ratio: <?= /* @noEscape */ $mediumWidth . '/' . $mediumHeight ?>;
+                --gallery-width: <?= /* @noEscape */ $mediumWidth ?>px;
+                --gallery-cols: <?= /* @noEscape */ $galleryOptionColumns ?>"
+            x-ref="galleryBody"
+        >
+            <img
+                src="<?= /* @noEscape */ $mainImageData ?>"
+                alt="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
+                width="<?= /* @noEscape */ $mediumWidth ?>"
+                height="<?= /* @noEscape */ $mediumHeight ?>"
+                loading="eager"
+                itemprop="image"
+                :class="firstImageClasses"
+            >
+            <template x-for="(image, index) in images" :key="index">
+                <figure
+                    class="relative flex flex-col group bg-container-darker w-full shrink-0 snap-start md:snap-align-none"
+                    :class="moreImagesClasses"
+                    x-intersect.full="setActive"
+                    :data-active="isActive"
+                    :data-show-more-image="getMaxImages"
+                    tabindex="-1"
+                    <?php if ($galleryOptionShowMagnifier): ?>
+                        x-magnifier.zoom.<?= $galleryOptionMagnifierZoom ?>="getMagnifierFullImage"
+                    <?php endif; ?>
+                >
+                    <img
+                        width="<?= /* @noEscape */ $mediumWidth ?>"
+                        height="<?= /* @noEscape */ $mediumHeight ?>"
+                        class="m-auto object-scale-down"
+                        :loading="getLoadingPattern"
+                        :src="image.img"
+                        :alt="imageCaption"
+                        :class="imageClasses"
+                    >
+                    <?php if ($galleryOptionShowMagnifier): ?>
+                        <div x-magnifier-target x-show="isImageType"></div>
+                    <?php endif; ?>
+                    <template x-if="isNotActiveVideo">
+                        <button
+                            type="button"
+                            class="group absolute inset-0 outline-offset-4 grid place-items-center"
+                            title="<?= $escaper->escapeHtmlAttr(__('Play video')) ?>"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Play video')) ?>"
+                            data-dialog-toggle
+                            x-cloak
+                            <?php if ($galleryOptionAllowfullscreen): ?>
+                                @click="openGalleryDialog"
+                            <?php else: ?>
+                                @click="setActiveVideo"
+                            <?php endif ?>
+                        >
+                            <?= $heroiconsSolid->playHtml(
+                                'stroke-white/75 fill-black/20 transition ease-in group-hover:scale-110 md:w-24 md:h-24',
+                                44,
+                                44,
+                                ['aria-hidden' => 'true']
+                            ); ?>
+                        </button>
+                    </template>
+                    <?php if (!$galleryOptionAllowfullscreen): ?>
+                        <template x-if="isActiveVideo">
+                            <iframe
+                                class="absolute inset-0 aspect-video max-h-full max-w-full"
+                                width="1280"
+                                height="720"
+                                type="text/html"
+                                frameborder="0"
+                                loading="lazy"
+                                x-data="getVideoData"
+                                :src="src"
+                                :alt="imageCaption"
+                                :title="imageCaption"
+                                :allow="allow"
+                            ></iframe>
+                        </template>
+                    <?php endif; ?>
+                    <?php if ($galleryOptionShowCaption): ?>
+                        <template x-if="showCaption">
+                            <figcaption
+                                class="absolute inset-x-0 bottom-0 pt-4 pb-2 px-4 text-sm xl:text-base font-bold bg-gradient-to-t from-black/60 text-white text-center
+                                md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                                x-text="image.caption"
+                            ></figcaption>
+                        </template>
+                    <?php endif; ?>
+                    <template x-if="imageIsNotVideo">
+                        <div class="z-0 absolute inset-0 p-2 w-full flex flex-col justify-start items-end gap-2">
+                            <?php if ($galleryOptionAllowfullscreen): ?>
+                                <button
+                                    type="button"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Open fullscreen')) ?>"
+                                    data-dialog-toggle
+                                    x-cloak
+                                    @click="openGalleryDialog"
+                                    <?php if (!$galleryOptionShowFullscreenIcon): ?>
+                                        class="absolute inset-0 w-full -z-10"
+                                    <?php endif; ?>
+                                >
+                                    <?php if ($galleryOptionShowFullscreenIcon): ?>
+                                        <span
+                                            title="<?= $escaper->escapeHtmlAttr(__('Open fullscreen')) ?>"
+                                            class="block p-2 rounded-full transition shadow hover:shadow-primary/30 focus:shadow-primary/30 bg-white text-primary/50 hover:text-primary focus:text-primary"
+                                        >
+                                            <?= $heroicons->arrowsExpandHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+                                        </span>
+                                        <span class="absolute inset-0 w-full -z-10"></span>
+                                    <?php endif; ?>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </template>
+                </figure>
+            </template>
+            <template x-if="showMoreImagesButton">
+                <button
+                    type="button"
+                    class="hidden md:flex col-span-full btn btn-secondary"
+                    @click="toggleShowMoreImages"
+                >
+                    <span x-text="showMoreImagesLabel"><?= $escaper->escapeHtml(__('View more')) ?></span>
+                </button>
+            </template>
+        </div>
+        <?php if ($galleryOptionArrows): ?>
+            <nav
+                class="flex items-center gap-2 my-4 md:hidden justify-between"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('%1 Gallery Navigation', $productName)) ?>"
+                x-cloak
+            >
+                <button
+                    type="button"
+                    tabindex="-1"
+                    class="shrink-0 p-2.5 rounded-full transition disabled:opacity-30 shadow hover:shadow-primary/30 focus:shadow-primary/30 bg-white text-primary"
+                    title="<?= $escaper->escapeHtmlAttr(__('Previous')) ?>"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Previous')) ?>"
+                    :disabled="isAtStart"
+                    @click="goToPrev"
+                ><?= $heroiconsSolid->arrowLeftHtml('', 16, 16, ['aria-hidden' => 'true']) ?></button>
+                <?php if ($galleryOptionShowThumbs): ?>
+                    <div class="font-bold text-sm<?= $galleryOptionArrows === "start"
+                        ? ' order-last ml-auto'
+                        : ($galleryOptionArrows === "end" ? ' order-first mr-auto' : ' mx-auto') ?>">
+                        <span x-text="itemCountIndex"></span>
+                        <span class="text-gray-300">/</span>
+                        <span class="text-gray-500" x-text="itemCount"></span>
+                    </div>
+                <?php endif; ?>
+                <button
+                    type="button"
+                    tabindex="-1"
+                    class="shrink-0 p-2.5 rounded-full transition disabled:opacity-30 shadow hover:shadow-primary/30 focus:shadow-primary/30 bg-white text-primary"
+                    title="<?= $escaper->escapeHtmlAttr(__('Next')) ?>"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Next')) ?>"
+                    :disabled="isAtEnd"
+                    @click="goToNext"
+                ><?= $heroiconsSolid->arrowRightHtml('', 16, 16, ['aria-hidden' => 'true']) ?></button>
+            </nav>
+        <?php endif; ?>
+        <?php if ($galleryOptionAllowfullscreen): ?>
+            <dialog
+                x-data="initGalleryDialog"
+                x-bind="dialogListeners"
+                class="max-w-full max-h-full bg-transparent p-0 backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+            >
+                <button
+                    class="z-10 fixed top-2 right-2 lg:top-6 lg:right-6 p-1 rounded-full text-white/50 hover:text-white transition-colors"
+                    title="<?= $escaper->escapeHtmlAttr(__('Close fullscreen')) ?>"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Close fullscreen')) ?>"
+                    @click="closeDialog"
+                >
+                    <?= $heroicons->xCircleHtml('fill-black/30', 32, 32, ['aria-hidden' => 'true']); ?>
+                </button>
+                <div
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-12"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-12"
+                >
+                    <template x-if="isVideoType">
+                        <iframe
+                            class="aspect-video max-w-full max-h-screen p-2 sm:p-4 shadow-xl h-auto"
+                            width="1280"
+                            height="720"
+                            type="text/html"
+                            frameborder="0"
+                            loading="lazy"
+                            x-data="getVideoData"
+                            :src="src"
+                            :alt="imageCaption"
+                            :title="imageCaption"
+                            :allow="allow"
+                        ></iframe>
+                    </template>
+                    <template x-if="isImageType">
+                        <img
+                            width="<?= /* @noEscape */ $mediumWidth ?>"
+                            height="<?= /* @noEscape */ $mediumHeight ?>"
+                            class="max-w-full max-h-screen p-2 sm:p-4 shadow-xl w-auto m-auto"
+                            :class="imageClasses"
+                            loading="lazy"
+                            :src="image.full"
+                            :alt="imageCaption"
+                        >
+                    </template>
+                </div>
+            </dialog>
+        <?php endif; ?>
+    </section>
+    <script>
+        function initGallery() {
+            return {
+                activeItem: 0,
+                activeVideo: false,
+                itemCount: 0,
+                loop: <?= $galleryOptionLoop ? 'true' : 'false' ?>,
+                isSlider: false,
+                isStart: true,
+                isEnd: false,
+                videoOptions: {
+                    loop: <?= $galleryOptionVideoLoop ? 'true' : 'false' ?>,
+                    showRelated: <?= $galleryOptionShowRelated ? 'true' : 'false' ?>,
+                    allowApi: false
+                },
+                maxImages: <?= $galleryOptionMaxImagesToShow ?>,
+                showMoreImages: false,
+                initialImages: <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+                images: <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+                init() {
+                    this.itemCount = this.images.length;
+                    this.calcIsSlider();
+
+                    this.$watch('activeItem', (item) => {
+                        if (this.isSlider) {
+                            this.activeVideo = false;
+                        }
+                        this.isStart = this.activeItem === 0;
+                        this.isEnd = this.activeItem === (this.itemCount - 1);
+                    });
+
+                    this.$watch('isSlider', (now, previous) => {
+                        if (now && now !== previous) {
+                            this.activeItem = 0;
+                            this.scrollToActive();
+                        };
+                    });
+
+                    this.$watch('showMoreImages', (isOpen) => {
+                        this.$nextTick(() => {
+                            const galleryInitItems = this.$refs.galleryBody.querySelectorAll('[data-show-more-image=false]');
+                            if (!galleryInitItems.length) return;
+
+                            const galleryItemToScrollTo = galleryInitItems[
+                                isOpen
+                                    ? galleryInitItems.length - 1 // Go to next item
+                                    : galleryInitItems.length - 2 // Go to prev item
+                            ]
+                            if (!galleryItemToScrollTo) return;
+
+                            galleryItemToScrollTo.scrollIntoView({ behavior: "smooth" });
+
+                            const focusTarget = galleryItemToScrollTo.querySelector('[data-dialog-toggle]');
+                            if (focusTarget) {
+                                focusTarget.focus();
+                            } else {
+                                galleryItemToScrollTo.focus();
+                            };
+                        });
+                    })
+                },
+                setActive() {
+                    return this.activeItem = this.index;
+                },
+                setActiveVideo() {
+                    return this.activeVideo = this.index;
+                },
+                isActive() {
+                    return this.activeItem === this.index;
+                },
+                isActiveVideo() {
+                    return this.activeVideo === this.index && this.image.type === 'video';
+                },
+                isNotActiveVideo() {
+                    return this.activeVideo !== this.index && this.image.type === 'video';
+                },
+                isVideoType() {
+                    return this.image && this.image.type === 'video';
+                },
+                isImageType() {
+                    return this.image && this.image.type === 'image';
+                },
+                isImagesToShow(index) {
+                    if (this.maxImages === 0) return false;
+                    if (this.showMoreImages) return false;
+                    return index > this.maxImages;
+                },
+                imageCaption() {
+                    return this.image.caption || '<?= $escaper->escapeJs($productName) ?>';
+                },
+                showCaption() {
+                    return this.image.caption && this.image.caption !== '<?= $escaper->escapeJs($productName) ?>';
+                },
+                imageClasses() {
+                    return {
+                        'invisible': this.activeVideo === this.index && this.image.type === 'video'
+                    };
+                },
+                imageIsNotVideo() {
+                    return this.image.type !== 'video';
+                },
+                getLoadingPattern() {
+                    return this.index <= 2 ? 'eager' : 'lazy'
+                },
+                getVideoData() {
+                    const videoUrl = this.image.videoUrl;
+                    if (!videoUrl) return;
+
+                    const videoData = {
+                        id: null,
+                        type: null,
+                        src: null,
+                        additionalParams: "&autoplay=1",
+                        allow: "fullscreen; picture-in-picture; autoplay;"
+                    }
+
+                    if (this.videoOptions.loop) {
+                        videoData.additionalParams += '&loop=1';
+                    }
+
+                    if (videoUrl.match(/youtube\.com|youtu\.be|youtube-nocookie.com/)) {
+                        const youtubeRegex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+                        const baseSrc = videoUrl.match(/youtube-nocookie.com/)
+                            ? 'https://www.youtube-nocookie.com/embed'
+                            : 'https://www.youtube.com/embed';
+
+                        videoData.type = "youtube";
+                        videoData.id = videoUrl.match(youtubeRegex)[1];
+
+                        // If rel=0 it only shows related for the channel not external
+                        videoData.additionalParams += (this.videoOptions.showRelated ? '&rel=1' : '&rel=0');
+
+                        if (this.videoOptions.loop) {
+                            videoData.additionalParams += `&playlist=${videoData.id}`
+                        }
+
+                        if (this.videoOptions.allowApi) {
+                            videoData.additionalParams += '&enablejsapi=1';
+                        }
+
+                        videoData.src = `${baseSrc}/${videoData.id}?origin=<?= $block->getBaseUrl() ?>${videoData.additionalParams}`;
+                        videoData.allow += " accelerometer; clipboard-write; encrypted-media; gyroscope;"
+                    } else if (videoUrl.match(/vimeo\.com/)) {
+                        const vimeoRegex = new RegExp([
+                            'https?:\\/\\/(?:www\\.|player\\.)?vimeo.com\\/(?:channels\\/(?:\\w+\\/)',
+                            '?|groups\\/([^\\/]*)\\/videos\\/|album\\/(\\d+)\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)'
+                        ].join(''));
+                        const timestamp = new Date().getTime();
+                        const baseSrc = "https://player.vimeo.com/video";
+
+                        videoData.type = "vimeo";
+                        videoData.id = videoUrl.match(vimeoRegex)[3];
+                        if (this.videoOptions.allowApi) {
+                            videoData.additionalParams += "&api=1"
+                        }
+                        videoData.src = `${baseSrc}/${videoData.id}?player_id=vimeo${videoData.id}${timestamp}${videoData.additionalParams}`;
+                    }
+
+                    return videoData;
+                },
+                nextItem() {
+                    const hasNext = this.activeItem < (this.itemCount - 1);
+                    this.activeItem = hasNext
+                        ? this.activeItem += 1
+                        : this.loop ? 0 : this.activeItem;
+                },
+                prevItem() {
+                    const hasPrev = this.activeItem > 0;
+                    this.activeItem = hasPrev
+                        ? this.activeItem -= 1
+                        : this.loop ? (this.itemCount - 1) : this.activeItem;
+                },
+                scrollToActive() {
+                    this.$nextTick(() => {
+                        const activeSlide = this.$refs.galleryBody.querySelector('[data-active]');
+                        if (!activeSlide) return;
+                        activeSlide.scrollIntoView({ block: "nearest", inline: "nearest" });
+                    });
+                },
+                calcIsSlider() {
+                    const overflow = getComputedStyle(this.$refs.galleryBody).overflow;
+                    this.isSlider = overflow === "auto" || overflow === "scroll";
+                },
+                receiveImages(images) {
+                    <?php if ($galleryOptionAppendOnReceive):  ?>
+                        const initialUrls = this.initialImages.map(image => image.full);
+                        const newImages = images.filter(image => !initialUrls.includes(image.full));
+                        this.images = [].concat(this.initialImages, newImages);
+                    <?php else: ?>
+                        this.images = images;
+                    <?php endif; ?>
+                    this.itemCount = this.images.length;
+                },
+                resetGallery() {
+                    this.images = this.initialImages;
+                    this.itemCount = this.images.length;
+                },
+                firstImageClasses() {
+                    return 'sr-only';
+                },
+                getMaxImages() {
+                    return `${this.index > this.maxImages}`;
+                },
+                showMoreImagesButton() {
+                    return this.maxImages !== 0 && this.itemCount > this.maxImages;
+                },
+                toggleShowMoreImages() {
+                    this.showMoreImages = !this.showMoreImages
+                },
+                showMoreImagesLabel() {
+                    return this.showMoreImages
+                        ? '<?= $escaper->escapeJs(__('View less')) ?>'
+                        : '<?= $escaper->escapeJs(__('View more')) ?>';
+                },
+                moreImagesClasses() {
+                    return { 'md:hidden': this.isImagesToShow((this.index + 1)) };
+                },
+                isAtStart() {
+                    return !this.loop && this.isStart;
+                },
+                isAtEnd() {
+                    return !this.loop && this.isAtEnd;
+                },
+                goToPrev() {
+                    this.prevItem();
+                    this.scrollToActive();
+                },
+                goToNext() {
+                    this.nextItem();
+                    this.scrollToActive();
+                },
+                itemCountIndex() {
+                    return (this.activeItem + 1);
+                },
+                eventListeners: {
+                    ['@update-gallery.window'](event) {
+                        this.receiveImages(event.detail);
+                    },
+                    ['@reset-gallery.window']() {
+                        this.resetGallery();
+                    },
+                    ['@resize.window.debounce']() {
+                        this.calcIsSlider();
+                    }
+                },
+                getMagnifierFullImage() {
+                    return this.image.type !== 'video' ? this.image.full : '';
+                },
+                openGalleryDialog() {
+                    this.$dispatch('openGalleryDialog', { image: this.image });
+                }
+            }
+        }
+        window.addEventListener('alpine:init', () => Alpine.data('initGallery', initGallery), { once: true });
+
+        <?php if ($galleryOptionAllowfullscreen): ?>
+            function initGalleryDialog() {
+                return {
+                    open: false,
+                    image: null,
+                    openDialog(image) {
+                        this.$root.showModal();
+                        this.open = true;
+                        this.image = event.detail.image
+                        this.scrollLock(this.open);
+                    },
+                    closeDialog() {
+                        this.$root.close();
+                        this.open = false;
+                        this.image = null;
+                        this.scrollLock(this.open);
+                    },
+                    scrollLock(use = true) {
+                        document.body.style.overflow = use ? "hidden" : "";
+                    },
+                    onDialogBackdropClickHelper(event, target) {
+                        const rect = target.getBoundingClientRect();
+                        const isInDialog =
+                            rect.top <= event.clientY &&
+                            event.clientY <= rect.top + rect.height &&
+                            rect.left <= event.clientX &&
+                            event.clientX <= rect.left + rect.width;
+                        return isInDialog;
+                    },
+                    dialogListeners: {
+                        ['@keydown.window.escape']() {
+                            this.closeDialog();
+                        },
+                        ['@click'](event) {
+                            if (this.onDialogBackdropClickHelper(event, this.$root)) return;
+
+                            this.closeDialog();
+                        },
+                        ['@openGalleryDialog.window'](event) {
+                            this.openDialog(event.detail.image);
+                        },
+                        ['@closeGalleryDialog.window']() {
+                            this.closeDialog();
+                        }
+                    }
+                }
+            }
+            window.addEventListener('alpine:init', () => Alpine.data('initGalleryDialog', initGalleryDialog), { once: true });
+        <?php endif; ?>
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+
+    <?php if ($galleryOptionShowMagnifier): ?>
+        <script>
+            (() => {
+                function alpine_magnifier(el) {
+                    Alpine.directive("magnifier", (el, { expression, modifiers }, { evaluateLater, effect, cleanup }) => {
+                        const isHoverableDevice = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                        const zoomSize = parseInt(modifierValue(modifiers, "zoom", 120)) + 100;
+                        const getImageSrc = evaluateLater(expression);
+                        let imageSrc;
+
+                        effect(() => {
+                            getImageSrc(img => { imageSrc = img || null });
+                            el.style.setProperty("--zoom-src", imageSrc ? `url(${imageSrc})` : null);
+                        });
+
+                        el.addEventListener('mouseleave', resetZoom, false);
+                        el.addEventListener('mousemove', updateZoom, false);
+
+                        cleanup(() => {
+                            el.removeEventListener('mouseleave', resetZoom);
+                            el.removeEventListener('mousemove', updateZoom);
+                        });
+
+                        function resetZoom(e) {
+                            el.style.setProperty("--zoom", null);
+                            el.style.setProperty("--zoom-y", null);
+                            el.style.setProperty("--zoom-x", null);
+                        }
+
+                        function updateZoom(e) {
+                            if (!imageSrc || !isHoverableDevice) return;
+                            const dimensions = this.getBoundingClientRect();
+                            const xPercent = Math.round(100 / (dimensions.width / (e.clientX - dimensions.left)));
+                            const yPercent = Math.round(100 / (dimensions.height / (e.clientY - dimensions.top)));
+                            el.style.setProperty("--zoom", `${zoomSize}%`);
+                            el.style.setProperty("--zoom-y", `${yPercent}%`);
+                            el.style.setProperty("--zoom-x", `${xPercent}%`);
+                        }
+                    });
+                }
+
+                function alpine_magnifier_target(el) {
+                    Alpine.directive("magnifier-target", (el, {}, { evaluate }) => {
+                        el.style.position = "absolute";
+                        el.style.inset = 0;
+                        el.style.background = "var(--zoom-src) var(--zoom-x) var(--zoom-y)/var(--zoom) no-repeat";
+                    });
+                }
+
+                function modifierValue(modifiers, key, fallback) {
+                    if (modifiers.indexOf(key) === -1) return fallback;
+                    const value = modifiers[modifiers.indexOf(key) + 1];
+                    return value || fallback;
+                }
+
+                document.addEventListener("alpine:init", () => {
+                    window.Alpine.plugin(alpine_magnifier);
+                    window.Alpine.plugin(alpine_magnifier_target);
+                });
+            })();
+        </script>
+        <?php $hyvaCsp->registerInlineScript() ?>
+    <?php endif; ?>
+</div>

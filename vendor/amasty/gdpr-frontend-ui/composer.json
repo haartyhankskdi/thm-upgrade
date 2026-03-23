@@ -1,0 +1,23 @@
+{
+    "name": "amasty/gdpr-frontend-ui",
+    "description": "Cookie Consent Js by Amasty",
+    "require": {
+        "php": ">=7.4",
+        "amasty/gdpr-cookie": ">=2.16.1",
+        "amasty/base": ">=1.21.1",
+        "amasty/geoip": "*"
+    },
+    "type": "magento2-module",
+    "version": "1.5.3",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\GdprFrontendUi\\": ""
+        }
+    }
+}

@@ -1,0 +1,70 @@
+<?php
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+
+$currentFullAction = $block->getRequest()->getFullActionName();
+$cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
+
+
+if ($currentFullAction === 'amlocator_index_index') : ?>
+    <div class="page-title-wrapper<?= $block->escapeHtmlAttr($cssClass) ?>">
+        <div class="custom container px-0">
+            <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                Store Locator
+            </h1>
+        </div>
+    </div>
+<?php
+return;
+endif;
+
+if ($currentFullAction === 'catalog_category_view') {
+
+    /** @var \Magento\Catalog\Model\Category $category */
+    $category = $block->getLayout()
+        ->getBlock('category.products')
+        ?->getCurrentCategory();
+
+    if ($category && $category->getName()) : ?>
+        <div class="page-title-wrapper<?= $block->escapeHtmlAttr($cssClass) ?>">
+            <h1 class="page-title category-title text-xl text-black font-bold lg:text-[38px] lg:leading-[44px]">
+                <?= $block->escapeHtml($category->getName()) ?>
+            </h1>
+        </div>
+    <?php endif;
+
+    return;
+}
+
+$titleHtml = '';
+if (trim($block->getPageHeading())) {
+    $titleHtml = '<span class="base" data-ui-id="page-title-wrapper" '
+        . $block->getAddBaseAttribute()
+        . '>'
+        . $block->escapeHtml($block->getPageHeading())
+        . '</span>';
+}
+
+$urlInterface = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$currenturl = $urlInterface->getCurrentPageUrl();
+
+
+if ($currenturl != $block->getBaseUrl() . 'recipes') :
+    if ($titleHtml) : ?>
+        <div class="page-title-wrapper<?= $block->escapeHtmlAttr($cssClass) ?>">
+            <div class="custom container <?php if($currenturl == $block->getBaseUrl() . 'amlocator/manchester-longsight/' || $currenturl == $block->getBaseUrl() . 'amlocator/forest-gate/'  ){ echo "store_title_break"; }?> px-0">
+                <h1 class="page-title text-3xl text-black font-bold lg:text-[38px] lg:leading-[44px]"
+                    <?php if ($block->getId()) : ?>
+                        id="<?= $block->escapeHtmlAttr($block->getId()) ?>"
+                    <?php endif; ?>
+                    <?php if ($block->getAddBaseAttributeAria()) : ?>
+                        aria-labelledby="<?= $block->escapeHtmlAttr($block->getAddBaseAttributeAria()) ?>"
+                    <?php endif; ?>>
+                    <?= /* @noEscape */ $titleHtml ?>
+                </h1>
+            </div>
+            <?= $block->getChildHtml() ?>
+        </div>
+    <?php endif;
+endif;

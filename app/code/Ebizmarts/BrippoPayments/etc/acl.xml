@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ebizmarts_BrippoPayments::recover_action" title="Recover Order Action" sortOrder="10"/>
+                <resource id="Ebizmarts_BrippoPayments::configuration" title="Brippo Configuration" sortOrder="20"/>
+            </resource>
+        </resources>
+    </acl>
+</config>

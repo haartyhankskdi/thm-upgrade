@@ -1,0 +1,158 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Express\Button as ExpressButton;
+use Ebizmarts\BrippoPayments\Model\Config\Source\ExpressLocation;
+use Ebizmarts\BrippoPayments\Model\Express;
+
+/** @var ExpressButton $block */
+
+if ($block->getIsEnabled()) {
+    $agreements = $block->getAgreements();
+    $source = ExpressLocation::PRODUCT_PAGE;
+    $mountElementUniqueId = $block->getUniqueElementId('brippo-express-product');
+    ?>
+
+    <div class="scExpressProductPage action tocart" style="padding: 0; display: none;">
+        <?php if ($block->showOrSeparator(Express::XML_PATH_PRODUCT_SHOW_OR)) { ?>
+            <div class="scExpressSeparator product">
+                <div class="separator separatorL"></div>
+                <h6 style="width: 20%;">Or</h6>
+                <div class="separator separatorR"></div>
+            </div>
+        <?php } ?>
+        <span id="<?= $block->escapeHtml($mountElementUniqueId) ?>-errors" class="message error" style="display: none;"></span>
+        <?php if (!empty($agreements)) { ?>
+            <div class="brippoExpressAgreements <?= $block->escapeJs($source); ?>">
+                <div class="content">
+                    <ul>
+                        <?php foreach ($agreements as $agreement): ?>
+                            <li>
+                                <div class="agreement-item-content checkout-agreements-block" id="agreement-item-<?= $block->escapeHtmlAttr($source) . $block->escapeHtmlAttr($agreement->getAgreementId()) ?>">
+                                    <label class="label action-show">
+                                        <a>
+                                            <?php if ($agreement->getIsHtml()):?>
+                                                <?= /* @noEscape */ trim($agreement->getCheckboxText()) ?>
+                                            <?php else:?>
+                                                <?= /* @noEscape */ trim($block->escapeHtml($agreement->getCheckboxText())) ?>
+                                            <?php endif; ?>
+                                        </a>
+                                    </label>
+                                    <input type="checkbox"
+                                           id="agreement-<?= (int) $agreement->getAgreementId() ?>"
+                                           name="agreement[<?= (int) $agreement->getAgreementId() ?>]"
+                                           value="1"
+                                           title="<?= $block->escapeHtml(trim($agreement->getCheckboxText())) ?>"
+                                           class="checkbox"/>
+                                </div>
+                            </li>
+                            <div class="brippoAgreementsModal" id="brippoAgreementsModal_<?= $block->escapeHtml($source . $agreement->getAgreementId()) ?>">
+                                <div class="content">
+                                    <?php if ($agreement->getIsHtml()):?>
+                                        <?= /* @noEscape */ $agreement->getContent() ?>
+                                    <?php else:?>
+                                        <?= $block->escapeHtml($agreement->getContent()) ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <script>
+                                require([
+                                    'domReady!.modman/brippo-payments/view/frontend/templates/product/express',
+                                    'brippo_payment_request_button',
+                                    'jquery'
+                                ], function(domReady, scExpress, $) {
+                                    $('#agreement-item-<?= $block->escapeHtmlAttr($source) . $block->escapeHtmlAttr($agreement->getAgreementId()) ?> label').click(function() {
+                                        scExpress.showAgreementsModal('<?= $block->escapeJs($source) ?>', '<?= $block->escapeJs($agreement->getAgreementId()) ?>');
+                                    });
+                                });
+                            </script>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+            </div>
+        <?php } ?>
+        <div id="<?= $block->escapeHtml($mountElementUniqueId) ?>" style="display: none; position: relative;"></div>
+        <div class="expressAddCoupon">
+            <div class="content">
+                <div class="textLink">Apply Discount Code</div>
+                <div class="expressAddCouponInputContainer">
+                    <?php $discountNote = $block->getDiscountInputNote();
+                    if (!empty($discountNote)) { ?>
+                        <div class="expressAddCouponNote"><?= $block->escapeHtml($discountNote) ?></div>
+                    <?php } ?>
+                    <div class="expressAddCouponSuccess message success" style="display: none;"><span>Coupon was applied.</span></div>
+                    <input type="text" class="input-text couponInput"
+                           id="brippoProductCouponCodeInput" value="" placeholder="Enter discount code">
+                    <a href="#" class="expressAddCouponApply">Apply</a>
+                    <a href="#" class="expressAddCouponRemove">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let appendToSelector = '<?= $block->escapeJs($block->getLayoutPlacement(Express::XML_PATH_PRODUCT_PLACEMENT, Express::DEFAULT_PRODUCT_PLACEMENT_BLOCK)) ?>';
+            if (!appendToSelector || appendToSelector === '' || !document.querySelector(appendToSelector)) {
+                appendToSelector = '<?= $block->escapeJs(Express::DEFAULT_PRODUCT_PLACEMENT_BLOCK) ?>'
+            }
+            const targetElement = document.querySelector(appendToSelector);
+            const brippoButtonElement = document.querySelector('.scExpressProductPage');
+            targetElement.appendChild(brippoButtonElement);
+            brippoButtonElement.style.display = 'block';
+        });
+
+        require([
+            'Magento_Customer/js/customer-data',
+            'brippo_payment_request_button',
+        ], function(customerData, scExpress) {
+            let cart = customerData.get('cart');
+            const source = {
+                source: '<?= $block->escapeJs($source); ?>',
+                elementId: '<?= $block->escapeJs($mountElementUniqueId) ?>',
+                currentProductId: "<?= $block->escapeJs($block->getProductId()); ?>"
+            };
+
+            let initPaymentRequest = function()
+            {
+                const config = {
+                    pKey: "<?= $block->escapeJs($block->getPublishableKey()); ?>",
+                    isEnabled: "<?= $block->escapeJs($block->getIsEnabled()); ?>",
+                    accountId: "<?= $block->escapeJs($block->getAccountId()); ?>",
+                    buttonType: "<?= $block->escapeJs($block->getButtonType()); ?>",
+                    buttonTheme: "<?= $block->escapeJs($block->getButtonTheme()); ?>",
+                    buttonHeight: "<?= $block->escapeJs($block->getButtonHeight()); ?>",
+                    enabledCouponCode: "<?= $block->escapeJs($block->getIsCouponCodeEnabled()); ?>"
+                };
+                scExpress.initPaymentRequest(config, source);
+                scExpress.bindConfigurableProductOptions(config, source);
+            };
+            initPaymentRequest();
+
+            let subscribedToCartEvent = false;
+            cart.subscribe(function ()
+            {
+                if (!subscribedToCartEvent) {
+                    setTimeout(initPaymentRequest, 500);
+                    subscribedToCartEvent = true;
+                }
+            });
+
+            <?php if ($block->getIsCouponCodeEnabled()) { ?>
+                document.querySelector('.scExpressProductPage .expressAddCoupon')
+                    .style.display = 'block';
+                scExpress.registerDiscountInput(
+                    document.querySelector('.scExpressProductPage .expressAddCoupon .textLink'),
+                    document.querySelector('.scExpressProductPage .expressAddCouponInputContainer'),
+                    document.querySelector('.scExpressProductPage .expressAddCouponApply'),
+                    document.querySelector('.scExpressProductPage .expressAddCouponRemove'),
+                    document.querySelector('#brippoProductCouponCodeInput'),
+                    source,
+                    document.querySelector('.scExpressProductPage .expressAddCouponSuccess'),
+                    document.querySelector('.scExpressProductPage .expressAddCouponNote')
+                );
+            <?php } ?>
+        });
+    </script>
+<?php } ?>

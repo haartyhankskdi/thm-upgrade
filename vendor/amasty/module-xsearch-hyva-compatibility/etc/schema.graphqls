@@ -1,0 +1,12 @@
+type StoreConfig {
+    amasty_xsearch_general_full_screen: Int @doc(description: "Enable full screen mode")
+    amasty_xsearch_product_popup_display: Int @doc(description: "Display popup mode")
+    amasty_xsearch_product_show_sku: Int @doc(description: "Show sku")
+    amasty_xsearch_product_desc_length: Int @doc(description: "Description length")
+    amasty_xsearch_layout_search_button_text: String @doc(description: "Search button color text"),
+    amasty_xsearch_layout_search_button: String @doc(description: "Search button background color"),
+}
+
+type XsearchCategory {
+    description: String @doc(description: "Category description")
+}

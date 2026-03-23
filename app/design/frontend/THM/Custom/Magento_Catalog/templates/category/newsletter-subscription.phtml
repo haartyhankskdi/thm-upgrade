@@ -1,0 +1,10 @@
+   <div class="subscribe-section">
+  <div class="subscribe-text">
+    <h2>Love a <strong>Good Deal?</strong></h2>
+    <p>Subscribe now and never miss out on our freshest offers and updates.</p>
+  </div>
+ <?php echo $this->getLayout()
+     ->createBlock(\Magento\Newsletter\Block\Subscribe::class)
+     ->setTemplate("Magento_Newsletter::subscribe.phtml")
+     ->toHtml(); ?>
+</div>

@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <method name="brippo_payments_paymentelement">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="brippo_payments_express">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="brippo_payments_paybylink">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="brippo_payments_ece">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="brippo_payments_terminal_moto_backend">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="brippo_payments_paymentelement_standalone">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

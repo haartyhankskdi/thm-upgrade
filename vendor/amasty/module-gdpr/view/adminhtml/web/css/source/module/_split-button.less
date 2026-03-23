@@ -1,0 +1,38 @@
+//
+//  Amasty Gdpr Regular Split Button Styles
+//  --------------------------------------------
+
+//
+//  Common
+//  --------------------------------------------
+
+& when (@media-common = true) {
+    .page-main-actions .page-actions .amgdpr-regular-split-button {
+        order: unset;
+        -webkit-order: unset;
+        z-index: 100;
+
+        &.actions-split.active, &:hover {
+            box-shadow: none;
+        }
+
+        & > .abs-action-quaternary {
+            &:first-child {
+                margin-right: 25px;
+                height: 100%;
+            }
+
+            &:nth-child(2) {
+                padding-left: calc(100% - 25px);
+                border: none;
+            }
+        }
+
+        & > .dropdown-menu {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+}

@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var $block \Haartyhanks\EcommerceAnalytics\Block\Ecommerce
+ */
+?>
+<?php $order_id =  $block->getLastOrderId(); ?>
+<?php // $analytic_code = $block->getAnaliticCode(); ?>
+<?php $analytic_code = "UA-65689755-1"; ?>
+<?php //$order_id = 117;
+	if(!empty($order_id) && !empty($analytic_code)){ // if getting order id
+		?>
+<?php $orderF =  $block->getOrderById($order_id); ?>
+<?php $current_currrency_in_use =  $orderF->getOrderCurrencyCode() ?>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-65689755-1"></script> 
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- standard GA code -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-65689755-1');
+</script>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '<?php echo $analytic_code ?>', 'auto');
+ga('send', 'pageview');
+</script>
+<script>
+	ga('require', 'ecommerce');
+	// start the transaction
+	ga('ecommerce:addTransaction', {
+		'id': '<?php echo $orderF->getIncrementId(); ?>',
+		'affiliation': '<?php echo $block->getStoreName(); ?>',
+		'revenue': '<?php echo $orderF->getGrandTotal(); ?>',
+		'shipping': '<?php echo $orderF->getShippingAmount()?:0; ?>',
+		'tax': '<?php echo ($orderF->getTaxAmount())?:0; ?>',
+		'currency': '<?php echo ($current_currrency_in_use)?:"GBP"; ?>'
+	});
+	
+	<?php 
+	
+	$orderItems = $orderF->getAllItems(); 
+	
+	foreach ($orderItems as $item) {
+		?>
+			ga('ecommerce:addItem', {
+				'id': '<?php echo $item->getItemId(); ?>',
+				'name': '<?php echo $item->getName(); ?>',
+				'sku': '<?php echo $item->getSku(); ?>',
+				'price': '<?php echo $item->getPrice(); ?>',
+				'quantity': '<?php echo (int) $item->getQtyOrdered(); ?>',
+			});
+			<?php
+		}
+		
+		?>
+	ga('ecommerce:send');
+	</script>
+
+<?php
+}
+// test file: https://pearlchemist.co.uk/phpinfo.php

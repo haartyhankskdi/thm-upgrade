@@ -1,0 +1,409 @@
+<?php
+$wishlistHelper = $this->helper("Magento\Wishlist\Helper\Data");
+$_productCollection = $block->getLoadedProductCollection();
+$_helper = $block->getData("outputHelper");
+$bestselling = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\BestSellers::class);
+$formKey = $bestselling->getFormKey();
+$current_block = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$isLoggedIn = $current_block->getCustomerData()->isLoggedIn();
+?>
+<?php if ($_productCollection->getSize()): ?>
+<div class="count_products">
+    <?php echo $_productCollection->getSize(); ?> Products Founds
+</div>
+<?php endif; ?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?= $escaper->escapeHtml(
+            __('We can\'t find products matching the selection.')
+        ) ?></div>
+    </div>
+<?php else: ?>
+  <!--<?//= $block->getToolbarHtml() ?>-->
+    <?= $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() === "grid") {
+        $viewMode = "grid";
+        $imageDisplayArea = "category_page_grid";
+        $showDescription = false;
+        $templateType =
+            \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = "list";
+        $imageDisplayArea = "category_page_list";
+        $showDescription = true;
+        $templateType =
+            \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    $pos = $block->getPositioned();
+    ?>
+    <!-- Product Wrapper Start -->
+    <div class="products wrapper <?= $viewMode ?> products-<?= $viewMode ?>" id="ajax-product-wrapper">
+        <ol class="products list items product-items">
+            <?php foreach ($_productCollection as $_product):
+
+                $inWishlist = false;
+                if ($isLoggedIn) {
+                    $wishlist = $wishlistHelper->getWishlist();
+                    if ($wishlist) {
+                        $wishlistItems = $wishlist->getItemCollection();
+                        foreach ($wishlistItems as $item) {
+                            if ($item->getProductId() == $_product->getId()) {
+                                $inWishlist = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                $specialPrice = $_product->getSpecialPrice();
+                $regularPrice = $_product->getPrice();
+                $specialFromDate = $_product->getSpecialFromDate();
+                $specialToDate = $_product->getSpecialToDate();
+                $currentDate = date("Y-m-d");
+                ?>
+            <li class="item product product-item">
+                <div class="product-item-info" id="product-item-info_<?= $_product->getId() ?>" data-container="product-<?= $viewMode ?>">
+                    <?php
+                    $productImage = $block->getImage(
+                        $_product,
+                        $imageDisplayArea
+                    );
+                    if ($pos != null) {
+                        $position =
+                            "left:" .
+                            $productImage->getWidth() .
+                            "px; top:" .
+                            $productImage->getHeight() .
+                            "px;";
+                    }
+                    ?>
+    <?php if ($isLoggedIn): ?>
+    <?php if (!$inWishlist): ?>
+        <!-- Not in wishlist, show blank heart -->
+        <form action="<?= $block->getUrl(
+            "wishlist/index/add"
+        ) ?>" method="post" class="custom-wishlist-form">
+            <input type="hidden" name="product" value="<?= $_product->getId() ?>" />
+            <input type="hidden" name="form_key" value="<?= $formKey ?>" />
+            <button type="submit" class="wishlist-btn" title="Add to Wishlist">
+                <img src="<?php echo $block->getViewFileUrl(
+                    "images/heart.svg"
+                ); ?>" alt="heart" />
+            </button>
+        </form>
+    <?php else: ?>
+        <!-- Already in wishlist, show red heart -->
+        <span class="wishlist-btn added" title="Already in Wishlist">
+            <img src="<?php echo $block->getViewFileUrl(
+                "images/heart-red.svg"
+            ); ?>" alt="heart-red" />
+        </span>
+    <?php endif; ?>
+<?php else: ?>
+    <!-- Not logged in -->
+    <a href="<?= $block->getUrl(
+        "customer/account/login"
+    ) ?>" class="wishlist-btn" title="Login to add to Wishlist">
+        <img src="<?php echo $block->getViewFileUrl(
+            "images/heart.svg"
+        ); ?>" alt="heart" />
+    </a>
+<?php endif; ?>
+     <?php if (
+         $specialPrice &&
+         $specialFromDate <= $currentDate &&
+         $specialPrice < $regularPrice
+     ) {
+         $discount = round(100 - ($specialPrice / $regularPrice) * 100);
+         echo '<div class="discount-badge">' . $discount . "%<br>OFF</div>";
+     } ?>
+                    <?php
+                    $createdAt = $_product->getCreatedAt();
+                    $isNew = false;
+                    if ($createdAt) {
+                        $createdDate = new \DateTime($createdAt);
+                        $now = new \DateTime();
+                        $interval = $now->diff($createdDate)->days;
+                        if ($interval <= 7) {
+                            $isNew = true;
+                        }
+                    }
+                    ?>
+<?php if ($isNew): ?>
+    <div class="custom-new-label">
+        <span>NEW</span>
+    </div>
+<?php endif; ?>
+                    <a href="<?= $escaper->escapeUrl(
+                        $_product->getProductUrl()
+                    ) ?>"
+                       class="product photo product-item-photo"
+                       tabindex="-1">
+                        <?= $productImage->toHtml() ?>
+                    </a>
+                    <div class="product details product-item-details">
+                        <strong class="product name product-item-name">
+                            <a class="product-item-link" href="<?= $escaper->escapeUrl(
+                                $_product->getProductUrl()
+                            ) ?>">
+                                <?= $_helper->productAttribute(
+                                    $_product,
+                                    $_product->getName(),
+                                    "name"
+                                ) ?>
+                            </a>
+                        </strong>
+                        <?= $block->getReviewsSummaryHtml(
+                            $_product,
+                            $templateType
+                        ) ?>
+                        <?php if (
+                            $specialPrice &&
+                            $specialFromDate <= $currentDate &&
+                            $specialPrice != ""
+                        ): ?>
+                            <div class="groceries-product-price">£<?= number_format(
+                                $specialPrice,
+                                2
+                            ) ?>
+                                <span style="text-decoration: line-through;">£<?= number_format(
+                                    $regularPrice,
+                                    2
+                                ) ?></span>
+                            </div>
+                        <?php else: ?>
+                            <div class="groceries-product-price">£<?= number_format(
+                                $regularPrice,
+                                2
+                            ) ?></div>
+                        <?php endif; ?>
+                         <?php if ($_product->getWeight() != "") { ?>
+            <div class="bestsell-product-weight">
+               <?php
+               $value = $_product->getWeight();
+               echo "Weight " .
+                   rtrim(rtrim(number_format($value, 4, ".", ""), "0"), ".");
+               ?>
+
+              </div>
+           <?php } ?>
+                <span class="vip-points">Earn 2 VIP Points</span>
+                        <?= $block->getProductDetailsHtml($_product) ?>
+
+                        <div class="product-item-inner">
+                <?php
+                $productId = $_product->getId();
+                $baseUrl = $block->getBaseUrl();
+                ?>
+              <?php
+              $hasAnyOptions = $_product->getHasOptions();
+              $productUrl = $block->escapeUrl($_product->getProductUrl());
+              ?>
+     <?php if ($hasAnyOptions): ?>
+        <button type="button"
+            onclick="location.href='<?= $productUrl ?>';"
+            title="<?= $block->escapeHtmlAttr(__("Customise & Add to Cart")) ?>"
+            class="customise-addtocart action tocart primary">
+        <span><?= $block->escapeHtml(__("Customise & Add to Basket")) ?></span>
+    </button>
+    <?php else: ?>
+            <div class="custom-cart-ui" data-product-id="<?= $productId ?>" data-form-key="<?= $formKey ?>">
+    <div class="cart-btn-wrapper default-state">
+        <button class="btn-add-to-cart">+ Add to Basket</button>
+    </div>
+
+    <div class="cart-btn-wrapper qty-state" style="display: none;">
+        <button class="btn-decrease">-</button>
+        <span class="qty-text">1 Added</span>
+        <button class="btn-increase">+</button>
+    </div>
+</div>
+<?php endif; ?>
+                            <?php if ($showDescription): ?>
+                                <div class="product description product-item-description">
+                                    <?= $_helper->productAttribute(
+                                        $_product,
+                                        $_product->getShortDescription(),
+                                        "short_description"
+                                    ) ?>
+                                    <a href="<?= $escaper->escapeUrl(
+                                        $_product->getProductUrl()
+                                    ) ?>"
+                                       title="<?= $block->stripTags(
+                                           $_product->getName(),
+                                           null,
+                                           true
+                                       ) ?>"
+                                       class="action more"><?= $escaper->escapeHtml(
+                                           __("Learn More")
+                                       ) ?></a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <?php
+            endforeach; ?>
+        </ol>
+    </div>
+     <?php
+     $pageSize = $block->getToolbarBlock()->getLimit();
+     $totalCount = $block->getLoadedProductCollection()->getSize();
+     ?>
+ <?php if ($totalCount > $pageSize): ?>
+    <!-- Load More Button -->
+    <div id="load-more-wrapper" style="text-align: center; margin-top: 20px;">
+        <button id="load-more-btn" data-page="2"
+                style="padding: 10px 25px; background: #333; color: #fff; border-radius: 5px; border: none;">
+            Load More
+        </button>
+    </div>
+    <?php endif; ?>
+
+    <!-- Bottom Pagination (Hidden by script) -->
+    <?= $block
+        ->getChildBlock("toolbar")
+        ->setIsBottom(true)
+        ->toHtml() ?>
+<?php endif; ?>
+
+
+<!-- Recipe Section --> 
+<div class="recipe-banner">
+    <div class="recipe-text">
+      <h1><strong>Watch. Learn. Cook</strong> <span>with Confidence.</span></h1>
+      <p>From mouth-watering halal recipes to expert butchery tips – discover the secrets behind every cut.</p>
+    </div>
+    <a href="<?php echo $block->getBaseUrl(); ?>recipes">
+    <button class="recipe-button">View All Recipes</button>
+</a>
+  </div>
+  <!-- Trends & Stories Section --> 
+ <?php echo $this->getLayout()
+     ->createBlock(\Magento\Framework\View\Element\Template::class)
+     ->setTemplate("Magento_Catalog::category/latest-post.phtml")
+     ->toHtml(); ?>
+     
+<style>
+  .block.filter {
+  background-color: #f6f9f6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.block.filter .filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.block.filter .filter-options-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 150px;
+  position: relative;
+}
+
+.block.filter .filter-options-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.block.filter .filter-options-content {
+  font-size: 13px;
+  color: #333;
+}
+
+.block.filter .items {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.block.filter .items .item {
+  padding: 2px 0;
+}
+
+.block.filter .items .item input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.recipe-banner {
+      background-color: #000;
+      color: #fff;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .recipe-text {
+      max-width: 600px;
+    }
+
+    .recipe-text h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .recipe-text h1 span {
+      font-weight: 300;
+    }
+
+    .recipe-text p {
+      margin-top: 10px;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #ccc;
+    }
+
+    .recipe-button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      padding: 14px 28px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .recipe-button:hover {
+      background-color: #256428;
+    }
+
+    @media (max-width: 768px) {
+      .recipe-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .recipe-text h1 {
+        font-size: 2rem;
+      }
+
+      .recipe-button {
+        margin-top: 20px;
+      }
+    }
+    .catalog-category-view .pages,
+.catalogsearch-result-index .pages {
+    display: none !important;
+}
+</style>

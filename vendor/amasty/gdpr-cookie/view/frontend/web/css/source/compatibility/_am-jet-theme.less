@@ -1,0 +1,63 @@
+//
+//  Compatibility with Amasty Jet Theme
+//  ______________________________________________
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .amgdprcookie-toggle-cookie .amgdprcookie-label {
+        & {
+            padding: 0;
+        }
+
+        &:before {
+            content: none;
+        }
+
+        &:after {
+            margin: 0;
+        }
+    }
+
+    .amgdprcookie-text-container {
+        font-size: 1.4rem;
+    }
+
+    .amgdprcookie-modal-container {
+        .amgdprcookie-button {
+            font-size: 1.4rem;
+            line-height: 1.6rem;
+        }
+
+        &.modal-popup .modal-inner-wrap {
+            max-height: 100%;
+        }
+    }
+
+    .amasty-jet-theme .amgdprjs-bar-template {
+        z-index: 100;
+    }
+
+    .amgdprcookie-bar-container .amgdprcookie-button {
+        border-radius: .4rem;
+        font-size: 1.8rem;
+        font-weight: normal;
+        line-height: 2rem;
+        margin-right: 1rem;
+    }
+
+    .modal-popup {
+        overflow-y: inherit;
+    }
+
+    .modal-popup .modal-inner-wrap {
+        width: auto;
+    }
+
+    .modal-popup.amgdprcookie-groups-modal.gdpr-cookie-container_setup-modal  {
+        top: 0;
+        transform: none;
+    }
+}

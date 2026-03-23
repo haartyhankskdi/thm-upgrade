@@ -1,0 +1,27 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+
+?>
+
+<button
+    type="button"
+    x-data="initAmCookieActionDispatcherBtn"
+    data-dispatch-action="<?= $escaper->escapeHtmlAttr($block->getData('dispatch_action')) ?>"
+    <?php if ($payload = $block->getData('dispatch_payload')): ?>
+        data-dispatch-payload='<?= $escaper->escapeHtmlAttr(\json_encode($payload)) ?>'
+    <?php endif; ?>
+    @click.prevent="actiondispatchHandler"
+    class="<?= $escaper->escapeHtmlAttr($block->getData('button_classes')) ?>"
+>
+    <?= $escaper->escapeHtml($block->getData('label')) ?>
+</button>

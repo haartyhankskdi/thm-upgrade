@@ -1,0 +1,109 @@
+/**
+ * different styles can be found at https://tailwindcss-forms.vercel.app/
+ **/
+.form-input,
+.form-email,
+.form-select,
+.form-multiselect,
+.form-textarea {
+    @apply border border-gray-300 rounded-md shadow-sm min-h-11 text-black;
+
+    &:focus {
+        @apply border-0 ring-0 shadow-none;
+    }
+}
+
+
+.form-input,
+.form-select,
+.form-email,
+.form-multiselect,
+.form-textarea {
+  @apply focus:border-0 focus:ring-0 focus:shadow-none;
+}
+
+
+[type='checkbox'],
+[type='radio'] {
+    @apply text-[#3B7E48];
+
+    &:focus {
+        @apply ring-[#3B7E48];
+    }
+}
+
+.mage-error {
+    @apply text-red text-base;
+}
+
+.account .street .search-bar button.action {
+    @apply bg-[#3B7E48] text-white text-[13px] py-[5px] px-[15px] rounded-[50px] mt-[10px] w-[110px];
+}
+.account .street .search-container input {
+    @apply !border-0 !text-black;
+}
+
+.comment-box .form-textarea:focus,
+.box-tocart .form-input:focus{
+    @apply border border-gray-300 outline-none ring-0;
+}
+.form-wishlist-items .actions-toolbar {
+    @apply flex-row;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: #CFE5D6; /* default */
+}
+
+/* Thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  background: #3B7E48;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  background: #3B7E48;
+  border-radius: 999px;
+  border: none;
+}
+
+/* Track */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+
+
+
+@media screen and (max-width: 767px) {
+
+    .account .street .search-bar {
+        @apply flex flex-col-reverse;
+    }
+    .account .street .search-container input {
+        @apply !w-full !min-w-full !max-w-full;
+    }
+    .account .street .search-bar button.action {
+        @apply mb-4;
+    }
+}

@@ -1,0 +1,211 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+/** @var \Mageplaza\RewardPointsUltimate\Block\Milestone\Tier $block */
+$account        = $block->getAccount();
+$allTier        = $block->getAllTier();
+$currentTier    = $block->getCurrentTier();
+$upTier         = $block->getUpTier($currentTier);
+$tierNumber     = count($allTier);
+$percentBar     = $tierNumber ? $block->getBarPercent($currentTier, $upTier) : 0;
+$milestonePoint = $block->getMilestonePoint();
+$background     = $block->getTierBackGround();
+$rangeColor     = $block->getTierColor();
+$step           = 0;
+$currentStep    = 0;
+?>
+<div id="mp-reward-milestone-tier" class="mp-reward-slide bg-[#F5F9F7] py-4 md:py-8 px-2 md:px-8 my-4 md:mt-8">
+    <?php if ($tierNumber) : ?>
+        <div class="mp-reward-container">
+            <div class="mp-reward-step-progress">
+                <?php foreach ($allTier as $tier) :
+                    $locationClass = '';
+                    $endClass = '';
+                    $tierId = $tier->getId();
+                    if ($tierId === $currentTier->getId()) {
+                        $currentStep   = $step;
+                        $locationClass = 'mp-tier-current';
+                    } else {
+                        if ($tier->getId() === $upTier->getId()) {
+                            $locationClass = 'mp-tier-up';
+                        }
+                    }
+                    if ($tierId === $block->getEndTierId()) {
+                        $endClass = 'mp-reward-step-end';
+                    }
+                    ?>
+                    <div class="mp-tier mp-tier_<?= /** @noEscape */
+                    $tierId ?> <?= /** @noEscape */
+                    $locationClass ?> <?= /** @noEscape */
+                    $endClass ?>"
+                         step="<?= /** @noEscape */
+                         $step ?>" tier-id="<?= /** @noEscape */
+                    $tierId ?>">
+                        <img src="<?= $block->escapeHtmlAttr($block->getImageUrl($tier)) ?>"
+                             alt="<?= /** @noEscape */
+                             $tier->getName() ?>">
+                        <i class="fa-solid fa-location-dot <?php if ($block->checkIsPassStepCircle($tier,
+                            $milestonePoint)) : ?>current-tier<?php endif; ?>" style="color:<?= /** @noEscape */
+                        $background ?>"></i>
+                        <div class="mp-reward-tier-info">
+                        <div class="mp-reward-tier-name"><?= /** @noEscape */
+                            $tier->getName() ?></div>
+                        <div class="mp-reward-tier-min-point"><?= /** @noEscape */
+                            $tier->getMinPoint() ?></div>
+                        <div class="mp-reward-tier-description">
+                            <p><?= /** @noEscape */
+                                $tier->getDescription() ?></p>
+                        </div>
+                    </div>
+                    </div>
+                    <?php if ($tierId !== $block->getEndTierId()) : ?>
+                    <div class="progress
+                         progress_<?= /** @noEscape */
+                    $tierId ?> mp-step_<?= /** @noEscape */
+                    $step ?>" style="color:<?= /** @noEscape */
+                    $background ?>;">
+                        <div class="bar"></div>
+                    </div>
+                <?php endif; ?>
+                    <style>
+                        <?php if ($step !== 0) : ?>
+                        .mp-tier_<?= /** @noEscape  */ $tierId?> {
+                            left: <?= /** @noEscape */ $step*40 ?>%;
+                        }
+
+                        .progress_<?= /** @noEscape  */ $tierId?> {
+                            left: <?= /** @noEscape */ $step*40 + 13?>%;
+                        }
+
+                        <?php else : ?>
+                        .progress_<?= /** @noEscape  */ $tierId?> {
+                            left: 13%;
+                        }
+
+                        <?php endif;?>
+                        <?php if ($block->checkIsPassStepCircle($tier, $milestonePoint)) : ?>
+                        .mp-tier_<?= /** @noEscape  */ $tierId?> {
+                            border: 1px dashed<?= /** @noEscape */ $rangeColor ?>;
+                            box-shadow: inset 0 0 0 3px #ffffff, inset 0 0 0 12px <?= /** @noEscape */ $rangeColor?>, inset 0 0 0 1px #333333;
+                        }
+
+                        .mp-tier_<?= /** @noEscape  */ $tierId?> .mp-reward-tier-description {
+                            border-left: 1px dashed<?= /** @noEscape */ $rangeColor ?>;
+                        }
+
+                        <?php else : ?>
+                        .mp-tier_<?= /** @noEscape  */ $tierId?> {
+                            border: 1px dashed<?= /** @noEscape */ $background ?>;
+                            box-shadow: inset 0 0 0 3px #ffffff, inset 0 0 0 12px <?= /** @noEscape */ $background?>, inset 0 0 0 1px #333333;
+                        }
+
+                        .mp-tier_<?= /** @noEscape  */ $tierId?> .mp-reward-tier-description {
+                            border-left: 1px dashed<?= /** @noEscape */ $background ?>;
+                        }
+
+                        <?php endif; ?>
+                    </style>
+                    <?php $step++; ?>
+                <?php endforeach; ?>
+            </div>
+            <div class="mask"></div>
+            <div class="mp-reward-control hidden" data-step="<?= /** @noEscape */
+            $currentStep ?>">
+                <div class="mp-next-bar"></div>
+                <div class="mp-back-bar"></div>
+            </div>
+        </div>
+        <script type="text/x-magento-init">
+            {
+                "*" : {
+                    "Mageplaza_RewardPointsUltimate/js/view/milestone/progress": {
+                        "loadStep": <?= /** @noEscape */
+            $currentStep ?>,
+                            "loadId": <?= /** @noEscape */
+            $currentTier->getId() ?>,
+                            "percentBar": <?= /** @noEscape */
+            $percentBar ?>,
+                            "allStep": <?= /** @noEscape */
+            $step ?>,
+                            "milestonePoint": <?= /** @noEscape */
+            $milestonePoint ?>
+            }
+        }
+    }
+        </script>
+    <?php endif; ?>
+    <?= $block->getChildHtml('mp_information') ?>
+</div>
+<style>
+    #mp-reward-milestone-tier.mp-reward-vertical .mp-tier-current .mp-reward-step-range {
+        height: <?= 100 * $percentBar ?>%;
+    }
+
+    #mp-reward-milestone-tier.mp-reward-horizontal .mp-tier-current .mp-reward-step-range {
+        width: <?= 85 * $percentBar ?>%;
+    }
+
+    .mp-reward-vertical .mp-reward-step-range {
+        background-color: <?= /** @noEscape */ $rangeColor ?>;
+    }
+
+    .mp-reward-horizontal .mp-reward-tier-description {
+        height: 50px;
+        border-left: 1px dashed<?= /** @noEscape */ $background ?>;
+    }
+
+    #mp-reward-milestone-tier .mp-reward-step-image .mp-step-border-circle.current-tier {
+        background-color: <?= /** @noEscape */ $rangeColor ?>;
+    }
+
+    .mp-reward-tier-info .current-tier {
+        color: <?= /** @noEscape */ $rangeColor ?> !important;
+    }
+
+    .mp-reward-horizontal .mp-reward-step-range {
+        background-color: <?= /** @noEscape */ $rangeColor ?>;
+    }
+
+    .mp-reward-vertical .mp-reward-progress-step:after {
+        background-color: <?= /** @noEscape */ $background ?>;
+        margin-left: 10px;
+    }
+
+    .mp-reward-horizontal .mp-reward-progress-step:after {
+        border-top: 2px dashed<?= /** @noEscape */ $background ?>;
+    }
+
+    .progress {
+        border: 1px dashed<?= /** @noEscape */ $background?>;
+    }
+
+    .bar {
+        background: <?= /** @noEscape */ $rangeColor?>;
+        height: 3px;
+        top: -1px;
+        position: absolute;
+    }
+
+    .mp-reward-slide .mp-tier .current-tier {
+        color: <?= /** @noEscape */ $rangeColor?> !important;
+    }
+</style>
+
+<?= $block->getChildHtml('mp_transaction') ?>

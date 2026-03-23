@@ -1,0 +1,56 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\ViewModel\ProductPage;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+/** @var Product $product */
+$product = $productViewModel->getProduct();
+
+if (!$product->getDescription()) {
+    return;
+}
+
+$cssClasses = $block->getData('css_classes') ?? 'prose';
+?>
+
+<div x-data="{ open: true }" class="divide-y">
+    <button 
+        @click="open = !open"
+        class="tab-title flex justify-between items-center w-full px-0 py-3 lg:py-8 text-xl md:text-[28px] text-left text-black font-bold focus:outline-none"
+    >
+        <span>Description</span> 
+        <svg 
+            :class="open ? 'rotate-90' : ''"
+            class="h-4 w-4 text-black transform transition-transform duration-200 text-black"
+                        fill="currentColor" viewBox="0 0 24 24" 
+        >
+            <path d="M9 5l9 9-9 9" />
+        </svg>
+    </button>
+    <div  
+        x-show="open"
+        x-collapse 
+        x-transition
+        class="px-0 pb-4 pt-4 text-base text-black <?= $escaper->escapeHtmlAttr($cssClasses) ?>"
+    >
+        <?= $productViewModel->productAttributeHtml($product, $product->getDescription(), 'description') ?>
+    </div>
+</div>
+

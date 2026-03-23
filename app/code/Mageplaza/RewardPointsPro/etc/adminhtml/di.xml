@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="mageplaza_reward_apply_catalog_rules_after_product_save" type="Mageplaza\RewardPointsPro\Plugin\Indexer\Product\Save\ApplyRules"/>
+    </type>
+    <type name="Magento\Catalog\Model\Category">
+        <plugin name="mageplaza_reward_apply_after_products_assign" type="Mageplaza\RewardPointsPro\Plugin\Indexer\Category"/>
+    </type>
+    <type name="Magento\Store\Model\Website">
+        <plugin name="mageplaza_reward_reindex_after_delete_website" type="Mageplaza\RewardPointsPro\Plugin\Indexer\Website"/>
+    </type>
+    <type name="Magento\Customer\Model\Group">
+        <plugin name="mageplaza_reward_reindex_after_delete_customer_group" type="Mageplaza\RewardPointsPro\Plugin\Indexer\CustomerGroup"/>
+    </type>
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="mageplaza_reward_reindex_after_import" type="Mageplaza\RewardPointsPro\Plugin\Indexer\ImportExport"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Eav\Attribute">
+        <plugin name="mageplaza_reward_change_product_attribute" type="Mageplaza\RewardPointsPro\Plugin\Indexer\Product\Attribute"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Action">
+        <plugin name="mageplaza_reward_price_plugin" type="Mageplaza\RewardPointsPro\Plugin\Model\Product\Action"/>
+    </type>
+</config>

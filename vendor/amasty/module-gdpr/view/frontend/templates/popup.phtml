@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/** @var Amasty\Gdpr\Block\Popup $block */
+/** @var Magento\Framework\Escaper $escaper */
+?>
+
+<div class="amgdpr-privacy-policy" id="amgdpr-privacy-popup"></div>
+
+<script data-cfasync="false" type="text/x-magento-init">
+    {
+        "#amgdpr-privacy-popup": {
+            "Amasty_Gdpr/js/popup":{
+                "textUrl":"<?= $escaper->escapeUrl($block->getTextUrl()); ?>",
+                "modalClass": "amgdpr-modal-container"
+            }
+        }
+    }
+</script>

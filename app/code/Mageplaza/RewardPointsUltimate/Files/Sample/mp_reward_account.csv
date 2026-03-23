@@ -1,0 +1,4 @@
+customer_email,point_balance,store_id,website_id,notification_update,notification_expire,is_active
+roni_cost11@example.com,10,1,1,1,1,1
+roni_cost111@example.com,20,1,1,0,0,1
+roni_cost1111@example.com,20,1,1,0,0,1

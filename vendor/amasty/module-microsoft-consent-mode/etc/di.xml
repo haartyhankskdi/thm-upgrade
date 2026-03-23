@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\MicrosoftConsentMode\Setup\SampleData\Installer">
+        <arguments>
+            <argument name="installers" xsi:type="array">
+                <item name="cookies" xsi:type="object">Amasty\MicrosoftConsentMode\Setup\SampleData\Installer\GdprCookie\CookiesAndGroups</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

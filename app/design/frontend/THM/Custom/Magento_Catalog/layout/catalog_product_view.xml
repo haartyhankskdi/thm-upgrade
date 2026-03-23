@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <!--  <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template" name="custom.product.schema" template="Magento_Catalog::product/view/jsonld.phtml"/>
+        </referenceContainer> -->
+
+        <!-- Add social share block before price -->
+        <referenceBlock name="product.info.main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.social.share"
+                   template="Magento_Catalog::product/view/socialshare.phtml"
+                   before="product.info.price"/>
+        </referenceBlock>
+
+
+        <!-- Remove SKU and Compare blocks -->
+        <referenceBlock name="product.info.sku" remove="true" />
+        <referenceBlock name="product.info.stock.sku" remove="true" />
+        <referenceBlock name="view.addto.compare" remove="true" />
+        <referenceBlock name="product.info.overview" remove="true" />
+
+
+        <!-- Add VIP points block after price -->
+       <!--  <referenceBlock name="product.info.main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="vip.points"
+                   template="Magento_Catalog::product/view/vip_points.phtml"
+                   after="product.info.price"/>
+        </referenceBlock> -->
+            <!-- Add payment card detail -->
+       <!--  <referenceBlock name="product.info.main">
+        <block class="Magento\Framework\View\Element\Template"
+               name="custom.after.wishlist"
+               template="Magento_Catalog::product/view/payment_card_image.phtml"
+               before="product.info.overview"/>
+        </referenceBlock> -->
+        <!--  STOCK STATUS BLOCK -->
+        <referenceBlock name="product.info.main">
+        
+        <block class="Haartyhanks\AutoUpsell\Block\ProductInfo"
+               name="product.stockstatus"
+               template="Haartyhanks_AutoUpsell::stock-status.phtml"
+               before="custom.after.wishlist" />
+    </referenceBlock>
+       
+
+  <!--  <referenceContainer name="content">
+        <block class="Magento\Framework\View\Element\Template"
+               name="custom.logo.section"
+               template="Magento_Catalog::product/view/logo-section.phtml" before="catalog.product.related"
+              />
+    </referenceContainer>  -->
+
+    <!-- Add your Nutritional Info block -->
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="nutritional.info"
+                   template="Magento_Catalog::product/view/nutritional_info.phtml"
+                   after="product.info.upsell"/>
+        </referenceContainer>
+
+          <referenceBlock name="product.info.media">
+            <block class="Haartyhanks\AutoUpsell\Block\Product\View\AccordionAttributes"
+                   name="product.info.accordion.attributes"
+                   template="Magento_Catalog::product/view/accordion_attributes.phtml" 
+                />
+        </referenceBlock>
+
+        
+        <referenceContainer name="product.info.media">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="google.reviews.block"
+                   template="Magento_Catalog::product/view/google_review.phtml"
+                   after="product.info.accordion.attributes"/>
+        </referenceContainer>
+
+          <referenceBlock name="product.info.details" remove="true"/>
+
+    <!-- <referenceContainer name="content">
+            <block class="Haartyhanks\AutoUpsell\Block\Product\View\ReviewData" name="review.popup.button" template="Magento_Catalog::product/view/review-popup.phtml" after="nutritional.info"/>
+   </referenceContainer> -->
+     
+    <referenceBlock name="catalog.product.related">
+    <action method="setTemplate">
+        <argument name="template" xsi:type="string">Magento_Catalog::product/list/related-items.phtml</argument>
+    </action>
+    </referenceBlock>
+     <move element="catalog.product.related" destination="product.info.main" after="product.stockstatus"/> 
+
+
+    <referenceContainer name="content">
+    <!-- Related Recipes (already added) -->
+    <block class="Magento\Framework\View\Element\Template"
+           name="custom.related.recipes"
+           template="Magento_Catalog::product/view/related_recipes.phtml"
+           after="nutritional.info" />
+
+
+
+    <block class="Magento\Framework\View\Element\Template"
+           name="latest.news.blog"
+           template="Magento_Catalog::product/view/latest_news.phtml"
+           after="custom.related.recipes"/>
+       
+
+          
+    </referenceContainer>
+   <!-- <referenceBlock name="product.info.main">
+        <block class="Magento\Catalog\Block\Product\View"
+               name="sticky.addtocart"
+               template="Magento_Catalog::product/view/sticky-addtocart.phtml" />
+    </referenceBlock>  -->
+
+    <!-- You Might Also Like Section -->
+   <!-- <referenceBlock name="product.info.upsell">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Magento_Catalog::product/list/upsell-items.phtml</argument>
+            </action>
+        </referenceBlock>  -->
+
+        <!-- Move upsell block after custom.related.recipes -->
+      <!-- <move element="product.info.upsell" destination="content" after="custom.related.recipes"/>  -->
+        <referenceBlock name="upsell.product.addto.compare" remove="true" />
+        <referenceBlock name="related.product.addto.compare" remove="true" />
+        <referenceBlock name="related.product.addto.wishlist" remove="true" />
+
+         <!--  <referenceBlock name="product.info.upsell" remove="true" /> -->
+      <referenceContainer name="content">
+            <block class="Haartyhanks\AutoUpsell\Block\Upsell"
+                   name="product.info.upsell"
+                   as="upsell_products"
+                   template="Haartyhanks_AutoUpsell::upsell.phtml"
+                    before ="nutritional.info"
+                   />
+        </referenceContainer> 
+
+         <!-- Trigger Button -->
+       <referenceBlock name="product.info.review" remove="true"/>
+    </body>
+</page>

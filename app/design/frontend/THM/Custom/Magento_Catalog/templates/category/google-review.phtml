@@ -1,0 +1,32 @@
+<div class="google-rating">
+  <span class="rating-text">4.8 Stars</span>
+  <span class="stars">
+    ★★★★★
+  </span>
+  <span class="google-logo">
+    <img src="<?= $block->getViewFileUrl('images/google-logo.png'); ?>" alt="Google Reviews" />
+  </span>
+</div>
+
+<style>
+  .google-rating {
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    gap: 6px;
+  }
+  .rating-text {
+    font-weight: 500;
+  }
+  .stars {
+    color: #FFD700; /* Gold stars */
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  .google-logo img {
+    width: 20px;
+    height: 20px;
+  }
+</style>

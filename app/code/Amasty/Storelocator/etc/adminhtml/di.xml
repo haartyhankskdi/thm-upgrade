@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Storelocator\Model\DataCollector\Location\CompositeCollector">
+        <arguments>
+            <argument name="dataCollectors" xsi:type="array">
+                <item name="attributes" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\AttributeCollector</item>
+                <item name="marker_image_url" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\MarkerImageUrlCollector</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\ImportExport\Controller\Adminhtml\Import\Index">
+        <plugin name="Amasty_Storelocator::info_message" type="Amasty\Storelocator\Plugin\ImportExport\Controller\Adminhtml\Import\Index\InfoMessage"/>
+    </type>
+
+    <!-- To build correct url during reindex from admin area -->
+    <type name="Amasty\Storelocator\Model\ConfigHtmlConverter">
+        <arguments>
+            <argument name="urlBuilder" xsi:type="object">Magento\Framework\Url</argument>
+        </arguments>
+    </type>
+
+    <!-- import entities promo start -->
+    <virtualType name="AmastyStorelocatorAttriubteImport" type="Amasty\ImportCore\Import\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_attribute</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Attribute</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorLocationImport" type="Amasty\ImportCore\Import\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_location</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Location</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorScheduleImport" type="Amasty\ImportCore\Import\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_schedule</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Schedule</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorLocationAttributeImport" type="Amasty\ImportCore\Import\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_store_attribute</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Location Attribute</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\ImportCore\Import\Config\DemoEntitiesPool">
+        <arguments>
+            <argument name="demoEntities" xsi:type="array">
+                <item name="amasty_amlocator_attribute" xsi:type="object">AmastyStorelocatorAttriubteImport</item>
+                <item name="amasty_amlocator_location" xsi:type="object">AmastyStorelocatorLocationImport</item>
+                <item name="amasty_amlocator_schedule" xsi:type="object">AmastyStorelocatorScheduleImport</item>
+                <item name="amasty_amlocator_store_attribute" xsi:type="object">AmastyStorelocatorLocationAttributeImport</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- import entities promo end -->
+
+    <!-- export entities promo start -->
+    <virtualType name="AmastyStorelocatorAttriubteExport" type="Amasty\ExportCore\Export\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_attribute</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Attribute</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorLocationExport" type="Amasty\ExportCore\Export\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_location</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Location</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorScheduleExport" type="Amasty\ExportCore\Export\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_schedule</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Schedule</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AmastyStorelocatorLocationAttributeExport" type="Amasty\ExportCore\Export\Config\DemoEntityConfig">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="entity_code" xsi:type="string">amasty_amlocator_store_attribute</item>
+                <item name="name" xsi:type="string">Amasty Storelocator Location Attribute</item>
+                <item name="group" xsi:type="string">Amasty Storelocator</item>
+                <item name="is_hidden_in_lists" xsi:type="boolean">false</item>
+                <item name="additional_data" xsi:type="array">
+                    <item name="promoLink" xsi:type="string">https://amasty.com/docs/doku.php?id=magento_2:store_locator&amp;utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=suggest_plabels#additional_packages_provided_in_composer_suggestions</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\ExportCore\Export\Config\DemoEntitiesPool">
+        <arguments>
+            <argument name="demoEntities" xsi:type="array">
+                <item name="amasty_amlocator_attribute" xsi:type="object">AmastyStorelocatorAttriubteExport</item>
+                <item name="amasty_amlocator_location" xsi:type="object">AmastyStorelocatorLocationExport</item>
+                <item name="amasty_amlocator_schedule" xsi:type="object">AmastyStorelocatorScheduleExport</item>
+                <item name="amasty_amlocator_store_attribute" xsi:type="object">AmastyStorelocatorLocationAttributeExport</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- export entities promo end -->
+
+    <virtualType name="LocatorTopCmsBlock" type="Amasty\Base\Block\Adminhtml\System\Config\Form\Field\Promo\PromoField">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">Amasty_StorelocatorSubscriptionFunctionality</argument>
+            <argument name="promoConfig" xsi:type="array">
+                <item name="promoLink" xsi:type="string">https://amasty.com/amcustomer/account/products/?utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=subscribe_storelocator</item>
+                <item name="comment" xsi:type="string"><![CDATA[Select CMS Block that will be displayed between the title
+                and main content of the Store Locator page. The functionality is available as part of an active
+                product subscription or support subscription for the module. To upgrade and obtain functionality
+                please follow the <a href="https://amasty.com/amcustomer/account/products/?utm_source=extension&utm_medium=backend&utm_campaign=subscribe_storelocator"
+                    target="_blank">link</a>.
+                Then you can find the 'amasty/module-storelocator-subscription-functionality' package for installation
+                in composer suggest.]]></item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="LocatorBottomCmsBlock" type="Amasty\Base\Block\Adminhtml\System\Config\Form\Field\Promo\PromoField">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">Amasty_StorelocatorSubscriptionFunctionality</argument>
+            <argument name="promoConfig" xsi:type="array">
+                <item name="promoLink" xsi:type="string">https://amasty.com/amcustomer/account/products/?utm_source=extension&amp;utm_medium=backend&amp;utm_campaign=subscribe_storelocator</item>
+                <item name="comment" xsi:type="string"><![CDATA[Select CMS Block that will be displayed between the main
+                content and footer of the Store Locator page. The functionality is available as part of an active product
+                subscription or support subscription for the module. To upgrade and obtain
+                functionality please follow the <a href="https://amasty.com/amcustomer/account/products/?utm_source=extension&utm_medium=backend&utm_campaign=subscribe_storelocator"
+                    target="_blank">link</a>.
+                Then you can find the 'amasty/module-storelocator-subscription-functionality'
+                package for installation in composer suggest.]]></item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

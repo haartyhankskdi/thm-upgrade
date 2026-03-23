@@ -1,0 +1,67 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\RewardPointsUltimate\Block\Account\TierDashboard;
+
+/** @var TierDashboard $block */
+$currentTier = $block->getCurrentTier();
+$upTier      = $block->getUpTier($currentTier);
+$upPoint     = $block->getUpPoint($upTier);
+?>
+<?php if ($currentTier->getId() || $upTier->getId()) : ?>
+    <div class="block reward-milestone-tier mp-clear">
+        <?php if ($block->isDashboard()) : ?>
+            <div class="block-title flex justify-between pb-4 mb-6">
+                <strong><?= $block->escapeHtml(__('My Milestones')) ?></strong>
+                <a class="action view bg-[#E63833] hover:bg-[#3B7E48] text-white text-sm font-normal px-4 py-2 rounded-full transition-all duration-300 " href="<?= $block->escapeHtmlAttr($block->getMilestoneUrl()) ?>">
+                    <span><?= $block->escapeHtml(__('View All')) ?></span>
+                </a>
+            </div>
+        <?php endif; ?>
+        <div class="block-content">
+            <div class="box box-milestone-tier">
+                <?php if ($block->iconConfig()) : ?>
+                    <div class="box-image" style="width: 20px !important; height: 20px !important;">
+                        <img src="<?= $block->escapeHtmlAttr($block->getImageUrl($currentTier)) ?>"
+                             alt="<?= /** @noEscape */ $currentTier->getName() ?>"
+                             style="height: 20px !important;"
+                        >
+                    </div>
+                <?php endif; ?>
+                <div class="box-content" style="border: none; background-color: unset">
+                    <?php if ($currentTier->getId()) : ?>
+                        <div class="box-current-tier">
+                            <?= /** @noEscape */
+                            __('Your tier is <strong>%1</strong> at present.', $block->formatText($currentTier->getName())) ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($upPoint > 0) : ?>
+                        <div class="box-up-tier">
+                            <?= /** @noEscape */
+                            __('Earn <strong>%1</strong> Reward Points to rank up <strong>%2</strong>.', $block->formatText($upPoint), $block->formatText($upTier->getName())) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?= /** @noEscape */ $block->getChildHtml() ?>
+    </div>
+<?php endif; ?>

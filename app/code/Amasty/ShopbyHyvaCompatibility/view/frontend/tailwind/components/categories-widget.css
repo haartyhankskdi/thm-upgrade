@@ -1,0 +1,4 @@
+/* categories widget styles */
+.amwidget-children-categories .amslider .slide {
+    @apply basis-4/12 max-w-[30%] md:basis-auto md:max-w-none;
+}

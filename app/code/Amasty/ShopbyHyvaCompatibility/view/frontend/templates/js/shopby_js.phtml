@@ -1,0 +1,1658 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\Shopby\Block\Product\ProductList\Ajax;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\JsInit;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Ajax $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+
+/** @var JsInit $jsInitViewModel */
+$jsInitViewModel = $viewModels->require(JsInit::class);
+$pageLayout = $productListAjax->getPageLayout() ?: $block->getLayout()->getUpdate()->getPageLayout();
+$isOneColumn = $pageLayout === '1column' || $pageLayout === 'cms-full-width' || $pageLayout === 'product-full-width';
+$additionalOptions = ['page' => 'p'];
+?>
+<script>
+    function shopBy() {
+        return {
+            cached: [],
+            filters: {},
+            signal: null,
+            controller: null,
+            element: null,
+            cacheKey: null,
+            response: null,
+            startAjax: false,
+            isLoading: false,
+            memorizeData: [],
+            defaultFilters: [],
+            currentFilters: [],
+            useShowButton: true,
+            showButtonClick: false,
+            isImprovedSorting: false,
+            isOneColumn: Boolean(<?= /** @noEscape */ $isOneColumn ?>),
+            isAjax: <?= (int)$block->canShowBlock() ?>,
+            scrollUp: <?= (int)$block->scrollUp() ?>,
+            clearUrl: '<?= $escaper->escapeJs($block->getClearUrl()) ?>',
+            submitByClick: <?= (int)$block->submitByClick() ?>,
+            currentCategoryId: <?= (int)$block->getCurrentCategoryId() ?>,
+            isMemorizerAllowed: <?= (int)$block->isMemorizingAllowed() ?>,
+            isAjaxSettingEnabled: <?= (int)$jsInitViewModel->isAjaxSettingEnabled() ?>,
+            isCategorySingleSelect: <?= (int)$block->isCategorySingleSelect() ?>,
+            toolbarOptions: <?= /* @noEscape */ $productListAjax->getToolbarWidgetOptions($additionalOptions) ?>.productListToolbarForm || {}, <?php //phpcs:ignore?>
+            options: {
+                isAjax: 0,
+                collectFilters: 0,
+                clearUrl: null,
+                delta: [],
+                deltaFrom: 0,
+                deltaTo: 0,
+                curRate: '1',
+                digitsAfterDot: 2
+            },
+            selectors: {
+                // sidebar
+                sidebar: '.sidebar',
+                sidebarList: '.sidebar.sidebar-main #narrow-by-list',
+                layeredFilter: '#layered-filter-block',
+                blockFilter: '.block-filter-top',
+
+                // top nav
+                topNav: '.amasty-catalog-topnav',
+                topNavigation: '.catalog-topnav .block-filter-top',
+
+                titleHead: '[data-ui-id="page-title-wrapper"]',
+                productsWrapper: '#amasty-shopby-product-list, .search.results',
+
+                filterName: '[name="amshopby[{name}][]"][value="{value}"]',
+                filterForm: 'form[data-amshopby-filter]',
+                filterItems: '[class*="am-filter-items"]',
+                filterFormAttr: 'form[data-amshopby-filter={attr}]',
+                filterRequestVar: '[data-amshopby-filter-request-var="cat"]',
+                filterOptionsItem: '.filter-option',
+                filterOptionsContent: '.filter-options-content',
+
+                // from to
+                fromToWidget: '[data-am-js="fromto-widget"]',
+
+                // remove
+                removeItems: '.filter-current .items .radio-remove-item',
+                removeAllItems: '.filter-current .items .amshopby-remove-item',
+
+                // sorting
+                improvedSortingWrapper: '[x-data="amSortingDirection()"]'
+            },
+            toolbarElements: {
+                mode: '[data-role="mode-switcher"]',
+                sortDir: '.sorter-action',
+                sort: '[data-role="sorter"]',
+                limiter: '[data-role="limiter"]'
+            },
+
+            /**
+             *
+             * @param e
+             */
+            stopEvents(e) {
+                e.stopPropagation();
+                e.preventDefault();
+            },
+
+            /**
+             *
+             * @param selector
+             * @returns {*}
+             */
+            qs(selector) {
+                return document.querySelector(selector);
+            },
+
+            /**
+             *
+             * @param selector
+             * @returns {NodeListOf<*>}
+             */
+            qsa(selector) {
+                return document.querySelectorAll(selector);
+            },
+
+            /**
+             *
+             * @param swatchId
+             * @param attributeID
+             */
+            setSwatchToProducts(swatchId, attributeID) {
+                setTimeout(() => {
+                    const productList = document.getElementById('amasty-shopby-product-list');
+                    if (productList) {
+                        const valueSelector = '[name="super_attribute[{name}]"][value="{value}"]'
+                            .replace('{name}', attributeID)
+                            .replace('{value}', swatchId);
+                        const swatches = productList.querySelectorAll(valueSelector);
+
+                        swatches.forEach(swatch => {
+                            if (!swatch.checked) {
+                                swatch.dispatchEvent(new Event('change'));
+                            }
+                        });
+                    }
+                }, 1500);
+            },
+
+            /**
+             *
+             * @param swatches
+             * @param attributeID
+             */
+            massSwatchSet(swatches, attributeID) {
+                swatches.map(swatch => {
+                    this.setSwatchToProducts(swatch, attributeID);
+                });
+            },
+
+            /**
+             *
+             * @param swatchIds
+             * @param attributeID
+             */
+            setSwatchMassToProducts(swatchIds, attributeID) {
+                const swatches = swatchIds.split(',');
+                this.massSwatchSet(swatches, attributeID);
+
+                window.onload = () => {
+                    setTimeout(() => {
+                        this.massSwatchSet(swatches, attributeID);
+                    }, 1000);
+                }
+            },
+
+            /**
+             *
+             */
+            setSelectedProductSwatch() {
+                this.qsa(this.selectors.removeAllItems).forEach(item => {
+                    if (item.getAttribute('data-massset')) {
+                        this.setSwatchMassToProducts(
+                            item.getAttribute('data-massset'),
+                            item.getAttribute('data-attribute-id')
+                        )
+                    }
+
+                    if (item.getAttribute('data-swatchset')) {
+                        this.setSwatchToProducts(
+                            item.getAttribute('data-swatchset'),
+                            item.getAttribute('data-attribute-id')
+                        )
+                    }
+                });
+            },
+
+            /**
+             *
+             * @returns {{}}
+             */
+            getUrlParams() {
+                let decode = window.decodeURIComponent,
+                    urlPaths = window.location.href.split('?'),
+                    urlParams = urlPaths[1] ? urlPaths[1].split('&') : [],
+                    params = {},
+                    parameters, i;
+
+                for (i = 0; i < urlParams.length; i++) {
+                    parameters = urlParams[i].split('=');
+                    params[decode(parameters[0])] = parameters[1] !== undefined ?
+                        decode(parameters[1].replace(/\+/g, '%20')) :
+                        '';
+                }
+
+                return params;
+            },
+
+            /**
+             *
+             * @returns {*|string}
+             */
+            getCurrentLimit() {
+                return this.getUrlParams()[this.toolbarOptions.limit] || this.toolbarOptions.limitDefault;
+            },
+
+            /**
+             *
+             * @returns {*|number}
+             */
+            getCurrentPage() {
+                return this.getUrlParams()[this.toolbarOptions.page] || 1;
+            },
+
+            /**
+             *
+             * @returns {*|number}
+             */
+            setDirectionDefault() {
+                const paramData = this.getUrlParams();
+                const sorterAction = document.querySelector(this.toolbarElements.sortDir);
+
+                if (sorterAction) {
+                    const hasSortDescClass = sorterAction.classList.contains('sort-desc');
+
+                    this.toolbarOptions.directionDefault = paramData[this.toolbarOptions.direction]
+                        ? (paramData[this.toolbarOptions.direction] === 'asc' ? 'desc' : 'asc')
+                        : (hasSortDescClass ? 'desc' : 'asc');
+                }
+            },
+
+            /**
+             *
+             * @param elements
+             * @param excluded
+             * @returns {[]}
+             */
+            excludingElement(elements, excluded) {
+                let clearing = [],
+                    excludedSelector = this.qs(excluded);
+                elements.forEach(element => {
+                    if (element !== excludedSelector) {
+                        clearing.push(element);
+                    }
+                });
+
+                return clearing;
+            },
+
+            /**
+             *
+             * @param form
+             * @returns {{name: *, value: *}[]}
+             */
+            serializeForm(form) {
+                const formData = new FormData(form);
+                const formDataMap = new Map();
+
+                formData.forEach((value, name) => {
+                    if (formDataMap.has(name)) {
+                        formDataMap.set(name, formDataMap.get(name) + ',' + value);
+                    } else {
+                        formDataMap.set(name, value);
+                    }
+                });
+
+                return Array.from(formDataMap, ([name, value]) => ({ name, value }));
+            },
+
+            /**
+             * @public
+             * @param {Array} formData
+             * @return {Array}
+             */
+            groupDataByName(formData) {
+                const hash = Object.create(null);
+
+                return formData.reduce((result, currentValue) => {
+                    const existingEntry = hash[currentValue.name];
+
+                    if (!existingEntry) {
+                        const newEntry = {
+                            name: currentValue.name,
+                            value: currentValue.value
+                        };
+                        hash[currentValue.name] = newEntry;
+                        result.push(newEntry);
+                    } else {
+                        existingEntry.value += ',' + currentValue.value;
+                    }
+
+                    return result;
+                }, []);
+            },
+
+            /**
+             * @public
+             * @returns {Boolean}
+             */
+            isBaseCurrency() {
+                return Number(this.options.curRate) === 1;
+            },
+
+            /**
+             *
+             * @param toBasePrice
+             * @param input
+             * @param delta
+             * @returns {*|number}
+             */
+            processPrice(toBasePrice, input, delta) {
+                const rate = Number(this.options.curRate);
+                const inputPrice = Number(input);
+                const adjustedDelta = typeof delta !== 'undefined' ? Number(delta) : 0;
+
+                if (this.isBaseCurrency()) {
+                    return inputPrice;
+                } else {
+                    if (toBasePrice) {
+                        return inputPrice / rate;
+                    } else {
+                        return (inputPrice * rate) + adjustedDelta;
+                    }
+                }
+            },
+
+            /**
+             * @public
+             * @return {Number}
+             */
+            getHideDigitsAfterDot() {
+                const value = +this.qs('[name="amshopby[price][]"]').getAttribute('data-digits-after-dot');
+                return Number.isNaN(value) ? 0 : value;
+            },
+
+            /**
+             * @public
+             * @param {String} value
+             * @return {String}
+             */
+            normalizePrice(value) {
+                const result = value.split('-');
+
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i] === undefined || result[i] === 'NaN') {
+                        result[i] = 0;
+                    }
+                    result[i] = this.processPrice(true, result[i])
+                        .amToFixed(2, this.getHideDigitsAfterDot());
+                }
+
+                return result.join('-').replace(/[ \r\n]/g, '');
+            },
+
+            /**
+             * @public
+             * @param {Array} data
+             * @param {Boolean} [isSorting]
+             * @param {Boolean} [clearFilter]
+             * @param clearUrl
+             * @return {Array}
+             */
+            normalizeData(data, isSorting, clearFilter, clearUrl) {
+                const normalizedData = [];
+
+                data.forEach(item => {
+                    if (item && item.value.trim() !== '' && item.value !== '-1') {
+                        const isNormalizeItem = normalizedData.find(normalizeItem =>
+                            (normalizeItem.name === item.name && normalizeItem.value === item.value) ||
+                            (item.name === 'amshopby[price][]' && normalizeItem.name === item.name)
+                        );
+
+                        if (!isNormalizeItem) {
+                            if (item.name === 'amshopby[price][]') {
+                                item.value = this.normalizePrice(item.value);
+                            }
+
+                            normalizedData.push(item);
+
+                            item.value.split(',').forEach(value => {
+                                if (this.isCategorySingleSelect === 1 &&
+                                    item.name === 'amshopby[cat][]' &&
+                                    +value !== this.currentCategoryId &&
+                                    !clearFilter &&
+                                    !isSorting) {
+                                    const filterRequestVar = this.selectors.filterRequestVar;
+                                    clearUrl = this.qs(`*${filterRequestVar} *[value="${item.value}"]`)
+                                        .closest('.item').querySelector('a').getAttribute('href');
+                                }
+                            });
+                        }
+                    }
+                });
+
+                this.groupDataByName(normalizedData)
+
+                if (clearUrl) {
+                    const locationData = clearUrl.split("?");
+                    if (locationData.length > 1) {
+                        const url = locationData[0];
+                        const urlParams = locationData[1].split('&');
+
+                        urlParams.forEach((param, index) => {
+                            const paramKey = param.split(/=(.*)/)[0];
+
+                            if (
+                                !this.qs(`.amshopby-remove-item[data-container="${paramKey}"]`) &&
+                                this.qs(`[name="amshopby[${paramKey}][]"]`)
+                            ) {
+                                urlParams.splice(index, 1);
+                            }
+                        });
+
+                        clearUrl = `${url}?${urlParams.join('&')}`;
+                    }
+
+                    normalizedData.clearUrl = clearUrl;
+                }
+                if (clearFilter && !this.submitByClick) {
+                    const removeItems = document.querySelectorAll(this.selectors.removeAllItems);
+
+                    for (let i = 0; i < removeItems.length; i++) {
+                        const item = removeItems[i];
+                        const container = item.getAttribute('data-container');
+                        const value = item.getAttribute('data-value');
+
+                        const findAmShopBy = normalizedData.find((amshopby) => {
+                            return amshopby.name === 'amshopby[' + container + '][]';
+                        });
+
+                        if (findAmShopBy) {
+                            const values = findAmShopBy.value.split(',');
+                            if (!values.includes(value)) {
+                                findAmShopBy.value += ',' + value;
+                            }
+                        } else {
+                            normalizedData.push({name: 'amshopby[' + container + '][]', value: value});
+                        }
+                    }
+                }
+
+                return normalizedData;
+            },
+
+            /**
+             *
+             * @param element
+             * @param selector
+             * @returns {string}
+             */
+            getFilterClass(element, selector) {
+                const filterItems = element.closest(selector);
+                const className = filterItems ? filterItems.className : element.querySelector(selector).className;
+                const startPos = className.indexOf('am-filter-items');
+                const endPos = className.indexOf(' ', startPos + 1) === -1 ? 100 : className.indexOf(' ', startPos + 1);
+                return className.substring(startPos, endPos);
+            },
+
+            /**
+             *
+             * @param forms
+             * @param currentFilterClass
+             * @param currentFilterForm
+             * @param existFields
+             * @param selectors
+             * @returns {unknown[]}
+             */
+            updateForms(forms, currentFilterClass, currentFilterForm, existFields, selectors) {
+                return Array.from(forms).map(item => {
+                    const filterClass = this.getFilterClass(item, selectors.filterItems);
+
+                    if (currentFilterClass === filterClass) {
+                        return currentFilterForm;
+                    } else {
+                        return item;
+                    }
+                }).filter(item => {
+                    const filterClass = this.getFilterClass(item, selectors.filterItems);
+                    const isPriceType = item.closest(selectors.filterOptionsItem)
+                        .querySelectorAll(selectors.fromToWidget).length;
+
+                    if (filterClass && existFields[filterClass] && !isPriceType) {
+                        return false;
+                    } else {
+                        existFields[filterClass] = true;
+                        return true;
+                    }
+                });
+            },
+
+            initialFilters() {
+                const initialFilters = [];
+                this.qsa(this.selectors.removeAllItems).forEach(item => {
+                    const value = item.getAttribute('data-swatchset');
+                    const name = item.getAttribute('data-container');
+                    if (value) {
+                        initialFilters.push({ name: `amshopby[${name}][]`, value });
+                    }
+                });
+                this.defaultFilters = initialFilters;
+
+                window.dispatchEvent(new CustomEvent('amfiltersUpdated'));
+            },
+
+            /**
+             * @public
+             * @param {String | null} element
+             * @param {String | null} clearUrl
+             * @param {Boolean | null} [clearFilter]
+             * @param {Boolean} [isSorting]
+             * @return {Array}
+             */
+            prepareTriggerAjax(element, clearUrl, clearFilter, isSorting) {
+                const selectors = this.selectors;
+                let forms;
+                forms = this.qsa(selectors.filterForm);
+
+                let attributeName,
+                    excludedFormSelector,
+                    serializeForms = [],
+                    isPriceExist = false,
+                    data;
+
+                if (element) {
+                    if (clearFilter) {
+                        attributeName = selectors.filterFormAttr
+                            .replace('{attr}', element.closest(selectors.filterOptionsContent)
+                                .querySelector('form')
+                                .getAttribute('data-amshopby-filter'));
+                        excludedFormSelector = selectors.sidebar + ' ' + attributeName;
+                        forms = this.excludingElement(forms, excludedFormSelector);
+                    }
+
+                    const currentFilterForm = element.closest(selectors.filterOptionsItem)
+                        .querySelector(selectors.filterForm);
+                    const currentFilterClass = this.getFilterClass(currentFilterForm, selectors.filterItems);
+                    forms = this.updateForms(forms, currentFilterClass, currentFilterForm, {}, selectors);
+                } else {
+                    forms = this.updateForms(forms, false, null, {}, selectors);
+                }
+
+                forms.forEach(form => {
+                    const serializeData = this.serializeForm(form);
+                    if (serializeData.length) {
+                        serializeForms.push(...serializeData);
+                    }
+                });
+
+                serializeForms.some(item => {
+                    if (item.name === 'amshopby[price][]') {
+                        isPriceExist = true;
+                        return true;
+                    }
+                    return false;
+                });
+
+                data = this.normalizeData(serializeForms, isSorting, clearFilter, clearUrl);
+                data.clearUrl = data.clearUrl || clearUrl;
+
+                if (this.options.delta.length) {
+                    data = data.concat(this.options.delta);
+                }
+
+                if (element && element !== document && element.closest('.price-ranges')) {
+                    data.push({
+                        name: 'price-ranges',
+                        value: 1
+                    });
+                }
+
+                window.dispatchEvent(new CustomEvent('amShopbySubmitFilters', {
+                    detail: {
+                        data: data,
+                        clearFilter: clearFilter,
+                        isSorting: isSorting
+                    }
+                }));
+
+                return data;
+            },
+
+            /**
+             *
+             * @param param
+             * @param paramValue
+             */
+            changeUrl(param, paramValue) {
+                let paramData = this.getUrlParams();
+                const defaultValue = this.toolbarOptions[param + 'Default'];
+                const paramName = this.toolbarOptions[param];
+                const [baseUrl] = this.toolbarOptions.url.split('?');
+                const currentPage = this.getCurrentPage();
+                const currentLimit = this.getCurrentLimit();
+                const pageParam = this.toolbarOptions.page;
+                const limitParam = this.toolbarOptions.limit;
+                const defaults = {
+                    mode: this.toolbarOptions.modeDefault,
+                    order: this.toolbarOptions.orderDefault,
+                    direction: this.toolbarOptions.directionDefault
+                };
+                if (currentPage > 1 && paramName === limitParam && param === 'limit') {
+                    const newPage = Math.floor(currentLimit * (currentPage - 1) / paramValue) + 1;
+                    newPage > 1 ? paramData[pageParam] = newPage : delete paramData[pageParam];
+                }
+                paramData[paramName] = paramValue;
+                if (paramValue.toString() === defaultValue?.toString() && !this.toolbarOptions.post) {
+                    delete paramData[paramName];
+                } else if (defaults[param] === paramValue) {
+                    delete paramData[paramName];
+                }
+                const queryParams = new URLSearchParams(paramData).toString();
+                const newUrl = queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
+
+                if (this.isAjax) {
+                    this.prepareTriggerAjax(null, newUrl, false, true);
+                } else {
+                    location.href = newUrl;
+                }
+            },
+
+            /**
+             *
+             * @param element
+             * @param event
+             * @param paramValue
+             */
+            addToolbarEvent(element, event, paramValue) {
+                const el = this.qs(element);
+                el.removeAttribute('@click.prevent');
+                el.removeAttribute('@change');
+                el.replaceWith(el.cloneNode(true));
+
+                this.qs(element).addEventListener(event, e => {
+                    this.stopEvents(e);
+                    let value;
+                    if (paramValue === 'order' || paramValue === 'limit') {
+                        value = e.currentTarget.value;
+                    } else if (paramValue === 'direction') {
+                        const classNames = e.currentTarget.getAttribute('class');
+                        value = classNames.indexOf('sort-desc') === -1 ? 'desc' : 'asc';
+                    } else {
+                        value = e.currentTarget.getAttribute('data-value');
+                    }
+                    this.changeUrl(paramValue, value);
+                }, false);
+            },
+
+            /**
+             *
+             */
+            initShopBy() {
+                if (this.isAjax) {
+                    if (typeof window.history.replaceState === "function") {
+                        window.history.replaceState({url: document.URL}, document.title);
+                        setTimeout(() => {
+                            /*
+                            Timeout is a workaround for iPhone
+                            Reproduce scenario is following:
+                            1. Open category
+                            2. Use pagination
+                            3. Click on product
+                            4. Press "Back"
+                            Result: Ajax loads the same content right after regular page load
+                            */
+                            window.onpopstate = e => {
+                                if (e.state && !this.startAjax) {
+                                    this.callAjax(e.state.url, []);
+                                }
+                            };
+                        }, 0);
+                    }
+
+                    this.qsa('.pages-items a').forEach(link => {
+                        link.addEventListener('click', e => {
+                            this.stopEvents(e);
+                            this.pagerEvent(e);
+                        }, false);
+                    });
+
+                    window.onload = () => {
+                        if (this.submitByClick) {
+                            window.addEventListener("popstate", (event) => {
+                                window.location.reload();
+                            }, {once: true});
+                        }
+                    }
+                }
+
+                <?php if (!$jsInitViewModel->isSingleChoiceMode()): ?>
+                this.qsa(this.selectors.removeItems).forEach(item => {
+                    const name = item.getAttribute('data-container');
+                    const value = item.getAttribute('data-value');
+
+                    let filter = document.createElement('div');
+                    filter.setAttribute('class', 'filter-option');
+                    filter.innerHTML = `<form data-amshopby-filter="attr_${name}" class="am-filter-items">
+                            <input value="${value}" type="hidden" name="amshopby[${name}][]" />
+                        </div>`;
+
+                    this.qs('#layered-filter-block-content').appendChild(filter);
+                });
+                <?php endif ?>
+
+                this.isImrovedSorting = !!this.qs(this.selectors.improvedSortingWrapper);
+
+                if (this.qs(this.toolbarElements.mode)) {
+                    this.addToolbarEvent(this.toolbarElements.mode, 'click', 'mode');
+                }
+
+                if (this.qs(this.toolbarElements.sortDir)) {
+                    this.addToolbarEvent(this.toolbarElements.sortDir, 'click', 'direction');
+                }
+
+                if (this.qs(this.toolbarElements.sort)) {
+                    this.addToolbarEvent(this.toolbarElements.sort, 'change', 'order');
+                }
+
+                if (this.qs(this.toolbarElements.limiter)) {
+                    this.addToolbarEvent(this.toolbarElements.limiter, 'change', 'limit');
+                }
+
+                this.topFiltersCheckOnMobile();
+                this.setSelectedProductSwatch();
+
+                this.initialFilters();
+
+                this.setDirectionDefault();
+            },
+
+            /**
+             *
+             * @param element
+             * @returns {boolean}
+             */
+            isFinderAndCategory(element) {
+                const isFinderPage = location.href.includes('find='); // Check if it's a finder page
+                const isRadioInput = element.type === 'radio';
+                const isCategoryCheckbox = element.name === 'amshopby[cat][]';
+
+                return isFinderPage && isRadioInput && isCategoryCheckbox;
+            },
+
+            /**
+             *
+             * @param element
+             */
+            setSwatchBorder(element) {
+                element.classList.toggle('border-container-darker');
+                element.classList.toggle('border-container-lighter');
+                element.classList.toggle('amshopby-link-selected');
+                element.classList.toggle('text-blue-600');
+            },
+
+            /**
+             * @public
+             * @param {Array} values
+             * @return {String}
+             */
+            toValidView(values) {
+                const formattedValues = values.map(value => (value !== undefined ? parseFloat(value).toFixed() : value)); <?php //phpcs:ignore?>
+                return formattedValues.join('-');
+            },
+
+            /**
+             * @public
+             * @param {String} name
+             * @param {String} filterValue
+             * @param {String} value
+             * @return {Boolean}
+             */
+            isEquals(name, filterValue, value) {
+                const values = value.split('-');
+                const filterValues = filterValue.split('-');
+
+                if (values.length > 1) {
+                    filterValue = this.toValidView(filterValues);
+                    value = this.toValidView(values);
+                }
+
+                return filterValue === value;
+            },
+
+            /**
+             * @public
+             * @param {String} name
+             * @param {String} value
+             * @return {void}
+             */
+            setDefault(name, value) {
+                const valueSelector = this.selectors.filterName
+                    .replace('{name}', name)
+                    .replace('{value}', value);
+
+                const filters = this.element.closest('.columns').querySelectorAll(valueSelector);
+
+                let realStatusChecked;
+
+                filters.forEach(filter => {
+                    const tagName = filter.tagName;
+
+                    if (tagName === 'SELECT' && name === 'price') {
+                        filter.querySelectorAll('option').forEach(option => {
+                            if (this.toValidView(option.value.split('-')) === value) {
+                                option.selected = false;
+                            }
+                        });
+                        filter.querySelector(`[value="${value}"]`).selected = true;
+                    }
+
+                    if (tagName === 'INPUT') {
+                        const inputType = filter.getAttribute('type');
+
+                        if (inputType !== 'text' && inputType !== 'hidden') {
+                            const selectedInputs = this.qsa(`${valueSelector}[value="${value}"]`);
+
+                            selectedInputs.forEach(selected => {
+                                realStatusChecked = realStatusChecked === undefined
+                                    ? selected.checked
+                                    : realStatusChecked;
+
+                                selected.checked = !realStatusChecked;
+
+                                Array.from(selected.parentNode.children)
+                                    .filter(child => child !== selected)
+                                    .forEach(sibling => sibling.classList.remove('selected'));
+                            });
+                        }
+
+                        if ((inputType === 'hidden' && this.isEquals(name, filter.value, value)) || name === 'price') {
+                            filter.value = filter.value !== value ? value : '';
+                        }
+                    }
+                });
+            },
+
+            /**
+             *
+             * @param url
+             * @param data
+             * @returns {string}
+             */
+            getClearUrlParams(url, data) {
+                let params = '';
+
+                url = url.replace('#', '');
+
+                data.forEach((param, index) => {
+                    if (index > 0) {
+                        params += '&';
+                    }
+
+                    params += `${param.name}=${param.value}`;
+                });
+
+                url += (url.includes('?') ? '&' : '?');
+
+                return `${url}${params}`;
+            },
+
+            /**
+             * @public
+             * @return {Object}
+             */
+            getProductBlock() {
+                let $productsWrappers = this.qsa(this.selectors.productsWrapper),
+                    $productsWrapper = $productsWrappers[$productsWrappers.length - 1];
+
+                if ($productsWrapper.closest('.search.results')) {
+                    $productsWrapper = $productsWrapper.closest('.search.results');
+                }
+
+                return $productsWrapper;
+            },
+
+            /**
+             * TriggerDOMContentLoaded for rebuild Page Builder
+             */
+            triggerDOMContentLoaded() {
+                const DOMContentLoadedEvent = new Event('DOMContentLoaded');
+                window.dispatchEvent(DOMContentLoadedEvent);
+            },
+
+            /**
+             *
+             * @param data
+             */
+            replaceCategoryView(data) {
+                if (data.h1) {
+                    const titleElement = document.createElement('div');
+                    titleElement.innerHTML = data.h1;
+                    const pageTitle = this.qs('.page-title').parentNode;
+                    const newPageTitle = titleElement.querySelector('.page-title').parentNode;
+                    pageTitle.classList.add('amshopby-page-title');
+                    newPageTitle.classList.add('amshopby-page-title');
+                    pageTitle.outerHTML = newPageTitle.outerHTML;
+                }
+
+                if (data.categoryData) {
+                    const existingCategoryView = this.qs('.category-view');
+                    if (!existingCategoryView) {
+                        const catNode = document.createElement('div');
+                        catNode.className = 'category-view';
+                        const mainContent = this.qs('#maincontent');
+                        let childNode = this.qs('.page-main .columns');
+
+                        if (this.qs('.amwidget-children-categories')) {
+                            childNode = this.qs('.amwidget-children-categories').parentNode;
+                        }
+
+                        mainContent.insertBefore(catNode, childNode);
+                    }
+
+                    hyva.replaceDomElement('.category-view', data.categoryData);
+
+                    const categoryView = this.qs('.category-view');
+                    categoryView.classList.add('container');
+                    categoryView.setAttribute('id', 'category-view-container');
+                } else {
+                    const categoryView = this.qs('.category-view');
+                    if (categoryView) {
+                        categoryView.remove();
+                    }
+                }
+            },
+
+            /**
+             *
+             */
+            scrollUpEvent() {
+                const productList = this.qs(this.selectors.productsWrapper);
+                const topNavBlock = this.qs(this.selectors.topNav);
+
+                const clientRect = topNavBlock ?
+                    topNavBlock.getBoundingClientRect() : productList.getBoundingClientRect();
+                const topPositionRelativeToDocument = clientRect.top + window.scrollY;
+
+                if (this.scrollUp && productList) {
+                    const top = this.scrollUp === 1 ? topPositionRelativeToDocument : 0;
+
+                    window.scrollTo({
+                        top: top,
+                        behavior: 'instant'
+                    });
+                }
+            },
+
+            /**
+             *
+             * @param data
+             * @returns {void}
+             */
+            reloadHtml(data) {
+                this.currentCategoryId = data.currentCategoryId || this.currentCategoryId;
+                hyva.replaceDomElement('.amshopby-filters-bottom-cms', data.bottomCmsBlock);
+                hyva.replaceDomElement('.breadcrumbs', data.breadcrumbs);
+                this.replaceCategoryView(data);
+                const mainContent = data.categoryProducts || data.cmsPageData;
+                if (mainContent) {
+                    this.insertMainContent(mainContent);
+                }
+
+                hyva.replaceDomElement('.switcher-currency', data.currency);
+                hyva.replaceDomElement('.switcher-language', data.store);
+                hyva.replaceDomElement('.switcher-store', data.store_switcher);
+                hyva.replaceDomElement(this.isOneColumn ? '.sidebar-topnav' : '.sidebar-main', data.navigation);
+                if (this.isOneColumn || (document.querySelector('.sidebar-main .block-filter') && document.querySelector('.amasty-catalog-topnav'))) { <?php //phpcs:ignore?>
+                    hyva.replaceDomElement('.sidebar-topnav', data.navigationTop);
+                }
+                hyva.replaceDomElement('.sidebar-additional', data.sidebar_additional);
+
+                <?php if ($block->isGoogleTagManager()): ?>
+                window.dispatchEvent(new CustomEvent('googleTag', {}));
+                <?php endif ?>
+
+                this.topFiltersCheckOnMobile();
+                this.scrollUpEvent();
+                this.triggerDOMContentLoaded();
+                this.isLoading = false;
+                hyva.initFormKey();
+            },
+
+            /**
+             *
+             * @param {string} mainContent
+             * @returns {void}
+             */
+            insertMainContent(mainContent) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(mainContent, 'text/html');
+
+                hyva.activateScripts(doc.body);
+                document.querySelector('#amasty-shopby-product-list').replaceWith(...doc.body.children);
+            },
+            /**
+             *
+             * @param clearUrl
+             * @param data
+             * @param pushState
+             * @param cacheKey
+             * @param isSorting
+             * @param isClearAll
+             * @returns {Promise<any>}
+             */
+            async callAjax(clearUrl, data, pushState, cacheKey, isSorting, isClearAll = false) {
+                if (this.controller) {
+                    this.controller.abort('Stopping a previous request to create a new one');
+                    this.signal = null;
+                }
+                this.controller = new AbortController();
+                this.signal = this.controller.signal;
+                window.dispatchEvent(new CustomEvent('amClearButtonText', {}));
+
+                const priceFilterIndex = data.findIndex(item => item.name === 'amshopby[price][]');
+                if (priceFilterIndex !== -1 && data[priceFilterIndex].value === 'NaN') {
+                    data.splice(priceFilterIndex, 1);
+                }
+
+                if (pushState && !isClearAll) {
+                    this.qsa(this.selectors.removeItems).forEach(removeItem => {
+                        const name = removeItem.getAttribute('data-container');
+                        const value = removeItem.getAttribute('data-value');
+                        const existingItem = data.find(item => item.name === 'amshopby[' + name + '][]');
+                        if (!existingItem) {
+                            data.push({ name: 'amshopby[' + name + '][]', value: value });
+                        } else if (!removeItem.classList.contains('radio-remove-item')
+                            && existingItem.value.indexOf(value) === -1) {
+                            existingItem.value += ',' + value;
+                        }
+                    });
+                }
+
+                if (!isSorting && !clearUrl) {
+                    const dir = 'product_list_dir';
+                    const sort = 'product_list_order';
+                    const params = new URL(location.href).searchParams;
+                    if (params.get(dir)) {
+                        data.push({ name: dir, value: params.get(dir) });
+                    }
+                    if (params.get(sort)) {
+                        data.push({ name: sort, value: params.get(sort) });
+                    }
+                }
+
+                data.push({ name: 'shopbyAjax', value: 1 });
+                this.startAjax = true;
+                clearUrl = clearUrl ? clearUrl.replace(/amp;/g, '') : this.clearUrl;
+
+                if (!this.submitByClick) {
+                    this.isLoading = true;
+                }
+                try {
+                    const response = await fetch(this.getClearUrlParams(clearUrl, data), {
+                        headers: {
+                            'Content-type': 'text/plain; charset=UTF-8',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        signal: this.signal
+                    });
+                    const responseData = await response.json();
+                    this.startAjax = false;
+
+                    if (!this.isAjaxSettingEnabled && this.showButtonClick
+                        && responseData.url && responseData.productsCount) {
+                        window.location.href = responseData.url;
+                        return;
+                    }
+
+                    if (responseData.isDisplayModePage && !this.submitByClick) {
+                        const url = this.clearUrl ? this.clearUrl : this.options.clearUrl;
+                        window.location = (this.url && this.url.indexOf('shopbyAjax') === -1) ? this.url : url;
+                        return;
+                    }
+
+                    if (cacheKey) {
+                        this.cached[cacheKey] = responseData;
+                    }
+                    this.response = responseData;
+
+                    if (responseData.newClearUrl
+                        && (responseData.newClearUrl.indexOf('?p=') === -1
+                            && responseData.newClearUrl.indexOf('&p=') === -1)) {
+                        this.options.clearUrl = responseData.newClearUrl;
+                    }
+
+                    if (pushState || this.showButtonClick || isSorting || isClearAll) {
+                        window.history.pushState({ url: responseData.url }, '', responseData.url);
+                    }
+
+                    if (this.submitByClick !== 1 || isSorting || isClearAll) {
+                        this.reloadHtml(responseData);
+                    }
+
+                    if (this.showButtonClick && !isClearAll && this.isAjaxSettingEnabled) {
+                        this.showButtonClick = false;
+                        this.response = false;
+                        this.reloadHtml(responseData);
+                    }
+
+                    if (this.submitByClick && this.useShowButton) {
+                        this.showButtonCounter(this.response.productsCount);
+                    }
+
+                    this.controller = null;
+                    this.signal = null;
+                    this.useShowButton = true;
+                } catch (error) {
+                    // console.warn(error);
+                }
+            },
+
+            /**
+             *
+             * @param text
+             * @returns {string|string}
+             */
+            escapeHtml(text) {
+                const doc = new DOMParser().parseFromString(text, 'text/html');
+                return doc.body.textContent || "";
+            },
+
+            /**
+             *
+             * @param element
+             * @param link
+             * @param clearFilter
+             */
+            apply(element, link, clearFilter) {
+                try {
+                    setTimeout(() => {
+                        this.response = null;
+                        let linkParam = clearFilter ? link : null;
+
+                        if (element?.closest('.price-ranges') && link.includes('?')) {
+                            link += '&price-ranges=1';
+                        }
+                        if (!this.options.collectFilters && this.isAjax) {
+                            this.prepareTriggerAjax(element, linkParam, clearFilter);
+                        } else {
+                            if (this.options.collectFilters === 1) {
+                                this.prepareTriggerAjax(element, linkParam);
+                            } else {
+                                window.location = link;
+                            }
+                        }
+                    }, 100);
+                } catch (e) {
+                    console.error(e);
+                    window.location = link;
+                }
+            },
+
+            /**
+             *
+             * @param link
+             */
+            fixDoubleValue(link) {
+                let input = link.closest('div').querySelector('input');
+
+                const sameValueFilters = this.qsa(
+                    `*[value="${input.value}"][name="${input.getAttribute('name')}"]`
+                );
+
+                if (sameValueFilters.length > 1) {
+                    sameValueFilters.forEach(filter => {
+                        if (filter !== input) {
+                            if (filter.getAttribute('type') === 'radio') {
+                                filter.closest('.am-filter').querySelectorAll('input').forEach(option => {
+                                    option.checked = false;
+                                });
+                            } else {
+                                filter.checked = false;
+                            }
+                        }
+                    });
+                }
+
+                if (input.getAttribute('type') !== 'radio' && !input.checked && !this.submitByClick) {
+                    let value = input.getAttribute('value');
+                    let name = input.getAttribute('name').replace('amshopby[', '');
+                    name = name.replace('][]', '');
+
+                    let removeItem = this.qs(
+                        `.amshopby-remove-item[data-container="${name}"][data-value="${value}"]`
+                    );
+
+                    if (removeItem) {
+                        removeItem.remove();
+                    }
+                }
+            },
+
+            /**
+             *
+             * @param newNode
+             * @param existingNode
+             */
+            insertAfter(newNode, existingNode) {
+                existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+            },
+
+            /**
+             *
+             * @param input
+             */
+            removeInputByName(input) {
+                const name = input.getAttribute('name').replace('amshopby[', '').replace('][]', '');
+                const removeItem = this.qs(`.amshopby-remove-item[data-container="${name}"]`);
+
+                if (removeItem) {
+                    removeItem.remove();
+                }
+            },
+
+            /**
+             *
+             * @param count
+             */
+            showButtonCounter(count) {
+                window.dispatchEvent(new CustomEvent('amApplyButtonData', {
+                    detail: {
+                        count: parseInt(count),
+                        disabled: !count
+                    }
+                }));
+            },
+
+            /**
+             *
+             * @param e
+             */
+            pagerEvent(e) {
+                const newUrl = e.currentTarget.getAttribute('href');
+                let updatedUrl = null;
+
+                const urlPaths = newUrl.split('?');
+                const urlParams = urlPaths[1] ? urlPaths[1].split('&') : [];
+
+                for (let i = 0; i < urlParams.length; i++) {
+                    if (urlParams[i].indexOf("p=") === 0) {
+                        const pageParam = urlParams[i].split('=');
+                        updatedUrl = this.getNewClearUrl(pageParam[0], pageParam[1] > 1 ? pageParam[1] : '');
+                        break;
+                    }
+                }
+
+                if (!updatedUrl) {
+                    updatedUrl = e.currentTarget.getAttribute('href');
+                }
+                updatedUrl = updatedUrl.replace('amp;', '');
+
+                this.prepareTriggerAjax(null, updatedUrl, false, true);
+                this.scrollUpEvent();
+            },
+
+            /**
+             *
+             * @param key
+             * @param value
+             * @param page
+             * @returns {string}
+             */
+            getNewClearUrl(key, value, page) {
+                const url = new URL(window.location.href);
+                const params = new window.URLSearchParams(url.search);
+
+                if (value !== '') {
+                    params.set(key, value);
+                } else {
+                    params.delete(key);
+                }
+
+                if (page) {
+                    params.set('p', page);
+                } else if (key !== 'p') {
+                    params.delete('p');
+                }
+
+                url.search = params;
+
+                return window.decodeURIComponent(url.toString());
+            },
+
+            /**
+             *
+             * @param data
+             * @param param
+             * @param prop
+             * @returns {*}
+             */
+            filterDataByProp(data, param, prop) {
+                return data.find(obj => obj[prop] === param[prop]);
+            },
+
+            /**
+             *
+             */
+            topFiltersCheckOnMobile() {
+                setTimeout(() => {
+                    const isMobile = document.body.clientWidth < 768;
+                    isMobile ? this.moveTopFiltersToSidebar() : this.removeTopFiltersFromSidebar();
+                }, 0);
+            },
+
+            /**
+             *
+             */
+            moveTopFiltersToSidebar() {
+                const sidebarList = this.qs(this.selectors.sidebarList);
+
+                if (!sidebarList) {
+                    const blockClass = this.qs(this.selectors.layeredFilter)
+                        ? this.selectors.layeredFilter
+                        : this.selectors.blockFilter;
+
+                    const $element = document.querySelector(`${this.selectors.topNav} ${blockClass}`);
+
+                    if ($element) {
+                        const $sidebar = this.qs(this.selectors.sidebar);
+                        const filterOptions = $element.querySelectorAll('.filter-option');
+
+                        filterOptions.forEach(filter => {
+                            const el = filter.cloneNode(true);
+                            const input = el.querySelector('[type="radio"], [type="checkbox"]');
+
+                            if (input) {
+                                const name = input.getAttribute('name');
+
+                                el.classList.add('from-top');
+
+                                if (!$sidebar.querySelectorAll(`[name="${name}"]`).length) {
+                                    $sidebar.querySelector('#layered-filter-block-content').append(el);
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+
+            /**
+             *
+             */
+            removeTopFiltersFromSidebar() {
+                const $sidebar = this.qs(this.selectors.sidebar);
+
+                if ($sidebar) {
+                    $sidebar.querySelectorAll('.from-top').forEach(filter => {
+                        filter.remove();
+                    });
+                }
+            },
+
+            toggleFilter(input, isChecked, status) {
+                let name = input.getAttribute('name');
+                if (!name) {
+                    name = `amshopby[${input.getAttribute('data-container')}][]`;
+                }
+                const value = input.getAttribute('value') || input.getAttribute('data-value');
+                const element = this.element;
+                if (status === 'once') {
+                    this.currentFilters = this.currentFilters.filter(filter => filter.name !== name);
+                }
+                const filterExists = this.currentFilters.some(filter => filter.name === name && filter.value === value);
+                if (isChecked && !filterExists) {
+                    this.currentFilters.push({name, value});
+                } else if (isChecked && filterExists) {
+                    this.currentFilters = this.currentFilters.filter(filter => filter.name === name || filter.value !== value); <?php //phpcs:ignore?>
+                } else if (!isChecked) {
+                    this.currentFilters = this.currentFilters.filter(filter => filter.name !== name || filter.value !== value); <?php //phpcs:ignore?>
+                    if (!this.currentFilters.length) {
+                        const defaultFilter = this.defaultFilters.find(filter => filter.name === name && filter.value === value); <?php //phpcs:ignore?>
+                        if (defaultFilter) {
+                            this.currentFilters.push(defaultFilter);
+                        }
+                    }
+                }
+                this.useShowButton = !!this.currentFilters.length;
+                if (!this.currentFilters.length) {
+                    this.showButtonCounter(0);
+                } else {
+                    window.dispatchEvent(new CustomEvent('amSetButtonPosition', { detail: {element} }));
+                }
+            },
+
+            eventListeners: {
+                ['@googleTag.window']() {
+                    <?php if ($block->isGoogleTagManager()): ?>
+                    const tag = 'script',
+                        layer = 'dataLayer',
+                        containerId = "<?= $escaper->escapeHtml($block->getGtmAccountId()) ?>";
+
+                    if (containerId) {
+                        window[layer] = window[layer] || [];
+                        window[layer].push({
+                            'gtm.start': new Date().getTime(),
+                            event: 'gtm.js'
+                        });
+
+                        const existingScript = document.querySelector('script[src*="gtm.js"]');
+                        if (existingScript) {
+                            existingScript.parentNode.removeChild(existingScript);
+                        }
+
+                        const scriptTag = document.createElement(tag);
+                        scriptTag.async = true;
+                        scriptTag.src = 'https://www.googletagmanager.com/gtm.js?id=' + containerId + (layer !== 'dataLayer' ? '&l=' + layer : ''); <?php //phpcs:ignore?>
+
+                        const firstScriptTag = document.getElementsByTagName(tag)[0];
+                        firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
+                    }
+                    <?php endif ?>
+                },
+                ['@amApplyButton.window']() {
+                    let valid = true;
+                    const cachedValues = this.cached[this.cacheKey];
+                    const cachedKey = this.response;
+                    const response = cachedValues || cachedKey;
+
+                    if (this.isAjaxSettingEnabled) {
+                        this.isLoading = true;
+                    }
+
+                    if (!response) {
+                        if (this.startAjax) {
+                            this.showButtonClick = true;
+                            this.showButtonCounter(0);
+                            return;
+                        } else {
+                            return;
+                        }
+                    }
+
+                    if (response.isDisplayModePage || (!this.isAjaxSettingEnabled && this.submitByClick)) {
+                        window.location.href = response.url;
+                        return;
+                    }
+
+                    if (valid && response) {
+                        this.showButtonCounter(0);
+                        window.history.pushState({ url: response.url }, '', response.url);
+                        setTimeout(() => {
+                            this.reloadHtml(response);
+                        }, 200);
+                        this.memorizeData = [];
+                        this.response = false;
+                        this.showButtonClick = false;
+                    }
+
+                    window.onpopstate = function () {
+                        location.reload();
+                    };
+                },
+                ['@amRemoveElement.window'](event) {
+                    const link = event.detail.element;
+
+                    if (this.isAjax) {
+                        const currentFilterItem = link.closest('.amshopby-remove-item');
+                        if (currentFilterItem) {
+                            this.element = currentFilterItem;
+                            this.toggleFilter(currentFilterItem, false, 'once');
+                            const filter = {
+                                attribute: currentFilterItem.getAttribute('data-container'),
+                                value: this.escapeHtml(currentFilterItem.getAttribute('data-value'))
+                            };
+
+                            try {
+                                this.setDefault(filter.attribute, filter.value);
+                                this.element = null;
+                                // const clearUrl = currentFilterItem.querySelector('a').getAttribute('href');
+                                if (this.submitByClick) {
+                                    // Case need to return filters that have not been confirmed for deletion
+                                    // if (this.memorizeData.length) {
+                                    //     this.memorizeData.forEach(item => {
+                                    //         this.setDefault(item.attribute, item.value);
+                                    //     });
+                                    //     this.memorizeData = [];
+                                    // }
+                                    // this.memorizeData.push(filter);
+                                } else {
+                                    currentFilterItem.remove();
+                                }
+                                this.prepareTriggerAjax(null, false, true);
+                            } catch (e) {
+                                console.error(e);
+                                window.location = link.getAttribute('href');
+                            }
+                        }
+                    } else {
+                        window.location.href = link.getAttribute('href');
+                    }
+                },
+                ['@amSwatchClick.window'](event) {
+                    const link = event.detail.element;
+
+                    if (this.isAjax) {
+                        this.element = link;
+                        const href = link.getAttribute('href');
+                        const input = link.closest('.am-swatch-wrapper').querySelector('input');
+                        const inputType = input.getAttribute('type');
+                        const ring = link.closest('.am-shopby-form').querySelector('.am-swatch-image');
+                        const status = inputType === 'radio' ? 'once' : 'multiple';
+                        this.toggleFilter(input, !input.checked, status);
+                        input.checked = !input.checked;
+
+                        if (inputType === 'radio' && ring) {
+                            link.closest('.am-shopby-form').querySelectorAll('.am-swatch-wrapper').forEach(swatch => {
+                                const swatchInput = swatch.querySelector('input');
+                                const swatchLink = swatch.querySelector('.swatch-option-link-layered');
+                                if (swatchInput.value !== input.value && swatchLink.classList.contains('amshopby-link-selected')) { <?php //phpcs:ignore?>
+                                    this.setSwatchBorder(swatchLink);
+                                }
+                            });
+
+                            if (!this.submitByClick) {
+                                this.removeInputByName(input);
+                            }
+
+                            if (input.checked) {
+                                this.setSwatchBorder(link);
+                            }
+                        } else {
+                            this.setSwatchBorder(link);
+                        }
+
+                        if (this.isFinderAndCategory(link)) {
+                            location.href = href;
+                            return;
+                        }
+
+                        setTimeout(() => {
+                            this.fixDoubleValue(link);
+                            this.apply(link, href);
+                        }, 10);
+                    } else {
+                        window.location.href = link.getAttribute('href');
+                    }
+                },
+                ['@amFilterElementClick.window'](event) {
+                    let filterElement = event.detail.element;
+                    const checked = event.detail.status;
+
+                    if (!filterElement.classList.contains('item')) {
+                        filterElement = filterElement.closest('div');
+                    }
+
+                    const checkbox = filterElement.querySelector('input[type="checkbox"], input[type="radio"]');
+                    const checkboxLink = filterElement.querySelector('a');
+                    const href = checkboxLink.getAttribute('href');
+                    this.element = checkboxLink;
+
+                    if (!this.isAjax) {
+                        location.href = href;
+                    }
+
+                    if (!this.submitByClick && checkbox.checked) {
+                        if (checkbox.type === 'radio' || checkbox.type === 'checkbox') {
+                            this.removeInputByName(checkbox);
+                        }
+                    }
+
+                    const filterType = checkbox.type === 'checkbox' ? 'multiple' : 'once';
+                    this.toggleFilter(checkbox, checked, filterType);
+
+                    setTimeout(() => {
+                        this.fixDoubleValue(checkboxLink);
+                        if (this.isFinderAndCategory(checkbox)) {
+                            location.href = href;
+                            return;
+                        }
+                        this.apply(checkboxLink, href);
+                    }, 10);
+                },
+                ['@amSliderValuesUpdated.window'](event) {
+                    const filterElement = event.detail.element;
+                    this.element = filterElement;
+                    const input = filterElement.querySelector('input');
+                    this.toggleFilter(input, true, 'once');
+                    this.apply(event.detail.element, event.detail.searchParams);
+                },
+                ['@amShopbySubmitFilters.window'](event) {
+                    const eventData = event.detail.data;
+                    const isClearAll = event.detail?.clearAll || false;
+                    const clearUrl = eventData.clearUrl || this.options.clearUrl;
+                    const isSorting = event.detail.isSorting;
+                    const pushState = !this.submitByClick;
+
+                    const dataAndUrl = [...eventData, clearUrl];
+                    const cacheKey = JSON.stringify(dataAndUrl);
+                    this.cacheKey = cacheKey;
+
+                    if (this.cached[cacheKey]) {
+                        const response = this.cached[cacheKey];
+                        if (pushState || isSorting) {
+                            if (response.newClearUrl &&
+                                !response.newClearUrl.includes('?p=') && !response.newClearUrl.includes('&p=')) {
+                                this.options.clearUrl = response.newClearUrl;
+                            }
+
+                            window.history.pushState({ url: response.url }, '', response.url);
+                            this.reloadHtml(response);
+                        } else {
+                            if (this.useShowButton) {
+                                this.showButtonCounter(response.productsCount);
+                            }
+                        }
+
+                        return;
+                    }
+
+                    this.callAjax(clearUrl, eventData, pushState, cacheKey, isSorting, isClearAll);
+                },
+                ['@configurable-selection-init.window']() {
+                    this.setSelectedProductSwatch();
+                },
+                ['@configurable-show-swatches.window'](event) {
+                    this.qsa(this.selectors.removeAllItems).forEach(item => {
+                        const swatchSet = item.getAttribute('data-swatchset');
+                        if (swatchSet) {
+                            const attributeId = item.getAttribute('data-attribute-id');
+                            const productId = event.detail.productId;
+                            const productItem = this.qs(`[name="product"][value="${productId}"]`).closest('.product-item');<?php //phpcs:ignore?>
+                            const valueSelector = `[name="super_attribute[${attributeId}]"][value="${swatchSet}"]`;
+                            const swatch = productItem.querySelector(valueSelector);
+                            if (swatch && !swatch.checked) {
+                                swatch.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+</script>

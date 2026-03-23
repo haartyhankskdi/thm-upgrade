@@ -1,0 +1,338 @@
+<?php
+// @codingStandardsIgnoreStart
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Payment\Info;
+use Ebizmarts\BrippoPayments\Helper\PlatformService\PlatformService;
+use Ebizmarts\BrippoPayments\Helper\Stripe;use Magento\Framework\Pricing\PriceCurrencyInterface;
+
+/**
+ * @return mixed|string
+ * @var Info $block
+ */
+
+function getStatusBadge($status)
+{
+    switch ($status) {
+        case 'succeeded':
+            return '<span class="tag success" title="">Succeeded</span>';
+        case 'refunded':
+            return '<span class="tag neutral" title="">Refunded</span>';
+        case 'partial-refund':
+            return '<span class="tag neutral" title="">Partial Refund</span>';
+        case 'requires_capture':
+            return '<span class="tag neutral" title="">Uncaptured</span>';
+        case 'requires_payment_method':
+        case 'requires_confirmation':
+        case 'requires_action':
+            return '<span class="tag neutral" title="">Incomplete</span>';
+        case 'failed':
+            return '<span class="tag danger" title="">Failed</span>';
+        case 'canceled':
+            return '<span class="tag neutral" title="">Canceled</span>';
+        case 'active':
+            return '<span class="tag success" title="">Active</span>';
+        default:
+            return $status;
+    }
+}
+
+function getRefundsRow($block)
+{
+    $refunds = $block->getRefunds();
+    echo '<tr>' .
+        '<th>' . $block->escapeHtml(__('Refunds')) . '</th>' .
+        '<td class="refunds">';
+
+    foreach ($refunds as $refund) {
+        echo '<div class="refund-detail">';
+        if (isset($refund['error'])) {
+            echo '<h5>' . $refund['id'] . '</h5>' .
+                '<p class="failed">' . $block->escapeHtml($refund['error']) . '</p>';
+        } else {
+            echo '<h5><b>' . $refund['id'] . '</b> for ' .
+                $block->priceCurrency->format(
+                    $block->stripeHelper->convertStripeAmountToMagentoAmount(
+                        $refund['amount'],
+                        $refund['currency']
+                    ),
+                    false,
+                    PriceCurrencyInterface::DEFAULT_PRECISION,
+                    null,
+                    strtoupper($refund['currency'])
+                ) . '</h5>';
+            if (isset($refund['payment_method_details'])
+                && isset($refund['payment_method_details']['card'])
+                && isset($refund['payment_method_details']['card']['acquirer_reference_number_status'])) {
+                $arnStatus = $refund['payment_method_details']['card']['acquirer_reference_number_status'];
+                if ($arnStatus === 'pending') {
+                    echo '<p class="pending">The refund has been initiated, but we haven’t finished processing the refund. Please try in a few minutes.</p>';
+                } elseif ($arnStatus === 'available') {
+                    echo '<p>Acquirer Reference Number (ARN): <b>' . $refund['payment_method_details']['card']['acquirer_reference_number'] . '</b> ' .
+                        '<span title="You can share an ARN with your customer to help them trace the refund at their bank." class="info-icon">' .
+                        '<span class="inner">i</span></span></p>';
+                } else {
+                    echo '<p class="pending">The ARN isn’t available or supported for this refund.</p>';
+                }
+            } else if (isset($refund['destination_details']['card']['reference_type'])) {
+                $stanStatus = $refund['destination_details']['card']['reference_type'];
+                if ($stanStatus === 'system_trace_audit_number') {
+                    echo '<p>System Trace Audit Number (STAN): <b>' . $refund['destination_details']['card']['reference'] . '</b> ' .
+                        '<span title="You can share a STAN with your customer to help them trace the refund at their bank." class="info-icon">' .
+                        '<span class="inner">i</span></span></p>';
+                } else {
+                    echo '<p class="pending">The STAN isn’t available or supported for this refund.</p>';
+                }
+            }
+        }
+        echo '</div>';
+    }
+    echo '</td></tr>';
+}
+
+if ($block->isOurMethod()) { ?>
+    <div class="brippoPayments-info-box">
+        <input type="hidden" id="brippoPaymentIntentId" value="<?= $block->escapeHtmlAttr($block->getPaymentIntentId()); ?>">
+        <input type="hidden" id="brippoOrderId" value="<?= $block->escapeHtmlAttr($block->getOrder()->getId()); ?>">
+        <table class="admin__table-secondary order-information-table payment-info brippoPayments">
+            <tbody>
+                <tr>
+                    <th><img class='brand-icon'
+                           src="https://brippo.s3.amazonaws.com/images/Logo_brippo3b_onlyname_gray.png"
+                           alt="Brippo Payments Logo"></th>
+                    <th style="text-align: right;"><a href="#" id="openBrippoOrderLog"><?= $block->escapeHtml(__('View order logs')) ?></a></th>
+                </tr>
+                <?php if (!empty($block->getPaymentIntent())) {
+                    $errorMessage = $block->escapeHtml($block->getPaymentIntentError());
+                    ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Payment ID')); ?></th>
+                        <td class="">
+                            <?= $block->escapeHtml($block->getPaymentIntentId()); ?><br>
+                            <a class="dashboard-link" href="<?= PlatformService::SERVICE_URL . 'accounts/dashboard#intents?intentId=' . $block->escapeHtml($block->getPaymentIntentId()) ?>" target="_blank">View in Dashboard</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Status')); ?></th>
+                        <td class="status">
+                            <?= getStatusBadge($block->getPaymentIntentStatus()); ?>
+                            <?php if ($block->supportsTerminalProcessing()
+                                && $block->getPaymentIntentStatus() === Stripe::PAYMENT_INTENT_STATUS_REQUIRES_PAYMENT_METHOD
+                            ) { ?>
+                                <input type="hidden" id="brippoOnLoadAction" value="processPaymentInTerminal">
+                                <button class="button primaryBrippo brippoButtonProcessInTerminal" type="button"
+                                        onclick="BrippoAdmin.processPaymentInTerminal.show();">
+                                    <span><?= $block->escapeHtml(__('Process Payment in Terminal'))?></span>
+                                </button>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <?php if ($block->getPaymentIntentStatus() === 'requires_capture') { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Authorization Expires')); ?></th>
+                            <td class="amount"><?= $block->escapeHtml($block->getPaymentIntentAuthoriationExpires()); ?></td>
+                        </tr>
+                    <?php } ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Amount')); ?></th>
+                        <td class="amount"><?= $block->getPaymentIntentAmount(); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Captured')); ?></th>
+                        <td class="captured"><?= $block->getPaymentIntentCapturedAmount(); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Refunded')); ?></th>
+                        <td class="refunded"><?= $block->escapeHtml($block->getPaymentIntentRefundedAmount()); ?></td>
+                    </tr>
+                    <?php if ($block->wasRefunded()) {
+                        getRefundsRow($block);
+                    }
+                    if ($block->isExpressCheckout()) { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Frontend Location')); ?></th>
+                            <td class=""><?= $block->escapeHtml($block->getSource()); ?></td>
+                        </tr>
+                    <?php }
+                    $wallet = $block->getWallet();
+                    if (!empty($wallet) && $wallet !== 'Undefined') { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Wallet')); ?></th>
+                            <td class="wallet-logo">
+                                <img alt="<?= $block->escapeHtml($wallet); ?>"
+                                     src="<?= $block->escapeHtml($block->getWalletLogoSrc($wallet)); ?>" />
+                            </td>
+                        </tr>
+                    <?php }
+                    $paymentMethod = $block->getPaymentMethod();
+                    if (!empty($paymentMethod)) { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Payment Method')); ?></th>
+                            <td class="payment-method-logo">
+                                <span class="payment-logo <?= $block->escapeHtmlAttr($paymentMethod); ?>"></span>
+                                <?= $block->escapeHtml($block->getPaymentMethodName($paymentMethod)); ?>
+                            </td>
+                        </tr>
+                    <?php }
+                    $receiptNumber = $block->getReceiptNumber();
+                    if (!empty($receiptNumber)) { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Receipt')); ?></th>
+                            <td>
+                                <a class="receipt" href="<?= $block->escapeHtmlAttr($block->getReceiptPdfUrl()); ?>" target="_blank">#<?= $block->escapeHtml($receiptNumber); ?></a>
+                                <button class="button primaryBrippo small brippoButtonSendReceipt" type="button"
+                                        onclick="BrippoAdmin.processPaymentInTerminal.sendReceipt();">
+                                    <?= $block->escapeHtml(__('Send Receipt'))?>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php }
+                    if (!empty($errorMessage)) { ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Error')); ?></th>
+                            <td class="result fail"><?= $errorMessage; ?></td>
+                        </tr>
+                    <?php }
+                } else { ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Payment ID')); ?></th>
+                        <td>
+                            <b><?= $block->escapeHtml(__("There is no payment associated to this order.")); ?></b>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+
+        <?php if (!empty($block->getPaymentIntent())) { ?>
+            <h4>Fraud Details</h4>
+            <table class="admin__table-secondary order-information-table payment-info brippoPayments">
+                <tbody>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Fraud Risk')); ?></th>
+                        <td class="result fraud-level <?= $block->escapeHtml($block->getFraudRisk()); ?>">
+                            <b><?= $block->escapeHtml(ucfirst($block->getFraudRisk())); ?></b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Street Check')); ?></th>
+                        <td class="result <?= $block->escapeHtml($block->getStreetCheck()); ?>">
+                            <b><?= $block->escapeHtml(ucfirst($block->getStreetCheck())); ?></b>
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/passed.png'); ?>" class="passed" alt="Check Passed">
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/failed.png'); ?>" class="failed" alt="Check Failed">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Zip Check')); ?></th>
+                        <td class="result <?= $block->escapeHtml($block->getZipCheck()); ?>">
+                            <b><?= $block->escapeHtml(ucfirst($block->getZipCheck())); ?></b>
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/passed.png'); ?>" class="passed" alt="Check Passed">
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/failed.png'); ?>" class="failed" alt="Check Failed">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('CVC Check')); ?></th>
+                        <td class="result <?= $block->escapeHtml($block->getCVCCheck()); ?>">
+                            <b><?= $block->escapeHtml(ucfirst($block->getCVCCheck())); ?></b>
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/passed.png'); ?>" class="passed" alt="Check Passed">
+                            <img src="<?php echo $block->getViewFileUrl('Ebizmarts_BrippoPayments/img/failed.png'); ?>" class="failed" alt="Check Failed">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php }
+
+        if (!empty($block->getPaymentIntent())) { ?>
+            <h4>Card Details</h4>
+            <table class="admin__table-secondary order-information-table payment-info brippoPayments">
+                <tbody>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Brand')); ?></th>
+                        <td class="">
+                            <div
+                                style="background-image: url('<?= $this->getViewFileUrl(
+                                    "Ebizmarts_BrippoPayments::img/card-brands.png",
+                                    ['area'  => 'frontend']
+                                ); ?>');"
+                                class="card-brand-logo <?= $block->escapeHtml($block->getCardBrand()); ?>"
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Funding')); ?></th>
+                        <td class=""><?= $block->escapeHtml(ucfirst($block->getFunding())); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Last 4')); ?></th>
+                        <td class=""><?= $block->escapeHtml($block->getCardLast4()); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Country')); ?></th>
+                        <td class=""><?= $block->escapeHtml($block->getCardCountry()); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Expiration')); ?></th>
+                        <td class=""><?= $block->escapeHtml($block->getCardExpDate()); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Type')); ?></th>
+                        <td class=""><?= $block->escapeHtml($block->getCardBrandProduct()); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php }
+
+        if (!empty($block->getPaymentLink())) { ?>
+            <h4>Payment Link Details</h4>
+            <table class="admin__table-secondary order-information-table payment-info brippoPayments">
+                <tbody>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Payment Link ID')); ?></th>
+                        <td>
+                            <?= $block->escapeHtml($block->getPaymentLinkId()); ?><br>
+                            <a class="dashboard-link" href="<?= $block->getPaymentLinkUrl(); ?>" target="_blank">Go to Link</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Status')); ?></th>
+                        <td class="status"><?= getStatusBadge($block->getPaymentLinkStatus()); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Email Sent')); ?></th>
+                        <td><?= $block->getPaymentLinkEmailSent(); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php } ?>
+    </div>
+
+    <div id="brippoOrderLogModal" style="display:none;">
+        <pre id="brippoPaymentLogContent" style="max-height:400px; overflow:auto;"></pre>
+    </div>
+
+    <script>
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ], function($, modal) {
+            const orderIncrementId = '<?= $block->escapeJs($block->getOrder()->getIncrementId()) ?>';
+
+            modal({
+                title: '<?= $block->escapeHtml(__('Brippo payment log')) ?>',
+                buttons: []
+            }, $('#brippoOrderLogModal'));
+
+            $('#openBrippoOrderLog').on('click', async (e) => {
+                e.preventDefault();
+                const {logData} = await BrippoAdmin.getOrderLog(orderIncrementId);
+                if (logData) {
+                    $('#brippoPaymentLogContent').text(logData);
+                    $('#brippoOrderLogModal').modal('openModal');
+                } else {
+                    $('#brippoPaymentLogContent').text('Could not find log for order #' + orderIncrementId);
+                    $('#brippoOrderLogModal').modal('openModal');
+                }
+            });
+        });
+    </script>
+
+<?php } // @codingStandardsIgnoreEnd ?>

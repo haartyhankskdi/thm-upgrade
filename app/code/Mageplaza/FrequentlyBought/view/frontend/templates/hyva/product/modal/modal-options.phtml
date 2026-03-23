@@ -1,0 +1,174 @@
+<?php
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+$block      = ($block->getData('data'));
+$product   = $block->getProduct();
+$productId = $product->getId();
+$items     = $block->getItems();
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+?>
+<div id="mpfbt-popup" class="white-popup" style="max-width: unset !important;">
+    <div @click="hide" class="action-close" data-role="closeBtn" type="button" style="position: absolute;right: 10px;top: 3px;cursor: pointer">
+        <?= $heroicons->xHtml('w-5 h-5') ?>
+    </div>
+    <div id="mpfbt-popup-main">
+            <div id="mpfbt-popup-content">
+                <table data-role="grid" class="table-auto" style="display: block; overflow-x: auto">
+                    <thead class="d-block">
+                    <tr>
+                        <th class="col thumbnail p-2" style="width: 15%"><span><?= /* @noEscape */
+                                __('Thumbnail') ?></span></th>
+                        <th class="col name p-2" style="width: 25%"><span><?= /* @noEscape */
+                                __('Name') ?></span></th>
+                        <th class="col price p-2" style="width: 10%"><span><?= /* @noEscape */
+                                __('Price') ?></span></th>
+                        <th class="col options p-2" style="width: 50%"><span><?= /* @noEscape */
+                                __('Options') ?></span></th>
+                    </tr>
+                    </thead>
+                    <tbody class="d-block">
+                    <tr class="mpfbt-popup-product-detail" data-mpfbt-popup-product-id="<?= /* @noEscape */
+                    $productId ?>">
+                        <input type="hidden" class="mpfbt-product-input"
+                               id="mpfbt-product-input-<?= /* @noEscape */
+                               $productId ?>" data-mpfbt-popup-product-id="<?= /* @noEscape */
+                        $productId ?>" data-price-amount="<?= /* @noEscape */
+                        $block->getPriceAmount($product) ?>" name="mageplaza_fbt[<?= /* @noEscape */
+                        $productId ?>]" value=""/>
+                        <td data-th="<?= $escaper->escapeHtml(__('Thumbnail')) ?>">
+                            <div>
+                                <a href="<?= /* @noEscape */
+                                $block->getProductUrl($product) ?>">
+                                            <span><?= $block->getImage($product,
+                                                    'product_thumbnail_image')->toHtml() ?></span>
+                                </a>
+                            </div>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtml(__('Name')) ?>">
+                            <div>
+                                <a href="<?= /* @noEscape */
+                                $block->getProductUrl($product) ?>">
+                                    <span><?= $escaper->escapeHtml($product->getName()) ?></span>
+                                </a>
+                            </div>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtml(__('Price')) ?>">
+                            <div>
+                                    <span
+                                        class="mp-base-product-price item-price mageplaza-fbt-price-<?= /* @noEscape */
+                                        $productId ?>" data-price-amount="<?= /* @noEscape */
+                                    $block->getPriceAmount($product); ?>">
+                                        <?= /* @noEscape */
+                                        $block->formatPriceWithCurrency($block->getPriceAmount($product)); ?>
+                                    </span>
+                            </div>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtml(__('Options')) ?>">
+                            <div>
+                                <div
+                                    class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */
+                                    $productId ?>"><?= /* @noEscape */
+                                    $block->getOptionWrapper($productId) ?></div>
+                                <div
+                                    class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */
+                                    $productId ?>"><?= /* @noEscape */
+                                    $block->getCustomOption($productId) ?></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php foreach ($items as $_item): ?>
+                        <?php $itemId = $_item->getProductId() ?: $_item->getId() ?>
+                        <tr class="mpfbt-popup-product-detail" data-mpfbt-popup-product-id="<?= /* @noEscape */
+                        $itemId ?>">
+                            <input type="hidden" class="mpfbt-product-input"
+                                   id="mpfbt-product-input-<?= /* @noEscape */
+                                   $itemId ?>" data-mpfbt-popup-product-id="<?= /* @noEscape */
+                            $itemId ?>" data-price-amount="<?= /* @noEscape */
+                            $block->getPriceAmount($_item) ?>" name="mageplaza_fbt[<?= /* @noEscape */
+                            $itemId ?>]" value=""/>
+                            <td data-th="<?= $escaper->escapeHtml(__('Thumbnail')) ?>">
+                                <div>
+                                    <a href="<?= /* @noEscape */
+                                    $block->getProductUrl($_item) ?>">
+                                                <span><?= $block->getImage($_item,
+                                                        'product_thumbnail_image')->toHtml(); ?></span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Name')) ?>">
+                                <div>
+                                    <a href="<?= /* @noEscape */
+                                    $block->getProductUrl($_item) ?>">
+                                        <span><?= $escaper->escapeHtml($_item->getName()) ?></span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Price')) ?>">
+                                <div>
+                                        <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */
+                                        $itemId ?>" data-price-amount="<?= /* @noEscape */
+                                        $block->getPriceAmount($_item) ?>">
+                                            <?= /* @noEscape */
+                                            $block->formatPriceWithCurrency($block->getPriceAmount($_item)); ?>
+                                        </span>
+                                </div>
+                            </td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Options')) ?>">
+                                <div>
+                                    <div
+                                        class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */
+                                        $itemId ?>">
+                                        <?= /* @noEscape */
+                                        $block->getOptionWrapper($itemId) ?>
+                                    </div>
+                                    <div
+                                        class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */
+                                        $itemId ?>">
+                                        <?= /* @noEscape */
+                                        $block->getCustomOption($itemId) ?>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mpfbt-total-items">
+                        <span class="mpfbt-total-items-label">
+                            <?= /* @noEscape */
+                            __('Total Selected Items:') ?>
+                        </span>
+                <span class="mpfbt-total-items-value"></span>
+            </div>
+            <div class="mageplaza-fbt-price-box">
+                <div class="mageplaza-fbt-total-price">
+                            <span class="mageplaza-fbt-total-price-label">
+                                <?= /* @noEscape */
+                                __('Total price:') ?>
+                            </span>
+                    <span data-price-amount="0" class="mageplaza-fbt-price-wrapper">
+                                <span class="mageplaza-fbt-price">
+                                    <?= /* @noEscape */
+                                    $block->getPriceWithCurrency(0) ?>
+                                </span>
+                            </span>
+                </div>
+            </div>
+            <div class="mpfbt-actions">
+                <button type="button" @click="hide" title="Continue shopping" class="action primary mpfbt-btn-continue">
+                            <span><?= /** @noEscape */
+                                __('Continue shopping') ?></span>
+                </button>
+                <button type="submit" title="Add All To Cart" class="action primary" id="mpfbt-btn-addtocart">
+                            <span><?= /** @noEscape */
+                                __('Add All To Cart') ?></span>
+                </button>
+            </div>
+
+    </div>
+</div>
+

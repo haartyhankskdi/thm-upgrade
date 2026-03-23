@@ -1,0 +1,52 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\RewardPoints\Block\Html\Footer;
+use Mageplaza\RewardPoints\Helper\Data;
+
+/** @var Footer $block */
+
+$helper = $this->helper(Data::class);
+?>
+<?php if ($block->isEnabled() && $block->isShowLandingPage()) : ?>
+
+    <?php if ($helper->checkHyvaTheme()) : ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 xl:col-span-2" style="max-width: 25%;">
+            <div>
+                <h4 class="text-md leading-5 font-semibold tracking-wider uppercase">
+                </h4>
+                <ul class="mt-4">
+                    <li class="mt-4">
+                        <a href="<?= $block->escapeUrl($block->getUrlLandingPage()) ?>" class="text-base leading-6">
+                            <?= $block->escapeHtml($block->getLandingPageLabel()) ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <?php else : ?>
+        <li>
+            <a href="<?= $block->escapeUrl($block->getUrlLandingPage()) ?>">
+                <?= $block->escapeHtml($block->getLandingPageLabel()) ?>
+            </a>
+        </li>
+    <?php endif; ?>
+<?php endif; ?>

@@ -1,0 +1,83 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+
+<div id="loading-mask"></div>
+
+<div id="mollie-order-status"><?= __('Current Status: Loading...'); ?></div>
+<div id="mollie-order-error"></div>
+
+<div id="mollie-retry-order" style="display: none;">
+    <button class="action primary"><?= __('Retry'); ?></button>
+</div>
+
+<script>
+require([
+    'jquery',
+    'mage/storage',
+    'mage/translate',
+    'loader',
+], function ($, storage, __, loader) {
+    var serviceUrl = '<?= $escaper->escapeJs($block->getData('status_url')); ?>';
+    var resetUrl = '<?= $escaper->escapeJs($block->getData('reset_url')); ?>';
+    var retryUrl = '<?= $escaper->escapeJs($block->getData('retry_url')); ?>';
+    var statusElement = document.getElementById('mollie-order-status');
+    var errorElement = document.getElementById('mollie-order-error');
+    var waitTime = 100;
+
+    $('#loading-mask').loader({
+        'icon': '<?= $escaper->escapeUrl($block->getViewFileUrl('images/loader-1.gif')); ?>'
+    }).loader('show');
+
+    function checkOrderStatus() {
+        storage.post(serviceUrl).done(function (response) {
+            statusElement.style.display = 'block';
+            errorElement.style.display = 'none';
+
+            var status = response[0].status;
+            if (status === 'processing') {
+                window.location.href = '/checkout/onepage/success/';
+                return;
+            }
+
+            statusElement.innerHTML = __('Current Status: %1').replace('%1', status);
+
+            if (status === 'canceled') {
+                $('#loading-mask').loader('hide');
+                $('#mollie-retry-order').show();
+                return;
+            }
+
+            if (waitTime < 1000) {
+                waitTime += 100;
+            }
+
+            setTimeout(checkOrderStatus, waitTime);
+        }).fail(function (error) {
+            console.error('Received error: ', error);
+
+            statusElement.style.display = 'none';
+            errorElement.style.display = 'block';
+            errorElement.innerHTML = __('Something went wrong while fetching order. Retrying...');
+        })
+    }
+
+    checkOrderStatus();
+
+    $('#mollie-retry-order .primary').click(function () {
+        $('#loading-mask').loader('show');
+
+        storage.post(resetUrl).done(function (response) {
+            window.location.href = retryUrl;
+        });
+    });
+})
+</script>

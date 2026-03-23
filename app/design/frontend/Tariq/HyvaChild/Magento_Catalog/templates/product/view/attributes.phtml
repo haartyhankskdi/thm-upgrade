@@ -1,0 +1,63 @@
+<?php
+/**
+ * Hyvä Themes - Attributes as Accordions
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Catalog\Helper\Output as CatalogOutputHelper;
+use Magento\Catalog\Block\Product\View\Attributes;
+use Magento\Catalog\Model\Product;
+
+/** @var Escaper $escaper */
+/** @var Attributes $block */
+
+$catalogOutputHelper = $this->helper(CatalogOutputHelper::class);
+$product = $block->getProduct();
+?>
+
+<?php if ($attributes = $block->getAdditionalData()): ?>
+    <div x-data="{ open: null }" class="divide-y border-t border-gray-200">
+
+        <?php foreach ($attributes as $index => $attribute): ?>
+            <?php
+                $label = $escaper->escapeHtml($attribute['label']);
+                $value = $catalogOutputHelper->productAttribute($product, $attribute['value'], $attribute['code']);
+
+                if (empty(trim(strip_tags($value)))) continue;
+
+                $allowed = ['ingredients', 'storage_guidelines', 'cooking_suggestions'];
+                if (!in_array($attribute['code'], $allowed)) continue;
+            ?>
+
+            <section>
+                <button 
+                    @click="open === '<?= $index ?>' ? open = null : open = '<?= $index ?>'"
+                    class="tab-title flex justify-between items-center w-full px-0 py-3 lg:py-8 text-xl md:text-[28px] text-left text-black font-bold focus:outline-none"
+                >
+                    <span><?= $label ?></span>
+                    <svg 
+                        :class="open === '<?= $index ?>' ? 'rotate-90' : ''"
+                        class="h-4 w-4 text-black transform transition-transform duration-200 text-black"
+                        fill="currentColor" viewBox="0 0 24 24"  
+                    >
+                        <path d="M9 5l9 9-9 9" />
+                    </svg>
+
+                    
+
+                </button>
+
+                <div 
+                    x-show="open === '<?= $index ?>'"
+                    x-collapse
+                    x-transition
+                    class="px-0 pb-4 text-base text-black"
+                >
+                    <?= /* @noEscape */ $value ?>
+                </div>
+            </section>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

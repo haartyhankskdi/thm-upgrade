@@ -1,0 +1,42 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/**@var \Mageplaza\RewardPointsPro\Block\Account\Dashboard\Hold $block */
+?>
+<?php if ([$points, $dayLabel, $numberDays, $holdingDate] = $block->getFirstHolding()) : ?>
+    <?php if ($points > 0 && $numberDays >= 0) : ?>
+        <div class="box box-point-hold"  style="float: right">
+            <strong class="box-title">
+                <span><?= $block->escapeHtml(__('Held Point:')) ?></span>
+            </strong>
+            <div class="box-content expired">
+                <span>
+                    <strong><?= /** @noEscape */ $points ?> </strong>
+                     <?php if ($dayLabel != 'today') : ?>
+                         <?= $block->escapeHtml(__('will be available within %1 %2 (%3).', $numberDays, $dayLabel, $holdingDate)) ?>
+                     <?php else : ?>
+                         <?= $block->escapeHtml(__('will be available within today'))?> (<?= /** @noEscape */ $holdingDate ?>).
+                     <?php endif; ?>
+                </span>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

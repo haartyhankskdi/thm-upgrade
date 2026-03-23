@@ -1,0 +1,66 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+<script>
+    if (window.AmFB) {
+        (() => {
+            const gdprListeners = [
+                {
+                    event: 'cookiebar-action-accept-finish',
+                    callback: () => window.AmFB.initPixels(),
+                    options: { once: true }
+                },
+                {
+                    event: 'cookiebar-action-allow-finish',
+                    callback: () => window.AmFB.initPixels(),
+                    options: { once: true }
+                }
+            ];
+
+            const isAllowedToRunScript = function () {
+                const facebookPixelCookieName = '_fbp';
+                const allowedCookies = hyva.getCookie('amcookie_allowed') || '';
+                const disallowedCookies = hyva.getCookie('amcookie_disallowed') || '';
+                return !!allowedCookies.length
+                    && (!disallowedCookies || disallowedCookies.indexOf(facebookPixelCookieName) === -1);
+            };
+
+            window.AmFB.setDataToSection = new Proxy(window.AmFB.setDataToSection, {
+                apply(target, thisArg, argArray) {
+                    if (isAllowedToRunScript()) {
+                        return target.apply(thisArg, argArray);
+                    }
+
+                    return {
+                        then: () => {}
+                    }
+                }
+            });
+
+            window.AmFB.initPixels = new Proxy(window.AmFB.initPixels, {
+                apply(target, thisArg, argArray) {
+                    if (isAllowedToRunScript()) {
+                        return target.apply(thisArg, argArray);
+                    }
+                }
+            });
+
+            window.AmFB = new Proxy(window.AmFB, {
+                get(target, prop, receiver) {
+                    if (prop === 'listeners') {
+                        return [...Reflect.get(...arguments), ...(gdprListeners)];
+                    }
+
+                    return Reflect.get(...arguments);
+                }
+            });
+        })();
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

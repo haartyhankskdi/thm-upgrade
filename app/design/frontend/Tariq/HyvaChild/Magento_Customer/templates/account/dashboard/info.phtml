@@ -1,0 +1,139 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 my-10">
+
+<?php
+function card($url, $img, $label, $delete = false) {
+    $textClass = $delete ? "text-red-600" : "text-gray-800";
+
+    if ($delete) {
+        echo '
+        <div x-data="{ open: false }">
+            <a href="javascript:void(0)" x-on:click="open = true" class="block">
+                <div class="py-12 bg-[#F5F9F7] rounded hover:shadow-lg transition cursor-pointer">
+                    <div class="flex flex-col items-center gap-4 mb-6">
+                        <img src="'.$img.'" class="w-12 h-12" />
+                        <h3 class="text-xl font-medium '.$textClass.'">'.$label.'</h3>
+                    </div>
+                </div>
+            </a>
+
+            <!-- DELETE POPUP -->
+            <div x-show="open" x-cloak
+                 class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg p-6 w-96 text-center">
+                    <h2 class="text-lg font-semibold text-red-600 mb-4">
+                        Delete Account
+                    </h2>
+
+                    <p class="text-gray-700 mb-6">
+                        Are you sure you want to delete your account?
+                    </p>
+
+                    <div class="flex justify-center gap-4">
+                        <button type="button"
+                                x-on:click="open = false"
+                                class="px-4 py-2 border rounded">
+                            Cancel
+                        </button>
+
+                        <a href="'.$url.'"
+                           class="px-4 py-2 bg-red-600 text-white rounded">
+                            Yes, Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>';
+    } else {
+        echo '
+        <a href="'.$url.'" class="block">
+            <div class="py-12 bg-[#F5F9F7] rounded hover:shadow-lg transition cursor-pointer">
+                <div class="flex flex-col items-center gap-4 mb-6">
+                    <img src="'.$img.'" class="w-12 h-12" />
+                    <h3 class="text-xl font-medium '.$textClass.'">'.$label.'</h3>
+                </div>
+            </div>
+        </a>';
+    }
+}
+?>
+
+<?php
+card(
+    $block->getUrl('customer/account/edit'),
+    $block->getUrl('pub/media').'wysiwyg/manage-account-details-icon1.svg',
+    'Manage Account Details'
+);
+
+card(
+    $block->getUrl('customer/address'),
+    $block->getUrl('pub/media').'wysiwyg/manage-location-details-icon.svg',
+    'Manage Address Details'
+);
+
+card(
+    $block->getUrl('contact'),
+    $block->getUrl('pub/media').'wysiwyg/need-help-icon.svg',
+    'Need Help'
+);
+
+card(
+    $block->getUrl('sales/order/history'),
+    $block->getUrl('pub/media').'wysiwyg/account-cart-icon.svg',
+    'My Orders'
+);
+
+card(
+    $block->getUrl('wishlist'),
+    $block->getUrl('pub/media').'wysiwyg/account-wishlist-icon.svg',
+    'My Wishlist'
+);
+
+card(
+    $block->getUrl('customer/rewards'),
+    $block->getUrl('pub/media').'wysiwyg/reward-point-icon.svg',
+    'My Points and Rewards'
+);
+
+card(
+    $block->getUrl('membership/manage'),
+    $block->getUrl('pub/media').'wysiwyg/vip-member-icon.svg',
+    'Membership'
+);
+
+card(
+    $block->getUrl('customer/account/delete'),
+    $block->getUrl('pub/media').'wysiwyg/delete-account.svg',
+    'Delete Account',
+    true
+);
+?>
+
+<?php
+$surveyBlock = $block->getLayout()->createBlock('MY\CompleteSurvey\Block\CompleteSurvey');
+$orderColl = $surveyBlock->getCustomerOrder();
+$surveyRecord = $surveyBlock->getCustomerSurveyRecord();
+$custId = $surveyBlock->getId();
+$custEmail = $surveyBlock->getEmail();
+$custEmailSent = $surveyBlock->getEmailSent();
+
+$queryParams = [
+    'cid' => base64_encode($custId),
+    'cemail' => base64_encode($custEmail)
+];
+
+if ($orderColl->getSize() >= 1 && $surveyRecord && $custEmailSent == 'yes') :
+?>
+<div class="myaccount-dashbord-1">
+    <a href="<?= $block->getUrl('completesurvey/manage', $queryParams) ?>">
+        <div class="my-account-1 account-survey last">
+            <div class="img">
+                <img src="<?= $block->getUrl('pub/media') ?>wysiwyg/suvery-icon.png"
+                     alt="Customer Survey" />
+            </div>
+            <h3>Customer Survey</h3>
+        </div>
+    </a>
+</div>
+<?php endif; ?>
+
+</div>

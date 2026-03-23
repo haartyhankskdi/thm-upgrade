@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Top menu for store
+ *
+ * @var $block \Magento\Theme\Block\Html\Topmenu
+ */
+
+$columnsLimit = $block->getColumnsLimit() ?: 0;
+$_menuHtml = $block->getHtml('level-top', 'submenu', $columnsLimit)
+?>
+
+<nav class="navigation" data-action="navigation">
+    <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+        <?= /* @noEscape */ $_menuHtml?>
+        <?= $block->getChildHtml() ?>
+    </ul>
+    <div class="nav_right">
+        <ul class="custom-links">
+        <li><a href="<?= $block->getBaseUrl() ?>sales/order/history/"><img src="<?php echo $block->getViewFileUrl('images/buy-again.svg'); ?>" alt="buy-again" />Buy Again</a></li>
+        <li><a href="<?= $block->getBaseUrl() ?>membership-page"><img src="<?php echo $block->getViewFileUrl('images/vip-member.svg'); ?>" alt="vip-member" />Become a VIP Member</a></li>
+        <li><a href="<?= $block->getBaseUrl() ?>store-locators"><img src="<?php echo $block->getViewFileUrl('images/store-locator.svg'); ?>" alt="store-locator" />Store Locator</a></li>
+    </ul>
+    </div>
+</nav>

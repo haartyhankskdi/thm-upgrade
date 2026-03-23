@@ -1,0 +1,12 @@
+<?php
+$_product = $block->getProduct();
+$ingredients = $_product->getData('ingredients');
+
+if (!$ingredients) {
+     return;
+}
+?>
+
+<div class="product-tab-content ingredients-tab">
+    <p><?= $block->escapeHtml($ingredients) ?></p>
+</div>

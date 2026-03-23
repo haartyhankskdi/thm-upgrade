@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */-->
+<config
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd"
+>
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="hyva-magento2-amasty-storelocator" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Amasty_Storelocator</item>
+                    <item name="compat_module" xsi:type="string">Amasty_StorelocatorHyva</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_Storelocator::make-css" disabled="true" />
+    </type>
+</config>

@@ -1,0 +1,173 @@
+<?php
+/**
+ * Hyvä Themes - Product List with Load More (button shown only if more than one page)
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\CurrentCategory;
+use Hyva\Theme\ViewModel\ProductListItem;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Block\Product\ListProduct;
+use Magento\Framework\Escaper;
+
+/** @var ListProduct $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$productViewModel         = $viewModels->require(ProductPage::class);
+$productListItemViewModel = $viewModels->require(ProductListItem::class);
+$currentCategoryViewModel = $viewModels->require(CurrentCategory::class);
+
+$eagerLoadImagesCount = (int) ($block->getData('eager_load_images_count') ?? 3);
+$productCollection = $block->getLoadedProductCollection();
+$items = $productCollection->getItems();
+usort($items, fn($a,$b)=>$b->getId()-$a->getId());
+
+// --- Safe pagination calc ---
+$toolbar     = $block->getToolbarBlock();
+$totalProducts = $productCollection->getSize();
+$pageSize = (int) $block->getToolbarBlock()->getLimit();
+$totalPages = ceil($totalProducts / $pageSize);
+?>
+
+<div class="flex justify-between items-center mb-4">
+    <?php if ($productCollection->getSize()): ?>
+        <div class="hidden md:block text-sm text-gray-700 font-medium">
+            <?= $productCollection->getSize(); ?> <?= __('Products Found') ?>
+        </div>
+    <?php else: ?>
+        <div class="text-sm text-gray-700 font-medium">
+            <?= $block->escapeHtml(__('No Products Found')) ?>
+        </div>
+    <?php endif; ?>
+    <div class="flex items-center space-x-2 hidden">
+        <?= $block->getChildHtml('toolbar') ?>
+    </div>
+</div>
+
+<?php if (!$productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></div>
+    </div>
+<?php else: ?>
+      <?= $block->getToolbarHtml() ?>
+<section class="pt-8 pb-12 scroll-item" id="product-list" aria-label="<?= $escaper->escapeHtmlAttr(__('Product list')) ?>" tabindex="-1">
+   
+    <?= $block->getAdditionalHtml() ?>
+
+    <?php
+    $viewMode         = $block->getMode();
+    $imageDisplayArea = $viewMode === 'grid' ? 'category_page_grid' : 'category_page_list';
+    $showDescription  = $viewMode !== 'grid';
+    $templateType     = $viewMode === 'grid'
+        ? \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW
+        : \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    ?>
+
+    <div id="products-wrapper" class="products wrapper  mode-<?= /* @noEscape */$viewMode ?> products-<?= /* @noEscape */$viewMode ?>">
+    <!--     <ul role="list"
+            class="mx-auto pt-4 pb-12 grid gap-4 grid-cols-1 <?//= $viewMode === 'grid' ? 'sm:grid-cols-2 xl:grid-cols-4' : '' ?> products list items product-items"> -->
+    <ul role="list" class="mx-auto pt-4 grid gap-2 md:gap-6 grid-cols-2 lg:grid-cols-4 products list items product-items">
+
+            <?php foreach (array_values($items) as $i => $product): ?>
+                <?php if ($i < $eagerLoadImagesCount): ?>
+                    <?php $product->setData('image_custom_attributes', ['loading' => 'eager', 'fetchpriority' => 'high']); ?>
+                <?php endif; ?>
+                <li class="flex flex-col mb-8">
+                    <div class="group bestsell-item border-0 bg-transparent hover:bg-[#F5F9F7] hover:shadow-lg transition-shadow duration-300 transition relative cursor-pointer pb-8">
+                    <?= $productListItemViewModel->getItemHtml(
+                        $product,
+                        $block,
+                        $viewMode,
+                        $templateType,
+                        $imageDisplayArea,
+                        $showDescription
+                    ); ?>
+                </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+      <?php if ($totalProducts > 12 && $totalPages > 1): ?>
+    <div
+        x-data="loadMoreProducts(<?= (int)$totalPages ?>, <?= (int)$totalProducts ?>)"
+        class="text-center mt-0 mb-12"
+    >
+        <template x-if="!allLoaded">
+            <button
+                @click="loadMore()"
+                class="bg-black text-white text-base font-normal uppercase px-12 py-4 rounded-full hover:bg-[#E63833] transition"
+                x-bind:disabled="loading"
+                x-text="loading ? 'Loading...' : 'Load More'"
+            ></button>
+        </template>
+
+      <!--   <template x-if="allLoaded">
+            <p class="text-gray-500 mt-2"><?//= __('All products loaded') ?></p>
+        </template> -->
+    </div>
+<?php endif; ?>
+    </div>
+</section>
+<?php endif; ?>
+<div id="cart-toast-container"></div>
+ <!-- Disable this section for search page --> 
+<?php
+$request = $block->getRequest();
+$fullActionName = $request->getFullActionName();
+ if ($fullActionName != 'catalogsearch_result_index'): ?>
+
+    <!-- Recipe Section --> 
+    <?php echo $this->getLayout()
+        ->createBlock('Magento\Cms\Block\Block')
+        ->setBlockId('list_recipe')
+        ->toHtml();
+    ?>
+
+    <!-- Trends & Stories Section --> 
+    <?php echo $this->getLayout()
+        ->createBlock(\Magento\Framework\View\Element\Template::class)
+        ->setTemplate("Magento_Catalog::category/latest-post.phtml")
+        ->toHtml();
+    ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentPage = 1;
+    const totalPages = <?= (int) $block->getToolbarBlock()->getLastPageNum() ?>;
+    const productsWrapper = document.querySelector('#products-wrapper ul');
+
+    // Infinite scroll observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && currentPage < totalPages) {
+                currentPage++;
+                loadPage(currentPage);
+            }
+        });
+    }, { threshold: 1 });
+
+    const sentinel = document.createElement('div');
+    sentinel.className = 'load-more-sentinel';
+    sentinel.style.height = '1px';
+    productsWrapper.parentNode.appendChild(sentinel);
+    observer.observe(sentinel);
+
+    function loadPage(page) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('p', page);
+
+        fetch(url)
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newItems = doc.querySelectorAll('#product-list #products-wrapper ul > li');
+                newItems.forEach(item => {
+                    productsWrapper.appendChild(item);
+                });
+            })
+            .catch(console.error);
+    }
+});
+</script>
+<?php endif; ?>

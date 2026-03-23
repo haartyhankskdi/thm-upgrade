@@ -1,0 +1,226 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Magento\Framework\Escaper;
+use Amasty\Storelocator\Block\View\Location as Block;
+
+/**
+ * @var \Amasty\Storelocator\Model\Location $location
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\Storelocator\Block\View\Location $block
+ */
+$location = $block->getCurrentLocation();
+$galleryImages = $block->getLocationGallery();
+$useFancybox = !empty($galleryImages);
+?>
+
+<script>
+    function mapLoaded() {
+        const mapLoadedEvent = new CustomEvent("map-loaded");
+        window.dispatchEvent(mapLoadedEvent);
+    }
+
+    function loadGoogleMaps() {
+        const apiKey = "<?= $escaper->escapeHtml($block->configProvider->getApiKey()); ?>";
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.onload = function() {
+            mapLoaded();
+        };
+        document.head.appendChild(script);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadGoogleMaps();
+    });
+</script>
+
+
+<script>
+    let map;
+    let directionsService;
+    let directionsDisplay;
+    let panoramaService;
+
+    function storeLocatorPage() {
+        return {
+            mapId: 'amlocation-map',
+            locationMarker: [],
+            locationData : {
+                lat: <?= (float)$location->getLat() ?>,
+                lng: <?= (float)$location->getLng() ?>,
+                marker_url: '<?= $escaper->escapeUrl($location->getMarkerImageUrl()) ?>'
+            },
+            locationLatLng: '',
+            swapMode: false,
+            travelMode: 'DRIVING',
+            showDierctions: false,
+            directionsExpanded: true,
+            scheduleExpanded: false,
+            reviewsExpanded: true,
+            popupError: '',
+            mobileAttribiutesExpanded: false,
+            useFancybox: <?= $escaper->escapeJs($useFancybox) ? 'true' : 'false' ?>,
+            initStoreLocatorPage() {
+                if (google !== undefined) {
+                    directionsService = new google.maps.DirectionsService();
+                    directionsDisplay = new google.maps.DirectionsRenderer();
+                    panoramaService = new google.maps.StreetViewService();
+                }
+
+                this.initializeMap();
+                this.initializeRoute();
+
+                if (this.useFancybox) {
+                    this.initializeFancybox();
+                }
+            },
+            initializeMap() {
+                const mapOptions = {
+                    zoom: 9,
+                    center: this.locationData,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+
+                this.locationLatLng = `${this.locationData.lat},${this.locationData.lng}`;
+
+                map = new google.maps.Map(document.getElementById(this.mapId), mapOptions);
+
+                this.locationMarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(this.locationData.lat, this.locationData.lng),
+                    map: map,
+                    icon: this.locationData.marker_url
+                });
+
+                directionsDisplay.setMap(map);
+
+            },
+            initializeRoute() {
+                autocompleteOrigin = new google.maps.places.Autocomplete(this.$refs.originPoint);
+
+                google.maps.event.addListener(autocompleteOrigin, 'place_changed', function () {
+                    this.calcRoute(this.$refs.originPoint.value, this.locationLatLng, this.swapMode);
+                }.bind(this));
+
+                directionsDisplay.setPanel(this.$refs.directionsPanel);
+            },
+            calcRoute(origin, destination, swapMode) {
+                let request = {
+                    origin: origin,
+                    destination: destination,
+                    travelMode: google.maps.TravelMode[this.travelMode]
+                };
+
+                if (this.swapMode) {
+                    request.origin = destination;
+                    request.destination = origin;
+                }
+
+                if (origin) {
+                    directionsService.route(request, function (result, status) {
+                        if (status == 'OK') {
+                            directionsDisplay.setDirections(result);
+                            this.showDierctions = true;
+                            this.$nextTick(() => {
+                                this.$refs.directionsPanel.focus()
+                            });
+                        } else {
+                            dispatchMessages([{
+                                type: "error",
+                                text: "<?= $escaper->escapeJs(__("Sorry, Google failed to get directions")) ?>"
+                            }], 5000);
+                        }
+                    }.bind(this));
+                }
+            },
+            changeMode(mode) {
+                if (mode === this.travelMode) {
+                    return;
+                };
+
+                this.travelMode = mode;
+                if (this.$refs.originPoint.value) {
+                    this.calcRoute(this.$refs.originPoint.value, this.locationLatLng, this.swapMode);
+                };
+            },
+            swap() {
+                this.swapMode = !this.swapMode;
+                if (this.$refs.originPoint.value) {
+                    this.calcRoute(this.$refs.originPoint.value, this.locationLatLng, this.swapMode);
+                };
+            },
+            initPanorama() {
+                panoramaService.getPanorama({
+                    location: new google.maps.LatLng(this.locationData.lat, this.locationData.lng)},
+                    function (result, status) {
+                        if (status === 'OK') {
+                            panorama = new google.maps.StreetViewPanorama(
+                                document.getElementById(this.mapId), {
+                                    pano: result.location.pano,
+                                    enableCloseButton: true
+                                }
+                            );
+                        } else {
+                            dispatchMessages([{
+                                type: "error",
+                                text: "<?= $escaper->escapeJs(__("Sorry, there is no available view of the street yet.")) ?>"
+                            }], 5000);
+                        }
+                }.bind(this))
+            },
+            sendReview: function () {
+                const form = this.$refs.reviewForm,
+                      formData = new FormData(form),
+                      url = window.location.origin + '/amlocator/location/savereview';
+
+                if (!formData.get("location-rating") || !formData.get("detail")) {
+                    this.popupError = '<?= $escaper->escapeJs(__("Please fill in all required fields")) ?>';
+                    setTimeout(() => {
+                        this.popupError = '';
+                    }, 3000)
+
+                    return
+                }
+
+                fetch(url, {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        dispatchMessages([{
+                            type: "success",
+                            text: "<?= $escaper->escapeJs(__("Review has been placed")) ?>"
+                        }], 5000);
+                        this.hide();
+                        form.reset();
+                    } else {
+                        dispatchMessages([{
+                            type: "error",
+                            text: "<?= $escaper->escapeJs(__("Issue with sending review. Please try letter")) ?>"
+                        }], 5000);
+                    }
+                });
+            },
+            initializeFancybox: function() {
+                fetch('<?= $escaper->escapeUrl($block->getViewFileUrl("Amasty_StorelocatorHyva::vendor/fancybox/fancybox.umd.js"))?>')
+                    .then(response => {
+                    return response.text();
+                }).then(scriptText => {
+                    const scriptElement = document.createElement('script');
+                    scriptElement.text = scriptText;
+                    document.body.appendChild(scriptElement);
+                }).then(() => {
+                    Fancybox.bind('[data-fancybox="gallery"]');
+                })
+            }
+        }
+    }
+</script>

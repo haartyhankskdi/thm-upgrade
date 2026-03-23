@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchPages() {
+        return {
+            pageItems() {
+                return this.sections.page.items
+            },
+            pageItemUrl() {
+                return `${BASE_URL + this.item.url}`
+            },
+            itemTitle() {
+                return this.item.title
+            },
+            itemDescription() {
+                return this.item.description
+            },
+            pageTitle() {
+                return this.sections.page.title
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

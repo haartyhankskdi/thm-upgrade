@@ -1,0 +1,58 @@
+<div class="payment-method" data-bind="if: shouldDisplayAtCheckoutPaymentsList, visible: canMakePayment, afterRender: onRenderedHandler, css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <div class="brippo-payment-list-label">
+                <img class="brippo-in-list-logo" data-bind="attr:{src: methodLogo()}"  alt="Wallet Logo"/>
+                <span class="brippo-in-list-title" data-bind="text: methodTitleForPaymentList()"></span>
+            </div>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <span id="brippo-payments-express-button-errors" class="message error" style="display: none;"></span>
+        <!-- ko if: useDefaultButton() -->
+            <div class="payment-method-note" style="padding: 10px 0;">
+                <strong>
+                    <!-- ko text: $t('Another step will appear to securely submit your payment information.') -->
+                    <!-- /ko -->
+                </strong>
+                <br>
+            </div>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button class="action primary checkout"
+                            type="submit"
+                            data-bind="
+                            click: placeOrder,
+                            attr: {title: $t('Place Order')},
+                            css: {disabled: !isPlaceOrderActionAllowed()},
+                            enable: (getCode() == isChecked())
+                            "
+                            disabled>
+                        <span data-bind="i18n: 'Place Order'"></span>
+                    </button>
+                </div>
+            </div>
+        <!-- /ko -->
+        <!-- ko ifnot: useDefaultButton() -->
+            <div id="brippo-payments-express-button" style="position: relative; max-width: 400px; margin-bottom: 10px; margin-top: 10px;"></div>
+        <!-- /ko -->
+
+    </div>
+</div>

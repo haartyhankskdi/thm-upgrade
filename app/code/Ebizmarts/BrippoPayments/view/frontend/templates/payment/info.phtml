@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Payment\Info;
+use Ebizmarts\BrippoPayments\Model\Express;
+
+/** @var Info $block */
+$title = $block->escapeHtml($block->getMethod()->getTitle());
+$data = $block->getMethod()->getInfoInstance()->getAdditionalInformation();
+
+$specificInfo = [];
+if ($block->getMethod()->getCode() == Express::METHOD_CODE) {
+    $title = $data['wallet'] ?? $title;
+}
+
+$cardBrand = "";
+$cardType = "";
+$cardLast4 = "";
+$cardExpiration = $block->prepareCardExpDate($data);
+
+if (isset($data['card_brand'])) {
+    $cardBrand = ucfirst($data['card_brand']);
+}
+if (isset($data['card_last4'])) {
+    $cardLast4 = $data['card_last4'];
+}
+if (isset($data['wallet']) && $data['wallet'] !== 'Undefined') {
+    $wallet = $data['wallet'];
+}
+if (isset($data['funding'])) {
+    $cardType =  ucfirst($data['funding']);
+}
+
+if (!empty($cardBrand)) {
+    $specificInfo[trim($cardType . ' Card Type')] = $cardBrand;
+}
+if (!empty($cardLast4)) {
+    $specificInfo[trim($cardType . ' Card Last 4')] = $cardLast4;
+}
+if (!empty($cardExpiration)) {
+    $specificInfo[trim($cardType . ' Card Expiration')] = $cardExpiration;
+}
+
+if (!empty($block->getPaymentLinkId())) {
+    $specificInfo['Payment Link ID'] = $block->getPaymentLinkId();
+    $specificInfo['Payment Link Status'] = $block->getPaymentLinkStatus();
+}
+
+?>
+<dl class="payment-method">
+    <dt class="title"><?= /* @noEscape */ $title ?></dt>
+    <?php if (!empty($specificInfo)): ?>
+        <dd class="content">
+            <table class="data table">
+                <caption class="table-caption"><?= /* @noEscape */ $title ?></caption>
+                <?php
+                foreach ($specificInfo as $label => $value):
+                    if (empty($value)) continue;
+                ?>
+                    <tr>
+                        <th scope="row"><?= $block->escapeHtml($label) ?></th>
+                        <td>
+                            <?= /* @noEscape */ nl2br($block->escapeHtml(implode("\n", $block->getValueAsArray($value, true)))) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </dd>
+    <?php endif;?>
+</dl>
+

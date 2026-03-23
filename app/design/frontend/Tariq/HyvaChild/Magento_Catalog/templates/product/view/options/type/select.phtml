@@ -1,0 +1,105 @@
+<?php
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\CustomOption;
+use Magento\Catalog\Block\Product\View\Options\Type\Select;
+use Magento\Framework\Escaper;
+
+/** @var Select $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$option = $block->getOption();
+$product = $block->getProduct();
+$optionId = $option->getId();
+$values = $option->getValues();
+$isRequired = $option->getIsRequire();
+
+/** @var CustomOption $customOptionsViewModel */
+$customOptionsViewModel = $viewModels->require(CustomOption::class);
+?>
+
+<div class="my-4 custom-option-wrapper"
+     data-option-id="<?= $optionId ?>"
+     data-required="<?= $isRequired ? '1' : '0' ?>"
+>
+
+    <!-- TITLE -->
+    <span class="block font-bold text-black mb-2">
+        <?= $escaper->escapeHtml($option->getTitle()) ?>
+        <?php if ($isRequired): ?>
+            <span class="text-red-600">*</span>
+        <?php endif; ?>
+    </span>
+
+    <!-- BUTTONS -->
+    <div class="flex flex-wrap gap-0">
+        <?php foreach ($values as $value):
+          $title = $value->getTitle();
+        $isLongText = mb_strlen($title) > 15;
+         ?>
+
+            <button type="button"
+                class="custom-option-btn cursor-pointer min-w-[115px] border px-6 py-3 <?= $isLongText ? 'long_custom' : 'short_custom' ?>" 
+                data-value="<?= $value->getId() ?>"
+            >
+                <?= $escaper->escapeHtml($value->getTitle()) ?>
+            </button>
+        <?php endforeach; ?>
+    </div>
+
+    <p class="text-red-600 text-sm mt-2 hidden option-error">
+        Please select an option
+    </p>
+
+    <!-- REAL HYVA SELECT (HIDDEN BUT REQUIRED) -->
+    <div class="hidden">
+        <?= $customOptionsViewModel->getOptionHtml($option, $product); ?>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.custom-option-wrapper').forEach(wrapper => {
+
+        const select = wrapper.querySelector('select');
+        const buttons = wrapper.querySelectorAll('.custom-option-btn');
+        const error = wrapper.querySelector('.option-error');
+        const required = wrapper.dataset.required === '1';
+
+        if (!select) return;
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function () {
+
+                buttons.forEach(b => b.classList.remove('border-black'));
+                btn.classList.add('border-black');
+
+                select.value = btn.dataset.value;
+
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+
+                if (error) error.classList.add('hidden');
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+
+            const addBtn = e.target.closest('button[type="submit"], button.add-to-basket');
+            if (!addBtn) return;
+
+            if (required && !select.value) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (error) error.classList.remove('hidden');
+                wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+    });
+
+});
+</script>

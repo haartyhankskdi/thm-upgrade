@@ -1,0 +1,83 @@
+//
+//  Amasty Base compatibility with admin themes
+//  ______________________________________________
+
+//
+//  Variables
+//  ----------------------------------------------
+
+@amasty-button-radius: 32px;
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .am-mageos-compat {
+        /* phpcs:ignore Magento2.Less.AvoidId.IdSelectorUsage */
+        #menu-menuamasty-base-menu {
+            .ambase-submenu .ambase-title {
+                color: @color-black;
+            }
+
+            .ambase-submenu:not(.-second) .ambase-menu-item .ambase-menu-item {
+                color: lighten(@submenu-link__color, 30%);
+            }
+
+            > a:before {
+                background-image: url(@ambase-menu-icon__amasty-logo-black);
+                background-size: 24px 26px;
+                height: 3.6rem;
+                padding: 0;
+            }
+
+            > a:hover:before,
+            &._show > a:before {
+                &:extend(.admin__menu .level-0:hover>a::before);
+                background-image: url(@ambase-menu-icon__amasty-logo-black);
+                background-size: 24px 26px;
+            }
+        }
+
+        .ambase-search-block .ambase-search {
+            background-color: @action-dropdown__background-color;
+            border-color: @action-dropdown__background-color;
+            border-radius: @amasty-button-radius;
+        }
+
+        /* phpcs:ignore Magento2.Less.ClassNaming.NotAllowedSymbol */
+        .admin__menu [data-ui-id^='menu-amasty-'] .submenu-group-title span:before {
+            background-image: url('@{baseDir}Amasty_Base/images/logo.svg');
+        }
+
+        /* phpcs:ignore Magento2.Less.ClassNaming.NotAllowedSymbol */
+        .admin__menu [data-ui-id^='menu-magento-'] [data-ui-id^='menu-magento-'] [data-ui-id^='menu-amasty-'] span:before {
+            background-image: url('@{baseDir}Amasty_Base/images/logo.svg');
+            margin-top: -.2rem;
+        }
+
+        .am-instance-registration.section-config .ambase-license-btn {
+            border-radius: @amasty-button-radius;
+            margin: 1.2rem 0;
+        }
+
+        .ambase-buttons-container .message {
+            margin: 0;
+        }
+
+        .ambase-buttons-block .ambase-button,
+        .ambase-grid-buttons .ambase-button,
+        .ambase-buttons-container .ambase-button {
+            border-radius: @amasty-button-radius;
+        }
+
+        .ampromo-config-info {
+            &:extend(.message-notice);
+        }
+
+        //  fix collapsed menu
+        .admin__page-nav._collapsed._show ._collapsed._hide ._collapsible:not(:hover) {
+            background: @admin__page-nav-title__collapsible__background-color;
+        }
+    }
+}

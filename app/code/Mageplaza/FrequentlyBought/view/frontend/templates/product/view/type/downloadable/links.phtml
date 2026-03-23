@@ -1,0 +1,80 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php /* @var \Magento\Downloadable\Block\Catalog\Product\Links $block */ ?>
+<?php $_linksPurchasedSeparately = $block->getLinksPurchasedSeparately(); ?>
+<?php $productId = $block->getProduct()->getId(); ?>
+<?php $helper = $this->helper(\Mageplaza\FrequentlyBought\Helper\Data::class); ?>
+<?php if ($block->hasLinks() && $block->getProduct()->isSaleable()):?>
+    <?php $_links = $block->getLinks(); ?>
+    <?php $_linksLength = 0; ?>
+    <?php $_isRequired = $block->getLinkSelectionRequired(); ?>
+    <div class="field downloads<?php if ($_isRequired) { echo ' required'; } ?><?php if (!$_linksPurchasedSeparately) { echo ' downloads-no-separately'; } ?>">
+        <label class="label"><span><?= /* @noEscape */ $block->getLinksTitle() ?></span></label>
+        <div class="control mg-fbt-options-list" id="mp-fbt-downloadable-links-list-<?= /* @noEscape */ $productId ?>"
+             data-mage-init='{"FbtPriceDownloadable":{
+                 "linkElement":"input:checkbox[value]",
+                 "allElements":"#mp_fbt_links_all_<?= /* @noEscape */ $productId ?>",
+                 "config":<?= /* @noEscape */ $block->getJsonConfig() ?>,
+                 "usePopup": "<?= /* @noEscape */ $helper->usePopup() ?>"
+                 }
+             }'
+             data-container-for="downloadable-links">
+            <?php foreach ($_links as $_link): ?>
+                <?php $_linksLength++;?>
+                <div class="field choice" data-role="link">
+                    <?php if ($_linksPurchasedSeparately): ?>
+                        <input type="checkbox"
+                               <?php if ($_isRequired): ?>data-validate="{'validate-one-checkbox-required-by-name':'mp-fbt-downloadable-links-list-<?= /* @noEscape */ $productId ?>'}" <?php endif; ?>
+                               name="links[<?= /* @noEscape */ $productId ?>][]"
+                               id="links_<?= /* @noEscape */ $productId ?>_<?= /* @noEscape */ $_link->getId() ?>"
+                               class="mp-fbt-multi-select"
+                               value="<?= /* @noEscape */ $_link->getId() ?>" <?= /* @noEscape */ $block->getLinkCheckedValue($_link) ?>/>
+                    <?php endif; ?>
+                    <label class="label" for="links_<?= /* @noEscape */ $productId; ?>_<?= /* @noEscape */ $_link->getId() ?>">
+                        <span><?= $block->escapeHtml($_link->getTitle()) ?></span>
+                        <?php if ($_link->getSampleFile() || $_link->getSampleUrl()): ?>
+                            <a class="sample link"
+                               href="<?= /* @noEscape */ $block->getLinkSampleUrl($_link) ?>" <?= /* @noEscape */ $block->getIsOpenInNewWindow() ? 'target="_blank"' : ''; ?>>
+                                <?= /* @noEscape */ __('sample') ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($_linksPurchasedSeparately): ?>
+                            <?= /* @noEscape */ $block->getLinkPrice($_link); ?>
+                        <?php endif; ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+            <?php if ($_linksPurchasedSeparately && $_linksLength > 1): ?>
+                <div class="field choice downloads-all">
+                    <input type="checkbox"
+                           data-notchecked="<?= /* @noEscape */ __('Select all')?>"
+                           data-checked="<?= /* @noEscape */ __('Unselect all')?>"
+                           id="mp_fbt_links_all_<?= /* @noEscape */ $productId ?>" />
+                    <label class="label" for="mp_fbt_links_all_<?= /* @noEscape */ $productId; ?>"><span><?= /* @noEscape */ __('Select all')?></span></label>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php if ($_isRequired): ?>
+            <span id="links-advice-container"></span>
+        <?php endif;?>
+    </div>
+<?php endif; ?>

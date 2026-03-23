@@ -1,0 +1,50 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+$location = $block->getData('location');
+$schedule = $block->getSchedule($location);
+?>
+<?php if ($schedule): ?>
+    <div
+        class="amlocator-week"
+        id="schedule<?= (int)$location->getId() ?>"
+    >
+        <div class="amlocator-schedule-table">
+            <?php foreach ($schedule->getBusinessHours() as $businessHours): ?>
+                <div class="amlocator-row flex flex-wrap mb-4">
+                    <span class="amlocator-cell -day w-1/2 text-sm pl-4">
+                        <?php $dayName = $block->getDayName($businessHours->getWeekday()); ?>
+
+                        <?php if ($dayName): ?>
+                            <?= $escaper->escapeHtml($dayName) ?>
+                        <?php endif; ?>
+                    </span>
+
+                    <?php if ($businessHours->isOpen()): ?>
+                        <span class="amlocator-cell -time w-1/2 pr-8 text-sm whitespace-nowrap text-right">
+                            <?= $escaper->escapeHtml($block->formatOpeningHours($businessHours)) ?>
+                        </span>
+
+                        <?php if ($businessHours->getBreakFrom() && $businessHours->getBreakTo()): ?>
+                            <span class="amlocator-cell -day w-1/2 text-sm pl-4">
+                                <?= $escaper->escapeHtml($block->getBreakText()) ?>
+                            </span>
+
+                            <span class="amlocator-cell -time w-1/2 pr-8 text-sm whitespace-nowrap text-right">
+                                <?= $escaper->escapeHtml($block->formatBreakPeriod($businessHours)) ?>
+                            </span>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <span class="amlocator-cell -time w-1/2 pr-8 text-sm whitespace-nowrap text-right">
+                            <?= $escaper->escapeHtml($block->getClosedText()) ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif ?>

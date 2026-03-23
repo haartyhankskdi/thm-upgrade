@@ -1,0 +1,117 @@
+<?php
+use Mageplaza\Blog\Block\Sidebar\Search;
+use Magento\Framework\Escaper;
+
+/** @var Search $block */
+/** @var Escaper $escaper */
+?>
+<div class="relative mpblog-search w-full">
+    <div class="field search">
+      <!--   <label class="label block mb-1 text-sm font-medium text-gray-700" for="mpblog-search-box">
+            <?//= $escaper->escapeHtml(__('Search')) ?>
+        </label> -->
+       <div class="flex flex-wrap justify-center gap-2 md:justify-start relative">
+            <input
+                id="mpblog-search-box"
+                type="text"
+                name="query"
+                value="<?= $escaper->escapeHtmlAttr($block->getRequest()->getParam('query')) ?>"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Search for Recipe here...')) ?>"
+                class="form-input flex-grow px-5 py-3 rounded-full text-white placeholder-white bg-[#2a2a2a] focus:outline-none border-0 focus:ring-2 focus:ring-gray-500 w-full h-[58px] lg:px-8 lg:pr-[50px]"
+                autocomplete="off"
+            />
+            <button class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-r-full transition absolute top-0 right-0 h-[58px]">
+               <img src="<?php echo $this->getBaseUrl() . 'media/wysiwyg/sub-arrow.svg'; ?>" alt="" class="w-auto" />
+            </button>
+            
+            <!-- 🔹 Autocomplete Result Box with Scroll -->
+            <div id="autocomplete-results"
+                 class="hidden bg-white border border-gray-200 rounded-lg shadow-lg mt-1 w-full max-h-80 overflow-y-auto z-50 p-4">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchBox = document.getElementById('mpblog-search-box');
+    const button = document.getElementById('mpblog-search-btn');
+    const results = document.getElementById('autocomplete-results');
+    const suggestions = <?= /** @noEscape */ $block->getSearchBlogData(); ?>;
+    const showImage = <?= /** @noEscape */ $block->getSidebarConfig('search/show_image'); ?>;
+    const minChars = <?= $block->getSidebarConfig('search/min_chars') ?: 1; ?>;
+    const limit = <?= $block->getSidebarConfig('search/search_limit') ?: 10; ?>;
+
+    function showSuggestions(term) {
+        results.innerHTML = '';
+        if (term.length < minChars) {
+            results.classList.add('hidden');
+            return;
+        }
+
+        let filtered = suggestions.filter(s => s.value.toLowerCase().includes(term.toLowerCase())).slice(0, limit);
+
+        if (filtered.length === 0) {
+            const noRes = document.createElement('div');
+            noRes.className = 'px-4 py-2 text-gray-500 text-sm';
+            noRes.textContent = 'No results found';
+            results.appendChild(noRes);
+        } else {
+            filtered.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 px-3 py-3 hover:bg-gray-100 cursor-pointer transition-colors';
+                if (showImage && s.image) {
+                    const img = document.createElement('img');
+                    img.src = s.image;
+                    img.alt = s.value;
+                    img.className = 'w-10 h-10 object-cover rounded-md flex-shrink-0';
+                    div.appendChild(img);
+                }
+
+                const textDiv = document.createElement('div');
+                textDiv.className = 'flex flex-col';
+                const title = document.createElement('span');
+                title.className = 'font-medium text-gray-800 text-sm';
+                title.textContent = s.value;
+                const desc = document.createElement('span');
+                desc.className = 'text-gray-500 text-xs truncate';
+                desc.textContent = s.desc;
+
+                textDiv.appendChild(title);
+                textDiv.appendChild(desc);
+                div.appendChild(textDiv);
+
+                div.addEventListener('click', () => {
+                    window.location.href = s.url;
+                });
+
+                results.appendChild(div);
+            });
+        }
+
+        results.classList.remove('hidden');
+    }
+
+    searchBox.addEventListener('input', () => showSuggestions(searchBox.value));
+    searchBox.addEventListener('focus', () => showSuggestions(searchBox.value));
+    searchBox.addEventListener('blur', () => {
+        setTimeout(() => results.classList.add('hidden'), 150);
+    });
+
+    button.addEventListener('click', goToSearchPage);
+    searchBox.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            goToSearchPage();
+        }
+    });
+
+    function goToSearchPage() {
+        const query = searchBox.value.trim();
+        if (query.length > 0) {
+            window.location.href = '/mpblog/search/?query=' + encodeURIComponent(query);
+        }
+    }
+});
+</script>

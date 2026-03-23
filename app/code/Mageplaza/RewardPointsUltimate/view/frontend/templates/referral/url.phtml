@@ -1,0 +1,97 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var Mageplaza\RewardPointsUltimate\Block\Referral\Js\Url $block */
+
+$referConfig  = $block->getReferralConfig();
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+if ($referConfig) : ?>
+    <?php if (!$helperPoints->isEnabledHyvaTheme()) : ?>
+        <script type="text/javascript">
+            //<![CDATA[
+            require([
+                'jquery',
+                'mage/cookies'
+            ], function ($) {
+                "use strict";
+
+                var referConfig = <?= /** @noEscape */ $referConfig ?>;
+                var value;
+                if (referConfig.isUrlParam) {
+                    var url = new URL(window.location);
+                    value = url.searchParams.get(referConfig.prefix);
+                } else {
+                    value = window.location.hash;
+                    if (value) {
+                        if (referConfig.prefix && (value.indexOf(referConfig.prefix) !== -1)) {
+                            value = value.substr(referConfig.prefix.length + 1)
+                        } else {
+                            value = value.substr(1);
+                        }
+                    }
+                }
+
+                setCookie(value, referConfig);
+
+                function setCookie(value, referConfig) {
+                    if (value) {
+                        $.mage.cookies.set(referConfig.cookieName, value);
+                        if (referConfig.defaultReferUrl) {
+                            window.location = referConfig.defaultReferUrl;
+                        }
+                    }
+                }
+            });
+            //]]>
+        </script>
+    <?php else : ?>
+        <script>
+            "use strict";
+
+            var referConfig = <?= /** @noEscape */ $referConfig ?>;
+            var value;
+            if (referConfig.isUrlParam) {
+                var url = new URL(window.location);
+                value = url.searchParams.get(referConfig.prefix);
+            } else {
+                value = window.location.hash;
+                if (value) {
+                    if (referConfig.prefix && (value.indexOf(referConfig.prefix) !== -1)) {
+                        value = value.substr(referConfig.prefix.length + 1)
+                    } else {
+                        value = value.substr(1);
+                    }
+                }
+            }
+
+            setCookie(value, referConfig);
+
+            function setCookie(value, referConfig) {
+                if (value) {
+                    hyva.setCookie(referConfig.cookieName, value);
+                    if (referConfig.defaultReferUrl) {
+                        window.location = referConfig.defaultReferUrl;
+                    }
+                }
+            }
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

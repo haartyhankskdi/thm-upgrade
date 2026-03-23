@@ -1,0 +1,122 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\Shopby\Block\Navigation\State;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var State $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsSolid $heroicons */
+$heroicons = $viewModels->require(HeroiconsSolid::class);
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+
+$filters = $block->getActiveFilters();
+$value = [];
+$pageLayout = $productListAjax->getPageLayout() ?: $block->getLayout()->getUpdate()->getPageLayout();
+$isOneColumn = $pageLayout === '1column' || $pageLayout === 'cms-full-width' || $pageLayout === 'product-full-width';
+$unfoldedCount = $block->getUnfoldedCount();
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<?php if (!empty($filters)): ?>
+    <div class="am-filter-state filter-option relative
+        <?= /* @noEscape */ $isOneColumn ? 'max-w-[500px]' : ''; ?>"
+         x-data="{ open: window.innerWidth > 768 }">
+        <div class="filter-options-title flex justify-between items-center gap-6 md:gap-4 lg:gap-6 cursor-pointer text-start font-normal border-container md:min-w-48 lg:min-w-58 w-full bg-white px-4 py-3 rounded-none"
+             @click="open = !open"
+             :aria-expanded="open ? 'true' : 'false'"
+             role="button"
+             tabindex="0"
+
+        >
+            <span class="text-sm md:text-[17px] md:leading-6 font-normal">
+                <?= $escaper->escapeHtml(__('Active filtering')) ?>
+                <span class="inline-block md:hidden">(<?= count($filters) ?>)</span> 
+            </span>
+
+            <?php if (!$isOneColumn): ?>
+            <span class="py-1 ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" stroke-width="2" stroke="currentColor" class="transition-transform transform duration-300 ease-in-out rotate-180" width="12" height="12" :class="{ 'rotate-180': open }" role="img">
+  <path d="M5.629 8.25L0 0H11.258L5.629 8.25Z" fill="currentColor"></path>
+            </span>
+            <?php endif; ?>
+        </div>
+        <div class="items am-filter p-4 md:absolute md:left-0 md:top-full z-10 p-4 bg-[#e4f0e8] w-full border-container space-y-2" data-amshopby-filter-request-var="state" x-show="!open">
+            <?php foreach ($filters as $filter): ?>
+                <?php
+                $filterSetting = $block->getFilterSetting($filter->getFilter());
+
+                /** @var \Magento\Catalog\Model\Layer\Filter\Item $filter */
+                $value = $value ?: $filter->getValue();
+                $resultValue = $block->getFilterValue($value, $filter);
+                ?>
+                <div class="amshopby-remove-item mb-1 flex bg-white px-4 py-2 justify-between items-center<?= /* @noEscape */ $filterSetting->isMultiselect() ? '' : ' radio-remove-item' ?>"
+                    data-container="<?= /* @noEscape */ $filter->getFilter()->getRequestVar() ?>"
+                    data-value="<?= /* @noEscape */ $block->getDataValue($resultValue) ?>"
+
+                    <?php $resultValue = is_array($resultValue) ? $block->getDataValue($resultValue) : $resultValue ?>
+                    <?php if (is_object($filter->getFilter()->getData('attribute_model')) && is_string($resultValue)): ?>
+                        <?php $attributeId = $filter->getFilter()->getData('attribute_model')->getAttributeId() ?>
+                        <?php $value = $productListAjax->getGroupsByAttributeId((int)$attributeId, $resultValue) ?>
+                        data-attribute-id="<?= /* @noEscape */ $attributeId ?>"
+
+                        <?php if ($value): ?>
+                            data-massset="<?= $escaper->escapeHtmlAttr($value) ?>"
+                        <?php else: ?>
+                            data-swatchset="<?= $escaper->escapeHtmlAttr($resultValue) ?>"
+                        <?php endif ?>
+                    <?php endif ?>
+                >
+
+                    <span class="flex flex-wrap">
+                        <?php /*
+                        <span class="filter-label block font-medium after:content-[':'] after:ml-0.5 mr-1"><?= $escaper->escapeHtml(__($filter->getName())) ?></span>
+                        */?>
+                        <span class="filter-value block">
+                            <?= /** @noEscape */ $block->viewLabel($filter) ?>
+                        </span>
+                    </span>
+                    <span>
+                        <a class="amshopby-remove p-1 text-center block action remove"
+                           href="<?= $escaper->escapeUrl($filter->getRemoveUrl()) ?>"
+                           title="<?= $escaper->escapeHtmlAttr(__('Remove This Item')) ?>"
+                           @click.prevent.stop="if (document.querySelector('[x-data=\'shopBy()\']')) {
+                                   window.dispatchEvent(new CustomEvent('amRemoveElement', {detail: {element: $event.currentTarget}}));
+                               } else {
+                                   window.location.href = '<?= $escaper->escapeUrl($filter->getRemoveUrl()) ?>';}">
+                            <?= $heroicons->xHtml('', 20, 20); ?>
+                        </a>
+                    </span>
+                </div>
+                <?php $value = $block->changeValueForMultiselect($filter->getFilter(), $value) ?>
+            <?php endforeach; ?>
+
+            <?php if ($block->getLayer()->getState()->getFilters()): ?>
+                <div class="block-actions filter-actions bg-white px-4 py-2">
+                    <a
+                        href="<?= $escaper->escapeUrl($block->getClearUrl()) ?>"
+                        class="text-sm text-slate-600 hover:text-slate-800"
+                    ><?= $escaper->escapeHtml(__('Clear All')) ?></a>
+                </div>
+            <?php endif; ?>
+            <div class="amshopby-button-wrap">
+                <?php if ($unfoldedCount && $unfoldedCount < count($filters)): ?>
+                    <?= /* @noEscape */ $block->createShowMoreButtonBlock() ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

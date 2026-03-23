@@ -1,0 +1,117 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand for Magento 2
+ */
+/** @var Amasty\ShopbyBrand\Block\Widget\BrandSlider $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+use Amasty\ShopbyBrand\Block\Widget\BrandSlider;
+
+$items = $block->getItems();
+$isSliderEnable = $block->isSliderEnabled();
+$splidePrefix = $isSliderEnable ? 'splide-' : '';
+$itemsPerView = (int)$block->getData('items_number') ?: BrandSlider::DEFAULT_ITEM_NUMBER;
+$imgWidth = (int)$block->getData('image_width') ?: BrandSlider::DEFAULT_IMG_WIDTH;
+$imgHeight = (int)$block->getData('image_height');
+$sliderWidth = (int)$block->getData('slider_width') ?: ($imgWidth + 10) * $itemsPerView;
+$buttonWidth = 40;
+$fontSizeMultiplier = 0.65;
+$sliderId = BrandSlider::HTML_ID . random_int(1, 10000);
+$itemsCount = count($items);
+?>
+
+<div class="am-widget-brand-slider">
+    <style>
+        .ambrands-slider-container.<?= /* @noEscape */ $sliderId ?> {
+            --am-brand-button-width: <?= /* @noEscape */ $buttonWidth ?>px;
+            --am-brand-slider-width: <?= /* @noEscape */ $sliderWidth ?>px;
+            <?= $imgWidth ? '--am-brand-img-width: ' . $escaper->escapeHtmlAttr($imgWidth) . 'px;' : '' ?>
+            <?= $imgHeight ? '--am-brand-img-height: ' . $escaper->escapeHtmlAttr($imgHeight) . 'px;' : '' ?>
+            --am-brand-slider-height: <?= $escaper->escapeHtmlAttr($imgHeight ?: $imgWidth) ?>px;
+            --am-brand-font-size-multiplier: <?= /* @noEscape */ $fontSizeMultiplier ?>;
+            <?= ($isSliderEnable && $itemsPerView && $itemsCount) ? '--am-brand-ie-width: ' . (($itemsPerView <= $itemsCount) ? $sliderWidth / $itemsPerView : $sliderWidth / $itemsCount) . 'px;' : '' ?>
+            <?= $block->getHeaderColor() ? '--am-brand-header-bg: ' . $escaper->escapeHtml($block->getHeaderColor()) . ';' : '' ?>
+            <?= $block->getTitleColor() ? '--am-brand-title-color: ' . $escaper->escapeHtml($block->getTitleColor()) . ';' : '' ?>
+        }
+    </style>
+    <div class="ambrands-slider-container <?= /* @noEscape */ $sliderId ?>">
+        <?php if ($block->getTitle()): ?>
+            <div class="amslider-header-container">
+                <?= $escaper->escapeHtml($block->getTitle()) ?>
+            </div>
+        <?php endif;?>
+        <div class="splide ambrands-slider ambrands-slider-hidden" aria-label="<?= $escaper->escapeHtmlAttr(__('Brand Slider')) ?>">
+            <div class="ambrands-slider splide__track amslider <?= $escaper->escapeHtml($isSliderEnable ? '-enable' : '') ?>"
+                 id="<?= /** @noEscape */ $sliderId ?>">
+                <div class="<?= /** @noEscape */ $splidePrefix ?>wrapper splide__list">
+                    <?php foreach ($items as $brand): ?>
+                        <div class="<?= /** @noEscape */ $splidePrefix?>slide brand-splide-slide splide__slide">
+                            <a href="<?= /** @noEscape */ $brand['url']?>"
+                               class="ambrands-slide-link"
+                               <?= !$block->getData('show_label') ? 'aria-label="' . $escaper->escapeHtmlAttr((string)$brand['label']) . '"' : '' ?>
+                            >
+                            <span class="ambrands-splide-brand
+                                <?= ($block->getData('show_label')) ? ' brand-label' : '' ?>"
+                            >
+                                <?php if ($brand['img']): ?>
+                                    <span class="ambrands-image-block">
+                                        <img alt="<?= $block->getData('show_label') ? '' : $escaper->escapeHtmlAttr($brand['label']) ?>"
+                                             src="<?= $escaper->escapeUrl($brand['img']); ?>"
+                                             class="ambrands-image"
+                                        />
+                                    </span>
+                                <?php else: ?>
+                                    <span class="ambrands-image-block">
+                                        <span class="ambrands-empty" aria-hidden="true">
+                                            <?= $escaper->escapeHtml($brand['label'][0]) ?>
+                                        </span>
+                                    </span>
+                                <?php endif ?>
+
+                                <?php if ($block->getData('show_label')): ?>
+                                    <span class="ambrands-label">
+                                        <?= $escaper->escapeHtml($brand['label']) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </span>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php if ($isSliderEnable): ?>
+        <?php
+        $breakpoints = [];
+        for ($i = 1; $i < $itemsPerView; $i++) {
+            $breakpointWidth = ($i + 2) * ($imgWidth + 20 + 10) + $buttonWidth * 2;
+            $breakpoints[$breakpointWidth] = [
+                'perPage' => $i,
+                'loop' => $block->isLoopAvailable($i)
+            ];
+        }
+        $breakpoints[768] = ['drag' => true];
+        ?>
+        <script type="text/x-magento-init">
+        {
+            "*": {
+                "Amasty_ShopbyBrand/js/brand-slider": {
+                    "selector": ".<?= $escaper->escapeJs($sliderId) ?>",
+                    "itemsPerView": <?= (int)$itemsPerView ?>,
+                    "isButtonsShow": <?= $escaper->escapeJs(var_export((bool)$block->getButtonsShow(), true)) ?>,
+                    "showPagination": <?= $escaper->escapeJs(var_export((bool)$block->isPaginationShow(), true)) ?>,
+                    "isLoop": <?= $escaper->escapeJs(var_export((bool)$block->isLoopAvailable($itemsPerView), true)) ?>,
+                    "simulateTouch": <?= $escaper->escapeJs(var_export((bool)$block->getSimulateTouch(), true)) ?>,
+                    "breakpoints": <?= /* @noEscape */ json_encode($breakpoints) ?>,
+                    "autoplay": <?= $escaper->escapeJs(var_export((bool)$block->isAutoplay(), true)) ?>,
+                    "autoplayTime": <?= (int)$block->getAutoplayTime() ?>
+                }
+            }
+        }
+        </script>
+    <?php endif; ?>
+</div>
+

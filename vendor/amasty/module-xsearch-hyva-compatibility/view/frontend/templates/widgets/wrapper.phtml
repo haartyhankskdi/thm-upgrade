@@ -1,0 +1,106 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+<script>
+    'use strict';
+
+    function amXsearchAnalytics() {
+        return {
+            backendUrl: '<?= $escaper->escapeUrl($block->getUrl('amasty_xsearch/analytics/collect')); ?>',
+            throttleTime: 500,
+            localStorageKey: 'amasty_xsearch_analytics',
+            observer: null,
+
+            init() {
+                this.loadStoredData();
+                this.addListener();
+                this.sendData = this.throttle(this.sendData.bind(this), this.throttleTime);
+            },
+
+            addListener() {
+                document.addEventListener('click', (event) => {
+                    this.handleClick(event.target);
+                });
+
+                window.addEventListener('load', () => {
+                    this.sendData();
+                });
+            },
+
+            handleClick(target) {
+                const searchInput = this.$refs?.searchInput?.value || '';
+                const item = target.closest('.product-item');
+                const isSearchClick = !!target.closest('[data-amsearch-analytics="block"] .product-item-link,' +
+                    ' [data-amsearch-analytics="block"] a,' +
+                    ' [data-amsearch-analytics="block"] .action-addtocart');
+
+                if (searchInput.length >= 3 && (item || isSearchClick)) {
+                    this.addToQueue({ type: 'search_click', timestamp: Date.now() });
+                }
+            },
+
+            addToQueue(eventData) {
+                let queue = JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
+                queue.push(eventData);
+                localStorage.setItem(this.localStorageKey, JSON.stringify(queue));
+            },
+
+            async sendData() {
+                let queue = JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
+                if (queue.length === 0) return;
+
+                try {
+                    const params = new URLSearchParams({
+                        isAjax: "1",
+                        form_key: hyva.getFormKey()
+                    });
+                    queue.forEach((item, index) => {
+                        Object.entries(item).forEach(([key, value]) => {
+                            params.append(`telemetry[${index}][${key}]`, value);
+                        });
+                    });
+                    await fetch(`${this.backendUrl}?${params.toString()}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    localStorage.removeItem(this.localStorageKey);
+                } catch (error) {
+                    console.error('Error sending analytics data:', error);
+                }
+            },
+
+            loadStoredData() {
+                let storedData = JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
+                if (storedData.length > 0) {
+                    console.log('Found unsent analytics data:', storedData);
+                }
+            },
+
+            throttle(func, limit) {
+                let lastCall = 0;
+                return function (...args) {
+                    const now = Date.now();
+                    if (now - lastCall >= limit) {
+                        lastCall = now;
+                        func(...args);
+                    }
+                };
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

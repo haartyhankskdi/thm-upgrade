@@ -1,0 +1,166 @@
+<?php
+/**
+ * MKY
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MKY license that is
+ * available through the world-wide-web at this URL:
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    MKY
+ * @package     MY_CustomerSurvey
+ * @copyright   Copyright (c) MKY
+ */
+
+/** @var \MY\CustomerSurvey\Block\CustomerSurvey $block */
+
+?>
+<div id="customersurvey">
+    <div class="customersurvey-content">
+        <h3><strong><?= $block->escapeHtml(__('Questions')) ?>: </strong></h3>
+        <form action="<?= $this->getUrl('customersurvey/survey/save') ?>" data-mage-init='{"validation":{}}' method="post" id="customersurvey_form">
+
+	        <p>Did you find our website easy to navigate?</p>
+	        
+            <div class="survey-form-list">
+	        <input type="radio" name="website_navigation" id="website_navigation1" class="required-entry validate-one-required-by-name" value="Yes, definitely" >
+	        <label for="website_navigation1">Yes, definitely</label>
+            </div>
+	        
+
+            <div class="survey-form-list">
+	        <input type="radio" name="website_navigation" id="website_navigation2" class="required-entry validate-one-required-by-name" value="Maybe, could use improvement" >
+	        <label for="website_navigation2">Maybe, could use improvement</label>
+            </div>
+	        
+            <div class="survey-form-list">
+	        <input type="radio" name="website_navigation" id="website_navigation3" class="required-entry validate-one-required-by-name" value="No, not at all" >	        
+	        <label for="website_navigation3">No, not at all</label>
+            </div>
+
+	        <div for="website_navigation" generated="true" class="mage-error" style="display: none;" id="website_navigation-error" data-was-processed="true">This is a required field.</div>
+
+            <div class="survey-form-textarea">
+            <div class="survey-form-message">
+	        <p>What would you like to see us improve</p>	        
+	        <textarea name="improvement" data-validate="{required:true}"></textarea>
+             
+            <div>
+                </div>
+
+	        <input type="submit" name="customersurvey_submit" value="Submit">
+        </form>
+    </div>
+</div>
+
+<style type="text/css">
+    .customersurvey-content{
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        background: #fdeded;
+        padding: 25px 0 35px 0px;
+        margin-top: 25px;
+    }
+    .customersurvey-content h3{
+        font-size: 22px; 
+          color: #000;
+          font-weight: 400;
+          font-family: 'Lato', sans-serif;
+          text-transform: none;
+          line-height: 38px;
+          margin: 0 0 10px 0;
+    }
+    .customersurvey-content p{
+        font-size: 14px; 
+          color: #000;
+          font-weight: 600;
+          font-family: 'Lato', sans-serif;
+          text-transform: none;
+          line-height: 24px;  
+    }
+    .survey-form-list{
+        width: auto;
+        float: none;
+        margin-right: 25px;
+        margin-left: 0px;
+        display: inline-block;
+    }
+    .survey-form-textarea{
+        width: 100%;
+        float: left;
+        margin-top: 25px;
+    }
+    .survey-form-message{
+        /*width: 50%;
+        margin: 0 auto;*/
+    }
+
+    
+    .survey-form-message textarea{
+        border: 0;
+        margin-bottom: 0px;
+        width: 65%;
+        height: 100px;
+        font-size: 13px;
+    }
+
+    .survey-form-message input[type='submit']{
+        background: #E63832;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 700;
+        line-height: 48px;
+        font-family: 'Lato', sans-serif;
+        text-align: center;
+        display: inline-block;
+        padding: 0 45px;
+        border-radius: 0;
+        border: 0;
+        text-transform: uppercase;
+        margin-top: 30px;
+    }
+    .survey-form-message input[type='submit']:hover{
+        background: #2a773e;
+    }
+
+    #registration a.action.primary{
+        background: #E63832;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 700;
+        line-height: 48px;
+        font-family: 'Lato', sans-serif;
+        text-align: center;
+        display: inline-block;
+        padding: 0 45px;
+        border-radius: 0;
+        border: 0;
+        margin-top: 10px;
+        text-transform: uppercase; 
+    }
+     #registration a.action.primary:hover{
+        background: #2a773e;
+    }
+
+    @media (max-width: 767px) {
+        .customersurvey-content{
+            text-align: left;
+            width: 92%;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .survey-form-message textarea{
+            width: 100%;
+        }
+        .survey-form-list{
+            margin-bottom: 7px;
+        }
+    }
+
+</style>

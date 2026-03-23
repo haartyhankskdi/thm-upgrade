@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\StorelocatorHyva\ViewModel\StorelocatorIcons">
+        <arguments>
+            <argument name="iconPathPrefix" xsi:type="string">Amasty_StorelocatorHyva::svg</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Storelocator\Controller\Location\SaveReview">
+        <plugin
+            name="Amasty_StorelocatorHyva::SaveReview"
+            type="Amasty\StorelocatorHyva\Plugin\Controller\Location\SaveReview"
+            sortOrder="10"
+            disabled="false"
+        />
+    </type>
+</config>

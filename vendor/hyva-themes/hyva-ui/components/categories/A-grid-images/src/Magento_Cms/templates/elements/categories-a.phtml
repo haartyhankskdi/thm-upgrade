@@ -1,0 +1,94 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+/**
+ * You can also get an image from `web/images/` in your theme:
+ * $escaper->escapeHtmlAttr($block->getViewFileUrl('images/banner.jpg'))
+ */
+$categories = [
+    [
+        'image_url' => 'https://unsplash.com/photos/h4i9G-de7Po/download?force=true&w=1440&q=80',
+        'image_alt' => __('A woman doing weight lifting'),
+        'label' => __('New Arrivals'),
+        'url' => $block->getUrl('home'),
+    ],
+    [
+        'image_url' => 'https://unsplash.com/photos/v0f_sspLB-o/download?force=true&w=640&q=80',
+        'image_alt' => __('A woman stretching after a run'),
+        'label' => __('Women'),
+        'url' => $block->getUrl('home'),
+    ],
+    [
+        'image_url' => 'https://unsplash.com/photos/dCL6vpW8oJM/download?force=true&w=640&q=80',
+        'image_alt' => __('A man in a hoodie and cap walking away'),
+        'label' => __('Men'),
+        'url' => $block->getUrl('home'),
+    ],
+    [
+        'image_url' => 'https://unsplash.com/photos/SdmdP3UKE6g/download?force=true&w=640&q=80',
+        'image_alt' => __('A woman showing her sports watch'),
+        'label' => __('Gear'),
+        'url' => $block->getUrl('home'),
+    ],
+    [
+        'image_url' => 'https://unsplash.com/photos/2mGaIs51MNU/download?force=true&w=640&q=80',
+        'image_alt' => __('A woman making a knee kick in the air'),
+        'label' => __('Training'),
+        'url' => $block->getUrl('home'),
+    ],
+];
+
+$useSlider = $block->getUseSlider() !== null ? $block->getUseSlider() : true;
+
+?>
+
+<div class="my-10">
+    <div class="flex-wrap flex justify-between items-baseline mb-2">
+        <div class="text-3xl leading-9 font-bold mr-1">
+            <?= $escaper->escapeHtml(__('Shop by category')) ?>
+        </div>
+        <a
+            href="<?= $escaper->escapeUrl($block->getUrl('home')) ?>"
+            class="block text-lg leading-7 font-semibold text-blue-700"
+        ><?= $escaper->escapeHtml(__('Browse all')) ?> →</a>
+    </div>
+    <div class="gap-4 <?= $useSlider
+        ? 'snap flex overflow-x-auto py-6 md:snap-none md:overflow-x-visible md:gap-4 md:grid md:grid-cols-2'
+        : 'grid grid-cols-2' ?>">
+        <?php foreach ($categories as $item): ?>
+            <a
+                href="<?= $escaper->escapeUrl($item['url']) ?>"
+                class="group block shadow-lg rounded-md overflow-hidden relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]
+                    <?= $useSlider
+                        ? 'w-[calc(100%-theme(spacing.7))] sm:w-[calc(50%-theme(spacing.5))] md:w-full md:first:col-span-full shrink-0 snap-start'
+                        : 'first:col-span-full' ?>"
+            >
+                <img
+                    alt="<?= $escaper->escapeHtml($item['image_alt']) ?>"
+                    class="absolute w-full h-full object-cover md:group-hover:scale-105 transition duration-300"
+                    src="<?= $escaper->escapeHtmlAttr($item['image_url']) ?>"
+                    width="1280"
+                    height="600"
+                    loading="lazy"
+                >
+                <div class="absolute bottom-0 pt-9 pb-6 px-6 text-center text-xl leading-10 font-bold uppercase w-full text-white
+                    drop-shadow-lg bg-gradient-to-b from-transparent to-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+                    <?= $escaper->escapeHtml($item['label']) ?>
+                </div>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>

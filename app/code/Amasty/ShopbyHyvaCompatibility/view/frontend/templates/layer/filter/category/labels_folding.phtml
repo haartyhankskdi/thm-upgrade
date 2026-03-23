@@ -1,0 +1,49 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Amasty\Shopby\Block\Navigation\FilterRenderer;
+use Amasty\ShopbyBase\Model\FilterSetting;
+
+/** @var FilterSetting $filterSetting */
+/** @var FilterRenderer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$filterUniqId = uniqid();
+$filterCode = $escaper->escapeHtml($filterSetting->getAttributeCode());
+$expandedMode = $filterSetting->getData('is_expanded');
+$isByClick = $filterSetting->getSubcategoriesExpand() === 2;
+$isSidebar = $block->getParentBlock()->getNameInLayout() === "catalog.leftnav" ? 'sidebar' : 'top';
+$filterName = $block->getFilter()->getName();
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<?php if ($filterSetting->isShowSearchBox($filterItems->getCount())): ?>
+    <?= /* @noEscape */ $block->getSearchForm() ?>
+<?php endif; ?>
+
+<form data-amshopby-filter="<?= $escaper->escapeHtmlAttr($filterCode); ?>"
+      class="am-filter"
+      data-amshopby-filter-request-var="<?= $escaper->escapeHtmlAttr($block->getFilter()->getRequestVar()); ?>"
+      aria-label="<?= $escaper->escapeHtml(__('Filter %1 in %2 filters', $filterName, $isSidebar)) ?>"
+    <?= $escaper->escapeHtml($expandedMode ? "data-amshopby-expanded=\"$expandedMode\"" : 'data-amshopby-expanded="0"'); ?>>
+    <ul class="items am-filter-items-<?= /* @noEscape */ $filterCode ?> am-labels-folding
+    <?= /* @noEscape */ $isByClick ? ' -am-by-click ' : '' ?>
+    <?= /* @noEscape */ $block->isMultiselect($filterSetting) ? '-am-multiselect' : '-am-singleselect' ?>
+    "
+        <?php if ($block->getEnableOverflowScroll($filterSetting) > 0): ?>
+            style="max-height: <?= /* @noEscape */ $block->getOverflowScrollValue($filterSetting) ?>px;
+                    overflow-y: auto;
+                    overflow-x: hidden;"
+        <?php endif; ?>>
+        <?= /* @noEscape */ $categoryTreeHtml ?>
+    </ul>
+</form>

@@ -1,0 +1,78 @@
+/*#customer-login-container {
+    @apply grid gap-x-4 gap-y-8 grid-cols-1 py-8;
+
+    @screen md {
+        @apply grid-cols-2;
+    }
+}
+*/
+ 
+.login-banner {
+    .login-banner-content {
+        @apply absolute top-1/2 transform -translate-y-1/2 text-white px-6 md:px-10 lg:px-16;
+
+        h2 {
+            @apply text-2xl md:text-4xl lg:text-[70px] lg:leading-[74px] mb-4 lg:mb-6;
+        }
+    }
+}
+
+.create.account .form-input {
+    @apply bg-[#E4F0E8] border-[#E4F0E8] rounded-none h-12;
+}
+
+@layer utilities {
+  .create.account input:-webkit-autofill,
+  .account form input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #E4F0E8 inset !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+}
+
+.account .page-title-wrapper .custom.container {
+    @apply !px-6;
+}
+
+.sales-order-view .page-title-wrapper {
+    @apply mt-10;
+}
+
+.order-details-items .order-items .grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.account.customer-milestone-index .page-title-wrapper .custom.container{
+    @apply !px-0;
+}
+
+.account.customer-rewards-index .column.main.c-header-type,
+.account.customer-rewards-transaction .column.main.c-header-type,
+.account.customer-referral-index .column.main.c-header-type,
+.account.customer-milestone-index .column.main.c-header-type{
+    @apply md:mt-[170px];
+}
+.account.customer-rewards-index .sidebar.sidebar-main,
+.account.customer-rewards-transaction .sidebar.sidebar-main,
+.account.customer-referral-index .sidebar.sidebar-main,
+.account.customer-milestone-index .sidebar.sidebar-main{
+    @apply md:mt-[22px];
+}
+
+.account.customer-rewards-index .page-title-wrapper h1.page-title,
+.account.customer-rewards-transaction .page-title-wrapper h1.page-title,
+.account.customer-referral-index .page-title-wrapper h1.page-title,
+.account.customer-milestone-index .page-title-wrapper h1.page-title {
+    @apply lg:text-[34px];
+}
+
+.cms-membership-page .page-title-wrapper,
+.cms-membership-page .breadcrumbs {
+    @apply hidden;
+}
+.membership_page {
+    @apply mt-2;
+}
+
+.account .columns .sidebar-main .breadcrumbs ul{
+    @apply mt-[25px] !justify-start;
+}

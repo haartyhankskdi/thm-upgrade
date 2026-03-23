@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */-->
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="amasty_storelocator_root" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Storelocator\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Storelocator\Model\DataCollector\Location\CompositeCollector">
+        <arguments>
+            <argument name="dataCollectors" xsi:type="array">
+                <item name="review" sortOrder="10" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\ReviewCollector</item>
+                <item name="average_rating" sortOrder="20" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\AverageRatingCollector</item>
+                <item name="rating_html" sortOrder="30" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\RatingHtmlCollector</item>
+                <item name="attributes" sortOrder="40" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\AttributeCollector</item>
+                <item name="html" sortOrder="50" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\HtmlCollector</item>
+                <item name="opening_hours" sortOrder="60" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\OpeningHoursCollector</item>
+                <item name="marker_image_url" sortOrder="70" xsi:type="object">Amasty\Storelocator\Model\DataCollector\Location\MarkerImageUrlCollector</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\MegaMenuLite\Model\ComponentDeclaration\Account">
+        <arguments>
+            <argument name="items" xsi:type="array">
+                <item name="store_locator"
+                      xsi:type="object">Amasty\Storelocator\Model\MegaMenu\ComponentDeclaration\Account\StoreLocatorItem</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

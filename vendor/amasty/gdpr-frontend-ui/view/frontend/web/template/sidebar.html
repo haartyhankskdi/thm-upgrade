@@ -1,0 +1,166 @@
+<div class="amgdprcookie-modal-template"
+     data-amgdprcookie-focus-start
+     tabindex="0"
+>
+    <span tabindex="0" class="amgdprcookie-focus-guard" data-focus-to="last"></span>
+    <% if (data.isAllowCustomersCloseBar){ %>
+        <button id="close-modal" class="action-close" type="button">
+            <span data-bind="i18n: 'Close Cookie Bar'"></span>
+        </button>
+    <% } %>
+    <form id="amgdprcookie-form-sidebar"
+          class="amgdprcookie-settings-form"
+          data-amcookie-js="form-cookie"
+          aria-label="<%= phrase.selectAndAcceptCookieGroup %>"
+    >
+        <div class="amgdprcookie-groups-container"
+             data-amcookie-js="groups"
+             role="group"
+             aria-label="<%= phrase.cookieGroupFieldset %>"
+        >
+            <% _.each(data.groups.groupData, function(group, index) { %>
+            <div class="amgdprcookie-cookie-container -modal">
+                <div class="amgdprcookie-header">
+                    <h3 class="amgdprcookie-caption">
+                        <%= group.name %>
+                    </h3>
+                    <div class="amgdprcookie-toggle-cookie">
+                        <input class="amgdprcookie-input <% if(group.isEssential){ %>disabled<% } %>"
+                               data-bind="keyboard: {
+                                   13: () => { $element.checked = !$element.checked },
+                               }"
+                               type="checkbox"
+                               data-amcookie-js="field"
+                               name="groups[]"
+                               id="<%= 'switch-box-' + index %>"
+                               value="<%= group.groupId %>"
+                               aria-label="<%= group.name %>"
+                        <% if(group.checked){ %>checked<% } %>
+                        <% if(group.isEssential){ %>disabled<% } %> >
+                        <label class="amgdprcookie-label" for="<%= 'switch-box-' + index %>">
+                            <%= group.name %>
+                        </label>
+                    </div>
+                </div>
+                <p class="amgdprcookie-text"><%= group.description %></p>
+                <a class="amgdprcookie-link"
+                   data-amgdprcookie-js="information"
+                   data-groupId="<%= group.groupId %>"
+                   href="#"
+                   aria-label="<%= `${phrase.moreInfo} ${phrase.about} ${group.name} ${phrase.cookieGroup}` %>"
+                ><%= data.linkName %></a>
+            </div>
+            <% }); %>
+        </div>
+        <div class="amgdprcookie-policy-container" data-amcookie-js="policy">
+            <div class="amgdprcookie-text-container">
+                <p class="amgdprcookie-policy"><%= data.policyText %></p>
+            </div>
+            <div class="amgdprcookie-buttons-block">
+                <% _.each(data.buttons, function(button) { %>
+                <button class="amgdprcookie-button <%= button.class %>"
+                        type="button"
+                        disabled
+                        data-amgdprcookie-js="<%= button.dataJs %>"><%= button.label %></button>
+                <% }); %>
+            </div>
+        </div>
+    </form>
+    <span tabindex="0" class="amgdprcookie-focus-guard" data-focus-to="first"></span>
+</div>
+
+<style>
+    <% if(css.backgroundColor){ %>
+    .amgdprcookie-modal-template {
+        background-color: <%= css.backgroundColor %>;
+    }
+    <% } %>
+    <% if(css.policyTextColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-policy {
+        color: <%= css.policyTextColor %>;
+    }
+    <% } %>
+    <% if(css.textColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-text {
+        color: <%= css.textColor %>;
+    }
+    <% } %>
+    <% if(css.titleColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-header {
+        color: <%= css.titleColor %>;
+    }
+    <% } %>
+    <% if(css.linksColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-link,
+    .amgdprcookie-modal-template .amgdprcookie-policy a {
+        color: <%= css.linksColor %>;
+    }
+    <% } %>
+    <% if(css.acceptBtnOrder || css.acceptBtnColor || css.acceptBtnTextColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-save {
+        <% if(css.acceptBtnOrder) { %> order: <%= css.acceptBtnOrder %>; <% } %>
+        <% if(css.acceptBtnColor) { %>
+            background-color: <%= css.acceptBtnColor %>;
+            border-color: <%= css.acceptBtnColor %>;
+        <% } %>
+        <% if(css.acceptBtnTextColor) { %> color: <%= css.acceptBtnTextColor %>; <% } %>
+    }
+    <% } %>
+    <% if(css.acceptBtnColorHover || css.acceptBtnTextColorHover){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-save:hover {
+        <% if(css.acceptBtnColorHover) { %>
+            background-color: <%= css.acceptBtnColorHover %>;
+            border-color: <%= css.acceptBtnColorHover %>;
+        <% } %>
+        <% if(css.acceptBtnTextColorHover) { %> color: <%= css.acceptBtnTextColorHover %>; <% } %>
+    }
+    <% } %>
+    <% if(css.allowBtnOrder || css.allowBtnColor || css.allowBtnTextColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-settings {
+        <% if(css.allowBtnOrder) { %> order: <%= css.allowBtnOrder %>; <% } %>
+        <% if(css.allowBtnColor) { %>
+            background-color: <%= css.allowBtnColor %>;
+            border-color: <%= css.allowBtnColor %>;
+        <% } %>
+        <% if(css.allowBtnTextColor) { %> color: <%= css.allowBtnTextColor %>; <% } %>
+    }
+    <% } %>
+    <% if(css.allowBtnColorHover || css.allowBtnTextColorHover){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-settings:hover {
+        <% if(css.allowBtnColorHover) { %>
+            background-color: <%= css.allowBtnColorHover %>;
+            border-color: <%= css.allowBtnColorHover %>;
+        <% } %>
+        <% if(css.allowBtnTextColorHover) { %> color: <%= css.allowBtnTextColorHover %>; <% } %>
+    }
+    <% } %>
+    <% if(css.declineBtnOrder || css.declineBtnColor || css.declineBtnTextColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-decline {
+        <% if(css.declineBtnOrder) { %> order: <%= css.declineBtnOrder %>; <% } %>
+        <% if(css.declineBtnColor) { %>
+            background-color: <%= css.declineBtnColor %>;
+            border-color: <%= css.declineBtnColor %>;
+        <% } %>
+        <% if(css.declineBtnTextColor) { %> color: <%= css.declineBtnTextColor %>; <% } %>
+    }
+    <% } %>
+    <% if(css.declineBtnColorHover || css.declineBtnTextColorHover){ %>
+    .amgdprcookie-modal-template .amgdprcookie-button.-decline:hover {
+        <% if(css.declineBtnColorHover) { %>
+            background-color: <%= css.declineBtnColorHover %>;
+            border-color: <%= css.declineBtnColorHover %>;
+        <% } %>
+        <% if(css.declineBtnTextColorHover) { %> color: <%= css.declineBtnTextColorHover %>; <% } %>
+    }
+    <% } %>
+    <% if(css.toggleActiveColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-cookie-container .amgdprcookie-toggle-cookie .amgdprcookie-input:checked:not([disabled]) + .amgdprcookie-label {
+        background-color: <%= css.toggleActiveColor %>;
+    }
+    <% } %>
+    <% if(css.toggleInActiveColor){ %>
+    .amgdprcookie-modal-template .amgdprcookie-cookie-container .amgdprcookie-toggle-cookie .amgdprcookie-input:not(:checked) + .amgdprcookie-label {
+        background-color: <%= css.toggleInActiveColor %>;
+    }
+    <% } %>
+</style>

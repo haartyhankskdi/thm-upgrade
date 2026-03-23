@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="quote_items">
+<!--            <block name="quote_items.requisition_list"-->
+<!--                   as="item_requisition_list"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/requisition_list_popup.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="requisition_list_popup" xsi:type="object">Magento\NegotiableQuoteRequisitionList\ViewModel\Quote\Item\RequisitionListPopup</argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.default.actions">
+<!--            <block name="checkout.cart.item.renderers.default.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.simple.actions">
+<!--            <block name="checkout.cart.item.renderers.simple.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.bundle.actions">
+<!--            <block name="checkout.cart.item.renderers.bundle.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.configurable.actions">
+<!--            <block name="checkout.cart.item.renderers.configurable.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.grouped.actions">
+<!--            <block name="checkout.cart.item.renderers.grouped.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.downloadable.actions">
+<!--            <block name="checkout.cart.item.renderers.downloadable.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.giftcard.actions">
+<!--            <block name="checkout.cart.item.renderers.giftcard.actions.requisitionList"-->
+<!--                   class="Magento\NegotiableQuoteRequisitionList\Block\Quote\Item\Actions\MoveToRequisitionList"-->
+<!--                   template="Magento_NegotiableQuoteRequisitionList::quote/item/actions/move_to_requisition_list.phtml"/>-->
+        </referenceBlock>
+    </body>
+</page>

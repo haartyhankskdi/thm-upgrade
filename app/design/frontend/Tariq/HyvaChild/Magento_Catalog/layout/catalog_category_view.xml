@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="catalog_list_item" />
+    <body>
+        <referenceContainer name="columns.top">
+            <referenceBlock name="page.main.title" remove="true"/>
+        </referenceContainer>
+        <referenceBlock name="category.image" remove="true"/>
+        <referenceBlock name="category.description" remove="true"/>
+        <referenceContainer name="category.view.container"
+                            htmlId="category-view-container"
+                            htmlClass="category-view grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10 items-start py-12">
+                      <container name="category.top.wrapper"
+                   htmlTag="div"
+                   htmlClass="top-div w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-start mx-auto py-1 md:p-0">      
+            <container name="category.left.section" htmlTag="div" htmlClass="left_section space-y-4 lg:space-y-6 flex flex-col items-start justify-center
+  sm:h-[400px] lg:h-[450px] lg:ml-16">
+                <!-- Breadcrumb section-->
+                <block class="Magento\Theme\Block\Html\Breadcrumbs"
+                   name="breadcrumbs"
+                   template="Magento_Theme::html/breadcrumbs.phtml"/>
+                <!-- Category Title -->
+                <block class="Magento\Theme\Block\Html\Title"
+                       name="custom.page.main.title"
+                       template="Magento_Theme::html/title.phtml">
+                    <arguments>
+                        <argument name="css_class" xsi:type="string">text-4xl font-semibold text-gray-900 pb-3</argument>
+                    </arguments>
+                </block>
+
+                <!-- Category Description -->
+                <block class="Magento\Catalog\Block\Category\View"
+                       name="custom.category.description"
+                       template="Magento_Catalog::category/description.phtml"/>
+
+                <!-- Google Reviews Section-->
+                <block class="Magento\Framework\View\Element\Template"
+                       name="google.reviews.block"
+                       template="Magento_Catalog::category/google-review.phtml"/>
+            </container>
+
+            <!--Catgegory Image -->
+            <container name="category.right.section" htmlTag="div" htmlClass="right-section flex justify-center items-center">
+                <block class="Magento\Catalog\Block\Category\View"
+                       name="custom.category.image"
+                       template="Magento_Catalog::category/image.phtml">
+                    <arguments>
+                        <argument name="image" xsi:type="object">Magento\Catalog\ViewModel\Category\Image</argument>
+                        <argument name="output" xsi:type="object">Magento\Catalog\ViewModel\Category\Output</argument>
+                    </arguments>
+                </block>
+            </container>
+            </container>
+            <!-- CMS content below -->
+            <block class="Magento\Catalog\Block\Category\View"
+                   name="category.cms"
+                   template="Magento_Catalog::category/cms.phtml"/>
+            <!-- Breadcrumb Schema -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="category.breadcrumb.schema"
+                   template="Magento_Catalog::breadcrumb-schema.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+
+            <!-- Bestselling Products -->
+            <block class="Magento\Framework\View\Element\Template"
+                       name="category.bestselling"
+                       template="Magento_Catalog::product/list-bestselling.phtml"
+                       after="google.reviews.block"/>
+            <block class="Magento\Catalog\Block\Category\View" name="category.products" template="Magento_Catalog::category/products.phtml">
+                <block class="Magento\Catalog\Block\Product\ListProduct" name="category.products.list" as="product_list" template="Magento_Catalog::product/list.phtml">
+                    <arguments>
+                        <argument name="eager_load_images_count" xsi:type="number">3</argument>
+                    </arguments>
+                    <block name="category.products.list.options" as="product_options"
+                           template="Magento_Catalog::product/options/options.phtml"></block>
+                    <block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="Magento_Catalog::product/list/toolbar.phtml">
+                        <block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager"/></block>
+                    <action method="setToolbarBlockName">
+                        <argument name="name" xsi:type="string">product_list_toolbar</argument>
+                    </action>
+                    <container name="category.product.list.additional" as="additional" label="Additional Info" after="product_list_toolbar" />
+                </block>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="product.price.render.default">
+            <arguments>
+                <argument name="is_product_list" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="sidebar.additional">
+            <block
+                name="catalog.compare.sidebar"
+                template="Magento_Catalog::product/compare/sidebar.phtml"
+                ifconfig="catalog/frontend/show_sidebar_in_list"
+            />
+            <block class="Magento\Catalog\Block\Widget\RecentlyViewed"
+                   name="recently_viewed_products.default_widget_plp"
+                   ifconfig="catalog/recently_products/show_on_plp"
+                   template="Magento_Catalog::product/widget/viewed/sidebar.phtml">
+                <arguments>
+                    <argument name="page_size" xsi:type="number">3</argument>
+                    <argument name="show_attributes" xsi:type="string">name,image,price,learn_more</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+      
+
+        <move element="category.bestselling" destination="content.top" before="catalog.leftnav"/>
+        <!-- <move element="catalog.leftnav" destination="content.top" /> -->
+        <referenceContainer name="columns" htmlClass="w-full px-4 md:px-20" />
+        <move element="category.cms" destination="category.view.container"/>
+        <referenceBlock name="catalog.leftnav" remove="false" />
+        <move element="catalog.leftnav" destination="product_list_toolbar" before="-" />
+    </body>
+</page>

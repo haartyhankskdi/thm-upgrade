@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceBlock name="cart-drawer">
+            <arguments>
+                <argument name="show_sku" xsi:type="boolean">true</argument> <!-- Show sku in product options (true/false) -->
+                <argument name="qty_style" xsi:type="string">input</argument> <!-- Qty style (text/input/select/incrementor) -->
+            </arguments>
+        </referenceBlock>
+        <block name="cart-drawer.qtybox" template="Magento_Theme::html/cart/qtybox.phtml"/>
+    </body>
+</page>

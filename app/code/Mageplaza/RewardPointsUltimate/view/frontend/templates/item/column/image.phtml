@@ -1,0 +1,34 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Image $block */
+
+/** @var \Magento\Wishlist\Model\Item|\Magento\Sales\Model\Order\Item $item */
+$item    = $block->getItem();
+$product = $item->getProduct();
+?>
+
+<a class="product-item-photo"
+   tabindex="-1"
+   href="<?= $block->escapeUrl($block->getProductUrl($item)) ?>"
+   title="<?= $block->escapeHtmlAttr($product->getName()) ?>">
+    <?= $block->getImage($product, 'wishlist_thumbnail')->toHtml() ?>
+</a>

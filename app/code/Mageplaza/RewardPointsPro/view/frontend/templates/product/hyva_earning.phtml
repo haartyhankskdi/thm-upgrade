@@ -1,0 +1,42 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Mageplaza\RewardPointsPro\Block\ProductEarning;
+
+/** @var ProductEarning $block */
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+$hyvaClass    = $helperPoints->isEnabledHyvaTheme() ? 'border-t border-gray-300 py-4 last:mb-6 last:border-b my-6' : '';
+if ($block->getPointEarn()) : ?>
+    <div class="catalog-points mp-reward-points mp-product <?= $hyvaClass ?>">
+        <?= /** @noEscape */ $block->getIconHtml() ?>
+        <?php
+        $pointEarn = '<strong>' . $block->getPointEarn() . '</strong>';
+        $product   = $block->getCurrentProduct();
+        $label     = $block->getLable($product, $pointEarn);
+        ?>
+        <span class="points mp-point-label"><?= /* @noEscape */ $label ?></span>
+        <div class="clr"></div>
+        <?php if (!$block->isCustomerLogin()) : ?>
+            <div class="register" style="font-size: 1.4rem;">
+                <span><?= $block->escapeHtml(__('Applies only to registered customers, may vary when logged in.')) ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

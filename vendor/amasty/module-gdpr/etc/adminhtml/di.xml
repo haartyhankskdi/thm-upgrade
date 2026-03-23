@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Gdpr\Model\Anonymization\Anonymizer">
+        <arguments>
+            <argument name="logger" xsi:type="object">Amasty\Gdpr\Model\ActionLoggerFromAdmin</argument>
+        </arguments>
+    </type>
+    <!-- This plugin disables updating orders customer email after corresponding customer email changed -->
+    <type name="Magento\Customer\Observer\UpgradeOrderCustomerEmailObserver">
+        <plugin name="amasty-gdpr-customer-upgrade-order-email" type="Amasty\Gdpr\Plugin\Customer\Observer\UpgradeOrderCustomerEmailObserverPlugin" />
+    </type>
+
+    <type name="Amasty\Gdpr\Model\ResourceModel\Grid\AbstractSearchResult">
+        <plugin name="orderGridCollectionFilterPlugin" disabled="true"/>
+    </type>
+
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <plugin name="Amasty_Gdpr::anonymise_button" type="Amasty\Gdpr\Plugin\Sales\Block\Adminhtml\Order\View\AnonymiseButton"/>
+    </type>
+</config>

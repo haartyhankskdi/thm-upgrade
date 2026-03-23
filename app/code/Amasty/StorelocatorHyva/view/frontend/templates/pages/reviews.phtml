@@ -1,0 +1,354 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\View\Reviews;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/**
+ * @var \Amasty\Storelocator\Block\View\Reviews $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ * @var \Hyva\Theme\Model\ViewModelRegistry $viewModels
+ */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$location = $block->getLocation();
+
+if ($location && $block->isReviewsEnabled()):
+    $locationReviews = $location->getLocationReviews();
+    $countOfRatings =  $locationReviews ? count($locationReviews) : 0;
+    $format = $location->getDateFormat() ? : \IntlDateFormatter::MEDIUM;
+    $locationAvgRating = ($location->getLocationAverageRating()) ? $location->getLocationAverageRating() : 0;
+?>
+    <div class="amlocator-block -separator m-4 h-px bg-container-darker"></div>
+
+    <div class="amlocator-block -reviews amlocator-reviews-wrapper px-4">
+        <div class="amlocator-collapse-title flex justify-between">
+            <strong>
+                <?= $escaper->escapeHtml(__('Reviews')); ?>
+            </strong>
+            <button
+                @click="reviewsExpanded = !reviewsExpanded"
+                :aria-expanded="reviewsExpanded"
+                aria-controls="amlocator-location-reviews"
+            >
+                <span class="sr-only">
+                    <?= $escaper->escapeHtml(__('Toggle store reviews')) ?>
+                </span>
+                <?= $heroicons->chevronDownHtml(
+                    'transition-transform transform duration-300 ease-in-out',
+                    24,
+                    24,
+                    [
+                        ":class" => "{
+                            'rotate-180': reviewsExpanded
+                        }",
+                        "aria-hidden" => "true"
+                    ]
+                ); ?>
+            </button>
+        </div>
+
+        <div>
+            <div class="amlocator-reviews-general flex flex-wrap items-center">
+                <span class="amlocator-value text-5xl mr-2.5">
+                    <span class="sr-only">
+                        <?= $escaper->escapeHtml(__('Review score - '))?>
+                    </span>
+                    <?= (float)round($locationAvgRating/20, 1);?>
+                </span>
+                <div class="amlocator-wrapper mr-5">
+                    <div aria-hidden="true">
+                        <?= $block->getReviewsStarsHtml($locationAvgRating) ?>
+                    </div>
+                    <span class="amlocator-count text-sm">
+                        <?= (int)$countOfRatings . $escaper->escapeHtml(__(' reviews'))?>
+                    </span>
+                </div>
+                <button
+                    @click="show"
+                    class="amlocator-button btn btn-primary"
+                    title="<?= $escaper->escapeHtmlAttr(__('Write a review'))?>"
+                    aria-haspopup="dialog"
+                >
+                    <?= $escaper->escapeHtml(__('Write a review'))?>
+                </button>
+
+                <div
+                    x-cloak
+                    x-spread="overlay()"
+                    x-bind="overlay()"
+                    class="
+                        fixed inset-0 flex items-center
+                        justify-center text-left bg-black bg-opacity-50 z-30
+                    "
+                >
+
+                    <div
+                        x-ref="dialog"
+                        x-init="hyva.trapFocus($el)"
+                        role="dialog"
+                        aria-labelledby="the-label"
+                        class="
+                            inline-block max-h-screen overflow-auto relative
+                            bg-white shadow-xl rounded-lg p-10 text-gray-700
+                            md:min-w-[400px]
+                        "
+                    >
+                        <button
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Close modal')) ?>"
+                            class="
+                                absolute top-0 right-0 p-2 text-gray-300
+                                transition-colors hover:text-black
+                            "
+                            @click="hide"
+                        >
+                            <?= $heroicons->xHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+                        </button>
+                        <div class="amlocator-review-popup-content">
+                            <?php if ($block->isCustomerAuthorized()): ?>
+                                <div class="amlocator-header">
+                                    <span>
+                                        <?= $escaper->escapeHtml(__("You're reviewing:"))?>
+                                    </span>
+                                    <span class="amlocator-name font-semibold">
+                                        <?= $escaper->escapeHtml($block->getLocationName()); ?>
+                                    </span>
+                                </div>
+                                <div class="amlocator-form-wrapper">
+                                    <form
+                                        class="amlocator-review-form review-form"
+                                        id="amlocator-review-form"
+                                        method="post"
+                                        x-ref="reviewForm"
+                                    >
+                                        <fieldset
+                                            class="fieldset review-fieldset"
+                                            data-hasrequired="<?= $escaper->escapeHtml(__('* Required Fields')) ?>"
+                                        >
+                                            <fieldset class="field review-field-ratings">
+                                                <label class="label">
+                                                    <span class="font-semibold">
+                                                        <?= $escaper->escapeHtml(__('Your Rating')) ?>
+                                                    </span>
+                                                </label>
+                                                <div class="control">
+                                                    <div
+                                                        class="nested"
+                                                        id="product-review-table"
+                                                        x-data="{ clickedRatingId: 0 }"
+                                                    >
+                                                        <div class="field choice review-field-rating">
+                                                            <div class="control review-control-vote flex flex-row grow-0">
+                                                                <?php $countOfStars = 5;
+                                                                for ($iterator = 1; $iterator <= $countOfStars; $iterator++): ?>
+                                                                    <div
+                                                                        class="relative"
+                                                                        @click="clickedRatingId = <?= (int)$iterator ?> || 0"
+                                                                    >
+                                                                        <label
+                                                                            class="rating-<?= $escaper->escapeHtmlAttr($iterator) ?> rating-label"
+                                                                            for="rating_<?= $escaper->escapeHtmlAttr($iterator) ?>"
+                                                                            title="
+                                                                                <?= $escaper->escapeHtmlAttr(
+                                                                                    __(
+                                                                                        '%1 %2',
+                                                                                        $iterator,
+                                                                                        $iterator > 1 ? __('stars') : __('star')
+                                                                                    )
+                                                                                ) ?>
+                                                                            "
+                                                                        >
+                                                                            <span>
+                                                                                <template x-if="<?= (int)$iterator ?> <= clickedRatingId">
+                                                                                    <svg
+                                                                                        xmlns="http://www.w3.org/2000/svg" class="fill-current w-6 h-6" viewBox="3 0 20 20"
+                                                                                        style="color: #f6e05e"
+                                                                                        fill="currentColor"
+                                                                                        aria-hidden="true"
+                                                                                    >
+                                                                                        <path
+                                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371
+                                                                                            1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
+                                                                                            1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                                                                                            1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                                                    </svg>
+                                                                                </template>
+
+                                                                                <template x-if="<?= (int)$iterator ?> > clickedRatingId">
+                                                                                    <svg
+                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="fill-current w-6 h-6"
+                                                                                        style="color: #cbd5e0"
+                                                                                        viewBox="3 0 20 20"
+                                                                                        fill="currentColor"
+                                                                                        aria-hidden="true"
+                                                                                    >
+                                                                                        <path
+                                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0
+                                                                                            1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
+                                                                                            1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                                                                                            1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                                                                        />
+                                                                                    </svg>
+                                                                                </template>
+                                                                            </span>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="location-rating"
+                                                                                class="absolute opacity-0 bottom-0 left-0 cursor-pointer"
+                                                                                id="rating_<?= $escaper->escapeHtmlAttr($iterator) ?>"
+                                                                                value="<?= $escaper->escapeHtmlAttr($iterator) ?>"
+                                                                                <?php if ($iterator === 1): ?>
+                                                                                    aria-label="<?= $escaper->escapeHtmlAttr(__('1 star')) ?>"
+                                                                                <?php else: ?>
+                                                                                    aria-label="<?= $escaper->escapeHtmlAttr(__('%1 stars', $iterator)) ?>"
+                                                                                <?php endif; ?>
+                                                                            />
+                                                                        </label>
+                                                                    </div>
+                                                                <?php endfor; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input
+                                                        type="hidden"
+                                                        name="validate_rating"
+                                                        class="validate-rating"
+                                                        value=""
+                                                    />
+                                                </div>
+                                            </fieldset>
+                                            <div class="field review-field-text required">
+                                                <label for="review_field" class="label">
+                                                    <span class="font-semibold">
+                                                        <?= $escaper->escapeHtml(__('Review')) ?>
+                                                    </span>
+                                                </label>
+                                                <div class="control">
+                                                    <textarea
+                                                        name="detail"
+                                                        class="w-full"
+                                                        id="review_field"
+                                                        cols="5"
+                                                        rows="3"
+                                                    ></textarea>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <input
+                                            type="hidden"
+                                            name="review-location-id"
+                                            value="<?= (int)$block->getLocationId() ?>"
+                                        />
+
+                                        <span
+                                            x-text="popupError"
+                                            class="text-red-600 text-sm"
+                                        ></span>
+
+                                        <div class="actions-toolbar review-form-actions">
+                                            <div class="primary actions-primary">
+                                                <button
+                                                    @click.prevent="sendReview()"
+                                                    type="submit"
+                                                    class="action submit primary"
+                                                >
+                                                    <span>
+                                                        <?= $escaper->escapeHtml(__('Submit Review')) ?>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            <?php else: ?>
+                                <div>
+                                    <?= $escaper->escapeHtml(__('Please %1 to leave a review.', $block->buildLoginLink()), ['a']) ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="amlocator-location-reviews overflow-auto"
+                :class="reviewsExpanded ? 'max-h-[500px]' : 'max-h-0'"
+                id="amlocator-location-reviews"
+            >
+                <ol class="amlocator-items">
+                    <?php if ($locationReviews):?>
+                        <?php foreach ($locationReviews as $review): ?>
+                            <li
+                                class="amlocator-location-review text-sm"
+                                x-data="{
+                                    isFoldable: $refs.message.offsetHeight > 40,
+                                    showHiddenContent: false
+                                }"
+                            >
+                                <div class="amlocator-wrapper pt-2.5 mb-2.5r">
+                                    <p class="amlocator-name font-bold mb-2.5">
+                                        <?= $escaper->escapeHtml($review->getCustomerName())?>
+                                    </p>
+                                    <div>
+                                        <span class="sr-only">
+                                            <?= $escaper->escapeHtml(__('Customer rating -')) ?>
+                                            <?= $escaper->escapeHtml($review->getRating()) ?>%
+                                        </span>
+                                        <div aria-hidden="true">
+                                            <?= $block->getReviewsStarsHtml($review->getRating()) ?>
+                                        </div>
+                                    </div>
+                                    <p
+                                        class="amlocator-message -collapsed my-2.5 break-words overflow-hidden"
+                                        data-amlocator-js="review-message"
+                                        x-ref="message"
+                                        :class="showHiddenContent ? 'max-h-[1000px]' : 'max-h-[60px]'"
+                                    >
+                                        <?= $escaper->escapeHtml($review->getReviewText()) ?>
+                                    </p>
+                                    <div class="amlocator-footer flex text-xs">
+                                        <button
+                                            class="amlocator-link -full mr-3 text-gray-400"
+                                            x-show="isFoldable"
+                                            @click="showHiddenContent = !showHiddenContent"
+                                        >
+                                            <template x-if="!showHiddenContent">
+                                                <span>
+                                                    <?= $escaper->escapeHtml(__('See a full review')) ?>
+                                                </span>
+                                            </template>
+                                            <template x-if="showHiddenContent">
+                                                <span>
+                                                    <?= $escaper->escapeHtml(__('Collapse review')) ?>
+                                                </span>
+                                            </template>
+                                        </button>
+                                        <time
+                                            class="amlocator-date ml-auto"
+                                            datetime="
+                                                <?= $escaper->escapeHtml(
+                                                    $block->formatDate($review->getPublishedAt(), $format)
+                                                ) ?>
+                                            "
+                                        >
+                                            <?= $escaper->escapeHtml($block->formatDate($review->getPublishedAt(), $format)) ?>
+                                        </time>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif;?>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+<?php endif; ?>

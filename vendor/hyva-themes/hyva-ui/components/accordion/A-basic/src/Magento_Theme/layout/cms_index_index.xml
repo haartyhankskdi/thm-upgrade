@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceContainer name="content">
+            <block name="accordion" template="Magento_Theme::elements/accordion/accordion.phtml">
+                <arguments>
+                    <argument name="multiselectable" xsi:type="boolean">false</argument> <!-- Allow multiple items to be open (true/false) -->
+                    <argument name="divider" xsi:type="boolean">true</argument> <!-- Show divider (true/false) -->
+                </arguments>
+
+                <block name="accordion-item-1">
+                    <arguments>
+                        <argument name="title" xsi:type="string" translate="true">Question 1</argument>
+                        <argument name="content" xsi:type="string" translate="true">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</argument>
+                    </arguments>
+                </block>
+                <block name="accordion-item-2">
+                    <arguments>
+                        <argument name="title" xsi:type="string" translate="true">Question 2</argument>
+                        <argument name="content" xsi:type="string" translate="true">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</argument>
+                        <argument name="open" xsi:type="boolean">true</argument>
+                        <argument name="icon" xsi:type="string">heroicons/outline/speakerphone</argument>
+                    </arguments>
+                </block>
+                <block name="accordion-item-3">
+                    <arguments>
+                        <argument name="title" xsi:type="string" translate="true">Question 3</argument>
+                    </arguments>
+                    <block class="Magento\Framework\View\Element\Text">
+                        <arguments>
+                            <argument name="text" xsi:type="string"><![CDATA[
+                                <div class="prose">
+                                    <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+                                    <p>Iusto itaque voluptatibus iste minima libero harum repellat!</p>
+                                <div>
+                            ]]></argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,16 @@
+<?php
+declare(strict_types=1);
+
+/** @var Success $block */
+
+use Ebizmarts\BrippoPayments\Block\Onepage\Success;
+
+if ($block->isBrippoFrontendPayByLink()) {
+    echo '<div class="paybylink-success-note">' .
+        $block->escapeHtml($block->getPayByLinkSuccessNote()) .
+    '</div>';
+}
+
+if ($block->isBrippoPaymentElement()) {
+    echo '<div data-mage-init=\'{"brippo_refresh_cart": {}}\'></div>';
+}

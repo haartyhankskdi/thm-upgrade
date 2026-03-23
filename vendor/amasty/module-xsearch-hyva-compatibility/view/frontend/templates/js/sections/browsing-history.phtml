@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchBrowsingHistory() {
+        return {
+            browsingHistoryItems() {
+                return this.sections.browsingHistory.items
+            },
+            browsingHistoryItemUrl() {
+                return this.resultPageUrl + this.searchItem.name.toLowerCase().replace(/<[^>]*>?/gm, '')
+            },
+            browsingHistoryItemName() {
+                return this.searchItem.name
+            },
+            browsingHistoryTitle() {
+                return this.sections.browsingHistory.title
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

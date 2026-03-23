@@ -1,0 +1,38 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+
+<button type="submit"
+        form="product_addtocart_form"
+        title="<?= $escaper->escapeHtmlAttr(__('+ Add To Basket')) ?>"
+        class="btn btn-primary add-to-basket w-full bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base  font-normal px-2 py-3 rounded-full transition duration-400 uppercase lg:w-[215px]"
+        id="product-addtocart-button"
+        data-addto="cart"
+>
+   <!--  <?//= $heroicons->shoppingCartHtml('border-current', 24, 24, ['aria-hidden' => 'true']); ?> -->
+    <span class="sm:block lg:block"><?= $block->getData('is_cart_configure') ?
+            $escaper->escapeHtml(__('Update item')) :
+            $escaper->escapeHtml(__('+ Add To Basket')) ?>
+    </span>
+</button>
+
+<?= $block->getChildHtml('', true) ?>

@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Payments\Recover;
+
+/** @var Recover $block */
+// @codingStandardsIgnoreStart
+
+$nonce = $block->getData('csp_nonce') ?: '';
+?>
+
+<div class="brippoRecoverOrder">
+    <?php if (empty($block->order) || empty($block->order->getEntityId())) { ?>
+        <div>
+            <h2><?= $block->escapeHtml(__('Unable to recover')) ?>.</h2>
+            <p><?= $block->escapeHtml(__('Order not found')) ?>.</p>
+        </div>
+    <?php } else if ($block->order->getInvoiceCollection()->getSize() > 0) { ?>
+        <div>
+            <h2><?= $block->escapeHtml(__('Unable to recover')) ?>.</h2>
+            <p><?= $block->escapeHtml(__('Order #%1 was already invoiced', $block->order->getIncrementId())) ?>.</p>
+        </div>
+    <?php } else if (!$block->hasOrderRecoverableState()) { ?>
+        <div>
+            <h2><?= $block->escapeHtml(__('Unable to recover')) ?>.</h2>
+            <p><?= $block->escapeHtml(
+                    __('Order #%1 state is ',
+                        $block->order->getIncrementId()) . $block->order->getState()
+                ) ?>.</p>
+        </div>
+    <?php } else if (!$block->isRecoverSignatureValid()) { ?>
+        <div>
+            <h2><?= $block->escapeHtml(__('Unable to recover')) ?>.</h2>
+            <p><?= $block->escapeHtml(__('Invalid signature')) ?>.</p>
+        </div>
+    <?php } else { ?>
+        <script nonce="<?= $block->escapeHtmlAttr($nonce) ?>">
+            const brippoRecoverOrderEntityId = '<?= $block->escapeJs($block->order->getEntityId()) ?>';
+            const brippoRecoverOrderBillingAddress = <?= $block->getBillingAddressJsonStringyfied() ?>;
+            const brippoRecoverLinkSource = '<?= $block->escapeJs($block->getLinkSource()) ?>';
+            const brippoRecoverIsManual = <?= $block->isManual() ? 'true' : 'false' ?>;
+            const brippoRecoverIsSoftFailRecovery = <?= $block->isSoftFailRecovery() ? 'true' : 'false' ?>;
+            const brippoRecoverNotification = <?= $block->getNotification() ?>;
+        </script>
+        <div class="orderDetails">
+            <h3>Pay for Order #<?= $block->escapeHtml($block->order->getIncrementId()) ?></h3>
+            <h1><?= $block->escapeHtml($block->getGrandTotal()) ?></h1>
+            <div class="cart">
+                <ul>
+                <?php foreach ($block->order->getAllVisibleItems() as $item): ?>
+                    <li>
+                        <img src="<?= $block->escapeHtml($block->getProductImageUrl($item->getProductId())) ?>"
+                             alt="<?= $block->escapeHtml($item->getName()) ?>" />
+                        <div class="description">
+                            <div class="name"><?= $block->escapeHtml($item->getName()) ?></div>
+                            <div class="qty">x<?= (int)$item->getQtyOrdered() ?></div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+                <div class="grandTotalDue">
+                    <div class="name">Total due</div>
+                    <?= $block->order->formatPrice($block->order->getGrandTotal()) ?>
+                </div>
+                <?php if (!$block->order->getIsVirtual() && !empty($block->order->getShippingAddress())) { ?>
+                <div class="shippingMethod">
+                    <div class="name">Delivery method</div>
+                    <p><?= $block->escapeHtml($block->order->getShippingDescription()) ?></p>
+                </div>
+                <?php } ?>
+            </div>
+            <div class="addresses">
+                <div class="address">
+                    <h4>Billing address</h4>
+                    <p><?= $block->escapeHtml($block->order->getBillingAddress()->getFirstname() . ' ' . $block->escapeHtml($block->order->getBillingAddress()->getLastname())) ?>
+                    </p>
+                    <p><?= nl2br($block->escapeHtml(implode(", ", $block->order->getBillingAddress()->getStreet()))) ?></p>
+                    <p><?= $block->escapeHtml($block->order->getBillingAddress()->getCity()) ?>,
+                    <?= $block->escapeHtml($block->order->getBillingAddress()->getRegion()) ?>,
+                    <?= $block->escapeHtml($block->order->getBillingAddress()->getPostcode()) ?></p>
+                    <p><?= $block->escapeHtml($block->order->getBillingAddress()->getCountryId()) ?></p>
+                    <p><?= $block->escapeHtml($block->order->getBillingAddress()->getTelephone()) ?></p>
+                </div>
+                <div class="address">
+                    <?php if ($block->order->getShippingAddress()): ?>
+                    <h4>Shipping address</h4>
+                        <p><?= $block->escapeHtml($block->order->getShippingAddress()->getFirstname() . ' ' . $block->escapeHtml($block->order->getShippingAddress()->getLastname())) ?></p>
+                        <p><?= nl2br($block->escapeHtml(implode(", ", $block->order->getShippingAddress()->getStreet()))) ?></p>
+                        <p><?= $block->escapeHtml($block->order->getShippingAddress()->getCity()) ?>,
+                            <?= $block->escapeHtml($block->order->getShippingAddress()->getRegion()) ?>,
+                            <?= $block->escapeHtml($block->order->getShippingAddress()->getPostcode()) ?></p>
+                        <p><?= $block->escapeHtml($block->order->getShippingAddress()->getCountryId()) ?></p>
+                        <p><?= $block->escapeHtml($block->order->getShippingAddress()->getTelephone()) ?></p>
+                    <?php else: ?>
+                        <p>Shipping address not available.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="brippoCheckout">
+            <?php if ($block->isStockAvailable()) { ?>
+                <script nonce="<?= $block->escapeHtmlAttr($nonce) ?>">
+                    const brippoRecoverIsStockAvailable = true;
+                </script>
+                <div class="loadingThrobber">
+                    <div class="checkoutThrobber">
+                        <div class="throbber"></div>
+                    </div>
+                </div>
+                <div id="brippoExpressCheckoutrecover_checkout_container">
+                    <div id="brippoExpressCheckoutrecover_checkout_error" class="expressCheckoutError"></div>
+                    <div id="brippoExpressCheckoutrecover_checkout_mount"></div>
+                </div>
+                <div class="separator" style="display: none;">
+                    <span class="separatorLine"></span>
+                    <span class="separatorOr">Or</span>
+                    <span class="separatorLine"></span>
+                </div>
+                <div id="brippoPaymentElement_recover_checkout_container">
+                    <div id="brippoPaymentElement_recover_checkout_error" class="brippoError"></div>
+                    <div id="brippoPaymentElement_recover_checkout_mount"></div>
+                </div>
+                <button class="button action primary" type="button" id="brippoRecoverPaymentElementPay" onclick="window.brippoPaymentElement.pay('recover_checkout');">Pay</button>
+            <?php } else { ?>
+                <script>
+                    const brippoRecoverIsStockAvailable = false;
+                </script>
+                <div class="brippoError" style="display: block">
+                    One or more items in your order are currently out of stock.
+                </div>
+                <p>You can optionally edit this order to remove unavailable products.</p>
+                <button class="button action primary"
+                        type="button" id="brippoRecoverReorder"
+                        onclick="location.href = '<?= $block->escapeHtml($block->getUrl('brippo_payments/payments/reorder', ['recoverOrderId' => $block->order->getEntityId()])) ?>';"
+                >Edit Order</button>
+            <?php } ?>
+        </div>
+    <?php }
+    // @codingStandardsIgnoreEnd
+    ?>
+</div>
+

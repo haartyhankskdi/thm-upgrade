@@ -1,0 +1,46 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\SalesRule\\\\Model\\\\Coupon\\:\\:load\\(\\) method$#"
+			count: 1
+			path: Helper/General.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\SalesRule\\\\Model\\\\Coupon\\:\\:save\\(\\) method$#"
+			count: 1
+			path: Helper/General.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\Sales\\\\Model\\\\Order\\:\\:save\\(\\) method$#"
+			count: 1
+			path: Model/Methods/Reorder.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Mollie\\\\Payment\\\\Model\\\\OrderLines\\:\\:load\\(\\) method$#"
+			count: 1
+			path: Model/OrderLines.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Mollie\\\\Payment\\\\Model\\\\OrderLines\\:\\:save\\(\\) method$#"
+			count: 2
+			path: Model/OrderLines.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\SalesRule\\\\Model\\\\Coupon\\:\\:load\\(\\) method$#"
+			count: 1
+			path: Service/Order/CancelOrder.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\SalesRule\\\\Model\\\\Coupon\\:\\:save\\(\\) method$#"
+			count: 1
+			path: Service/Order/CancelOrder.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Mollie\\\\Payment\\\\Model\\\\OrderLines\\:\\:save\\(\\) method$#"
+			count: 1
+			path: Service/Order/Lines/Order.php
+
+		-
+			message: "#^Use service contracts to persist entities in favour of Magento\\\\Quote\\\\Model\\\\QuoteIdMask\\:\\:load\\(\\) method$#"
+			count: 1
+			path: Webapi/PaymentToken.php

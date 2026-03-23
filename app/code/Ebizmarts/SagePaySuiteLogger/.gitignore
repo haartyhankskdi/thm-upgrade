@@ -1,0 +1,4 @@
+.idea
+*.orig
+.DS_STORE
+captainhook.json

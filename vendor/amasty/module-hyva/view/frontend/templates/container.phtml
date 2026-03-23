@@ -1,0 +1,29 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Hyva Theme Base Package (System)
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var $block Template */
+/** @var $escaper Escaper */
+$childItems = $block->getChildNames();
+?>
+<?php if (!empty($childItems)): ?>
+<div class="container">
+    <div class="am-hyva-top-links-container pt-2 pb-2 flex flex-row items-end justify-end"
+         role="navigation"
+         aria-label="<?= $escaper->escapeHtml(__('Top Navigation Links')) ?>"
+    >
+        <?php foreach ($childItems as $childName): ?>
+            <div class="pl-3">
+                <?= /** @noEscape  */ $block->getChildHtml($childName) ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>

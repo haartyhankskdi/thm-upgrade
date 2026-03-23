@@ -1,0 +1,107 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+dssadasdas
+<?php 
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');//get current category
+    $cmsPage = $objectManager->get('\Magento\Cms\Model\Page');
+    $moduleName = $this->getRequest()->getModuleName();
+    $controller = $this->getRequest()->getControllerName();
+    $action     = $this->getRequest()->getActionName();
+    $url = $moduleName.'_'.$controller.'_'.$action;
+    $cmsPageId = $cmsPage->getIdentifier(); //Get Current CMS Page Identifier
+?>
+<?php if ($crumbs && is_array($crumbs)) : ?>
+<div class="breadcrumbs">
+
+    <ul class="items">
+        <?php if($url == 'catalog_category_view'){ ?>
+            <h1><?= strtoupper($category->getName()); ?></h1>
+        <?php } if($url == 'checkout_cart_index'){ ?>
+            <h1><?= strtoupper(__('Shopping Cart')); ?></h1>
+        <?php } if($url == 'contact_index_index'){ ?>
+            <h1><?= strtoupper(__('Contact Us')); ?></h1>
+        <?php } if($url == 'onestepcheckout_index_index'){ ?>
+            <h1><?= strtoupper(__('Checkout')); ?></h1>
+        <?php } if($url == 'customer_account_create'){ ?>
+            <h1><?= strtoupper(__('Register')); ?></h1>
+        <?php } if($url == 'customer_account_login'){ ?>
+            <h1><?= strtoupper(__('Login')); ?></h1>
+        <?php } if($url == 'customer_account_index'){ ?>
+            <h1><?= strtoupper(__('My Account')); ?></h1>
+        <?php } if($url == 'customer_account_edit'){ ?>
+            <h1><?= strtoupper(__('Account Information')); ?></h1>
+        <?php } if($url == 'customer_address_index'){ ?>
+            <h1><?= strtoupper(__('Address Book')); ?></h1>
+        <?php } if($url == 'sales_order_history' || $url == 'sales_order_view'){ ?>
+            <h1><?= strtoupper(__('My Orders')); ?></h1>
+        <?php } if($url == 'customer_address_form'){ ?>
+            <h1><?= strtoupper(__('Address Edit')); ?></h1>
+        <?php } if($url == 'newsletter_manage_index'){ ?>
+            <h1><?= strtoupper(__('Newsletter Subscription')); ?></h1>
+        <?php } if($cmsPageId == 'franchise') { ?>
+            <h1><?= strtoupper(__('Franchise')); ?></h1>
+        <?php } if($cmsPageId == 'sainsbury-s') { ?>
+            <h1><?= strtoupper(__("Sainsbury's")); ?></h1>
+        <?php } if($cmsPageId == 'customer-care') { ?>
+            <h1><?= strtoupper(__('Customer Care')); ?></h1>
+        <?php } if($cmsPageId == 'complaints') { ?> 
+            <h1><?= strtoupper(__('Complaints')); ?></h1>           
+        <?php } if($cmsPageId == 'privacy-policy') { ?>
+            <h1><?= strtoupper(__('Privacy Policy')); ?></h1>
+        <?php } if($cmsPageId == 'store-locators') { ?>
+            <h1><?= strtoupper(__('Store Locators')); ?></h1>
+        <?php } if($cmsPageId == 'delivery-information') { ?>
+            <h1><?= strtoupper(__('Delivery Information')); ?></h1>
+        <?php } if($cmsPageId == 'terms-conditions') { ?>
+            <h1><?= strtoupper(__('Terms & Conditions')); ?></h1>
+        <?php } if($cmsPageId == 'about-us') { ?>
+            <h1><?= strtoupper(__('About Us')); ?></h1>
+        <?php } if($cmsPageId == 'deliveroo-available-locations') { ?>
+            <h1><?= strtoupper(__('Available Locations')); ?></h1>
+        <?php } if($cmsPageId == 'career-success') { ?>
+            <h1><?= strtoupper(__('Career Success')); ?></h1>
+        <?php } if($cmsPageId == 'cookie-policy') { ?>
+            <h1><?= strtoupper(__('Cookie Policy')); ?></h1>
+        <?php } if($cmsPageId == 'favourites') { ?>
+            <h1><?= strtoupper(__('Favourites')); ?></h1>
+        <?php } if($cmsPageId == 'recipes') { ?>
+            <h1><?= strtoupper(__('Recipes')); ?></h1>
+        <?php } if($cmsPageId == 'our-policy') { ?>
+            <h1><?= strtoupper(__('Our Policy')); ?></h1>
+        <?php } if($cmsPageId == 'organic') { ?>
+            <h1><?= strtoupper(__('Organic')); ?></h1>
+        <?php } if($cmsPageId == 'tariq-premium') { ?>
+            <h1><?= strtoupper(__('Tariq Premium')); ?></h1>
+        <?php } if($cmsPageId == 'ubereats-available-locations') { ?>
+            <h1><?= strtoupper(__('Uber Eats Available Locations')); ?></h1>
+            <?php } if($cmsPageId == 'allergen-listing') { ?>
+            <h1><?= strtoupper(__('Allergen Listing')); ?></h1>
+            <?php } if($cmsPageId == 'allergen-information') { ?>
+            <h1><?= strtoupper(__('Allergen Information')); ?></h1>
+
+        <?php } ?>
+
+        <span><?= $block->escapeHtml($block->getPageHeading())?></span>
+        <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+            <li class="item <?= $block->escapeHtmlAttr($crumbName) ?>">
+            <?php if ($crumbInfo['link']) : ?>
+                <a href="<?= $block->escapeUrl($crumbInfo['link']) ?>"
+                   title="<?= $block->escapeHtmlAttr($crumbInfo['title']) ?>">
+                    <?= $block->escapeHtml($crumbInfo['label']) ?>
+                </a>
+            <?php elseif ($crumbInfo['last']) : ?>
+                <strong><?= $block->escapeHtml($crumbInfo['label']) ?></strong>
+            <?php else : ?>
+                <?= $block->escapeHtml($crumbInfo['label']) ?>
+            <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+        
+    </ul>
+</div>
+<?php endif; ?>

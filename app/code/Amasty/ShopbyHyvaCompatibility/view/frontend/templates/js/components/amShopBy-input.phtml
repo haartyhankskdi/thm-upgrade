@@ -1,0 +1,84 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function initInput() {
+        return {
+            isSelected: false,
+            open: false,
+            positioned: false,
+            left: true,
+            value: '',
+            name: '',
+            type: 'radio',
+
+            /**
+             *
+             * @param url
+             */
+            selectInput(url) {
+                location.href = url;
+            },
+
+            /**
+             *
+             * @param element
+             */
+            openParentFilter(element) {
+                this.$nextTick(() => {
+                    if (element.querySelector('.items-children .amshopby-link-selected')) {
+                        this.open = true;
+                    }
+                })
+            },
+
+            leftPosition(element) {
+                const itemsChildren = element.querySelector('.items-children');
+                let boundingClientRect = null;
+
+                if (itemsChildren) {
+                    itemsChildren.classList.toggle('hidden');
+                    boundingClientRect = itemsChildren.getBoundingClientRect();
+
+                    this.left = window.innerWidth > (boundingClientRect.width + boundingClientRect.left);
+                    itemsChildren.classList.toggle('hidden');
+                }
+            },
+
+            eventListeners: {
+                ['@amApplyInputChanged.window'](event) {
+                    const element = event.detail.element;
+                    const value = event.detail.value;
+                    const name = event.detail.name;
+                    if (this.name === name && this.value === value) {
+                        this.isSelected = !this.isSelected;
+                        window.dispatchEvent(new CustomEvent('amFilterElementClick', {
+                            detail: {
+                                element,
+                                status: this.isSelected
+                            }
+                        }));
+                    } else {
+                        if (this.type === 'radio' && this.name === name) {
+                            this.isSelected = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</script>

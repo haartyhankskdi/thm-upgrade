@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!--=========================================== INVITATIONS =================================================-->
+    <route url="/V1/mpReward/invitations" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_invitation"/>
+        </resources>
+    </route>
+    <route url="/V1/mpReward/mine/invitations" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="getReferralByCustomerId"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/mpReward/mine/invite" method="POST">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="invite"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/mpReward/invitation/refer" method="POST">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="referByCode"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/invitation/mine/code" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="getReferCode"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/mpReward/invitations/count" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="count"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_invitation"/>
+        </resources>
+    </route>
+    <route url="/V1/mpReward/invitations/invited/:email" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="getInvitedByEmail"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_invitation"/>
+        </resources>
+    </route>
+    <route url="/V1/mpReward/invitations/referral/:email" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" method="getReferralByEmail"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_invitation"/>
+        </resources>
+    </route>
+
+    <!--=========================================== REFERRAL RULES =================================================-->
+    <route url="/V1/mpReward/referral-rules" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\ReferralRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_rules" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/referral-rules/:id" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\ReferralRepositoryInterface" method="getRuleById"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_rules" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/referral-rules/:id" method="DELETE">
+        <service class="Mageplaza\RewardPointsUltimate\Api\ReferralRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_rules" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/referral-rules" method="POST">
+        <service class="Mageplaza\RewardPointsUltimate\Api\ReferralRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::referral_rules" />
+        </resources>
+    </route>
+
+    <!--=========================================== BEHAVIOR RULES =================================================-->
+    <route url="/V1/mpReward/behavior-rules" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/behavior-rules/:id" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="getRuleById"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/behavior-rules/:id" method="DELETE">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Mageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/behavior-rules" method="POST">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="MMageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/behavior-rules/email-templates" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="getEmailTemplateOptions"/>
+        <resources>
+            <resource ref="MMageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+    <route url="/V1/mpReward/behavior-rules/sender-options" method="GET">
+        <service class="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" method="getSenderOptions"/>
+        <resources>
+            <resource ref="MMageplaza_RewardPoints::earning_behavior" />
+        </resources>
+    </route>
+</routes>

@@ -1,0 +1,52 @@
+<?php 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['franchise_form'])) {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $contact = htmlspecialchars($_POST['contact']);
+
+    $to = "komalthumar567@gmail.com";
+    $subject = "Franchise Enquiry - Tariq Halal Meats";
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "From: " . $email . "\r\n";
+
+    $message = "
+        <html>
+        <head><title>Franchise Enquiry</title></head>
+        <body>
+            <h2>New Franchise Enquiry Received</h2>
+            <p><strong>Name:</strong> {$name}</p>
+            <p><strong>Email:</strong> {$email}</p>
+            <p><strong>Contact Number:</strong> {$contact}</p>
+        </body>
+        </html>
+    ";
+
+    if (mail($to, $subject, $message, $headers)) {
+        // Redirect to Thank You page
+        header("Location: /thank-you"); // Replace with your actual URL
+        exit();
+    } else {
+        echo "<div style='color: red;'>Error sending email. Please try again later.</div>";
+    }
+}
+?>
+
+<form method="post" action="">
+    <input type="hidden" name="franchise_form" value="1" />
+    <div>
+        <label for="name">Name:</label><br>
+        <input type="text" name="name" required />
+    </div>
+    <div>
+        <label for="email">Email:</label><br>
+        <input type="email" name="email" required />
+    </div>
+    <div>
+        <label for="contact">Contact Number:</label><br>
+        <input type="text" name="contact" required />
+    </div>
+    <div style="margin-top: 10px;">
+        <button type="submit">Submit</button>
+    </div>
+</form>

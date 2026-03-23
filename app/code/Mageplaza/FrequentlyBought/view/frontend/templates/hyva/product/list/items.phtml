@@ -1,0 +1,915 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var Mageplaza\FrequentlyBought\Block\Product\ProductList\FrequentlyBought $block */
+/** @var HeroiconsOutline $heroicons */
+$product   = $block->getProduct();
+$productId = $product->getId();
+$items     = $block->getItems();
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+if ($block->isShow() && $items->getSize()):?>
+    <hr>
+    <?php if ($title = $block->getTitleBlock()): ?>
+        <div
+            class="mageplaza-fbt-title block-title title container mx-auto flex pt-6 pb-3 mb-6 md:flex-row border-b-2 border-gray-300">
+            <h2 class="text-gray-900 text-2xl title-font font-base text-center md:text-left w-full"
+                id="block-mageplaza-fbt-heading"><?= $escaper->escapeHtml($title) ?></h2>
+        </div>
+    <?php endif; ?>
+    <div class="mageplaza-fbt-content card w-full px-6 py-3">
+        <form id="mageplaza-fbt-form" method="post"
+              action="<?= $block->escapeUrl($block->getUrl('frequentlybought/cart/add')) ?>"
+              x-data="{...hyva.formValidation($el),...initMpFbtForm($el),...hyva.modal()}"
+              @submit="myFormSubmit"
+              x-bind="eventListeners"
+        >
+            <?= $block->getFormKeyHtml() ?>
+            <div class="wrapper products-grid flex items-center flex-wrap mb-8">
+                <ol class="mageplaza-fbt-image-box flex flex-wrap items-center" style="float: unset">
+                    <li class="item product first-item product-item mageplaza-fbt-hidden mageplaza-fbt-item-<?= /* @noEscape */
+                    $productId ?>">
+                        <span><?= $block->getImage($product, 'related_products_list')->toHtml() ?></span>
+                    </li>
+                    <?php foreach ($items as $_item): ?>
+                        <?php $itemId = $_item->getProductId() ?: $_item->getId() ?>
+                        <li class="product-item-plus mageplaza-fbt-hidden mageplaza-fbt-plus-<?= /* @noEscape */
+                        $itemId ?>">
+                            <?php if ($separateImage = $block->getSeparatorImage()): ?>
+                                <img src="<?= $block->escapeUrl($separateImage) ?>" alt="+"/>
+                            <?php else: ?>
+                                <span>&#43;</span>
+                            <?php endif; ?>
+                        </li>
+                        <li class="item product product-item mageplaza-fbt-hidden mageplaza-fbt-item-<?= /* @noEscape */
+                        $itemId ?>">
+                            <span>
+                                <a href="<?= /* @noEscape */
+                                $block->getProductUrl($_item) ?>"
+                                   class="product photo product-item-photo mageplaza-fbt-url-product">
+                                    <?= $block->getImage($_item, 'related_products_list')->toHtml() ?>
+                                </a>
+                            </span>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+                <div class="mageplaza-fbt-price-box mb-0" style="float: unset">
+                    <div class="mageplaza-fbt-total-price">
+                        <span class="mageplaza-fbt-total-price-label">
+                            <?= /* @noEscape */
+                            __('Total price:') ?>
+                        </span>
+                        <span data-price-amount="0" class="mageplaza-fbt-price-wrapper">
+                            <span class="mageplaza-fbt-price">
+                                <?= /* @noEscape */
+                                $block->getPriceWithCurrency(0) ?>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="mageplaza-fbt-buttons">
+                        <div class="mageplaza-fbt-add-to-cart">
+                            <?php if (!$block->usePopup()): ?>
+                                <button
+                                    class="w-auto btn btn-primary justify-center text-sm mr-auto action primary mpfbt-tocart"
+                                    type="submit" title="<?= /* @noEscape */
+                                __('Add selected to cart') ?>">
+                                    <?= $heroicons->shoppingCartHtml('border-current inline'); ?>
+                                    <span><?= /* @noEscape */
+                                        __('Add selected to cart') ?></span>
+                                </button>
+                            <?php else: ?>
+                                <button
+                                    class="w-auto btn btn-primary justify-center text-sm mr-auto action primary mpfbt-tocart"
+                                    @click="_showPopup($el, null)"
+                                    type="button" title="<?= /* @noEscape */
+                                __('Add selected to cart') ?>">
+                                    <?= $heroicons->shoppingCartHtml('border-current inline'); ?>
+                                    <span><?= /* @noEscape */
+                                        __('Add selected to cart') ?></span>
+                                </button>
+                            <?php endif; ?>
+
+                        </div>
+                        <?php if ($block->getShowWishList()): ?>
+                            <div class="mageplaza-fbt-add-to-wishlist">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        title="<?= /* @noEscape */
+                                        __('Add selected to wishlist') ?>"
+                                        data-url="<?= /* @noEscape */
+                                        $block->getUrl('frequentlybought/wishlist/add') ?>"
+                                        @click="_addToWishList('<?= /* @noEscape */
+                                        $block->getUrl('frequentlybought/wishlist/add') ?>')">
+                                    <span><?= /* @noEscape */
+                                        __('Add selected to wishlist') ?></span>
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="mp-clear"></div>
+            </div>
+            <div class="mageplaza-fbt-rows">
+                <ul>
+                    <li>
+                        <input type="checkbox" class="related-checkbox"
+                               data-mageplaza-fbt-product-id="<?= /* @noEscape */
+                               $productId ?>"
+                               data-price-amount="<?= /* @noEscape */
+                               $block->getPriceAmount($product) ?>"
+                               id="mageplaza-fbt-checkbox-<?= /* @noEscape */
+                               $productId; ?>"
+                               name="mageplaza_fbt[<?= /* @noEscape */
+                               $productId ?>]" <?= (!$block->getProductIsSalable($product)) ? 'disabled="disabled"' : '' ?> />
+                        <span>
+                            <div class="mageplaza-fbt-checkbox-label">
+                                <strong><?= /* @noEscape */
+                                    __('This item:') ?></strong>
+                                <span class="mageplaza-fbt-name-<?= /* @noEscape */
+                                $productId; ?>"><?= $escaper->escapeHtml($product->getName()) ?></span>
+                                <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */
+                                $productId ?>" data-price-amount="<?= /* @noEscape */
+                                $block->getPriceAmount($product) ?>"><?= /* @noEscape */
+                                    $block->formatPriceWithCurrency($block->getPriceAmount($product)) ?></span>
+                                <?php if (!$block->getProductIsSalable($product)): ?>
+                                    <span class="mageplaza-fbt-out-of-stock"><?= /* @noEscape */
+                                        __('Out of stock') ?></span>
+                                <?php endif; ?>
+                                <?php if (!$block->usePopup()): ?>
+                                    <span class="mageplaza-fbt-detail"></span>
+                                <?php endif; ?>
+                            </div>
+                        </span>
+                        <?php if (!$block->usePopup()): ?>
+                            <div
+                                class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */
+                                $productId ?> mageplaza-fbt-hidden"><?= /* @noEscape */
+                                $block->getOptionWrapper() ?></div>
+                            <div
+                                class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */
+                                $productId ?> mageplaza-fbt-hidden"><?= /* @noEscape */
+                                $block->getCustomOption() ?></div>
+                        <?php endif; ?>
+                    </li>
+                    <?php foreach ($items as $_item): ?>
+                        <?php $itemId = $_item->getProductId() ?: $_item->getId(); ?>
+                        <?php $isSalable = $block->getProductIsSalable($_item); ?>
+                        <li>
+                            <input type="checkbox" class="related-checkbox"
+                                   data-mageplaza-fbt-product-id="<?= /* @noEscape */
+                                   $itemId ?>" data-price-amount="<?= /* @noEscape */
+                            $block->getPriceAmount($_item); ?>" id="mageplaza-fbt-checkbox-<?= /* @noEscape */
+                            $itemId ?>" name="mageplaza_fbt[<?= /* @noEscape */
+                            $itemId ?>]" <?= (!$isSalable) ? 'disabled="disabled"' : '' ?> />
+                            <span>
+                                <div class="mageplaza-fbt-checkbox-label">
+                                    <a class="text-blue-900" href="<?= /* @noEscape */
+                                    $block->getProductUrl($_item) ?>">
+                                        <?= $escaper->escapeHtml($_item->getName()) ?>
+                                    </a>
+                                    <span class="item-price mageplaza-fbt-price-<?= /* @noEscape */
+                                    $itemId ?>" data-price-amount="<?= /* @noEscape */
+                                    $block->getPriceAmount($_item) ?>">
+                                        <?= /* @noEscape */
+                                        $block->formatPriceWithCurrency($block->getPriceAmount($_item)); ?>
+                                    </span>
+                                    <?php if (!$isSalable): ?>
+                                        <span class="mageplaza-fbt-out-of-stock"><?= /* @noEscape */
+                                            __('Out of stock') ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!$block->usePopup()): ?>
+                                        <span class="mageplaza-fbt-detail"></span>
+                                    <?php endif; ?>
+                                </div>
+                            </span>
+                            <?php if (!$block->usePopup()): ?>
+                                <div
+                                    class="fieldset mageplaza-fbt-option-product mageplaza-fbt-option-wrapper-<?= /* @noEscape */
+                                    $itemId ?> mageplaza-fbt-hidden"><?= /* @noEscape */
+                                    $block->getOptionWrapper($itemId) ?></div>
+                                <div
+                                    class="fieldset mageplaza-fbt-option-product mageplaza-fbt-custom-option-<?= /* @noEscape */
+                                    $itemId ?> mageplaza-fbt-hidden"><?= /* @noEscape */
+                                    $block->getCustomOption($itemId) ?></div>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php if ($block->usePopup()): ?>
+                <?php
+                $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
+
+                $modal      = $modalViewModel->createModal()
+                    ->withTemplate('Mageplaza_FrequentlyBought::hyva/product/modal/modal-options.phtml')
+                    ->withDialogRefName("mp-fbt-modal-options")->addDialogClass('w-full xl:w-1/2 md:w-3/4 max-h-dialog relative')
+                    ->removeDialogClass('p-10');
+                $modalBlock = $modal->getContentRenderer();
+                $modalBlock->setData('data', $block);
+                ?>
+                <?= /* @noEscape */
+                $modal ?>
+            <?php endif; ?>
+        </form>
+    </div>
+    <hr>
+
+
+<?php endif; ?>
+<script>
+    hyva.formValidation.addRule('validate-one-required-by-name', function(value, options, field, context) {
+        const elm = field.element;
+        let selector = '';
+        if (options === 'true') {
+            const name = elm.name.replace(/([\\[\]])/g, '\\$1');
+            selector = `input[name^="${name}"]:checked`;
+        } else {
+            selector = `input[name^="${options.replace(/([\\[\]])/g, '\\$1')}"]:checked`;
+        }
+
+        const container = elm.closest('form');
+
+        return container.querySelectorAll(selector).length > 0
+            ? true
+            : 'Please select one of the options.';
+    });
+
+    hyva.formValidation.addRule('validate-grouped-qty', function(value, options, field, context) {
+        let result = false;
+        let total = 0;
+
+        document.querySelectorAll(`${options} input[data-validate*="validate-grouped-qty"]`).forEach(function(element) {
+            const val = element.value;
+            const valInt = parseFloat(val) || 0;
+
+            if (val && val.length > 0 && valInt >= 0) {
+                total += valInt;
+                result = true;
+            } else {
+                result = false;
+            }
+        });
+
+        return result && total > 0
+            ? true
+            : 'Please specify the quantity of product(s).';
+    });
+
+    function initMpFbtForm (element) {
+        return {
+            options: <?= /* @noEscape */ $block->getJsonConfig() ?>,
+            removeRelatedBlock: <?= /* @noEscape */ $this->getHelperData()->getConfigGeneral('remove_related_block') ?>,
+            init () {
+                if(this.removeRelatedBlock) {
+                    let relatedBlock = document.querySelector('section .product-slider.related-product-slider');
+                    if(relatedBlock) {
+                        relatedBlock.remove()
+                    }
+                }
+                this._EventListener();
+                this._bind();
+                this._renderShowDetail();
+                let infoDetails = document.querySelector('.product-info-main > div');
+                if(infoDetails) {
+                    let wrapFbtBlock  = document.querySelector('.mageplaza-frequently-bought-together-block');
+                    infoDetails.before(wrapFbtBlock);
+                }
+            },
+            cache: {
+                priceObject: {}
+            },
+            _EventListener () {
+                let self = this;
+                element.addEventListener('change', function (event) {
+                    if (event.target.matches('.mageplaza-fbt-rows .related-checkbox')) {
+                        self._reloadTotalPrice();
+                    }
+                });
+
+                element.addEventListener('change', function (event) {
+                    if (event.target.matches('.mageplaza-fbt-rows .mageplaza-fbt-grouped .mageplaza-fbt-grouped-qty')) {
+                        self._reloadGroupedPrice(event.target);
+                        let totalSelectedGrouped = document.querySelector('.mpfbt-total-items-value');
+                        if (totalSelectedGrouped) {
+                            totalSelectedGrouped.innerText = self._countSelectedItems();
+                        }
+                    }
+                });
+
+                element.querySelectorAll('.mageplaza-fbt-rows .product-custom-option').forEach(function (option) {
+                    option.addEventListener('change', (event) => self._onOptionChanged(event.target));
+                });
+
+
+                element.addEventListener('click', function (event) {
+                    if (event.target.matches('.mageplaza-fbt-detail .detailed-node')) {
+                        self._showHideDetail(event.target);
+                    }
+                });
+
+                element.addEventListener('click', function (event) {
+                    if (event.target.matches('.mageplaza-fbt-add-to-cart button.action.mpfbt-tocart')) {
+                        if (self.options.usePopup !== '1') {
+                            // self._addValidation();
+                        }
+                    }
+                });
+
+                if (self.options.usePopup === '1') {
+                    element.addEventListener('change', function (event) {
+                        if (event.target.matches('#mpfbt-popup-content .mageplaza-fbt-grouped .mageplaza-fbt-grouped-qty')) {
+                            self._reloadGroupedPrice(event.target);
+                            let totalSelectedGrouped = document.querySelector('.mpfbt-total-items-value');
+                            if (totalSelectedGrouped) {
+                                totalSelectedGrouped.innerText = self._countSelectedItems();
+                            }
+                        }
+                    });
+
+                    element.querySelectorAll('#mpfbt-popup-content  .product-custom-option').forEach(function (option) {
+                        option.addEventListener('change', (event) => self._onOptionChanged(event.target));
+                    });
+                }
+
+            },
+            _bind () {
+                var self = this;
+                element.querySelectorAll('.mageplaza-fbt-rows .related-checkbox').forEach(function (checkbox) {
+                    checkbox.click();
+                });
+                element.querySelectorAll('.mageplaza-fbt-rows .mageplaza-fbt-grouped').forEach(function (groupedElement) {
+                    self._reloadGroupedPrice(groupedElement);
+                });
+                if (this.options.usePopup === '1') {
+                    document.querySelectorAll('.mageplaza-fbt-rows ul li').forEach(function (listItem) {
+                        var relatedCheckbox = listItem.querySelector('.related-checkbox');
+                        var productId       = relatedCheckbox.getAttribute('data-mageplaza-fbt-product-id');
+                        var productInput    = document.getElementById('mpfbt-product-input-' + productId);
+
+                        if (!relatedCheckbox.checked) {
+                            productInput.value = '';
+                        } else {
+                            productInput.value = '1';
+                        }
+                    });
+                }
+            },
+            _renderShowDetail: function () {
+                document.querySelectorAll('.mageplaza-fbt-rows .mageplaza-fbt-option-product div').forEach(function (el) {
+                    var html = '';
+                    if (el.children.length > 0) {
+                        var closestLi     = el.closest('li');
+                        var detailElement = closestLi.querySelector('.mageplaza-fbt-detail');
+                        html += '<a class="detailed-node not-active" href="javascript:void(0)">';
+                        html += 'Show details';
+                        html += '</a>';
+                        if (detailElement && detailElement.children.length === 0) {
+                            detailElement.innerHTML = html;
+                        }
+                    }
+                });
+            },
+            _reloadGroupedPrice (element) {
+                var totalPrice      = 0;
+
+                if(this.options.usePopup === '1') {
+                    var productDetail = element.closest('.mpfbt-popup-product-detail');
+                    var productInput = productDetail.querySelector('.mpfbt-product-input');
+                    var productId = productInput.getAttribute('data-mpfbt-popup-product-id');
+
+                    var qtyElements = document.querySelectorAll(
+                        '#mpfbt-popup-content #mageplaza-fbt-super-product-table-' + productId + ' .mageplaza-fbt-grouped-qty'
+                    );
+                    qtyElements.forEach(function (qtyElement) {
+                        var price = 0;
+                        if (parseFloat(qtyElement.value) > 0) {
+                            var qty = parseFloat(qtyElement.value);
+                            var priceAmount = parseFloat(qtyElement.getAttribute('data-child-product-price-amount'));
+                            price = qty * priceAmount;
+                        }
+                        qtyElement.setAttribute('data-child-product-price-total', price);
+                        totalPrice += parseFloat(qtyElement.getAttribute('data-child-product-price-total'));
+                    });
+                } else {
+                    var listItem        = element.closest('li');
+                    var relatedCheckbox = listItem.querySelector('.related-checkbox');
+                    var productId       = relatedCheckbox.getAttribute('data-mageplaza-fbt-product-id');
+                    var quantityInputs = document.querySelectorAll('.mageplaza-fbt-rows #mageplaza-fbt-super-product-table-' + productId + ' .mageplaza-fbt-grouped-qty');
+                    quantityInputs.forEach(function (input) {
+                        var price = 0;
+
+                        if (parseFloat(input.value) > 0) {
+                            price = parseFloat(input.value) * parseFloat(input.getAttribute('data-child-product-price-amount'));
+                        }
+
+                        input.setAttribute('data-child-product-price-total', price);
+
+                        totalPrice += parseFloat(input.getAttribute('data-child-product-price-total')) || 0;
+                    });
+                }
+
+                document.querySelectorAll('.mageplaza-fbt-price-' + productId).forEach((priceElement) => {
+                    if (priceElement) {
+                        priceElement.setAttribute('data-price-amount', totalPrice);
+                    }
+                });
+
+
+                this._reloadTotalPrice();
+            },
+            _reloadTotalPrice () {
+                var totalPrice = 0;
+                var totalPricePopup = 0;
+                var count      = 0;
+                var self       = this;
+
+                if (this.options.usePopup === '1') {
+                    var productInputs = document.querySelectorAll('#mpfbt-popup-content .mpfbt-product-input');
+                    productInputs.forEach(function (input) {
+                        if (input.value) {
+                            let selectorCheckBox = `.mageplaza-fbt-rows li input[name="${input.name}"]`;
+                            let inpCheck = document.querySelector(selectorCheckBox);
+                            var closestRow   = input.closest('tr');
+                            var priceElement = closestRow.querySelector('.item-price');
+                            var priceAmount  = parseFloat(priceElement.getAttribute('data-price-amount'));
+                            if(inpCheck) {
+                                var closestListItem = inpCheck.closest('li');
+                                var priceElementCheckBox    = closestListItem.querySelector('.item-price');
+                                priceElementCheckBox.setAttribute('data-price-amount', priceAmount);
+                            }
+                            totalPricePopup += priceAmount;
+                            priceElement.innerHTML = hyva.formatPrice(priceAmount);
+                        }
+                    });
+                    var relatedCheckboxes = document.querySelectorAll('.mageplaza-fbt-rows .related-checkbox');
+                    relatedCheckboxes.forEach(function (checkbox) {
+                        var closestListItem = checkbox.closest('li');
+                        var priceElement    = closestListItem.querySelector('.item-price');
+                        var priceAmount     = priceElement.getAttribute('data-price-amount');
+                        priceElement.innerHTML = hyva.formatPrice(priceAmount);
+
+                    });
+                }
+                document.querySelectorAll('.mageplaza-fbt-rows .related-checkbox').forEach(function (checkbox) {
+                    var listItem     = checkbox.closest('li');
+                    var priceElement = listItem.querySelector('.item-price');
+                    var priceAmount  = parseFloat(priceElement.getAttribute('data-price-amount'));
+
+                    if (checkbox.checked) {
+                        totalPrice += priceAmount;
+                        self._reloadImageProductList(checkbox, true);
+                        count++;
+                    } else {
+                        self._reloadImageProductList(checkbox, false);
+                    }
+
+                    priceElement.innerHTML = hyva.formatPrice(priceAmount);
+                });
+
+                var priceBox = document.querySelector('.mageplaza-fbt-price-box');
+                if (count === 0) {
+                    if (!priceBox.classList.contains('mageplaza-fbt-hidden')) {
+                        priceBox.classList.add('mageplaza-fbt-hidden');
+                    }
+                } else {
+                    priceBox.classList.remove('mageplaza-fbt-hidden');
+                }
+
+                document.querySelectorAll('.mageplaza-fbt-price-wrapper').forEach(priceWrapper=>{
+                    if (priceWrapper) {
+                        priceWrapper.setAttribute('data-price-amount', totalPrice);
+                    }
+                });
+
+                document.querySelectorAll('.mageplaza-fbt-price').forEach(priceDisplay =>{
+                    if (priceDisplay) {
+                        priceDisplay.innerHTML = hyva.formatPrice(totalPrice);
+                    }
+                });
+
+                self._reloadButtonLabel(count);
+            },
+            _reloadImageProductList (element, checked) {
+
+                if (this.options.useSlider === true) {
+                    return;
+                }
+                var productId = element.getAttribute('data-mageplaza-fbt-product-id');
+                if (checked) {
+                    document.querySelector('.mageplaza-fbt-item-' + productId)?.classList.remove('mageplaza-fbt-hidden');
+                    document.querySelector('.mageplaza-fbt-plus-' + productId)?.classList.remove('mageplaza-fbt-hidden');
+                } else {
+                    document.querySelector('.mageplaza-fbt-item-' + productId)?.classList.add('mageplaza-fbt-hidden');
+                    document.querySelector('.mageplaza-fbt-plus-' + productId)?.classList.add('mageplaza-fbt-hidden');
+                }
+
+                var firstVisibleItem = document.querySelector('.mageplaza-fbt-image-box li:not(.mageplaza-fbt-hidden)');
+                if (firstVisibleItem && firstVisibleItem.classList.contains('product-item-plus')) {
+                    firstVisibleItem.classList.add('mageplaza-fbt-hidden');
+                }
+            },
+            _reloadButtonLabel (number) {
+                var buttonCartLabel      = 'Add %s to Cart';
+                var buttonWishlistLabel  = 'Add %s to Wishlist';
+                var numberLessThanTwelve = [
+                    'zero', 'one', 'two', 'three', 'four', 'five',
+                    'six', 'seven', 'eight', 'nine', 'ten',
+                    'eleven', 'twelve'
+                ];
+                var num                  = parseInt(number, 10);
+                var replace              = '';
+
+                if (num > 1) {
+                    replace = ' all';
+                    if (num <= 12) {
+                        replace += ' ' + numberLessThanTwelve[num];
+                    }
+                }
+
+                buttonCartLabel     = buttonCartLabel.replace(' %s', replace);
+                buttonWishlistLabel = buttonWishlistLabel.replace(' %s', replace);
+
+                var cartButton = document.querySelector('.mageplaza-fbt-add-to-cart button');
+                if (cartButton) {
+                    cartButton.setAttribute('title', buttonCartLabel);
+                    var cartButtonText = cartButton.querySelector('span');
+                    if (cartButtonText) {
+                        cartButtonText.textContent = buttonCartLabel;
+                    }
+                }
+
+                var wishlistButton = document.querySelector('.mageplaza-fbt-add-to-wishlist button');
+                if (wishlistButton) {
+                    wishlistButton.setAttribute('title', buttonWishlistLabel);
+                    var wishlistButtonText = wishlistButton.querySelector('span');
+                    if (wishlistButtonText) {
+                        wishlistButtonText.textContent = buttonWishlistLabel;
+                    }
+                }
+
+                return this;
+            },
+            _showHideDetail (el) {
+                if (el.classList.contains('not-active')) {
+                    el.classList.remove('not-active');
+                    el.innerHTML = 'Hide details';
+                    el.closest('li').querySelectorAll('.mageplaza-fbt-option-product').forEach(e => {
+                        e.classList.remove('mageplaza-fbt-hidden');
+                    })
+
+                } else {
+                    el.classList.add('not-active');
+                    el.innerHTML = 'Show details';
+                    el.closest('li').querySelectorAll('.mageplaza-fbt-option-product').forEach(e => {
+                        e.classList.add('mageplaza-fbt-hidden');
+                    })
+                }
+            },
+            _addToWishList: function (url) {
+                if (url) {
+                    const formData = new FormData(element);
+                    const wishListData = new FormData();
+
+                    formData.forEach((value, key) => {
+                        if (value === 'on') {
+                            wishListData.append(key, value);
+                        }
+                    });
+                    wishListData.append('form_key',hyva.getFormKey())
+                    fetch(url,{
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: wishListData,
+                        method: "POST",
+                    }).then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        }
+                    }).catch(e => {
+                        console.log(e.message);
+                    })
+                }
+            },
+            myFormSubmit (event) {
+                event.preventDefault();
+                let allMessages = element.querySelectorAll('.mageplaza-fbt-rows ul li ul.messages');
+                allMessages.forEach(el => {
+                    el.remove();
+                });
+                element.querySelectorAll('.mageplaza-fbt-rows ul li').forEach(function (listItem) {
+                    let selectTypesFlag = false;
+
+                    const relatedCheckbox = listItem.querySelector('.related-checkbox');
+                    if (relatedCheckbox && !relatedCheckbox.checked) {
+                        const clickableLink = listItem.querySelector('.mageplaza-fbt-detail a:not(.not-active)');
+                        if (clickableLink) clickableLink.click();
+                        return;
+                    }
+
+                    const groupedElements = listItem.querySelectorAll('.mageplaza-fbt-grouped');
+                    if (groupedElements.length > 0) {
+                        let active = false;
+
+                        listItem.querySelectorAll('.mageplaza-fbt-grouped-qty').forEach(function (qtyElement) {
+                            const qty = parseFloat(qtyElement.value);
+                            if (qty > 0) {
+                                active = true;
+                            }
+                        });
+
+                        if (!active) {
+                            const notActiveLink = listItem.querySelector('.mageplaza-fbt-detail a.not-active');
+                            if (notActiveLink) notActiveLink.click();
+                        }
+                    }
+
+                    listItem.querySelectorAll('[aria-required="true"]').forEach(function (requiredElement) {
+                        const optionType = requiredElement.type;
+
+                        if (optionType !== 'hidden' && !requiredElement.classList.contains('qty')) {
+                            switch (optionType){
+                                case 'text':
+                                case 'textarea':
+                                case 'select-one':
+                                    selectTypesFlag = requiredElement.value;
+                                    break;
+
+                                case 'radio':
+                                    selectTypesFlag      = false;
+                                    const radioGroupName = requiredElement.name;
+                                    document.querySelectorAll(`[name="${radioGroupName}"]`).forEach(function (radio) {
+                                        if (radio.checked) {
+                                            selectTypesFlag = true;
+                                        }
+                                    });
+                                    break;
+
+                                case 'select-multiple':
+                                    selectTypesFlag = false;
+                                    requiredElement.querySelectorAll('option').forEach(function (option) {
+                                        if (option.selected) {
+                                            selectTypesFlag = true;
+                                        }
+                                    });
+                                    break;
+
+                                case 'checkbox':
+                                    selectTypesFlag             = false;
+                                    const multiSelectCheckboxes = listItem.querySelectorAll('.mg-fbt-options-list .mp-fbt-multi-select');
+                                    multiSelectCheckboxes.forEach(function (checkbox) {
+                                        if (checkbox.checked) {
+                                            selectTypesFlag = true;
+                                        }
+                                    });
+                                    break;
+
+                                case 'file':
+                                    selectTypesFlag = requiredElement.value && !requiredElement.disabled;
+                                    break;
+                            }
+
+                            if (!selectTypesFlag) return false;
+                        }
+                    });
+
+                    if (!selectTypesFlag && groupedElements.length === 0) {
+                        const notActiveLink = listItem.querySelector('.mageplaza-fbt-detail a.not-active');
+                        if (notActiveLink) notActiveLink.click();
+                    }
+                });
+                this.validate()
+                .then(() => {
+                    event.target.submit()
+                })
+                .catch((invalid) => {
+                    if (invalid.length > 0) {
+                        invalid[0].focus();
+                    }
+                });
+            },
+            _showPopup (event, singleProductId) {
+                var mpFbtPopupContent = document.getElementById('mpfbt-popup-content');
+                var addToCartBtn      = document.querySelector('button#mpfbt-btn-addtocart');
+                if (singleProductId !== null) {
+                    var productInputs = mpFbtPopupContent.querySelectorAll('.mpfbt-product-input');
+                    productInputs.forEach(function (input) {
+                        input.value = '';
+                    });
+
+                    var productDetails = mpFbtPopupContent.querySelectorAll('.mpfbt-popup-product-detail');
+                    productDetails.forEach(function (detail) {
+                        detail.style.display = 'none';
+                    });
+
+                    document.querySelector('#mpfbt-popup .mpfbt-total-items').style.display       = 'none';
+                    document.querySelector('#mpfbt-popup .mageplaza-fbt-price-box').style.display = 'none';
+
+                    addToCartBtn.textContent = 'Add to Cart';
+                    addToCartBtn.setAttribute('title', 'Add to Cart');
+
+                    document.getElementById('mpfbt-product-input-' + singleProductId).value = 1;
+
+                    var singleProductDetail = mpFbtPopupContent.querySelector(
+                        '.mpfbt-popup-product-detail[data-mpfbt-popup-product-id="' + singleProductId + '"]'
+                    );
+                    if (singleProductDetail) {
+                        singleProductDetail.style.display = 'table-row';
+                    }
+                } else {
+                    var productRows = document.querySelectorAll('.mageplaza-fbt-rows ul li');
+
+                    productRows.forEach(function (row) {
+                        var relatedCheckbox = row.querySelector('.related-checkbox');
+                        var productId       = relatedCheckbox.dataset.mageplazaFbtProductId;
+
+                        if (!relatedCheckbox.checked) {
+                            document.getElementById('mpfbt-product-input-' + productId).value = '';
+                            var productDetail                                                 = mpFbtPopupContent.querySelector(
+                                '.mpfbt-popup-product-detail[data-mpfbt-popup-product-id="' + productId + '"]'
+                            );
+                            if (productDetail) {
+                                productDetail.style.display = 'none';
+                            }
+                        } else {
+                            document.getElementById('mpfbt-product-input-' + productId).value = 1;
+                            var productDetail                                                 = mpFbtPopupContent.querySelector(
+                                '.mpfbt-popup-product-detail[data-mpfbt-popup-product-id="' + productId + '"]'
+                            );
+                            if (productDetail) {
+                                productDetail.style.display = 'table-row';
+                            }
+                        }
+                    });
+                }
+                window.dispatchEvent(
+                    new CustomEvent('hyva-modal-show', {detail: {dialog: 'mp-fbt-modal-options'}})
+                );
+                let totalSelectedGrouped = document.querySelector('.mpfbt-total-items-value');
+                if (totalSelectedGrouped) {
+                    totalSelectedGrouped.innerText = this._countSelectedItems();
+                }
+            },
+            _onOptionChanged (element) {
+                let optionPrice       = 0;
+                const changes         = {};
+                const optionName      = element.name;
+                const optionType      = element.type;
+                let productId = null;
+                let productPrice = null;
+                let parentElement   = null;
+
+                if(this.options.usePopup === '1') {
+                    parentElement   = element.closest('tr');
+                    let inputElement = parentElement.querySelector('.mpfbt-product-input');
+                    productId       = inputElement.getAttribute('data-mpfbt-popup-product-id');
+                    productPrice      = parseFloat(inputElement.getAttribute('data-price-amount'));
+                } else {
+                    parentElement   = element.closest('li');
+                    let checkboxElement = parentElement.querySelector('.related-checkbox');
+                    productId       = checkboxElement.getAttribute('data-mageplaza-fbt-product-id');
+                    productPrice      = parseFloat(checkboxElement.getAttribute('data-price-amount'));
+                }
+                switch (optionType){
+                    case 'text':
+                    case 'textarea':
+                        optionPrice         = parseFloat(
+                            parentElement.querySelector('div.field .price-wrapper').getAttribute('data-price-amount')
+                        );
+                        changes[optionName] = element.value ? optionPrice : 0;
+                        break;
+
+                    case 'radio':
+                        optionPrice = parseFloat(element.getAttribute('price'));
+                        if (element.checked) {
+                            changes[optionName] = optionPrice;
+                        }
+                        break;
+
+                    case 'select-one':
+                        const selectedOption = element.options[element.selectedIndex];
+                        if (selectedOption && selectedOption.getAttribute('price')) {
+                            optionPrice = parseFloat(selectedOption.getAttribute('price'));
+                        }
+                        changes[optionName] = optionPrice;
+                        break;
+
+                    case 'select-multiple':
+                        optionPrice = 0;
+                        Array.from(element.options).forEach(function (option) {
+                            if (option.selected && option.getAttribute('price')) {
+                                optionPrice += parseFloat(option.getAttribute('price'));
+                            }
+                        });
+                        changes[optionName] = optionPrice;
+                        break;
+
+                    case 'checkbox':
+                        optionPrice      = 0;
+                        const checkboxes = parentElement.querySelectorAll('.options-list .product-custom-option');
+                        checkboxes.forEach(function (checkbox) {
+                            if (checkbox.checked) {
+                                optionPrice += parseFloat(checkbox.getAttribute('price'));
+                            }
+                        });
+                        changes[optionName] = optionPrice;
+                        break;
+
+                    case 'file':
+                        if (element.value && !element.disabled) {
+                            optionPrice = parseFloat(
+                                parentElement.querySelector('div.field .price-wrapper').getAttribute('data-price-amount')
+                            );
+                        }
+                        changes[optionName] = optionPrice;
+                        break;
+                }
+
+                Object.assign(this.cache.priceObject, changes);
+
+                Object.keys(this.cache.priceObject).forEach(function (key) {
+                    const value               = this.cache.priceObject[key];
+                    let productIdUpdate = null;
+                    if(this.options.usePopup === '1') {
+                        let parentElementUpdate = document.querySelector(`[name="${key}"]`).closest('tr');
+                        productIdUpdate     = parentElementUpdate.querySelector('.mpfbt-product-input').getAttribute('data-mpfbt-popup-product-id');
+                    } else {
+                        let parentElementUpdate = document.querySelector(`[name="${key}"]`).closest('li');
+                        productIdUpdate     = parentElementUpdate.querySelector('.related-checkbox').getAttribute('data-mageplaza-fbt-product-id');
+                    }
+                    if (productId === productIdUpdate) {
+                        productPrice += parseFloat(value);
+                    }
+                }, this);
+                parentElement.querySelector('.item-price').setAttribute('data-price-amount', productPrice);
+                this._reloadTotalPrice();
+            },
+            _countSelectedItems: function () {
+                var count = 0;
+                document.querySelectorAll('.mageplaza-fbt-rows ul li').forEach(function (listItem) {
+                    var checkbox  = listItem.querySelector('.related-checkbox');
+                    var productId = checkbox.getAttribute('data-mageplaza-fbt-product-id');
+
+                    if (checkbox.checked) {
+                        var groupedItems = document.querySelectorAll('#mageplaza-fbt-super-product-table-' + productId + ' .mageplaza-fbt-grouped-qty');
+
+                        if (groupedItems.length > 0) {
+                            groupedItems.forEach(function (groupedItem) {
+                                if (parseInt(groupedItem.value) > 0) {
+                                    count += parseInt(groupedItem.value);
+                                }
+                            });
+                        } else {
+                            count++;
+                        }
+                    }
+                });
+
+                return count;
+            },
+            eventListeners: {
+                ['@reload-price-frequently-bought.window'] () {
+                    this._reloadTotalPrice();
+                }
+            }
+
+        }
+    }
+</script>
+<style>
+    li.product-item-plus img {
+        height: 50px;
+        width: 50px;
+    }
+    #mpfbt-popup-content .product-image-photo {
+        max-width: 75px;
+    }
+    @media (max-width: 767px) {
+        #mpfbt-popup-content tbody tr td[data-th="Options"] div {
+            width: min-content;
+        }
+        #mpfbt-popup-content tbody tr td[data-th="Options"] input[type="text"], #mpfbt-popup-content tbody tr td[data-th="Options"] select {
+            max-width: 125px;
+        }
+    }
+</style>

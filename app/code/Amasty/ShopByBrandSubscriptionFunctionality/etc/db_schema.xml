@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality
+ */-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="amasty_amshopby_option_setting">
+        <column xsi:type="varchar" name="page_layout" nullable="true" length="255" comment="Page Layout"/>
+        <column xsi:type="boolean" name="show_brand_info" nullable="true" default="0"
+                comment="Display Additional Brand Information"/>
+        <column xsi:type="varchar" name="brand_info_block_position" nullable="true" length="150"
+                comment="Brand Info Block Position"/>
+        <column xsi:type="varchar" name="brand_info_postal_address" nullable="true" length="255"
+                comment="Manufacturer or Importer Postal Address"/>
+        <column xsi:type="varchar" name="brand_info_electronic_address" nullable="true" length="255"
+                comment="Manufacturer or Importer Electronic Address"/>
+        <column xsi:type="varchar" name="brand_info_contact" nullable="true" length="255"
+                comment="Responsible Person’s Contact Information"/>
+    </table>
+</schema>

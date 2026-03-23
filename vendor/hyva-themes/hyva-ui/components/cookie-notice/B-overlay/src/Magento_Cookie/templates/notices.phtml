@@ -1,0 +1,112 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\Store as StoreViewModel;
+use Magento\Cookie\Block\Html\Notices;
+use Magento\Framework\Escaper;
+use Magento\Cookie\Helper\Cookie;
+
+/** @var Notices $block */
+/** @var Escaper $escaper */
+/** @var Cookie $cookieHelper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var StoreViewModel $storeViewModel */
+$storeViewModel = $viewModels->require(StoreViewModel::class);
+
+$cookieHelper = $block->getData('cookieHelper');
+?>
+<?php if ($cookieHelper->isCookieRestrictionModeEnabled()): ?>
+    <script>
+        function initCookieBanner() {
+            const isUserAllowedSaveCookieName = '<?= /* @noEscape */ Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>';
+            const currentWebsiteId = <?= (int) $storeViewModel->getStore()->getWebsiteId() ?>;
+
+            const isAllowedSaveCookie = () => {
+                const allowedCookies = hyva.getCookie(isUserAllowedSaveCookieName);
+                const allowedCookieWebsites = allowedCookies
+                    ? JSON.parse(unescape(allowedCookies))
+                    : [];
+
+                return allowedCookieWebsites[currentWebsiteId] !== undefined
+                    ? !! allowedCookieWebsites[currentWebsiteId]
+                    : false;
+            };
+
+            return {
+                showCookieBanner: false,
+                cookieName: isUserAllowedSaveCookieName,
+                cookieValue: '<?= /* @noEscape */ $cookieHelper->getAcceptedSaveCookiesWebsiteIds() ?>',
+                cookieLifetime: '<?= /* @noEscape */ $cookieHelper->getCookieRestrictionLifetime() ?>',
+                noCookiesUrl: '<?= $escaper->escapeJs($block->getUrl('cookie/index/noCookies')) ?>',
+                checkAcceptCookies() {
+                    this.showCookieBanner = ! isAllowedSaveCookie();
+                },
+                hideCookieBanner() {
+                    this.showCookieBanner = false;
+                },
+                setAcceptCookies() {
+                    const cookieExpires = this.cookieLifetime / 60 / 60 / 24;
+                    hyva.setCookie(this.cookieName, this.cookieValue, cookieExpires);
+                    if (!hyva.getCookie(this.cookieName)) {
+                        window.location.href = this.noCookiesUrl;
+                    } else {
+                        window.dispatchEvent(new CustomEvent('user-allowed-save-cookie'));
+                    }
+                    this.showCookieBanner = false;
+                }
+            }
+        }
+        window.addEventListener('alpine:init', () => Alpine.data('initCookieBanner', initCookieBanner), {once: true})
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+
+    <section
+        id="notice-cookie-block"
+        aria-label="<?= $escaper->escapeHtml(__('We use cookies to make your experience better.')) ?>"
+        x-data="initCookieBanner"
+        x-init="checkAcceptCookies"
+        x-defer="idle"
+    >
+        <template x-if="showCookieBanner">
+            <div
+                role="dialog"
+                aria-modal="true"
+                class="z-30 fixed bottom-6 left-6 right-6 shadow-md rounded-xl bg-white/90 p-6 flex flex-col gap-4 lg:p-4 lg:pl-8 lg:flex-row lg:items-center"
+            >
+                <p class="font-bold text-gray-800 flex items-center justify-center gap-2 lg:flex-1 lg:justify-start">
+                    <span>
+                        <?= $escaper->escapeHtml(__('We use cookies to make your experience better.')) ?>
+                    </span>
+                    <a
+                        href="<?= $escaper->escapeUrl($block->getPrivacyPolicyLink()) ?>"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Read our policy')) ?>"
+                        class="inline-block text-gray-500 hover:text-gray-800"
+                    >
+                        <?= $heroicons->informationCircleHtml('stroke-current', 24, 24, ['aria-hidden' => 'true']) ?>
+                    </a>
+                </p>
+                <button
+                    type="button"
+                    id="btn-cookie-allow"
+                    class="btn btn-primary"
+                    @click="setAcceptCookies"
+                >
+                    <?= $escaper->escapeHtml(__('Allow Cookies')) ?>
+                </button>
+            </div>
+        </template>
+    </section>
+<?php endif; ?>

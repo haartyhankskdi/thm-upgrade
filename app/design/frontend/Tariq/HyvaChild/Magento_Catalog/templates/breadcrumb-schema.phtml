@@ -1,0 +1,71 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$registry = $objectManager->get(\Magento\Framework\Registry::class);
+$category = $registry->registry("current_category");
+
+if (!$category || !$category->getId()) {
+    return;
+}
+
+$categoryRepository = $objectManager->get(
+    \Magento\Catalog\Model\CategoryRepository::class
+);
+
+$breadcrumbItems = [];
+$position = 1;
+
+// Add Home
+$breadcrumbItems[] = [
+    "@type" => "ListItem",
+    "position" => (string) $position++,
+    "name" => "Tariq Halal",
+    "item" => rtrim($block->getUrl(""), "/"),
+];
+
+// Add category path
+$pathIds = explode("/", $category->getPath());
+foreach ($pathIds as $catId) {
+    if ((int) $catId <= 1 || (int) $catId == (int) $category->getId()) {
+        continue;
+    }
+
+    try {
+        $cat = $categoryRepository->get($catId);
+        if (!$cat->getIsActive()) {
+            continue;
+        }
+
+        $breadcrumbItems[] = [
+            "@type" => "ListItem",
+            "position" => (string) $position++,
+            "name" => $cat->getName(),
+            "item" => $cat->getUrl(),
+        ];
+    } catch (\Exception $e) {
+        continue;
+    }
+}
+
+// Add current category
+$breadcrumbItems[] = [
+    "@type" => "ListItem",
+    "position" => (string) $position++,
+    "name" => $category->getName(),
+    "item" => $category->getUrl(),
+];
+
+$breadcrumbSchema = [
+    "@context" => "http://schema.org",
+    "@type" => "BreadcrumbList",
+    "itemListElement" => $breadcrumbItems,
+];
+?>
+
+<script type="application/ld+json">
+<?= json_encode(
+    $breadcrumbSchema,
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+) ?>
+</script>

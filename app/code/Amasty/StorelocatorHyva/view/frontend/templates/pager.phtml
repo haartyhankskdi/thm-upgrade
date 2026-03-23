@@ -1,0 +1,257 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Magento\Theme\Block\Html\Pager;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/**
+ * @var \Magento\Theme\Block\Html\Pager $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+?>
+<?php if ($block->getCollection()->getSize()): ?>
+
+    <?php if ($block->getUseContainer()): ?>
+        <div class="pager">
+    <?php endif ?>
+
+        <?php if ($block->getShowAmounts()): ?>
+            <p class="toolbar-amount">
+                <span class="toolbar-number">
+                <?php if ($block->getLastPageNum() > 1): ?>
+                    <?= $escaper->escapeHtml(
+                        __('Items %1 to %2 of %3 total', $block->getFirstNum(), $block->getLastNum(), $block->getTotalNum())
+                    ) ?>
+                <?php elseif ($block->getTotalNum() == 1): ?>
+                    <?= $escaper->escapeHtml(__('%1 Item', $block->getTotalNum())) ?>
+                <?php else: ?>
+                    <?= $escaper->escapeHtml(__('%1 Item(s)', $block->getTotalNum())) ?>
+                <?php endif; ?>
+                </span>
+            </p>
+        <?php endif ?>
+
+        <?php if ($block->getLastPageNum() > 1): ?>
+        <div class="pages">
+            <strong class="sr-only" id="paging-label">
+                <?= $escaper->escapeHtml(__('Pages pagination')) ?>
+            </strong>
+            <ul
+                class="items pages-items flex h-6 justify-end"
+                aria-labelledby="paging-label"
+            >
+                <?php if (!$block->isFirstPage()): ?>
+                    <li
+                        class="
+                            item pages-item-previous mx-1 bg-container-lighter
+                            hover:bg-primary hover:text-white
+                        "
+                    >
+                        <?php $text = $block->getAnchorTextForPrevious() ? $block->getAnchorTextForPrevious() : '';?>
+                        <button
+                            class="<?= $escaper->escapeHtmlAttr($text ? 'link ' : 'action ') ?> previous"
+                            @click="loadNewPage"
+                            data-page-url="<?= $escaper->escapeUrl($block->getPreviousPageUrl()) ?>"
+                            title="<?= $escaper->escapeHtmlAttr($text ? $text : __('Previous')) ?>"
+                        >
+                            <span class="label sr-only">
+                                <?= $escaper->escapeHtml(__('Page')) ?>
+                            </span>
+                            <span>
+                                <?php if ($text): ?>
+                                    <?= $escaper->escapeHtml($text) ?>
+                                <?php else: ?>
+                                    <?= $heroicons->chevronLeftHtml('', 24, 24); ?>
+                                <?php endif;?>
+                            </span>
+                        </button>
+                    </li>
+                <?php endif;?>
+
+            <?php if ($block->canShowFirst()): ?>
+                <li
+                    class="
+                        item px-2 mx-1 bg-container-lighter
+                        hover:bg-primary hover:text-white
+                    "
+                >
+                    <a
+                        class="page first"
+                        @click="loadNewPage"
+                        data-page-url="<?= $escaper->escapeUrl($block->getFirstPageUrl()) ?>"
+                    >
+                        <span class="label">
+                            <?= $escaper->escapeHtml(__('Page')) ?>
+                        </span>
+                        <span>1</span>
+                    </a>
+                </li>
+            <?php endif;?>
+
+            <?php if ($block->canShowPreviousJump()): ?>
+                <li
+                    class="
+                        item px-2 mx-1 bg-container-lighter
+                        hover:bg-primary hover:text-white
+                    "
+                >
+                    <button
+                        class="page previous jump"
+                        @click="loadNewPage"
+                        data-page-url="<?= $escaper->escapeUrl($block->getPreviousJumpUrl()) ?>"
+                    >
+                        <span>...</span>
+                    </button>
+                </li>
+            <?php endif;?>
+
+            <?php foreach ($block->getFramePages() as $_page): ?>
+                <?php if ($block->isPageCurrent($_page)): ?>
+                    <li class="item current px-2 mx-1 bg-primary text-white">
+                        <strong class="page">
+                            <span class="label sr-only">
+                                <?= $escaper->escapeHtml(__('You\'re currently reading page')) ?>
+                            </span>
+                            <span>
+                                <?= $escaper->escapeHtml($_page) ?>
+                            </span>
+                        </strong>
+                    </li>
+                <?php else: ?>
+                    <li
+                        class="
+                            item px-2 mx-1 bg-container-lighter
+                            hover:bg-primary hover:text-white
+                        "
+                    >
+                        <button
+                            href="<?= $escaper->escapeUrl($block->getPageUrl($_page)) ?>"
+                            @click="loadNewPage"
+                            data-page-url="<?= $escaper->escapeUrl($block->getPageUrl($_page)) ?>"
+                            class="page"
+                        >
+                            <span class="label sr-only">
+                                <?= $escaper->escapeHtml(__('Page')) ?>
+                            </span>
+                            <span>
+                                <?= $escaper->escapeHtml($_page) ?>
+                            </span>
+                        </button>
+                    </li>
+                <?php endif;?>
+            <?php endforeach;?>
+
+            <?php if ($block->canShowNextJump()): ?>
+                <li
+                    class="
+                        item px-2 mx-1 bg-container-lighter
+                        hover:bg-primary hover:text-white
+                    "
+                >
+                    <button
+                        class="page next jump"
+                        @click="loadNewPage"
+                        data-page-url="<?= $escaper->escapeUrl($block->getNextJumpUrl()) ?>"
+                    >
+                        <span class="label sr-only">
+                            <?= $escaper->escapeHtml(__('Skip a few pages')) ?>
+                        </span>
+                        <span>...</span>
+                    </button>
+                </li>
+            <?php endif;?>
+
+            <?php if ($block->canShowLast()): ?>
+                <li
+                    class="
+                        item px-2 mx-1 bg-container-lighter
+                        hover:bg-primary hover:text-white
+                    "
+                >
+                    <button
+                        class="page last"
+                        @click="loadNewPage"
+                        data-page-url="<?= $escaper->escapeUrl($block->getLastPageUrl()) ?>"
+                    >
+                        <span class="label sr-only">
+                            <?= $escaper->escapeHtml(__('Page')) ?>
+                        </span>
+                        <span>
+                            <?= $escaper->escapeHtml($block->getLastPageNum()) ?>
+                        </span>
+                    </button>
+                </li>
+            <?php endif;?>
+
+            <?php if (!$block->isLastPage()): ?>
+                <li
+                    class="
+                        item pages-item-next bg-container-lighter
+                        hover:bg-primary hover:text-white
+                    "
+                >
+                    <?php $text = $block->getAnchorTextForNext() ? $block->getAnchorTextForNext() : '';?>
+                    <button
+                        class="<?= /* @noEscape */ $text ? 'link ' : 'action ' ?> next"
+                        @click="loadNewPage"
+                        data-page-url="<?= $escaper->escapeUrl($block->getNextPageUrl()) ?>"
+                        title="<?= $escaper->escapeHtmlAttr($text ? $text : __('Next')) ?>"
+                    >
+                        <span class="label sr-only">
+                            <?= $escaper->escapeHtml(__('Page')) ?>
+                        </span>
+                        <span>
+                            <?php if ($text): ?>
+                                <?= $escaper->escapeHtml($text) ?>
+                            <?php else: ?>
+                                <?= $heroicons->chevronRightHtml('', 24, 24); ?>
+                            <?php endif; ?>
+                        </span>
+                    </button>
+                </li>
+            <?php endif;?>
+            </ul>
+        </div>
+        <?php endif; ?>
+
+    <?php if ($block->isShowPerPage()): ?>
+        <div class="limiter">
+            <strong class="limiter-label">
+                <?= $escaper->escapeHtml(__('Show')) ?>
+            </strong>
+            <select
+                id="limiter"
+                data-mage-init='{"redirectUrl": {"event":"change"}}'
+                class="limiter-options"
+            >
+                <?php foreach ($block->getAvailableLimit() as $_key => $_limit): ?>
+                    <option
+                        value="<?= $escaper->escapeUrl($block->getLimitUrl($_key)) ?>"
+                        <?php if ($block->isLimitCurrent($_key)): ?>
+                            selected="selected"
+                        <?php endif ?>
+                    >
+                        <?= $escaper->escapeHtml($_limit) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <span class="limiter-text">
+                <?= $escaper->escapeHtml(__('per page')) ?>
+            </span>
+        </div>
+    <?php endif ?>
+
+    <?php if ($block->getUseContainer()): ?>
+        </div>
+    <?php endif ?>
+
+<?php endif ?>

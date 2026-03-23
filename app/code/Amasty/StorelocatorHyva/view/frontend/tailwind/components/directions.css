@@ -1,0 +1,7 @@
+@layer utilities {
+    .amlocator-directions-container {
+        & table.adp-placemark {
+            @apply bg-primary text-white font-semibold align-middle;
+        }
+    }
+}

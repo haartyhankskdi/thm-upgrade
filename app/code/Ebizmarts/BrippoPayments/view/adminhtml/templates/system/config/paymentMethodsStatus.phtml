@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Helper\Stripe;
+use Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodsStatus;
+
+/** @var PaymentMethodsStatus $block */
+?>
+
+<div class="actions stripeConnectStatus brippoPaymentMethodsStatus">
+    <?php if (!$block->hasAccountId($block->livemode)) { ?>
+        <p style="color:gray;"><?= $block->escapeHtml(__('Please complete account setup.')) ?></p>
+    <?php } else {
+        $accountResponseError = $block->retrieveConnectedAccountStatus($block->livemode);
+        if (empty($accountResponseError)) { ?>
+            <table class="statusTable">
+                <tr>
+                    <td class="title">Google Pay</td>
+                    <td>
+                        <?php if ($block->isCapabilityActive(Stripe::ACCOUNT_CAPABILITY_CARD_PAYMENTS)) { ?>
+                            <span class="greenText"><?= $block->escapeHtml(__('Setup complete')) ?></span>
+                            <img src="<?= $block->escapeHtmlAttr($block->getViewFileUrl(
+                                'Ebizmarts_BrippoPayments/img/passed.png'
+                            )); ?>"
+                                 class="passed" alt="GooglePay active icon">
+                        <?php } else { ?>
+                            <span class="redText">
+                                <?= $block->escapeHtml(__('Please complete account setup.')) ?>
+                            </span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">
+                        Apple Pay
+                    </td>
+                    <?php if ($block->isCapabilityActive(Stripe::ACCOUNT_CAPABILITY_CARD_PAYMENTS)) { ?>
+                        <td>
+                            <div>
+                                <?php if ($block->isApplePayAssociationFileInPlace()) { ?>
+                                    <span class="greenText">
+                                        <?= $block->escapeHtml(__('Apple association file correctly placed'))?>
+                                    </span>
+                                    <img src="<?= $block->escapeHtmlAttr($block->getViewFileUrl(
+                                        'Ebizmarts_BrippoPayments/img/passed.png'
+                                    )); ?>"
+                                         class="passed" alt="Apple association file correctly placed icon">
+                                <?php } else { ?>
+                                    <span class="redText">
+                                        <?= $block->escapeHtml(__('Apple association file error: ')) ?>
+                                    </span>
+                                    <div>
+                                        <span class="redText">
+                                            <?= $block->escapeHtml($block->applePayAssociationFileSetupStatus); ?>
+                                        </span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </td>
+                    <?php } else { ?>
+                        <td>
+                            <span class="redText">
+                                <?= $block->escapeHtml(__('Please complete account setup.')) ?>
+                            </span>
+                        </td>
+                    <?php } ?>
+                </tr>
+                <tr>
+                    <td class="title" style="border-bottom: 0;">Link</td>
+                    <td style="border-bottom: 0;">
+                        <?php if ($block->isCapabilityActive(Stripe::ACCOUNT_CAPABILITY_CARD_PAYMENTS)) { ?>
+                            <span class="greenText"><?= $block->escapeHtml(__('Setup complete')) ?></span>
+                            <img src="<?= $block->escapeHtmlAttr($block->getViewFileUrl(
+                                'Ebizmarts_BrippoPayments/img/passed.png'
+                            )); ?>"
+                                 class="passed" alt="GooglePay active icon">
+                        <?php } else { ?>
+                            <span class="redText">
+                                <?= $block->escapeHtml(__('Please complete account setup.')) ?>
+                            </span>
+                        <?php } ?>
+                    </td>
+                </tr>
+            </table>
+        <?php } else { ?>
+            <p style="color:red;"><?= $block->escapeHtml($accountResponseError); ?></p>
+        <?php } ?>
+    <?php } ?>
+</div>

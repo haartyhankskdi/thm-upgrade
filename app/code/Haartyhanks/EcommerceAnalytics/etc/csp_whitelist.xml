@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="google-place" type="host">maps.googleapis.com</value>
+                <value id="google-capcha" type="host">www.google.com</value>
+                <value id="google-gstatic" type="host">www.gstatic.com</value>
+                <value id="google-map-gstatic" type="host">maps.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="google-marketingplatform" type="host">marketingplatform.google.com</value>
+                <value id="google-googleadservices" type="host">www.googleadservices.com</value>
+                <value id="google-analytics" type="host">www.google-analytics.com</value>
+                <value id="google-gstatic" type="host">maps.gstatic.com</value>
+                <!-- PC -->
+                <value id="www-google-com" type="host">www.google.com</value>
+                <value id="www-google-co-in" type="host">www.google.co.in</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="fonts-googleapis" type="host">fonts.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="fonts-gstatic" type="host">fonts.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="stats-g-doubleclick" type="host">stats.g.doubleclick.net</value>
+                <value id="www-google-com" type="host">www.google.com</value>
+                <value id="www-google-analytics-com" type="host">www.google-analytics.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

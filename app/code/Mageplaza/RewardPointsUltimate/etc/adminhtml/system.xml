@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="rewardpoints" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="earning" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="earning_point_with_coupon" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Earning Point from Orders with Applied Coupon</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If No, When a customer applies a coupon to an order, they will not receive points from this order.</comment>
+                </field>
+            </group>
+            <group id="spending" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="spending_point_with_coupon" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Spending Point from Orders with Applied Coupon</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If No, When a customer applies a coupon to an order, they won't get spending points for this order.</comment>
+                </field>
+            </group>
+            <group id="behavior" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Social behavior</label>
+                <group id="facebook" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+                       showInStore="1" canRestore="1">
+                    <label>Like via Facebook</label>
+                    <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Show Facebook like button on frontend</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="show_count" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Show Facebook like count on frontend</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="pages_display" translate="label comment" type="multiselect" sortOrder="20"
+                           showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Page to display</label>
+                        <source_model>Mageplaza\RewardPointsUltimate\Model\Source\Pages</source_model>
+                    </field>
+                </group>
+                <group id="twitter" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+                       showInStore="1" canRestore="1">
+                    <label>Tweet via Twitter</label>
+                    <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Show Twitter tweet button on frontend</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="pages_display" translate="label comment" type="multiselect" sortOrder="20"
+                           showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Page to display</label>
+                        <source_model>Mageplaza\RewardPointsUltimate\Model\Source\Pages</source_model>
+                    </field>
+                </group>
+            </group>
+            <group id="referrals" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Customer referrals</label>
+                <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1" canRestore="1">
+                    <label>General</label>
+                    <field id="email" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Invitation e-mail</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    </field>
+                    <field id="default_url" translate="label comment" type="text" sortOrder="20" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Default Refer URL</label>
+                        <validate>validate-url</validate>
+                    </field>
+                </group>
+                <group id="url_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="1" canRestore="1">
+                    <label>Url Key</label>
+                    <field id="param" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                           showInStore="1" canRestore="1">
+                        <label>Use Param</label>
+                        <source_model>Mageplaza\RewardPointsUltimate\Model\Source\UrlParam</source_model>
+                        <comment>
+                            <![CDATA[E.g: <br />Parameter: http://example.com/?<strong>code=123</strong><br />Hash: http://example.com<strong>#code123</strong>]]></comment>
+                    </field>
+                    <field id="prefix" translate="label comment" type="text" sortOrder="20" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Prefix</label>
+                    </field>
+                </group>
+            </group>
+            <group id="milestone" translate="label comment" type="text" sortOrder="90" showInDefault="1"
+                   showInWebsite="1" showInStore="0">
+                <label>Milestones</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable Milestones</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="source" translate="label comment" type="multiselect" sortOrder="5" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Earn Point Source</label>
+                    <source_model>Mageplaza\RewardPointsUltimate\Model\Source\PointSource</source_model>
+                </field>
+                <field id="period" translate="label comment" type="text" sortOrder="10" showInWebsite="1"
+                       showInStore="0" showInDefault="1" canRestore="1">
+                    <label>Earning Period</label>
+                    <validate>validate-digits validate-not-negative-number</validate>
+                </field>
+                <field id="background_color" translate="label comment" type="text" sortOrder="25" showInWebsite="1"
+                       showInStore="0" showInDefault="1" canRestore="1">
+                    <label>Milestone Tier Progress Background Color</label>
+                    <frontend_model>Mageplaza\Core\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="range_color" translate="label comment" type="text" sortOrder="30" showInWebsite="1"
+                       showInStore="0" showInDefault="1" canRestore="1">
+                    <label>Milestone Tier Progress Color</label>
+                    <frontend_model>Mageplaza\Core\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="email" translate="label comment" type="select" sortOrder="35" showInWebsite="1"
+                       showInStore="0"
+                       showInDefault="1" canRestore="1">
+                    <label>Email Notification</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="template" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Customer Update Tier Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <comment>Select an email template used to send customers before Customer Update Tier.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

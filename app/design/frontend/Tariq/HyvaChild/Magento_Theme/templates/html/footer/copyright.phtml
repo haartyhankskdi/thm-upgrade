@@ -1,0 +1,24 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Theme\Block\Html\Footer;
+use Magento\Framework\Escaper;
+
+/** @var Footer $block */
+/** @var Escaper $escaper */
+?>
+<div class="flex flex-col md:flex-row items-center justify-between text-gray-300">
+<p class="text-base text-left text-white md:text-left md:text-[17px]">
+    Copyright © 2026 Tariq Halal. All rights reserved. <span class="w-full md:w-auto lg:w-auto">Created by <a href="https://haartyhanks.com/" target="_blanl" class="text-base text-left text-white md:text-left md:text-[17px] hover:text-red hover:underline  transition-all duration-300 ease-in-out">Haarty Hanks</a>.</span>
+    <?php /* Enable the following line to show the copyright information configured in the admin
+    <span><?= $escaper->escapeHtml($block->getCopyright()) ?></span>
+    */ ?>
+</p>
+</div>

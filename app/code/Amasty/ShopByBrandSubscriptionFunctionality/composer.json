@@ -1,0 +1,21 @@
+{
+    "name": "amasty/module-shop-by-brand-subscription-functionality",
+    "description": "Shop by Brand Subscription Functionality by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.18.1",
+        "amasty/module-shop-by-brand": ">=2.20.0"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.2.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\ShopByBrandSubscriptionFunctionality\\": ""
+        }
+    }
+}

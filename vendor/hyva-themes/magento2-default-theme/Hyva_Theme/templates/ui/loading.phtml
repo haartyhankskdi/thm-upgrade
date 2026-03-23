@@ -1,0 +1,33 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\SvgIcons;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var SvgIcons $hyvaicons */
+$hyvaicons = $viewModels->require(SvgIcons::class);
+?>
+<div
+    class="z-50 fixed inset-0 grid place-items-center bg-white/70 text-slate-800"
+    x-cloak
+    x-show="isLoading"
+    x-transition.opacity.duration.200ms
+>
+    <div class="flex gap-10 items-center p-4">
+        <?= $hyvaicons->loaderHtml('', 57, 57, ['aria-hidden' => 'true']); ?>
+        <span class="text-xl select-none">
+            <?= $escaper->escapeHtml(__('Loading...')) ?>
+        </span>
+    </div>
+</div>

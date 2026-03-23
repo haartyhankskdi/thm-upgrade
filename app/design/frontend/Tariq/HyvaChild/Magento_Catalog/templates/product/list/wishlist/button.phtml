@@ -1,0 +1,50 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\ProductAttributes as ProductAttributes;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsSolid $heroiconsSolid */
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+
+/** @var Product $product */
+if (! ($product = $block->getData('product'))) {
+    return;
+}
+
+$productId = $product->getId();
+
+$productAttribute = $viewModels->require(ProductAttributes::class);
+$productName = $productAttribute->getValue($product, 'name');
+
+?>
+
+<button x-data="initWishlist()"
+        x-defer="intersect"
+        @click.prevent="addToWishlist(<?= (int) $productId ?>)"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Wish List') . ' ' . $productName) ?>"
+        type="button"
+        class="w-[31px] h-[31px] bg-black rounded-full flex items-center justify-center text-white absolute z-10 top-3 left-3 opacity-0 scale-90
+      transition-all duration-300 ease-out
+
+      group-hover:opacity-100
+      group-hover:scale-100"
+        data-addto="wishlist"
+>
+    <img src ="<?= $block->getViewFileUrl('images/heart.svg') ?>" width="16" height="15" alt="wishlist" />
+</button>

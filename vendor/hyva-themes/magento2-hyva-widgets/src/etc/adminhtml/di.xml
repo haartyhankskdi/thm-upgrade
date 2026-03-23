@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Widget\Model\Widget">
+        <plugin name="hyva_wysiwyg_widget_plugin" type="Hyva\Widgets\Plugin\Widget"
+                sortOrder="1"/>
+    </type>
+    <type name="Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content">
+        <plugin name="hyva_wysiwyg_image_content" type="Hyva\Widgets\Plugin\WysiwygImagePlugin"/>
+    </type>
+</config>

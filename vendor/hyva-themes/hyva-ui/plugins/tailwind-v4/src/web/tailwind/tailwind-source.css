@@ -1,0 +1,58 @@
+@import "tailwindcss" source(none);
+@source "../../**/*.php";
+@source "../../**/*.xml";
+
+/* Custom styles */
+@import "./base";
+@import "./components";
+@import "./theme";
+@import "./utilities";
+
+/* Import generated styles for Hyvä Compatible Modules and Design Tokens */
+@import "./generated/hyva-source.css";
+@import "./generated/hyva-tokens.css";
+
+/**
+ * ! Temp support for the Hyvä Checkout
+ * The Tailwind styles are based on v2 which are not compatible with v4
+ * and therefore we can only scan the phtml and xml files for now.
+ * This can be removed once the Hyvä Checkout supports Tailwind v4.
+ */
+@source "../../../../../../../vendor/hyva-themes/magento2-hyva-checkout/src/**/*.phtml";
+@source "../../../../../../../vendor/hyva-themes/magento2-hyva-checkout/src/**/*.xml";
+
+@theme {
+    --color-bg: var(--color-slate-50);
+    --color-text: var(--color-slate-950);
+    --color-text-secondary: var(--color-slate-600);
+    --color-surface: var(--color-white);
+
+    /* * Set using the design tokens config */
+    /* --color-primary-lighter: var(--color-blue-500); */
+    /* --color-primary: var(--color-blue-700); */
+    /* --color-primary-darker: var(--color-blue-900); */
+    /* --color-secondary-lighter: var(--color-green-500); */
+    /* --color-secondary: var(--color-green-700); */
+    /* --color-secondary-darker: var(--color-green-900); */
+
+    /* @deprecated Will be removed in favor for named variables, in the future */
+    --color-container-lighter: #f5f5f5;
+    --color-container: #e7e7e7;
+    --color-container-darker: #b6b6b6;
+    --bg-container-lighter: #fff;
+    --bg-container: #fafafa;
+    --bg-container-darker: #f5f5f5;
+}
+
+/* @deprecated Will be removed in favor for named variables, in the future */
+@utility bg-container-lighter {
+    --color-container-lighter: var(--bg-container-lighter);
+}
+
+@utility bg-container {
+    --color-container: var(--bg-container);
+}
+
+@utility bg-container-darker {
+    --color-container-darker: var(--bg-container-darker);
+}

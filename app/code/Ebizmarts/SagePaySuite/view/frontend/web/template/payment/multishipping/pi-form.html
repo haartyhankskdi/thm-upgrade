@@ -1,0 +1,38 @@
+<!--
+/**
+ * Copyright © 2020 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<div class="payment-method" id="pi-form-multishipping">
+    <div class="payment-method-content" style="display: block">
+        <div id="sp-container"></div>
+        <div id="submit-container">
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button class="action primary checkout" id="submit_dropin_payment"
+                            type="button"
+                            data-bind="
+                            click: tokenise,
+                            attr: {title: $t('Submit card')},
+                            css: {disabled: !isPlaceOrderActionAllowed()},
+                            enable: (getCode() == isChecked())"
+                            disabled>
+                        <span data-bind="text: $t('Submit card')"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <div id="dropin-form" class="action checkout"
+                     data-bind="afterRender: watchRadioButton()"></div>
+            </div>
+        </div>
+
+        <!-- #### sagepay 3D secure form V2#### -->
+        <form data-bind="attr: {id: getCode() + '-3DsecureV2-form'}" method="POST">
+            <input type="hidden" name="creq">
+        </form>
+    </div>
+</div>

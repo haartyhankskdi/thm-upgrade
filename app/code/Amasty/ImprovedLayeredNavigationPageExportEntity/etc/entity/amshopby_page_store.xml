@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Improved Layered Navigation Page Export Entity
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_ExportCore:etc/am_export.xsd">
+    <entity code="amshopby_page_store">
+        <name>Amasty Improved Layered Navigation Page Store</name>
+        <group>Amasty Improved Layered Navigation</group>
+        <description>Amasty Improved Layered Navigation Page Store Export Entity</description>
+        <enabledChecker class="Amasty\ExportCore\Export\Config\IsModuleEnabled">
+            <arguments>
+                <argument name="moduleName" xsi:type="string">Amasty_ShopbyPage</argument>
+            </arguments>
+        </enabledChecker>
+        <collectionFactory class="Amasty\ExportCore\Export\Config\CustomEntity\CollectionFactory">
+            <arguments>
+                <argument name="tableName" xsi:type="string">amasty_amshopby_page_store</argument>
+                <argument name="idField" xsi:type="string">page_id</argument>
+            </arguments>
+        </collectionFactory>
+        <fieldsConfig>
+            <fieldsClass class="Amasty\ExportCore\Export\FieldsClass\Describe"/>
+            <fields>
+                <field name="store_id">
+                    <actions>
+                        <storeId2StoreCode/>
+                    </actions>
+                    <filter>
+                        <type>store</type>
+                    </filter>
+                </field>
+            </fields>
+        </fieldsConfig>
+    </entity>
+    <relation code="amshopby_page_page_store">
+        <parent_entity>amshopby_page</parent_entity>
+        <child_entity>amshopby_page_store</child_entity>
+        <sub_entity_field_name>amshopby_page_store</sub_entity_field_name>
+        <type>one_to_many</type>
+        <arguments>
+            <argument name="parent_field_name" xsi:type="string">page_id</argument>
+            <argument name="child_field_name" xsi:type="string">page_id</argument>
+        </arguments>
+    </relation>
+</config>

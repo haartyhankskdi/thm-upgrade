@@ -1,0 +1,25 @@
+{
+    "amasty_amlocator_location_index": {
+        "column": {
+            "location_id": true,
+            "product_id": true,
+            "store_id": true
+        },
+        "index": {
+            "AMASTY_AMLOCATOR_LOCATION_IDX_LOCATION_ID_PRD_ID_STORE_ID": true
+        }
+    },
+    "amasty_amlocator_content_location_index": {
+        "column": {
+            "record_id": true,
+            "location_id": true,
+            "store_list_html": true,
+            "popup_html": true,
+            "store_id": true
+        },
+        "index": {
+            "AMASTY_AMLOCATOR_LOCATION_INDEX_LOCATION_ID": true,
+            "AMASTY_AMLOCATOR_LOCATION_INDEX_STORE_ID": true
+        }
+    }
+}

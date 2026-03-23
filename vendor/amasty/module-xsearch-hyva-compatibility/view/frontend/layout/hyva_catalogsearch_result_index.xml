@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="amasty.xsearch.tabs" template="Amasty_XsearchHyvaCompatibility::tabs.phtml">
+            <block name="search-tabs-init" template="Amasty_XsearchHyvaCompatibility::page-search/tabs-init.phtml"/>
+        </referenceBlock>
+
+        <referenceContainer name="additional">
+            <container name="related.search.recommendations" htmlClass="amsearch-related-recommendations"
+                       htmlTag="section" after="product_list_toolbar">
+                <block class="Magento\AdvancedSearch\Block\Recommendations"
+                       ifconfig="amasty_xsearch/general/show_related_terms"
+                       name="search_recommendations"/>
+            </container>
+            <container name="related.search.suggestions" htmlClass="amsearch-related-suggestions"
+                       htmlTag="section" after="product_list_toolbar">
+                <block class="Magento\AdvancedSearch\Block\Suggestions" name="search_suggestions"/>
+            </container>
+        </referenceContainer>
+
+        <move element="related.search.term" destination="additional" after="product_list_toolbar" />
+    </body>
+</page>

@@ -1,0 +1,45 @@
+/* container spacing for top filters */
+.category-top-filters-wrapper {
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* ensure layered nav inner block is full width */
+.category-top-filters-wrapper .block-layered-nav,
+.category-top-filters-wrapper .layered {
+  width: 100%;
+  display: block;
+}
+
+/* --- Force product grid to one column --- */
+/* Typical Magento product grid wrapper selectors - tune if your theme uses custom CSS classes */
+.page-layout-1column .products-grid,
+.category-products .products-grid,
+.products.wrapper .products-grid,
+.products-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 1.5rem !important;
+}
+
+/* product card adjustments (reduce width constraints) */
+.products.wrapper .product-item,
+.products-grid .product-item {
+  width: 100% !important;
+}
+
+/* If product images are large, make them responsive */
+.products-grid .product-item img,
+.product-item .product-image-photo {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* small screens: preserve spacing */
+@media (max-width: 768px) {
+  .category-top-filters-wrapper {
+    padding: .5rem 0;
+  }
+}

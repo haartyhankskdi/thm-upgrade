@@ -1,0 +1,19 @@
+<div class="copyright-section">
+    <div class="page-main">
+<p class="copyright">
+    Copyright © 2025 Tariq Halal. All rights reserved. <span>Created by <a href="https://haartyhanks.com/" target="_blanl">Haarty Hanks</a>.</span>
+    <!-- <?= $block->escapeHtml($block->getCopyright()) ?> -->
+</p>
+<div class="footer-payment">
+    <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('footer_payment_address')->toHtml(); ?>
+</div>
+</div>
+</div>
+<?php 
+$controllerName = $this->getRequest()->getControllerName();
+$actionName = $this->getRequest()->getActionName();
+$routeName = $this->getRequest()->getRouteName();
+$rm_url = $routeName.'_'.$controllerName.'_'.$actionName;
+if($rm_url != "sales_order_printInvoice"){ ?>
+    <div class="club-member-logo" ><a href="/membership-page"><img src="<?php echo $this->getViewFileUrl('images/vip-club-logo.png'); ?>" alt=""></a></div>
+<?php } ?>

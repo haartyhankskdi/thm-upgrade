@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Amasty\Shopby\Block\Navigation\FilterRenderer;
+use Amasty\ShopbyBase\Model\FilterSetting;
+
+/** @var FilterSetting $filterSetting */
+/** @var FilterRenderer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$filterUniqId = uniqid();
+$filterCode = $escaper->escapeHtml($filterSetting->getAttributeCode());
+$currentCategoryId = (int) $block->getCurrentCategoryId();
+$expandedMode = $filterSetting->getData('is_expanded');
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<form class="amshopby-flyout-block am-filter"
+      data-amshopby-filter="<?= /* @noEscape */ $filterCode; ?>"
+      data-amshopby-filter-request-var="<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>"
+      <?= $expandedMode ? "data-amshopby-expanded=" . $escaper->escapeHtml($expandedMode) : "data-amshopby-expanded='0'"; ?>
+      <?php if ($block->getEnableOverflowScroll($filterSetting) > 0): ?>
+            style="max-height:<?= /* @noEscape */ (int) $block->getOverflowScrollValue($filterSetting); ?>px;
+            overflow-y: auto;
+            overflow-x: hidden;"
+      <?php endif; ?>
+>
+    <ul class="items am-filter-items-<?= /* @noEscape */ $filterCode; ?> amshopby-fly-out-view">
+        <?= /* @noEscape */ $categoryTreeHtml; ?>
+    </ul>
+</form>

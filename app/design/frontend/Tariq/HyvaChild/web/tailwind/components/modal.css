@@ -1,0 +1,56 @@
+/* .modal {} */
+
+.backdrop {
+    @apply fixed inset-0 flex bg-black bg-opacity-25;
+}
+
+
+.ambar-action-btn {
+    @apply  bg-[#dc2626] hover:bg-[#3B7E48] text-white text-sm uppercase font-normal px-2 py-2.5 rounded-full transition-all duration-300 ease-in-out;
+}
+.more-info-btn {
+    @apply !text-black;
+}
+
+#amcookie-bar-content a{
+    @apply !text-black underline outline-none border-0 shadow-none;
+}
+
+#amcookie-bar-content a:focus,
+#amcookie-bar-content a:focus:visible{
+    @apply !outline-none !border-0 shadow-none;
+}
+.amgdprcookie-toggle-cookie{
+  @apply relative;
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-input{
+  @apply h-0 w-0 opacity-0;
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-input:not([checked]) + .amgdprcookie-label{
+  @apply bg-white;
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-input + .amgdprcookie-label{
+  @apply bg-[#3B7E48];
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-label{
+  @apply absolute right-0 top-0 w-[50px] h-[29px] rounded-[40px] cursor-pointer text-[0];
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-label::after{
+  content: "";
+  @apply absolute left-[2px] top-[2px] w-[25px] h-[25px] rounded-[40px] bg-[#3B7E48] transition-all duration-300;
+}
+
+.amgdprcookie-toggle-cookie .amgdprcookie-input:checked + .amgdprcookie-label::after{
+  @apply left-[95%] -translate-x-full bg-white;
+}
+
+
+.page-main .page.messages{
+    @apply z-[9999] w-full  absolute;
+}

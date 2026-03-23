@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <vipfree>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>MY\Membership\Model\Carrier\Vipfree</model>
+                <name>VIP Free Shipping</name>
+                <handling_type>F</handling_type>
+                <vipsubtotal>75</vipsubtotal>
+                <price>0.00</price>
+                <title>VIP Free Shipping Method</title>
+                <type>I</type>
+                <specificerrmsg>This shipping method is not available right now.</specificerrmsg>
+            </vipfree>
+        </carriers>
+    </default>
+</config>

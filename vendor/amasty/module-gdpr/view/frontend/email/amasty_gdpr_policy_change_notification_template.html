@@ -1,0 +1,17 @@
+<!--@subject {{trans "Our Privacy Policy has been amended"}} @-->
+<!--@vars {
+"var customer_name|escape":"Customer name",
+"var policy_text|raw":"Policy text",
+"var account_url":"Account URL"
+} @-->
+{{template config_path="design/email/header_template"}}
+<div>
+    <p>{{trans "Dear %customer_name" customer_name=$customer_name|escape}},<br>
+    {{trans "We would like to inform you that our Privacy Policy has been amended. Due to the changes related to the EU GDPR (General Data Protection Regulation), we are required to notify you about this update and are required to get your consent to the updated policy."}}</p>
+    <div style="padding: 0 10px; margin-left: 10px; background-color: #ebebeb; border: 1px solid #494949">
+        <div>{{var policy_text|raw}}</div>
+    </div>
+    <p>{{trans "There are no major differences, we still take care of all your personal data, we store it securely and use it only for processing your orders and support requests."}}</p>
+    <a href="{{var account_url}}" style="font-weight: bold; font-size: 18px;">{{trans "I have read and accept"}}</a>
+</div>
+{{template config_path="design/email/footer_template"}}

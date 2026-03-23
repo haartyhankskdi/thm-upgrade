@@ -1,0 +1,473 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+$storeConfig = $viewModels->require(StoreConfig::class);
+$maxItemsToDisplay = $storeConfig->getStoreConfig('checkout/sidebar/max_items_display_count');
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$custom = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$quote = $custom->getQuote();
+$couponCode = $quote->getCouponCode();
+$subtotal = (float) $quote->getSubtotal();
+$discount = abs((float) ($quote->getSubtotalWithDiscount() - $quote->getSubtotal()));
+$shippingAmount = (float) $quote->getShippingAddress()->getShippingAmount();
+$shippingDesc = $quote->getShippingAddress()->getShippingDescription();
+$grandTotal = (float) $quote->getGrandTotal();
+
+$cartTotalAfterDiscount = $subtotal - $discount;
+if ($cartTotalAfterDiscount >= 100) {
+    $shippingDesc = 'Free Delivery - Applicable for orders above £100';
+    $shippingAmount = 0.00;
+} else {
+    $shippingDesc = 'Mainland UK - Orders Below £100';
+    $shippingAmount = 9.99;
+}
+$grandTotal = $cartTotalAfterDiscount + $shippingAmount;
+
+?>
+<script>
+    function initCartDrawer() {
+        return {
+            open: false,
+            isLoading: false,
+            cart: {},
+            maxItemsToDisplay: <?= (int) $maxItemsToDisplay ?>,
+            itemsCount: 0,
+            cartItems: [],
+
+            getData(data) {
+                if (data.cart) {
+                    this.cart = data.cart;
+                    this.itemsCount = data.cart.items?.length || 0;
+                    this.setCartItems();
+                }
+                this.isLoading = false;
+            },
+
+            getItemCountTitle() {
+                return hyva.strf('<?= $escaper->escapeJs(__('%0 of %1 products in cart displayed')) ?>',
+                    this.maxItemsToDisplay,
+                    this.itemsCount
+                );
+            },
+
+            setCartItems() {
+                this.cartItems = this.cart.items?.sort((a, b) => b.item_id - a.item_id) || [];
+                if (this.maxItemsToDisplay > 0) {
+                    this.cartItems = this.cartItems.slice(0, this.maxItemsToDisplay);
+                }
+            },
+
+            increaseQty(item) {
+                let qty = parseInt(item.qty, 10) || 0;
+                item.qty = qty + 1;
+                this.updateItemQty(item);
+                 window.location.reload();
+            },
+         decreaseQty(item) {
+        let qty = parseInt(item.qty, 10) || 1;
+         if (qty <= 1) {
+        return;
+       }
+
+    // qty > 1
+    item.qty = qty - 1;
+    this.updateItemQty(item);
+
+    window.location.reload();
+},
+
+
+
+            updateItemQty(item) {
+                this.isLoading = true;
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/updateItemQty/';
+                const body = `form_key=${formKey}&item_id=${item.item_id}&item_qty=${item.qty}`;
+
+                fetch(postUrl, {
+                    method: "POST",
+                    headers: { "content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
+                    body: body,
+                    credentials: "include"
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    } else {
+                        window.dispatchMessages && window.dispatchMessages([{
+                            type: 'error',
+                            text: result.error_message || '<?= $escaper->escapeJs(__('Unable to update quantity.')) ?>'
+                        }]);
+                    }
+                })
+                .catch(() => {
+                    window.dispatchMessages && window.dispatchMessages([{
+                        type: 'error',
+                        text: '<?= $escaper->escapeJs(__('Something went wrong updating quantity.')) ?>'
+                    }]);
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
+            },
+
+            deleteItemFromCart(itemId) {
+                this.isLoading = true;
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/removeItem/';
+
+                fetch(postUrl, {
+                    headers: { "content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
+                    body: "form_key=" + formKey + "&item_id=" + itemId,
+                    method: "POST",
+                    credentials: "include"
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        window.dispatchMessages && window.dispatchMessages([{
+                            type: 'success',
+                            text: '<?= $escaper->escapeJs(__('Item removed.')) ?>'
+                        }]);
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    } else {
+                        window.dispatchMessages && window.dispatchMessages([{
+                            type: 'error',
+                            text: result.error_message
+                        }]);
+                    }
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
+                 window.location.reload();
+            },
+
+            scrollLock(use = true) {
+                document.body.style.overflow = use ? "hidden" : "";
+            },
+
+            toggleCartDrawer(event) {
+                if (event.detail && event.detail.isOpen !== undefined) {
+                    if (event.detail.isOpen) {
+                        this.openCartDrawer();
+                    } else {
+                        this.open = false;
+                        this.scrollLock(false);
+                        this.$refs?.cartDialogContent && hyva.releaseFocus(this.$refs.cartDialogContent);
+                    }
+                } else {
+                    this.openCartDrawer();
+                }
+            },
+
+            openCartDrawer() {
+                this.open = true;
+                this.scrollLock(true);
+                this.$nextTick(() => {
+                    this.$refs?.cartDialogContent && hyva.trapFocus(this.$refs.cartDialogContent);
+                });
+            },
+
+            closeCartDrawer() {
+                this.$dispatch('toggle-cart', { isOpen: false });
+            },
+
+            getSectionDataExtraActions() {
+                if (!this.cart.extra_actions) return '';
+                const node = document.createElement('div');
+                node.innerHTML = this.cart.extra_actions;
+                hyva.activateScripts(node);
+                return node.innerHTML;
+            }
+        }
+    }
+</script>
+
+<section x-cloak
+         x-show="cart"
+         id="cart-drawer"
+         x-data="initCartDrawer()"
+         @private-content-loaded.window="getData($event.detail.data)"
+         @toggle-cart.window="toggleCartDrawer($event)"
+         @keydown.escape="closeCartDrawer">
+
+    <div role="dialog"
+         aria-labelledby="cart-drawer-title"
+         aria-modal="true"
+         :aria-hidden="!open"
+         class="fixed inset-y-0 right-0 z-30 flex max-w-full">
+
+        <!-- Backdrop -->
+        <div class="backdrop"
+             x-show="open"
+             x-transition:enter="ease-in-out duration-500"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in-out duration-500"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             role="button"
+             @click="closeCartDrawer"
+             aria-label="<?= $escaper->escapeHtmlAttr(__('Close minicart')) ?>"></div>
+
+        <!-- Drawer Content -->
+        <div class="relative w-screen max-w-md shadow-2xl"
+             x-show="open"
+             x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             x-ref="cartDialogContent"
+             role="region"
+             :tabindex="open ? 0 : -1"
+             aria-label="<?= $escaper->escapeHtmlAttr(__('My Cart')) ?>">
+
+            <div class="flex flex-col h-full max-h-screen bg-white text-black shadow-xl">
+                <?= $block->getChildHtml('cart-drawer.top'); ?>
+
+                <!-- Header -->
+                <header class="relative px-4 py-6 sm:px-6">
+                    <p id="cart-drawer-title" class="text-lg font-medium leading-7 text-gray-900">
+                        <!-- <strong><?//= $escaper->escapeHtml(__('My Cart')) ?></strong> -->
+                        <span class="items-total text-xs"
+                              x-show="maxItemsToDisplay && maxItemsToDisplay < itemsCount"
+                              x-text="getItemCountTitle()"></span>
+                    </p>
+                </header>
+
+                <?= $block->getChildHtml('cart-drawer.items.before'); ?>
+
+                <!-- Empty Cart -->
+                <template x-if="!itemsCount">
+                    <div class="relative px-8 py-6 bg-white border-b sm:px-6 border-container">
+                        <?= $escaper->escapeHtml(__('Cart is empty')) ?>
+                    </div>
+                </template>
+
+                <div class="cart-slider-sec overflow-y-auto max-h-[180vh] ">
+                <!-- Cart Items -->
+               <template x-if="itemsCount">
+    <div class="px-8 py-3 space-y-4 bg-white">
+        <template x-for="item in cartItems">
+            <div class="minicart-list flex items-start gap-4 pb-8 pt-6 m-0 hover:bg-gray-50 transition border-b border-gray-200">
+
+                <div class="mini-cart-img-sec lg:w-[95px]">
+                <!-- Product Image -->
+                
+                <template x-if="item.product_has_url && item.is_visible_in_site_visibility">
+                    <div class="mini-cart-img mb-6 lg:w-[95px] lg:h-[95px]">
+                    <a :href="item.product_url" class="flex-shrink-0 w-20 h-20  overflow-hidden">
+                        <img :src="item.product_image.src"
+                             :width="item.product_image.width"
+                             :height="item.product_image.height"
+                             loading="lazy"
+                             class="object-cover w-full h-full"
+                             :alt="item.product_name"/>
+                    </a>
+                    </div>
+                </template>
+
+                <!-- Action Buttons -->
+                    <div class="flex items-center gap-3 mt-2">
+
+                        <button type="button"
+                                @click="deleteItemFromCart(item.item_id)"
+                                class="text-red-500 hover:text-red-700 transition"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Remove item')) ?>">
+                            <?= $heroicons->trashHtml('', 18, 18); ?>
+                        </button>
+
+                        <a :href="item.configure_url"
+                           x-show="item.product_type !== 'grouped' && item.is_visible_in_site_visibility"
+                           class="text-black hover:text-red-700 transition">
+                            <?= $heroicons->pencilHtml('', 18, 18); ?>
+                        </a> 
+                        
+                    </div>
+
+            </div>
+
+                <!-- Product Info -->
+                <div class="flex flex-col flex-grow space-y-2">
+                    <!-- Product Name & SKU -->
+                    <h3 class="text-sm md:text-xl md:leading-[24px] font-medium text-black mb-1" x-html="item.product_name"></h3>
+                    <p class="text-sm text-black font-normal" x-html="item.product_sku"></p>
+
+                    <div class="flex items-center justify-between pt-4">
+                    <!-- Quantity Controls -->
+                    <div class="flex items-center border border-gray-300 rounded-none overflow-hidden w-32 lg:w-[145px]">
+                        <button type="button"
+                                class="bg-black text-white px-4 py-3 hover:bg-green-800 transition"
+                                @click="decreaseQty(item)">−</button>
+
+                        <input type="number"
+                               class="text-center w-full border-0 focus:ring-0 focus:outline-none py-3"
+                               x-model="item.qty"
+                               min="1"
+                               readonly />
+
+                        <button type="button"
+                                class="bg-black text-white px-4 py-3 hover:bg-green-800 transition"
+                                @click="increaseQty(item)">+</button>
+                    </div>
+
+                    <!-- Product Price -->
+                    <p class="text-xl font-semibold text-[#3B7E48]" x-html="item.product_price"></p>
+
+                    </div>
+
+                    
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+
+<!-- Apply Coupon -->
+<?php if ($quote->hasItems() && $quote->getItemsCount() > 0): ?>
+<div x-data="{ open: <?= $couponCode ? 'true' : 'false' ?> }" class="mb-2 relative">
+    <template x-if="!<?= $couponCode ? 'true' : 'false' ?> ">
+        <div @click="open = !open" class="px-8 mb-2 flex items-center gap-1 text-sm cursor-pointer">
+             Apply Discount Code >
+        </div>
+    </template>
+    <form 
+        x-show="open" 
+        x-transition
+        action="<?= $block->getUrl('checkout/cart/couponPost') ?>" 
+        method="post" 
+        class="d-flex gap-2 mb-2 flex-wrap p-4 px-8 border rounded"
+    >
+
+    <div class="flex-col sm:flex-row gap-2 justify-center md:justify-start border border-[#6B6B6B] relative shadow-none"> 
+        <input name="form_key" type="hidden" value="<?= $block->getFormKey() ?>">
+
+        <?php if ($couponCode): ?>
+            <input 
+                name="coupon_code" 
+                type="text" 
+                class="form-input h-12 w-full disabled:opacity-75 disabled:bg-gray-100 disabled:pointer-events-none rounded-none pr-14 focus:border-0" 
+                value="<?= $couponCode ?>" 
+                readonly
+            >
+            <input type="hidden" name="remove" value="1">
+            <button type="submit" class="btn bg-[#E63833] px-5 text-white absolute top-0 right-0 h-12 rounded-none transition-all hover:bg-black">
+               <img src ="<?= $block->getViewFileUrl('images/cart-close-icon.png') ?>"/>
+            </button>
+        <?php else: ?>
+            <input 
+                name="coupon_code" 
+                type="text" 
+                class="form-input h-12 w-full disabled:opacity-75 disabled:bg-gray-100 disabled:pointer-events-none rounded-none pr-14 focus:border-0" 
+                placeholder="Enter coupon code" 
+                required
+            >
+            <button type="submit" class="btn bg-black px-5 text-white absolute top-0 right-0 h-12 rounded-none transition-all hover:bg-black">
+                <img src ="<?= $block->getViewFileUrl('images/cart-arrow.svg') ?>"/>
+            </button>
+        </div>
+        <?php endif; ?>
+    </form>
+</div>
+<?php endif; ?>
+
+<?= $this->getLayout()->createBlock("Haartyhanks\AutoRelated\Block\Minicart\Related")->setTemplate("Haartyhanks_AutoRelated::cart/minicart/related.phtml")->toHtml() ?>
+
+</div>
+
+ <!-- Totals + Checkout -->
+ <template x-if="itemsCount">
+    <div class="px-4">
+        <?= $block->getChildHtml('cart-drawer.totals.before'); ?>
+
+        <div class="relative grid gap-0 py-3 px-4 bg-white text-gray-800 text-sm border-t border-gray-200">
+
+           <!-- Subtotal -->
+    <div class="flex justify-between py-1 text-base text-black font-semibold gap-5">
+        <span><?= $escaper->escapeHtml(__('Subtotal')) ?></span>
+        <span>£<?= number_format($subtotal, 2) ?></span>
+    </div>
+
+    <!-- Discount -->
+    <?php if ($discount > 0 && $couponCode): ?>
+        <div class="flex justify-between py-1 text-green-700  gap-5">
+            <span><?= $escaper->escapeHtml(__('Discount')) ?> (<?= $escaper->escapeHtml($couponCode) ?>):</span>
+            <span>-£<?= number_format($discount, 2) ?></span>
+        </div>
+    <?php elseif ($discount > 0): ?>
+        <div class="flex justify-between py-1 text-base text-black font-semibold gap-5">
+            <span><?= $escaper->escapeHtml(__('Discount')) ?>:</span>
+            <span>-£<?= number_format($discount, 2) ?></span>
+        </div>
+    <?php endif; ?>
+
+    <!-- Shipping -->
+    <div class="flex justify-between py-1 text-base text-black font-semibold gap-5">
+        <span>
+            <?= $escaper->escapeHtml('Shipping (' . $shippingDesc . ')') ?>
+        </span>
+        <span>£<?= number_format($shippingAmount, 2) ?></span>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-2 border-gray-300 hidden">
+
+    <!-- Grand Total -->
+    <div class="flex justify-between py-1 text-base text-black font-semibold">
+        <span><?= $escaper->escapeHtml(__('Order Total')) ?></span>
+        <span>£<?= number_format($grandTotal, 2) ?></span>
+    </div>
+        </div>
+        <div class="w-full p-3 rounded-lg hover:bg-gray-100 mt-2">
+
+            <a @click.prevent.stop="closeCartDrawer(); 
+               $dispatch('toggle-authentication', {url: '<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>'});"
+               href="<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>"
+               class="bg-[#E63833] hover:bg-[#3B7E48] text-white text-lg font-semibold px-8 py-3 rounded-full transition duration-200 uppercase w-full text-center inline-block">
+               <?= __('Secure Checkout') ?>
+            </a>
+        </div>
+         
+         <a class="inline-block w-full text-center mb-6" href="<?= $escaper->escapeUrl($block->getUrl('checkout/cart')) ?>"
+                                   class="underline"
+                                >
+          <?= $escaper->escapeHtml(__('View and Edit Cart')) ?>
+         </a>
+    
+    </div>
+</template>
+
+<?= $block->getChildHtml('cart-drawer.bottom'); ?>
+            </div>
+
+            <!-- Close Button -->
+            <button type="button"
+                    @click="closeCartDrawer"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Close minicart')) ?>"
+                    class="absolute top-0 right-2 p-4 mt-2 text-gray-300 hover:text-black">
+                <?= $heroicons->xHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+            </button>
+        </div>
+        <?= $block->getChildHtml('loading') ?>
+    </div>
+</section>

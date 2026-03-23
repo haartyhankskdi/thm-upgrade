@@ -1,0 +1,582 @@
+#brippoFailsafePaymentElementModal {
+    display: none;
+}
+
+#brippoFailsafePaymentElementModal .footer {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.scExpressSeparator {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 30px;
+}
+
+.scExpressSeparator .separator {
+    width: 40%;
+    border-bottom: 1px solid #ddd;
+    max-height: 15px;
+}
+
+.scExpressSeparator.product {
+    margin-bottom: 5px;
+    margin-top: -10px;
+}
+
+.scExpressSeparator.minicart {
+    margin-bottom: 5px;
+    margin-top: -5px;
+}
+
+.scExpressSeparator.cart {
+    margin-bottom: -17px;
+    margin-top: 5px;
+}
+
+.scExpressSeparator h6 {
+    color: #555;
+    text-align: center;
+    width: 20%;
+    vertical-align: middle;
+    margin: 10px 0 0;
+}
+
+.brippoExpressAgreements,
+.brippoAgreementsModal {
+    display: none;
+}
+
+.brippoExpressAgreements ul {
+    list-style: none;
+    padding: 0;
+    text-align: right;
+    margin: 5px 0;
+}
+
+.brippoExpressAgreements li {
+    margin: 0;
+}
+
+.brippoExpressAgreements label {
+    color: #000;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.expressAddCoupon {
+    position: relative;
+    display: none;
+    min-height: 15px;
+}
+
+.expressAddCoupon .content {
+    display: none;
+}
+
+.expressAddCoupon .textLink {
+    color: #000;
+    font-weight: 400;
+    font-size: 1.3rem;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    right: 0px;
+}
+
+.expressAddCoupon .textLink::after {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 10px;
+    line-height: 12px;
+    color: inherit;
+    content: '\e622';
+    font-family: 'luma-icons';
+    margin: 3px 0 0;
+    vertical-align: middle;
+    display: inline-block;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+    display: inline;
+    margin-left: 10px;
+    position: static;
+    color: #000;
+}
+
+.expressAddCoupon .couponInput {
+    border: none;
+    padding: 3px 10px;
+    margin: 0;
+    color: #000;
+    font-size: 1.2rem;
+    height: 30px;
+    border-radius: 3px;
+    background-color: #eee;
+    flex: 10;
+}
+
+.paybylink-note {
+    font-weight: bold;
+    margin: 10px 0 30px;
+}
+
+.paybylink-success-note {
+    border: 2px solid #aaa;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.brippo-payment-list-label {
+    display: inline-block; min-height: 30px; position: static;
+}
+.brippo-in-list-logo {
+    height: 30px; margin-bottom: -8px;display: inline-block;
+}
+.brippo-in-list-title {
+    margin-left: 5px;
+}
+
+.scExpress {
+    margin: 15px 0 20px;
+    max-width: 400px;
+}
+
+@media only screen and (max-width: 767px) {
+    .checkout-payment-method .step-title.mobile {
+        padding-left: 0;
+    }
+}
+
+.brippoOverLoader {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: #ccc;
+    opacity: 0.7;
+    border-radius: 3px;
+}
+
+.brippoOverLoader .brippoOverLoaderSpinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #555;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: brippoLoaderSpin 1s linear infinite;
+    position: relative;
+    top: calc(50% - 12px);
+    left: 10px
+}
+
+@keyframes brippoLoaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.expressAddCouponInputContainer {
+    display: none;
+    width: calc(100% - 22px);
+    flex-wrap:wrap;
+    background-color: #fff;
+    margin-top: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.expressAddCouponNote {
+    min-width: 100%;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.expressAddCouponApply,
+.expressAddCouponRemove {
+    font-size: 1.4rem;
+    text-align: right;
+    width: auto;
+    padding: 4px 8px 4px 18px;
+    flex: 1;
+}
+
+.scExpressProductPage {
+    background-color: transparent;
+}
+
+.expressAddCouponSuccess {
+    width: 100%;
+    display: none;
+}
+
+.noWalletsLogo {
+    object-fit: cover;
+    object-position: left;
+    width: 125px;
+}
+
+.brippo-on-top-title {
+    font-weight: 300;
+    font-size: 2.6rem;
+}
+
+/*
+ * ECE
+ */
+
+.brippoThrobberVeil {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    top: 0;
+    right: 0;
+    opacity: .4;}
+
+.brippoThrobberVeil .throbber,
+.brippoRecoverOrder .checkoutThrobber {
+    border: 4px solid #464646;
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: brippoVeilSpinnerAnimationSpin 1s linear infinite;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10000000000;
+    top: calc(50% - 25px);
+}
+
+@keyframes brippoVeilSpinnerAnimationSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.expressCheckoutTitle {
+    display: none;
+}
+
+.brippoRecoverOrder .separator,
+.brippoExpressOrSeparator {
+    display: none;
+    margin: 12px 0;
+    background-color: transparent;
+}
+
+.brippoExpressOrSeparator .separatorOr {
+    margin: 0 10px;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+.brippoRecoverOrder .separatorLine,
+.brippoExpressOrSeparator .separatorLine {
+    flex: 1;
+    border-bottom: 1px solid #bbb;
+    position: relative;
+    top: -7px;
+}
+
+.brippoError,
+.expressCheckoutError {
+    display: none;
+    padding: 10px 12px 9px;
+    margin: 0 0 10px;
+    background-color: #ffe8e8;
+    border: 1px solid #f9a9a9;
+    color: #d33838;
+}
+
+.expressCheckoutTitle {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+#brippoExpressCheckoutcheckout_mount {
+    margin-bottom: 15px;
+}
+
+#brippoExpressCheckoutminicart_container {
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#brippoExpressCheckoutminicart_mount,
+#brippoExpressCheckoutcart_mount,
+#brippoExpressCheckoutcheckout_mount {
+    min-width:232px;
+}
+
+
+.brippoRecoverOrder {
+    display: flex;
+    gap: 6%;
+    margin: 20px 0;
+}
+
+.brippoRecoverOrder .orderDetails {
+    min-width: 50%;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 15px 50px 50px;
+    align-self: flex-start;
+}
+
+.brippoRecoverOrder .orderDetails h3 {
+    color: gray;
+    font-weight: normal;
+    font-size: 1.6rem;
+}
+
+.brippoRecoverOrder .orderDetails h1 {
+    font-weight: 400;
+}
+
+.brippoRecoverOrder .orderDetails .cart ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.brippoRecoverOrder .orderDetails .cart li {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.brippoRecoverOrder .orderDetails .cart li img {
+    height: 40px;
+}
+
+.brippoRecoverOrder .orderDetails .cart li .description {
+    flex: 1;
+}
+
+.brippoRecoverOrder .orderDetails .cart li .description .name {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 0px 0 0px;
+}
+
+.brippoRecoverOrder .orderDetails .cart li .description .qty {
+    font-size: 1.2rem;
+}
+
+.brippoRecoverOrder .orderDetails .cart li .price {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.brippoRecoverOrder .orderDetails .grandTotalDue,
+.brippoRecoverOrder .orderDetails .shippingMethod {
+    display: flex;
+}
+
+.brippoRecoverOrder .orderDetails .grandTotalDue .name {
+    flex: 1;
+    font-size: 1.7rem;
+    font-weight: 600;
+    margin: 0px 0 0px;
+}
+
+.brippoRecoverOrder .orderDetails .shippingMethod {
+    margin-top: 10px;
+}
+
+.brippoRecoverOrder .orderDetails .shippingMethod .name {
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 0px 0 0px;
+}
+
+.brippoRecoverOrder .orderDetails .grandTotalDue .price {
+    font-size: 1.7rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.brippoRecoverOrder .orderDetails .addresses {
+    display: flex;
+    margin-top: 60px;
+    gap: 50px;
+    background-color: #fff;
+    padding: 25px 30px 20px;
+    border-radius: 5px;
+}
+
+.brippoRecoverOrder .orderDetails .addresses .address {
+    flex: 1;
+}
+
+.brippoRecoverOrder .orderDetails .addresses .address:first-child {
+    border-right: 1px solid #ddd;
+}
+
+.brippoRecoverOrder .orderDetails .addresses .address h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 10px;
+    padding-bottom: 5px;
+}
+
+.brippoRecoverOrder .orderDetails .addresses .address p {
+    margin: 0 0 5px;
+}
+
+.brippoRecoverOrder .brippoCheckout {
+    flex: 1;
+    min-width: 400px;
+    padding-bottom: 20px;
+    padding-top: 0px;
+}
+
+#brippoRecoverPaymentElement {
+    margin-top: 20px;
+}
+
+#brippoPaymentElement_recover_checkout_container {
+    margin: 0px 0 20px;
+}
+
+#brippoRecoverPaymentElementPay {
+    font-size: 2rem;
+    width: 100%;
+    padding: 15px;
+    display: none;
+}
+
+.brippoRecoverOrder .separator {
+    opacity: .6;
+    margin: 18px 0px;
+    display: flex;
+}
+
+.brippoRecoverOrder .separatorOr {
+    margin: 0 15px;
+    color: #555;
+    font-size: 1.3rem;
+}
+
+.brippoRecoverOrder .separatorLine {
+    top: -9px;
+}
+
+.brippoRecoverOrder .loadingThrobber {
+    margin: 0px 0;
+    opacity: .6;
+    padding: 15px 0;
+}
+
+.brippoRecoverOrder .loadingThrobber .checkoutThrobber {
+    scale: .6;
+}
+
+.brippo_payments-payments-recover .page-title {
+    display: none !important;
+}
+
+.payment-logo {
+    display: inline-block;
+    height: 20px;
+    width: 32px;
+    background: url('../img/paymentelement.png') no-repeat;
+    background-size: auto 100%;
+    vertical-align: middle;
+    zoom: 1.2;
+    position: relative;
+    top: -2px;
+}
+
+.payment-logo.visa {
+    background-position-x: 0;
+}
+
+.payment-logo.mastercard {
+    background-position-x: -33px;
+}
+
+.payment-logo.amex {
+    background-position-x: -66px;
+}
+
+.payment-logo.applepay {
+    background-position-x: -99px;
+}
+
+.payment-logo.googlepay {
+    background-position-x: -132px;
+}
+
+.payment-logo.link {
+    width: 27px;
+    background-position-x: -165px;
+}
+
+.payment-logo.klarna {
+    width: 47px;
+    background-position-x: -193px;
+}
+
+.payment-logo.clearpay,
+.payment-logo.afterpay_clearpay {
+    width: 105px;
+    background-position-x: -241px;
+}
+
+.payment-logo.pay_by_bank {
+    width: 35px;
+    background-position-x: -347px;
+}
+
+.payment-logo.billie {
+    width: 36px;
+    background-position-x: -385px;
+}
+
+#brippoExpressCheckoutcheckout_list_mount {
+    max-width: 500px;
+}
+
+.brippoExpressCheckoutElementList label .logos .payment-logo {
+    margin-right: 3px;
+}
+
+@media screen and (max-width: 575px) {
+    #brippoExpressCheckoutcart_container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .brippoRecoverOrder {
+        display: block
+    }
+    .brippoRecoverOrder .orderDetails {
+        padding: 10px 20px 20px;
+        margin-bottom: 25px;
+    }
+    .brippoRecoverOrder .orderDetails .addresses {
+        margin-top: 20px;
+        padding: 15px;
+        gap: 15px;
+        font-size: 1.2rem;
+    }
+    #brippoExpressCheckoutcheckout_list_mount {
+        max-width: none;
+    }
+}

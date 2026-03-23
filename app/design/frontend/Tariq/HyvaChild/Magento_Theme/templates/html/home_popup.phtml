@@ -1,0 +1,111 @@
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; }
+
+  .modal2 {
+    display: block; /* To Show and Hide the Pop Up */
+    position: fixed; /* Stay in place */
+    z-index: 9999999999; /* Sit on top */
+    padding-top: 40px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  }
+
+  /* Modal Content */
+  .modal-content2 {
+    background-color: transparent;
+    margin: auto;
+    padding: 0px 0 50px 0;
+    border: 0px solid #888;
+    width: 45%;
+    position: relative;
+  }
+
+  /* The Close Button */
+  .close2 {
+    color: #fff !important;
+    float: right;
+    font-size: 40px !important;
+    font-weight: 300;
+    position: absolute;
+    top: -45px;
+    right: 0px; 
+    opacity: 1;
+  }
+
+  .close2:hover,
+  .close2:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  @media (max-width: 767px) {
+    .modal-content2 { width: 90% !important; }
+  }
+
+  @media only screen and (min-width: 768px) and (max-width:977px) {
+    .modal-content2 { width: 85% !important; }
+  }
+
+  @media only screen and (min-width: 978px) and (max-width:1024px) {
+    .modal-content2 { width: 75% !important; }
+  }
+</style>
+
+<!-- The Modal -->
+<div id="myModal2" class="modal2">
+  <div class="modal-content2" >
+    <span class="close2" onclick="closeModal()" style="position: absolute; top: -45px; right: -30px; font-size: 20px; cursor: pointer;">&times;</span>
+    <p style="text-align: center; margin-bottom: 5px !important;">
+      <!-- <img src="https://www.tariqhalalmeats.com/pub/media/wysiwyg/holiday-bank.jpg" alt="Bank Holiday" style="max-width: 100%;" /> -->
+      <img src="https://magento-1479223-5610846.cloudwaysapps.com/pub/media/wysiwyg/holiday-christmas.jpg" alt="Christmas Holiday" style="max-width: 100%;" />
+    </p>
+  </div> 
+</div> 
+
+
+
+<style>
+  
+ 
+
+  @media (max-width: 767px) {
+    .modal-content2 .close2{ 
+      right: 0 !important;
+    }
+  }
+</style>
+
+<script>
+  function showModalIfNeeded() {
+    const modal = document.getElementById('myModal2');
+    //const lastShown = localStorage.getItem('modalLastShown');
+
+    // Check if the modal was shown before
+  /*  if (lastShown) {
+      const lastTime = parseInt(lastShown, 10);
+      const now = new Date().getTime();
+      const hoursPassed = (now - lastTime) / (1000 * 60 * 60);
+
+      if (hoursPassed < 24) {
+        // Less than 24 hours — don't show
+        return;
+      }
+    }*/
+
+    // Show modal and update timestamp
+    modal.style.display = 'block';
+    //localStorage.setItem('modalLastShown', new Date().getTime());
+  }
+
+  function closeModal() {
+    document.getElementById('myModal2').style.display = 'none';
+  }
+
+  window.onload = showModalIfNeeded;
+</script>

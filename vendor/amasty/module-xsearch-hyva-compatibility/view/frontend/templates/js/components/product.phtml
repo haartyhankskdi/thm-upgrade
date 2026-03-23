@@ -1,0 +1,132 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchProduct() {
+        return {
+            productSmallImageLabel() {
+                return this.product.small_image.label
+            },
+            productItemViewClass() {
+                return {
+                    'flex-1': !this.config.isGridView,
+                    'flex-row mb-5 list-view': this.config.isGridView && (this.isFullWidthSearch || this.isDefaultSearchInput || this.searchPopupWidth > 900),
+                    'flex-col mt-2 w-full md:w-auto md:max-w-md': !this.config.isGridView && (!this.isFullWidthSearch || !this.isDefaultSearchInput || this.searchPopupWidth <= 900)
+                }
+            },
+            productSmallImageWrapperClass() {
+                return { 'md:w-1/6 md:mb-0 mr-5': this.config.isGridView }
+            },
+            productSmallImageClass() {
+                return { 'min-w-52': !this.config.isGridView }
+            },
+            productInfoClass() {
+                return {
+                    'md:text-left': this.config.isGridView,
+                    'text-center': !this.config.isGridView
+                }
+            },
+            productDescriptionClass() {
+                return {
+                    'text-left': this.config.isGridView,
+                    'text-center': !this.config.isGridView
+                }
+            },
+            productActionsWrapperClass() {
+                return {
+                    'mt-auto': !this.config.isGridView,
+                    'flex-wrap': this.config.isGridView && this.config.isProductAddToCartBlockEnabled && this.product.is_salable,
+                    'justify-start': this.config.isGridView
+                }
+            },
+            productAddToCartButtonClass() {
+                return {
+                    'mr-auto w-auto': !this.config.isGridView,
+                    'w-full sm:w-auto mb-3 sm:mb-0': this.config.isGridView
+                }
+            },
+            productAddToCartButtonClickEvent(event) {
+                return this.addToCart(this.product, this.$event)
+            },
+            productAddToWishlistClickEvent() {
+                return this.addToWishlist(this.product)
+            },
+            productAddToCompareClickEvent() {
+                return this.addToCompare(this.product)
+            },
+            productUrl() {
+                return this.getProductUrl(this.product)
+            },
+            productNameHtml() {
+                return this.product.name
+            },
+            productSku() {
+                return this.product.sku
+            },
+            productDescriptionHtml() {
+                return this.truncateWithDots(
+                    this.product.short_description.html,
+                    this.config.shortDescriptionLength
+                )
+            },
+            isShowProductSkuConfig() {
+                return this.config.isShowSku
+            },
+            isProductReviewsBlockEnabledConfig() {
+                return this.config.isProductReviewsBlockEnabled
+            },
+            isProductAddToCartBlockEnabledAndSalable() {
+                return this.config.isProductAddToCartBlockEnabled && this.product.is_salable
+            },
+            isProductAddToCartButtonEnabled() {
+                return this.isProductAddToCartBlockEnabledAndSalable() &&
+                    !this.productAmHidePriceAddtocart() &&
+                    !this.productHidePriceNewAddToCart()
+            },
+            productSmallImageUrl() {
+                return this.getProductImageUrl(this.product)
+            },
+            productAmHidePriceAddtocart() {
+                return this.product.am_hide_price_addtocart || false;
+            },
+            productHidePriceNewAddToCart() {
+                return this.product.hide_price_newAddToCart || '';
+            },
+            productAmHidePriceWishlist() {
+                return this.product.am_hide_price_wishlist || false;
+            },
+            isNotProductAmHidePriceWishlist() {
+                return !this.productAmHidePriceWishlist()
+            },
+            productAmHidePriceCompare() {
+                return this.product.am_hide_price_compare || false;
+            },
+            isNotProductAmHidePriceCompare() {
+                return !this.productAmHidePriceCompare()
+            },
+            isProductOutOfStock() {
+                return this.isProductAddToCartBlockEnabledConfig() && !this.productIsSalable()
+            },
+            isProductAddToCartBlockEnabledConfig() {
+                return this.config.isProductAddToCartBlockEnabled || false;
+            },
+            productIsSalable() {
+                return this.product.is_salable || false;
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

@@ -1,0 +1,13 @@
+<template x-if="segment.code === 'grand_total'">
+    <div class="flex justify-between py-2 text-lg text-black font-semibold">
+       <!--  <h3 class="w-7/12 font-semibold text-left md:w-auto"
+            x-html="segment.title"
+        ></h3> -->
+        <h3 class="w-7/12 font-semibold text-left md:w-auto">
+         Order Total
+          </h3>
+        <div class="w-5/12 text-right md:w-auto"
+             x-text="hyva.formatPrice(segment.value)"
+        ></div>
+    </div>
+</template>

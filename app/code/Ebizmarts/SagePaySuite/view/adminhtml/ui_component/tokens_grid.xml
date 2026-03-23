@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">tokens_grid.tokens_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <deps>
+            <dep>tokens_grid.tokens_grid_data_source</dep>
+        </deps>
+        <spinner>token_grid_columns</spinner>
+    </settings>
+    <dataSource name="tokens_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="tokens_grid_data_source">
+            <settings>
+                <requestFieldName>entity_id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="token_grid_columns">
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <dataType>date</dataType>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+        <column name="cc_last_4">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CC last 4</label>
+            </settings>
+        </column>
+        <column name="cc_type">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CC Type</label>
+            </settings>
+        </column>
+        <column name="created_at">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Created at</label>
+            </settings>
+        </column>
+        <column name="expiration_date">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Expires at</label>
+            </settings>
+        </column>
+        <column name="payment_method_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Payment Method</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Ebizmarts\SagePaySuite\Ui\Component\Grid\Token\Column\Tokens">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="label" xsi:type="string" translate="true">Action</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

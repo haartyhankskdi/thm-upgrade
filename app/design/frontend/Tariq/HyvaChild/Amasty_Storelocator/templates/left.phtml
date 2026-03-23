@@ -1,0 +1,152 @@
+<?php
+use Amasty\Storelocator\Block\Location;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var \Amasty\Storelocator\Block\Location $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons */
+
+$locations = $block->getLocationCollection();
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$storelocatorIcons = $viewModels->require(Amasty\StorelocatorHyva\ViewModel\StorelocatorIcons::class);
+?>
+
+<div class="amlocator-wrapper flex flex-col h-full">
+    <div class="amlocator-stores-wrapper">
+
+        <?php foreach ($locations as $location):
+
+
+            $timezone = new \DateTimeZone('Europe/London');
+            $currentDateTime = new \DateTime('now', $timezone);
+
+            $todayWorkingTime = $location->getWorkingTimeToday();
+            $isOpen = false;
+
+            if ($todayWorkingTime && strpos($todayWorkingTime, '-') !== false) {
+
+                $timeParts = explode('-', $todayWorkingTime);
+
+                try {
+                    $openDateTime  = new \DateTime(trim($timeParts[0]), $timezone);
+                    $closeDateTime = new \DateTime(trim($timeParts[1]), $timezone);
+
+                    if ($closeDateTime <= $openDateTime) {
+                        $closeDateTime->modify('+1 day');
+                    }
+
+                    if ($currentDateTime >= $openDateTime && $currentDateTime <= $closeDateTime) {
+                        $isOpen = true;
+                    }
+
+                } catch (\Exception $e) {
+                    $isOpen = false;
+                }
+            }
+            ?>
+
+            <div
+                name="leftLocation"
+                class="amlocator-store-desc mb-4 overflow-auto border-0 border-[#A4D2BB] last:border-b-0 cursor-pointer hover:bg-container-darker pb-4"
+                :class="idActiveStore === <?= (int)$location['id'] ?> ? 'active bg-container-darker' : ''"
+            >
+                <div class="px-4 md:p-0"
+                     @click="chooseStore(<?= (int)$location['id'] ?>)"
+                >
+                   <div class="flex justify-between">
+                         <div class="amlocator-store-information">
+                            <?= $location->getStoreListHtml() ?><br>
+                               <?php if ($location['phone']):?>
+                      
+                          <span class="mt-2 inline-block">Tel:  <a href="   tel:<?= $escaper->escapeHtml($location->getPhone())?>"
+                                class="amlocator-link hover:underline"
+                            >
+                                <?= $escaper->escapeHtml($location->getPhone())?>
+                            </a></span><br>
+                       
+                     <?php endif; ?>
+                    <?php if ($location['email']):?>
+                    
+                          Email: <a href="mailto:<?= $escaper->escapeUrl($location->getEmail())?>"
+                                class="amlocator-link hover:underline"
+                                title="<?= $escaper->escapeHtml($location->getName()); ?>"
+                            >
+                                <?= $escaper->escapeUrl($location->getEmail()) ?>
+                            </a><br>
+                       
+                     <?php endif; ?>
+                        </div>
+                <?php $attributes = $location->getData('attributes'); 
+              if (!empty($attributes)) {
+             foreach ($attributes as $attributeCode => $attributeData) {
+      
+             if (isset($attributeData['option_title']) && strtolower($attributeData['option_title']) === 'yes'){?>
+            <div class="opening-soon-image mb-2">
+               <img src="<?= $block->getViewFileUrl('images/opening-soon-label.png') ?>">
+
+            </div>
+            <?php
+             } 
+           }
+             }?>
+                  <!-- <?//php if ($baseImage = $block->getLocationImage($location)): ?>
+                            <div
+                                class="amlocator-image w-[150px] h-[150px] min-w-[150px] bg-center bg-cover mr-4"
+                                style="background-image:url('<?//= $escaper->escapeUrl($baseImage) ?>')"
+                            ></div>
+                        <?//php endif; ?> -->
+                    </div>
+                   
+                    <?php if ($location->getShowSchedule() && !empty($todayWorkingTime)): ?>
+                        <div class="amlocator-schedule-container text-black mt-3">
+                            <div class="flex items-center w-full">
+
+                                <?= $heroicons->clockHtml("w-5 h-5", 24, 24, ['aria-hidden' => 'true']) ?>
+
+                                <div class="amlocator-today w-full flex justify-between text-sm px-2 items-center">
+
+                                    <!-- STATUS -->
+                                    <strong>
+                                        <?php if ($isOpen): ?>
+                                            <span class="text-[#00722D] font-semibold">
+                                                Open Now:
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-red-600 font-semibold">
+                                                Closed Now:
+                                            </span>
+                                        <?php endif; ?>
+                                    </strong>
+
+                                    <!-- TODAY TIMING -->
+                                    <span class="amlocator-time font-semibold text-black">
+                                        <?= $escaper->escapeHtml($todayWorkingTime); ?>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php $storeUrl = $block->getLocationUrl($location); ?>
+                    <div class="stores-link mt-3">
+                        <a href="<?= $escaper->escapeUrl($block->getUrl('amlocator/' . $location->getUrlKey())) ?>"
+                           class="view-details-btn inline-block w-auto border border-[#3B7E48] px-8 py-2 text-center font-normal text-black text-base rounded-full hover:bg-[#3B7E48] hover:!text-white transition-all duration-300 ease-in-out" target="_blank">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
+    <?php if ($pager = $block->getPagerHtml()): ?>
+        <div class="amlocator-pager-container">
+            <?= $pager; ?>
+        </div>
+    <?php endif; ?>
+</div>

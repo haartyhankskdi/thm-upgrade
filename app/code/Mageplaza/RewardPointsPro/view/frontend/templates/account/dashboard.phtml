@@ -1,0 +1,90 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\RewardPointsPro\Block\Account\Dashboard $block */
+
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+$column = $block->checkEnableHoldingBlock() ? 3 : 4;
+?>
+<div class="block-reward-dashboard bg-[#F5F9F7] py-4 md:py-8 px-2 md:px-8 my-4 md:mt-8">
+    <div class="block reward-balance row-mp">
+        <div class="col-mp mp-<?= /** @noEscape */ $column ?> mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance available flex h-[100px] items-center justify-center text-center text-lg text-white py-6 bg-[#39E070]">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Available Balance')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */
+                        $block->getAvailableBalance() ?></strong>
+                </span>
+            </div>
+        </div>
+        <?php if ($block->checkEnableHoldingBlock()) : ?>
+            <div class="col-mp mp-3 mp-sm-6 mp-xs-12 ">
+                <div class="box-balance holding flex h-[100px] items-center justify-center text-center text-lg text-white py-6 bg-[#25B9F6]">
+                    <span>
+                        <div class="label">
+                            <span><?= $block->escapeHtml(__('Holding')) ?></span>
+                        </div>
+                        <strong><?= /** @noEscape */
+                            $block->getTotalHoldPoints() ?></strong>
+                    </span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="col-mp mp-<?= /** @noEscape */ $column ?> mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance earned flex h-[100px] items-center justify-center text-center text-lg text-white py-6 bg-[#0249D3]">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Total Earned')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */
+                        $block->getTotalEarnedPoints() ?></strong>
+                </span>
+            </div>
+        </div>
+        <div class="col-mp mp-<?= /** @noEscape */ $column ?> mp-sm-6 mp-xs-12 item-balance">
+            <div class="box-balance paid flex h-[100px] items-center justify-center text-center text-lg text-white py-6 bg-green-600">
+                <span>
+                    <div class="label">
+                        <span><?= $block->escapeHtml(__('Total Spent')) ?></span>
+                    </div>
+                    <strong><?= /** @noEscape */
+                        $block->getTotalSpentPoints() ?></strong>
+                </span>
+            </div>
+        </div>
+        <div class="mp-clear"></div>
+    </div>
+    <?php if (!$block->isRewardAccountActive()) : ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Your Account is currently inactive.')) ?></span>
+        </div>
+    <?php endif ?>
+
+    <?= /** @noEscape */
+    $block->getChildHtml() ?>
+</div>
+<!-- Compatible with Hyva theme -->
+<?php if ($helperPoints->isEnabledHyvaTheme()) : ?>
+     
+<?php endif; ?>
+

@@ -1,0 +1,13 @@
+{
+    "name": "hyva-themes/hyva-ui",
+    "description": "Hyvä UI Components",
+    "suggest": {
+        "hyva-themes/magento2-default-theme": "*"
+    },
+    "type": "magento2-theme",
+    "authors": [{
+        "name": "Hyvä Themes B.V.",
+        "email": "info@hyva.io"
+    }],
+    "license": "See LICENSE.md or https://hyva.io/license"
+}

@@ -1,0 +1,66 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+?>
+<?php
+/**
+ * Blog sidebar categories template
+ *
+ * @var $block \Magefan\Blog\Block\Sidebar\Categories
+ */
+?>
+
+<?php $items = $block->getGroupedChilds(); ?>
+
+<?php
+/** @var Hyva\Theme\ViewModel\HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
+?>
+
+<?php if (count($items)) { ?>
+<div class="block-categories mb-10">
+    <div class="title text-base text-center font-medium py-2 px-2 border border-[#333333] text-[#333333 uppercase mb-4">
+        <?= $block->escapeHtml(__('Categories')) ?>
+    </div>
+
+    <ul class="accordion font-normal text-[#333333]">
+    <?php
+        $level = 0;
+        $first = true;
+        foreach ($items as $item) {
+            $newLevel = $item->getLevel();
+
+            if ($level == $newLevel && !$first) {
+                echo '</li>';
+            }
+
+            if ($level < $newLevel) {
+                echo '<ul>';
+            }
+
+            if ($level > $newLevel) {
+                for ($i = $level; $i > $newLevel; $i--) {
+                    echo '</ul></li>';
+                }
+            }
+    ?>
+        <li class="<?= ($newLevel > 0) ? 'pl-0' : 'pt-1' ?> text-[13px] leading-5 border-b border-[#dddddd] pb-2.5 mb-2">
+            <a class="hover:text-red duration-300" href="<?= $block->escapeUrl($item->getCategoryUrl()) ?>">
+                <?= $block->escapeHtml($item->getTitle()) ?>
+                <?php if ($block->showPostsCount()) { ?>
+                    <span class="font-semibold">(<?= $block->escapeHtml($item->getPostsCount()) ?>)</span>
+                <?php } ?>
+            </a>
+            <?php
+            $level = $newLevel;
+            $first = false;
+        }
+    ?>
+    </ul>
+</div>
+<?php } ?>
+
+
+

@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/**
+ * @var \Amasty\Gdpr\Block\Adminhtml\Menu\DeleteRequestCounter $block
+ */
+?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+                "Amasty_Gdpr/js/menu/counter": {
+                        "deleteRequestCount":"<?= (int)$block->getDeleteRequestsCount() ?>"
+            }
+        }
+    }
+</script>

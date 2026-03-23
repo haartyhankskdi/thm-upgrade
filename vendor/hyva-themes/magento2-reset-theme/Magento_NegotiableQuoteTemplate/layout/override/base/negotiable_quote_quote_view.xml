@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="quote.actions.container">
+<!--            <block class="Magento\NegotiableQuoteTemplate\Block\Quote\Action\CreateTemplate"-->
+<!--                   name="negotiable.quote.info.links.create.template"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::quote/actions/create-template.phtml"-->
+<!--                   before="-">-->
+<!--                <arguments>-->
+<!--                    <argument name="acl_manager" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Template\AclManager</argument>-->
+<!--                    <argument name="linked_quote_info_provider" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Quote\LinkedQuoteInfo</argument>-->
+<!--                    <argument name="template_doc_info" xsi:type="object">Magento\NegotiableQuoteTemplate\ViewModel\Template\TemplateDocs</argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+        </referenceContainer>
+    </body>
+</page>

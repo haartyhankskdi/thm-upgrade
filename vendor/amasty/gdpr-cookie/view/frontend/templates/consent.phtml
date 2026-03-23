@@ -1,0 +1,52 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */
+
+use Amasty\GdprCookie\Block\Consent;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+
+/** @var Consent $block */
+/** @var SecureHtmlRenderer $secureRenderer */
+
+
+$jsLayout = $block->getJsLayout();
+$config = $jsLayout['config'];
+$jsonConfig = json_encode($config);
+$components = $jsLayout['jsComponents'];
+?>
+
+<?php if ($jsLayout['isCookiePolicyAllowed']):
+    $scriptSting = <<<script
+    window.isGdprCookieEnabled = true;
+
+    require(['Amasty_GdprFrontendUi/js/modal-show'], function (modalConfigInit) {
+        modalConfigInit($jsonConfig);
+    });
+    script;
+    echo /** @noEscape */ $secureRenderer->renderTag('script', ['data-cfasync' => 'false', 'type' => 'text/javascript'], $scriptSting, false);
+?>
+    <script data-cfasync="false" type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": <?= /* @noEscape */ json_encode($components) ?>
+            }
+        }
+    </script>
+    <!-- ko scope: 'gdpr-cookie-modal' -->
+        <!--ko template: getTemplate()--><!-- /ko -->
+    <!-- /ko -->
+    <style>
+        .amgdprjs-bar-template {
+            z-index: 999;
+        <?php if ((int)$config['barLocation']): ?>
+            top: 0;
+        <?php else: ?>
+            bottom: 0;
+        <?php endif; ?>
+        }
+    </style>
+<?php endif; ?>
+

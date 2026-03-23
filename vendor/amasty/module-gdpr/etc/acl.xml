@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Customer::customer">
+                    <resource id="Amasty_Gdpr::gdpr" title="Personal Data Protection" translate="title">
+                        <resource id="Amasty_Gdpr::action_log" title="Action Log" translate="title" />
+                        <resource id="Amasty_Gdpr::consent_log" title="Consent Log" translate="title" />
+                        <resource id="Amasty_Gdpr::consent_queue" title="Customers Consents Email Queue" translate="title" />
+                        <resource id="Amasty_Gdpr::requests" title="Delete Requests" translate="title" />
+                        <resource id="Amasty_Gdpr::policy" title="Privacy Policy" translate="title" />
+                        <resource id="Amasty_Gdpr::consents" title="Consent Checkboxes" translate="title" />
+                        <resource id="Amasty_Gdpr::personal_data" title="Download Personal Data" translate="title" />
+                    </resource>
+                </resource>
+                <resource id="Magento_Sales::sales">
+                    <resource id="Magento_Sales::sales_operation">
+                        <resource id="Magento_Sales::sales_order">
+                            <resource id="Magento_Sales::actions">
+                                <resource id="Amasty_Gdpr::order_anonymise" title="Amasty Order Data Anonymise" sortOrder="200" translate="title"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Amasty_Gdpr::config" title="Amasty Personal Data Protection Settings" translate="title" sortOrder="160504" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,206 @@
+<?php
+/** 
+ * @var $block \Magento\Framework\View\Element\Template 
+ */
+?>
+
+<div class="deal-section">
+  <div class="container">
+    <div class="deal-inner">
+  <!-- LEFT SIDE -->
+  <div class="deal-left">
+    <div class="deal-title-img"><img src="<?php echo $block->getBaseUrl()?>pub/media/wysiwyg/Deals-of-this-week-img.png" alt="Deals-of-this-week-img"></div>
+    
+
+
+    <div class="super-deal-countdown" data-start="06/20/2025 00:00:00" data-end="06/26/2025 23:59:59">
+      <p class="deal-subtitle">Offer Ends In</p>
+      <div class="time-circles">
+        <div class="time-box textDiv_Days">
+          <span class="number">0</span>
+          <span class="text">Days</span>
+        </div>
+        <div class="time-box textDiv_Hours">
+          <span class="number">0</span>
+          <span class="text">Hours</span>
+        </div>
+        <div class="time-box textDiv_Minutes">
+          <span class="number">0</span>
+          <span class="text">Mins</span>
+        </div>
+        <div class="time-box textDiv_Seconds">
+          <span class="number">0</span>
+          <span class="text">Secs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE -->
+ <div class="deal-right">
+    <a href="https://www.tariqhalalmeats.com/tariq-essentials-chunky-fish-fingers-500g.html"><img src="<?php echo $block->getBaseUrl()?>pub/media/wysiwyg/deal-of-week-offer-banner-new.jpg" alt="offer-banner-1"></a>
+    <!-- <a href="https://www.tariqhalalmeats.com/tariq-essentials-battered-cod-fillets-500g.html"><img class="last" src="<?php echo $block->getBaseUrl()?>pub/media/wysiwyg/bogo-offer-banner-2.jpg" alt="offer-banner-1"></a> -->
+  </div>
+</div>
+</div>
+</div>
+ 
+
+<script>
+  function startCountdown() {
+    const countdown = document.querySelector('.super-deal-countdown');
+    if (!countdown) return;
+    const startDate = new Date(countdown.getAttribute('data-start')).getTime();
+    const endDate = new Date(countdown.getAttribute('data-end')).getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+
+      if (now < startDate) {
+        countdown.innerHTML = "<p>Deal Not Started</p>";
+        return;
+      }
+
+      if (now > endDate) {
+        countdown.innerHTML = "<p>Deal Expired</p>";
+        return;
+      }
+
+      const distance = endDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdown.querySelector(".textDiv_Days .number").textContent = days;
+      countdown.querySelector(".textDiv_Hours .number").textContent = hours;
+      countdown.querySelector(".textDiv_Minutes .number").textContent = minutes;
+      countdown.querySelector(".textDiv_Seconds .number").textContent = seconds;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  document.addEventListener("DOMContentLoaded", startCountdown);
+</script>
+
+
+
+<style type="text/css">
+  .deal-section{
+    width: 100%;
+    display: inline-block;
+    padding:35px 0;
+    margin: 0;
+    background-color: #000000;
+  }
+  .deal-inner{
+    width: auto;
+    display: inline-block;
+    padding: 15px 15px 15px 0;
+    margin: 0;
+    background-color: #141414;
+  }
+  .deal-title-img{
+    width: 350px;
+    float: left;
+  }
+  .super-deal-countdown{
+    width: 86%;
+    display: inline-block;
+    margin-left: 15px;
+    margin-top: 8px;
+    color: #000;
+    background: url(https://www.tariqhalalmeats.com/pub/media/wysiwyg/Golden-bg.png) 0 0 no-repeat;
+    padding: 15px 15px
+  }
+  .deal-subtitle{
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 28px;
+    color: #151414;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .time-box{
+    width: auto;
+    float: left;
+  }
+  .time-box span.number{
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 50px;
+    color: #151414;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  .time-box span.text{
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #151414;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  @media screen and (min-width: 768px) {
+    .deal-section .container{
+      width: 940px !important;
+      margin: 0 auto;
+    }
+    .deal-inner{
+      width: 100% !important;
+    }
+    .deal-left{
+      width: 350px;
+      float: left;
+      margin-right: 15px;
+      margin-top: 35px;
+    }
+    .deal-right img{
+      margin-right: 8px;
+    }
+    .deal-right img.last{
+      margin-right: 0 !important;
+    }
+  }
+
+
+@media (max-width: 767px) {
+  .deal-section .container{
+      width: 92% !important;
+      margin: 0 auto;
+    }
+
+  .deal-left,
+  .deal-right{
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  .super-deal-countdown{
+    margin-left: 0 !important;
+    margin-bottom: 25px;
+  }
+  .deal-right img{
+    margin-bottom: 20px;
+  }
+  .deal-inner{
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .deal-title-img {
+    width: auto;
+    float: left;
+    margin: 0px 10px;
+}
+}
+
+</style>

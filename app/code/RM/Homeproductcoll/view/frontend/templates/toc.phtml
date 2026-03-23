@@ -1,0 +1,145 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+ $productNames = ["Halal Whole Duck 2kg (By Silver Hill Duck)", "Baby Lamb Shanks", "Mutton Leg", "Chicken Thigh Boneless", "Tariq Halal Premium Lamb Kebabs (15pc) Gold Range", "Chicken Strips (1kg)", "Traditional Chicken Curry with Rice 450g", "Thai Sweet Chilli Chicken with Noodles 450g", "Marinated Chicken Cubes"];
+   $productCollection = $objectManager->create(\Magento\Catalog\Model\ResourceModel\Product\Collection::class);
+   $productCollection->addAttributeToSelect('*')
+       ->addAttributeToFilter('name', ['in' => $productNames])
+       ->addAttributeToFilter('status', 1)
+       ->setPageSize(10);
+
+   $_categoryProducts = $productCollection;
+   $_listBlock = $block->getProductListBlock();
+   $cartHelper = $objectManager->get(\Magento\Checkout\Helper\Cart::class);
+?>
+<div class="groceries-main-section">
+   <h3><span>Winter Comfort Picks</span></h3>
+   <div class="groceries-section">
+      <div class="groceries-content-n">
+         <?php  $i = 1; 
+            if (!empty($_categoryProducts)):
+              foreach ($_categoryProducts as $product) :
+                if($i <= 10){
+               $_addToCartUrl = $cartHelper->getAddUrl($product);  
+                $productImageUrl = $block->getMediaUrl().$product->getSmallImage();
+                
+              ?>
+              <!-- <img data-lazy="<?//= $productImageUrl; ?> -->
+         <div class="groceries-product">
+            <div class="groceries-product-img"><a href="<?= $product->getProductUrl() ?>">
+              <img data-lazy="<?= $productImageUrl ?>" /></a></div>
+              <!-- <img data-lazy="<?//=$block->getBaseUrl();?>pub/media/catalog/product/placeholder/default/no-image_1.jpg"/></a></div> -->
+            <div class="product-name"><a href="<?= $product->getProductUrl() ?>"><?= __($product->getName()) ?></a></div>
+            <?php if($product->getSpecialPrice() && $product->getSpecialPrice() != ''){ ?>            
+              <div class="groceries-product-price">£<?= __(number_format($product->getSpecialPrice(), 2)) ?>  <span style="text-decoration: line-through;">£<?= __(number_format($product->getPrice(), 2)) ?></span></div>
+            <?php }else{ ?>
+              <div class="groceries-product-price">£<?= __(number_format($product->getPrice(), 2)) ?></span></div>
+            <?php } ?>
+            <!-- <div class="groceries-desc">
+              <?php //if (!empty($product->getDescription())) { $_productDes = $product->getDescription(); } ?>
+              <?php //$_productDes = strip_tags($_productDes);?>
+              <?php //$_productDes =  implode(' ', array_slice(explode(' ', $_productDes), 0, 20));?>
+               <div class="description-text"><?//= __($_productDes." ...") ?></div>
+            </div> -->
+
+            
+            <div class="addtocart-btn">
+              <form data-role="tocart-form" action="<?= $_addToCartUrl; ?>" method="post"> 
+                 <?php echo $block->getBlockHtml('formkey')?>
+                 <?php if(!$product->getHasOptions()){ ?>
+                  <div class="field qty">
+                      <label class="label" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
+                      <a class="qty-<?= $product->getId() ?>-down-fixed-onclick qty-down" onclick="changeQty(<?= $product->getId() ?>, 'decrease')"><i class="fa fa-minus"></i></a>
+                      <div class="control">
+                          <input type="number"
+                                 name="qty"
+                                 id="qty-<?= $product->getId() ?>"
+                                 min="0"
+                                 value="1"
+                                 title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                                 class="qty-<?= $product->getId() ?> input-text qty"
+                                 />
+                      </div>
+                      <a class="qty-<?= $product->getId() ?>-up-fixed-onclick qty-up" onclick="changeQty(<?= $product->getId() ?>, 'increase')"><i class="fa fa-plus"></i></a>
+                  </div>
+                 <?php } else{ ?>
+                        <div class="field qty no-space"></div>
+                    <?php } ?>
+                <?php if ($product->getHasOptions()): ?>
+    <a href="<?= $product->getProductUrl() ?>" class="customise-addtocart action primary cart-btn">
+        <?= __('Customise & Add to Cart') ?>
+    </a>
+<?php else: ?>
+    <button type="submit" class="action tocart primary cart-btn">
+        <?= __('Add to Cart') ?>
+    </button>
+<?php endif; ?>
+
+              </form>
+          </div>
+         </div>
+         <?php $i++; } ?> 
+         <?php endforeach; 
+            endif;
+              ?>
+      </div>
+   </div>
+</div>
+<script>
+    function changeQty(productID, type) {
+        let qtyObj = document.querySelector('#qty-'+productID);
+        var qtyValue = parseInt(qtyObj.value);
+        if(type == "decrease") {
+            if(qtyValue > 1) {
+                qtyValue--;
+            }
+        } else {
+            qtyValue++;
+        }                   
+        qtyObj.value = qtyValue;
+        return false;
+    }
+    
+   require([
+       'jquery',
+       'slick'
+   ], function ($) {
+    'use strict';
+       jQuery(document).ready(function () {
+           jQuery(".groceries-content-n").slick({
+               dots: true,
+               infinite: true,
+               //speed: 300,
+               slidesToShow: 4,
+               slidesToScroll: 4,
+               autoplaySpeed: 2000,
+               autoplay: false,
+               focusOnSelect: false,
+               lazyLoad: 'ondemand',
+               pauseOnHover: true,               
+               responsive: [
+                   {
+                       breakpoint: 1280,
+                       settings: {
+                           slidesToShow: 3,
+                           slidesToScroll: 3
+                       }
+                   },
+                   {
+                       breakpoint: 768,
+                       settings: {
+                           slidesToShow: 2,
+                           slidesToScroll: 2
+                       }
+                   },
+                   {
+                       breakpoint: 600,
+                       settings: {
+                           slidesToShow: 2,
+                           slidesToScroll: 2
+                       }
+                   }
+               ]
+           });
+       });
+   });
+</script>

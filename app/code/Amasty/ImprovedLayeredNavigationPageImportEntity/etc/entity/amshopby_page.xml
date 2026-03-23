@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Improved Layered Navigation Page Import Entity
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_ImportCore:etc/am_import.xsd">
+    <entity code="amshopby_page">
+        <name>Amasty Improved Layered Navigation Page</name>
+        <group>Amasty Improved Layered Navigation</group>
+        <description>Amasty Improved Layered Navigation Page Import Entity</description>
+        <enabledChecker class="Amasty\ImportCore\Import\Config\IsModuleEnabled">
+            <arguments>
+                <argument name="moduleName" xsi:type="string">Amasty_ShopbyPage</argument>
+            </arguments>
+        </enabledChecker>
+        <fieldsConfig>
+            <fieldsClass class="Amasty\ImportCore\Import\FieldsClass\Describe">
+                <arguments>
+                    <argument name="tableName" xsi:type="string">amasty_amshopby_page</argument>
+                </arguments>
+            </fieldsClass>
+            <fields>
+                <field name="page_id">
+                    <actions>
+                        <trim apply="beforeValidate"/>
+                    </actions>
+                    <validation>
+                        <nonNegative/>
+                        <notEmpty>
+                            <excludeBehaviors>
+                                <addDirect/>
+                            </excludeBehaviors>
+                        </notEmpty>
+                    </validation>
+                </field>
+                <field name="position">
+                    <validation>
+                        <optionValue optionSource="Amasty\ShopbyPage\Model\Config\Source\Position"/>
+                    </validation>
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Amasty\ShopbyPage\Model\Config\Source\Position</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="conditions">
+                    <validation>
+                        <json/>
+                    </validation>
+                </field>
+                <field name="top_block_id">
+                    <validation>
+                        <optionValue optionSource="Magento\Catalog\Model\Category\Attribute\Source\Page"/>
+                    </validation>
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Magento\Catalog\Model\Category\Attribute\Source\Page</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="bottom_block_id">
+                    <validation>
+                        <optionValue optionSource="Magento\Catalog\Model\Category\Attribute\Source\Page"/>
+                    </validation>
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Magento\Catalog\Model\Category\Attribute\Source\Page</class>
+                        </options>
+                    </filter>
+                </field>
+                <field name="tag_robots">
+                    <validation>
+                        <optionValue optionSource="Amasty\ShopbyPage\Model\Config\Source\Robots"/>
+                    </validation>
+                    <filter>
+                        <type>select</type>
+                        <options>
+                            <class>Amasty\ShopbyPage\Model\Config\Source\Robots</class>
+                        </options>
+                    </filter>
+                </field>
+            </fields>
+            <sampleData>
+                <row>
+                    <field name="page_id">1</field>
+                    <field name="position">replace</field>
+                    <field name="url">canonical</field>
+                    <field name="title">title</field>
+                    <field name="description">description</field>
+                    <field name="meta_title">meta title</field>
+                    <field name="meta_keywords">meta keywords</field>
+                    <field name="meta_description">meta description</field>
+                    <field name="conditions">["{\"filter\":\"148\",\"value\":[\"4\",\"5\"]}"]</field>
+                    <field name="categories">1,2,3</field>
+                    <field name="top_block_id">1</field>
+                    <field name="bottom_block_id">1</field>
+                    <field name="image">image.jpg</field>
+                    <field name="tag_robots">INDEX,FOLLOW</field>
+                </row>
+            </sampleData>
+        </fieldsConfig>
+        <behaviors>
+            <addUpdateDirect name="Add/Update">
+                <tableName>amasty_amshopby_page</tableName>
+            </addUpdateDirect>
+            <addDirect name="Only add">
+                <tableName>amasty_amshopby_page</tableName>
+            </addDirect>
+            <updateDirect name="Only update">
+                <tableName>amasty_amshopby_page</tableName>
+            </updateDirect>
+            <deleteDirect name="Delete">
+                <tableName>amasty_amshopby_page</tableName>
+            </deleteDirect>
+        </behaviors>
+    </entity>
+</config>

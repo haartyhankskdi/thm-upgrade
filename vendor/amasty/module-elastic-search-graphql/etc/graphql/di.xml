@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search and Elastic Search GraphQL for Magento 2 (System)
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Layer\Context" type="Magento\CatalogGraphQl\Model\Layer\Context">
+        <arguments>
+            <argument name="collectionProvider" xsi:type="object">elasticsearchLayerSearchItemCollectionProvider</argument>
+            <argument name="collectionFilter" xsi:type="object">Magento\Catalog\Model\Layer\Search\CollectionFilter</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Layer\Search" type="Magento\Catalog\Model\Layer\Search">
+        <arguments>
+            <argument name="context" xsi:type="object">Amasty\ElasticSearchGraphQl\Model\Layer\Context</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Layer\Resolver" type="Magento\Catalog\Model\Layer\Resolver">
+        <arguments>
+            <argument name="layersPool" xsi:type="array">
+                <item name="search" xsi:type="string">Amasty\ElasticSearchGraphQl\Model\Layer\Search</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Amasty\ElasticSearchGraphQl\Model\Resolver\Product">
+        <arguments>
+            <argument name="layerResolver" xsi:type="object">Amasty\ElasticSearchGraphQl\Model\Layer\Resolver</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Xsearch\Block\Search\Product">
+        <arguments>
+            <argument name="layerResolver" xsi:type="object">Amasty\ElasticSearchGraphQl\Model\Layer\Resolver</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ElasticSearchGraphQl\Model\Resolver\Product">
+        <arguments>
+            <argument name="productBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Product\Proxy</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Category" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Category</argument>
+            <argument name="code" xsi:type="string">category</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Blog" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Blog</argument>
+            <argument name="code" xsi:type="string">blog</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Brand" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Brand</argument>
+            <argument name="code" xsi:type="string">brand</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Faq" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Faq</argument>
+            <argument name="code" xsi:type="string">faq</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\StoreLocator" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Locator</argument>
+            <argument name="code" xsi:type="string">locator</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Landing" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Landing</argument>
+            <argument name="code" xsi:type="string">landing_page</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Page" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Page</argument>
+            <argument name="code" xsi:type="string">page</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Popular" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Popular</argument>
+            <argument name="code" xsi:type="string">popular_searches</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\BrowsingHistory" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\BrowsingHistory</argument>
+            <argument name="code" xsi:type="string">browsing_history</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Recent" type="Amasty\ElasticSearchGraphQl\Model\Resolver\UniversalResolver">
+        <arguments>
+            <argument name="searchBlock" xsi:type="object">Amasty\Xsearch\Block\Search\Recent</argument>
+            <argument name="code" xsi:type="string">recent_searches</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="amasty_xsearch_general_popup_width" xsi:type="string">amasty_xsearch/general/popup_width</item>
+                <item name="amasty_xsearch_general_dynamic_search_width" xsi:type="string">amasty_xsearch/general/dynamic_search_width</item>
+                <item name="amasty_xsearch_general_min_chars" xsi:type="string">amasty_xsearch/general/min_chars</item>
+                <item name="amasty_xsearch_general_four_zero_four_redirect" xsi:type="string">amasty_xsearch/general/four_zero_four_redirect</item>
+                <item name="amasty_xsearch_general_enable_tabs_search_result" xsi:type="string">amasty_xsearch/general/enable_tabs_search_result</item>
+                <item name="amasty_xsearch_general_show_related_terms" xsi:type="string">amasty_xsearch/general/show_related_terms</item>
+                <item name="amasty_xsearch_general_show_related_terms_results" xsi:type="string">amasty_xsearch/general/show_related_terms_results</item>
+
+                <item name="amasty_xsearch_product_enabled" xsi:type="string">amasty_xsearch/product/enabled</item>
+                <item name="amasty_xsearch_product_title" xsi:type="string">amasty_xsearch/product/title</item>
+                <item name="amasty_xsearch_product_position" xsi:type="string">amasty_xsearch/product/position</item>
+                <item name="amasty_xsearch_product_limit" xsi:type="string">amasty_xsearch/product/limit</item>
+                <item name="amasty_xsearch_product_name_length" xsi:type="string">amasty_xsearch/product/name_length</item>
+                <item name="amasty_xsearch_product_desc_length" xsi:type="string">amasty_xsearch/product/desc_length</item>
+                <item name="amasty_xsearch_product_reviews" xsi:type="string">amasty_xsearch/product/reviews</item>
+                <item name="amasty_xsearch_product_add_to_cart" xsi:type="string">amasty_xsearch/product/add_to_cart</item>
+                <item name="amasty_xsearch_product_redirect_single_product" xsi:type="string">amasty_xsearch/product/redirect_single_product</item>
+
+                <item name="amasty_xsearch_popular_searches_enabled" xsi:type="string">amasty_xsearch/popular_searches/enabled</item>
+                <item name="amasty_xsearch_popular_searches_first_click" xsi:type="string">amasty_xsearch/popular_searches/first_click</item>
+                <item name="amasty_xsearch_popular_searches_title" xsi:type="string">amasty_xsearch/popular_searches/title</item>
+                <item name="amasty_xsearch_popular_searches_position" xsi:type="string">amasty_xsearch/popular_searches/position</item>
+                <item name="amasty_xsearch_popular_searches_limit" xsi:type="string">amasty_xsearch/popular_searches/limit</item>
+
+                <item name="amasty_xsearch_browsing_history_enabled" xsi:type="string">amasty_xsearch/browsing_history/enabled</item>
+                <item name="amasty_xsearch_browsing_history_first_click" xsi:type="string">amasty_xsearch/browsing_history/first_click</item>
+                <item name="amasty_xsearch_browsing_history_title" xsi:type="string">amasty_xsearch/browsing_history/title</item>
+                <item name="amasty_xsearch_browsing_history_position" xsi:type="string">amasty_xsearch/browsing_history/position</item>
+                <item name="amasty_xsearch_browsing_history_limit" xsi:type="string">amasty_xsearch/browsing_history/limit</item>
+
+                <item name="amasty_xsearch_recent_searches_enabled" xsi:type="string">amasty_xsearch/recent_searches/enabled</item>
+                <item name="amasty_xsearch_recent_searches_first_click" xsi:type="string">amasty_xsearch/recent_searches/first_click</item>
+                <item name="amasty_xsearch_recent_searches_title" xsi:type="string">amasty_xsearch/recent_searches/title</item>
+                <item name="amasty_xsearch_recent_searches_position" xsi:type="string">amasty_xsearch/recent_searches/position</item>
+                <item name="amasty_xsearch_recent_searches_limit" xsi:type="string">amasty_xsearch/recent_searches/limit</item>
+
+                <item name="amasty_xsearch_blog_enabled" xsi:type="string">amasty_xsearch/blog/enabled</item>
+                <item name="amasty_xsearch_blog_title" xsi:type="string">amasty_xsearch/blog/title</item>
+                <item name="amasty_xsearch_blog_position" xsi:type="string">amasty_xsearch/blog/position</item>
+                <item name="amasty_xsearch_blog_limit" xsi:type="string">amasty_xsearch/blog/limit</item>
+                <item name="amasty_xsearch_blog_name_length" xsi:type="string">amasty_xsearch/blog/name_length</item>
+                <item name="amasty_xsearch_blog_desc_length" xsi:type="string">amasty_xsearch/blog/desc_length</item>
+
+                <item name="amasty_xsearch_brand_enabled" xsi:type="string">amasty_xsearch/brand/enabled</item>
+                <item name="amasty_xsearch_brand_title" xsi:type="string">amasty_xsearch/brand/title</item>
+                <item name="amasty_xsearch_brand_position" xsi:type="string">amasty_xsearch/brand/position</item>
+                <item name="amasty_xsearch_brand_limit" xsi:type="string">amasty_xsearch/brand/limit</item>
+                <item name="amasty_xsearch_brand_name_length" xsi:type="string">amasty_xsearch/brand/name_length</item>
+                <item name="amasty_xsearch_brand_desc_length" xsi:type="string">amasty_xsearch/brand/desc_length</item>
+
+                <item name="amasty_xsearch_category_enabled" xsi:type="string">amasty_xsearch/category/enabled</item>
+                <item name="amasty_xsearch_category_title" xsi:type="string">amasty_xsearch/category/title</item>
+                <item name="amasty_xsearch_category_position" xsi:type="string">amasty_xsearch/category/position</item>
+                <item name="amasty_xsearch_category_limit" xsi:type="string">amasty_xsearch/category/limit</item>
+                <item name="amasty_xsearch_category_name_length" xsi:type="string">amasty_xsearch/category/name_length</item>
+                <item name="amasty_xsearch_category_desc_length" xsi:type="string">amasty_xsearch/category/desc_length</item>
+                <item name="amasty_xsearch_category_full_path" xsi:type="string">amasty_xsearch/category/full_path</item>
+
+                <item name="amasty_xsearch_page_enabled" xsi:type="string">amasty_xsearch/page/enabled</item>
+                <item name="amasty_xsearch_page_title" xsi:type="string">amasty_xsearch/page/title</item>
+                <item name="amasty_xsearch_page_position" xsi:type="string">amasty_xsearch/page/position</item>
+                <item name="amasty_xsearch_page_limit" xsi:type="string">amasty_xsearch/page/limit</item>
+                <item name="amasty_xsearch_page_name_length" xsi:type="string">amasty_xsearch/page/name_length</item>
+                <item name="amasty_xsearch_page_desc_length" xsi:type="string">amasty_xsearch/page/desc_length</item>
+
+                <item name="amasty_xsearch_landing_page_enabled" xsi:type="string">amasty_xsearch/landing_page/enabled</item>
+                <item name="amasty_xsearch_landing_page_title" xsi:type="string">amasty_xsearch/landing_page/title</item>
+                <item name="amasty_xsearch_landing_page_position" xsi:type="string">amasty_xsearch/landing_page/position</item>
+                <item name="amasty_xsearch_landing_page_limit" xsi:type="string">amasty_xsearch/landing_page/limit</item>
+                <item name="amasty_xsearch_landing_page_name_length" xsi:type="string">amasty_xsearch/landing_page/name_length</item>
+                <item name="amasty_xsearch_landing_page_desc_length" xsi:type="string">amasty_xsearch/landing_page/desc_length</item>
+
+                <item name="amasty_xsearch_faq_enabled" xsi:type="string">amasty_xsearch/faq/enabled</item>
+                <item name="amasty_xsearch_faq_title" xsi:type="string">amasty_xsearch/faq/title</item>
+                <item name="amasty_xsearch_faq_position" xsi:type="string">amasty_xsearch/faq/position</item>
+                <item name="amasty_xsearch_faq_limit" xsi:type="string">amasty_xsearch/faq/limit</item>
+                <item name="amasty_xsearch_faq_name_length" xsi:type="string">amasty_xsearch/faq/name_length</item>
+                <item name="amasty_xsearch_faq_desc_length" xsi:type="string">amasty_xsearch/faq/desc_length</item>
+
+                <item name="amasty_xsearch_layout_enabled" xsi:type="string">amasty_xsearch/layout/enabled</item>
+                <item name="amasty_xsearch_layout_border" xsi:type="string">amasty_xsearch/layout/border</item>
+                <item name="amasty_xsearch_layout_hover" xsi:type="string">amasty_xsearch/layout/hover</item>
+                <item name="amasty_xsearch_layout_highlight" xsi:type="string">amasty_xsearch/layout/highlight</item>
+                <item name="amasty_xsearch_layout_background" xsi:type="string">amasty_xsearch/layout/background</item>
+                <item name="amasty_xsearch_layout_text" xsi:type="string">amasty_xsearch/layout/text</item>
+                <item name="amasty_xsearch_layout_hover_text" xsi:type="string">amasty_xsearch/layout/hover_text</item>
+
+                <item name="amasty_xsearch_recently_viewed_enabled" xsi:type="string">amasty_xsearch/recently_viewed/enabled</item>
+                <item name="amasty_xsearch_recently_viewed_title" xsi:type="string">amasty_xsearch/recently_viewed/title</item>
+                <item name="amasty_xsearch_recently_viewed_enabled_limit" xsi:type="string">amasty_xsearch/recently_viewed/limit</item>
+
+                <item name="amasty_xsearch_bestsellers_enabled" xsi:type="string">amasty_xsearch/bestsellers/enabled</item>
+                <item name="amasty_xsearch_bestsellers_title" xsi:type="string">amasty_xsearch/bestsellers/title</item>
+                <item name="amasty_xsearch_bestsellers_position" xsi:type="string">amasty_xsearch/bestsellers/position</item>
+                <item name="amasty_xsearch_bestsellers_limit" xsi:type="string">amasty_xsearch/bestsellers/limit</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Products\Query\Search">
+        <plugin name="ElasticSearchGraphQl::requestTypeDetection"
+                type="Amasty\ElasticSearchGraphQl\Plugin\CatalogGraphQl\Model\Resolver\Products\Query\SearchPlugin"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="ElasticSearchGraphQl::addStockSorting"
+                type="Amasty\ElasticSearchGraphQl\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin"/>
+    </type>
+    <type name="Amasty\ElasticSearchGraphQl\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin" shared="true"/>
+
+    <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\SortingProvider">
+        <plugin name="Amasty_Xsearch::show-out-of-stock-last" type="Amasty\ElasticSearchGraphQl\Plugin\ElasticSearch\Model\Search\GetRequestQuery\SortingProviderPlugin" />
+    </type>
+
+    <type name="Magento\Elasticsearch\SearchAdapter\Query\Builder\Sort">
+        <plugin name="Amasty_Xsearch::show-out-of-stock-last" type="Amasty\ElasticSearchGraphQl\Plugin\ElasticSearch\Model\Search\GetRequestQuery\SortingProviderPlugin" />
+    </type>
+
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Product\MediaGallery\Url">
+        <plugin name="Amasty_ElasticSearchGraphQl::get-relative-path" type="Amasty\ElasticSearchGraphQl\Plugin\CatalogGraphQl\Model\Resolver\Product\MediaGallery\UrlPlugin" />
+    </type>
+
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\Bestsellers" type="Amasty\ElasticSearchGraphQl\Model\Resolver\Slider">
+        <arguments>
+            <argument name="productsProvider" xsi:type="object">Amasty\Xsearch\Model\Slider\Bestsellers\ProductsProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\ElasticSearchGraphQl\Model\Resolver\RecentlyViewed" type="Amasty\ElasticSearchGraphQl\Model\Resolver\Slider">
+        <arguments>
+            <argument name="productsProvider" xsi:type="object">Amasty\Xsearch\Model\Slider\RecentlyViewed\ProductsProvider</argument>
+        </arguments>
+    </virtualType>
+</config>

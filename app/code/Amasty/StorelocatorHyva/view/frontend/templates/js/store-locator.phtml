@@ -1,0 +1,616 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Magento\Framework\Escaper;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/**
+ * @var \Amasty\Storelocator\Block\Location $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\Model\ViewModelRegistry $viewModels
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ * @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp
+ */
+
+$productId = (int)$block->getRequest()->getParam('product');
+$attributes = $block->getAttributes();
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$mapId = $block->getData('googleMapId');
+$clusterUrl = $block->getViewFileUrl('Amasty_Storelocator::js/cluster.js');
+
+?>
+
+<script>
+    function mapLoaded() {
+        const mapLoadedEvent = new CustomEvent("map-loaded");
+        window.dispatchEvent(mapLoadedEvent);
+    }
+
+    function loadGoogleMaps() {
+        const apiKey = "<?= $escaper->escapeHtml($block->configProvider->getApiKey()); ?>";
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.onload = function() {
+            mapLoaded();
+        };
+        document.head.appendChild(script);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadGoogleMaps();
+    });
+
+    let map = {};
+    let marker = [];
+    let markerCluster = {};
+
+    function storeLocator() {
+        return {
+            isPopup: <?= /* @noEscape */ var_export((bool)$block->getIsPopup(), true) ?>,
+            amMediaUrl :"<?= $escaper->escapeJs($block->getAmStoreMediaUrl()); ?>",
+            mapZoom: <?= $escaper->escapeJs($block->getMapZoom()); ?>,
+            productId: "<?= $escaper->escapeJs((int)$block->getProductId()) ?>",
+            categoryId: "<?= $escaper->escapeJs((int)$block->getCategoryId()) ?>",
+            automaticLocate: "<?= $escaper->escapeJs((bool)$block->getAutomaticLocate()) ?>",
+            enableClustering: "<?= $escaper->escapeJs((bool)$block->getClustering()) ?>",
+            enableSuggestionClickSearch: "<?= $escaper->escapeJs((bool)$block->getSuggestionClickSearch()) ?>",
+            enableCountingDistance: "<?= $escaper->escapeJs((bool)$block->getCountingDistance()) ?>",
+            distanceConfig: "<?= $escaper->escapeJs($block->getDistanceConfig()) ?>",
+            useGeoConfig: "<?= $escaper->escapeJs((bool)$block->getGeoUse()) ?>",
+            allowedCountries: <?= /* @noEscape */ $block->getAllowedCountries() ?>,
+            ajaxCallUrl: "<?= $escaper->escapeJs(
+                $block->getUrlAjax() . $block->getQueryString()
+            ); ?>",
+            useBrowserLocation: "<?= $escaper->escapeJs((bool)$block->getUseBrowserLocation()) ?>",
+            jsonLocations: <?= /* @noEscape */ $block->getJsonLocations() ?>,
+            imageLocations: "<?= $escaper->escapeJs($block->getViewFileUrl('Amasty_Storelocator::images/')); ?>",
+            mapId : "<?= $escaper->escapeJs($mapId); ?>",
+            mapContainerId: "<?= $escaper->escapeJs($block->getMapContainerId()); ?>",
+            mapContainer: document.getElementById(this.mapContainerId),
+            showSearch: <?= (int)$block->getShowSearch(); ?>,
+            <?php if ($block->getRadiusType() == 'range'):?>
+                isRadiusSlider: <?= $escaper->escapeJs($block->getRadiusType()) == 'range'?>,
+                maxRadiusValue: <?= (int)$block->getMaxRadiusValue(); ?>,
+                minRadiusValue: <?= (int)$block->getMinRadiusValue(); ?>,
+            <?php endif;?>
+            map: {},
+            infowindow: [],
+            geocoder: {},
+            latitude: <?= $escaper->escapeJs($block->getLat()) ?>,
+            longitude: <?= $escaper->escapeJs($block->getLng()) ?>,
+            radius: 0,
+            searchString: '',
+            idActiveStore: 0,
+            needGoTo: false,
+            bounds: {},
+            showResetButton: false,
+            isFiltersOpen: <?= $escaper->escapeJs($block->getIsFilterOpen()) ?>,
+            scheduleOpenArray: [],
+            init() {
+                this.$el.dataset.googleMapId && this.initStoreLocator(this.$el.dataset.googleMapId);
+            },
+            initStoreLocator(mapId) {
+                this.mapId = this.mapId ? this.mapId : mapId;
+                this.initializeMap();
+                this.prepareMap();
+                this.isPopup && this.makeAjaxCall(1);
+            },
+            notShowResetButton() {
+                return !this.showResetButton;
+            },
+            changeFilterOpen() {
+                this.isFiltersOpen = !this.isFiltersOpen;
+            },
+            getAriaLabelForFilterButton() {
+                return this.isFiltersOpen
+                    ? this.$el.dataset.closeFilter
+                    : this.$el.dataset.openFilter;
+            },
+            getFilterButtonClass() {
+                return { 'rotate-180': this.isFiltersOpen };
+            },
+            getLeftLocationClass() {
+                return { 'active bg-primary text-white': this.idActiveStore === Number(this.$el.dataset.currentStoreId) };
+            },
+            getScheduleClass() {
+                return { 'bg-primary-lighter text-white': this.idActiveStore === Number(this.$el.dataset.currentStoreId) };
+            },
+            getWeekClass() {
+                return {
+                    'hidden': !this.scheduleOpenArray.includes(this.$el.dataset.currentStoreId),
+                    'bg-primary text-white': this.idActiveStore === Number(this.$el.dataset.currentStoreId)
+                };
+            },
+            includesInScheduleOpenArray() {
+                return this.scheduleOpenArray.includes(this.$el.dataset.currentStoreId);
+            },
+            getScheduleRotateClass() {
+                return {
+                    'rotate-180': this.includesInScheduleOpenArray()
+                }
+            },
+            getPickupHereButtonClass() {
+                return this.$el.parentElement?.parentElement?.getAttribute('name') === 'leftLocation'
+                    && this.idActiveStore === Number(this.$el.dataset.idForLocation)
+                    ? 'btn-secondary' : 'btn-primary' ;
+            },
+            clickButtonPickUpHere() {
+                this.$dispatch('ampickup-click-button-pick-up-here', { storeId: Number(this.$el.dataset.idForLocation) });
+                this.$dispatch('close-ampickup-location-map-modal');
+            },
+            navigateMe() {
+                this.needGoTo = true;
+
+                if (navigator.geolocation && this.useBrowserLocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        if (!this.$refs.searchInput.value) {
+                            this.latitude = position.coords.latitude;
+                            this.longitude = position.coords.longitude;
+                        }
+
+                        this.makeAjaxCall(1);
+
+                    }.bind(this), this.navigateFail.bind(this));
+                } else if (this.useGeoConfig) {
+                    this.makeAjaxCall(1);
+                } else {
+                    dispatchMessages([{
+                        type: "error",
+                        text: "<?= $escaper->escapeJs(__('Sorry we\'re unable to display the nearby' .
+                        ' stores because the "Use browser location" or "Use Geo IP" options are disabled' .
+                        ' in the module settings. Please, contact the administrator.')) ?>"
+                    }], 5000);
+                }
+            },
+            navigateFail(error) {
+                if (this.useGeoConfig == 1) {
+                    this.makeAjaxCall(1);
+                } else if (error.code == 1) {
+                    dispatchMessages([{
+                        type: "error",
+                        text: error.message
+                    }], 5000);
+                }
+            },
+            collectParams(sortByDistance, isReset) {
+                return {
+                    'lat': this.latitude,
+                    'lng': this.longitude,
+                    'radius': this.getRadius(isReset),
+                    'product': this.productId,
+                    'category': this.categoryId,
+                    'sortByDistance': sortByDistance,
+                    ...this.collectAttributes()
+                };
+            },
+            collectAttributes() {
+                const formData = new FormData(this.$refs.filtersForm);
+                const attributes = {};
+
+                [...formData].map(( item,i ) => {
+                    attributes[`attributes[${i}][name]`] = item[0];
+                    attributes[`attributes[${i}][value]`] = item[1];
+                });
+
+                return attributes;
+            },
+            getRadius(isReset) {
+                let radiusParameter = null;
+
+                if (isReset) {
+                    return 0;
+                }
+
+                radiusParameter = this.radius;
+
+                if (this.distanceConfig == 'km' || this.distanceConfig == 'choose') {
+                    radiusParameter /= 1.609344;
+                }
+
+                return radiusParameter;
+            },
+            makeAjaxCall(sortByDistance, isReset) {
+                const params = this.collectParams(sortByDistance, isReset);
+
+                fetch(this.ajaxCallUrl, {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    method: 'POST',
+                    body: new URLSearchParams(params)
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        dispatchMessages([{
+                            type: "error",
+                            text: "<?= $escaper->escapeJs(__("Issue with fetching data. Please try letter")) ?>"
+                        }], 5000);
+                    }
+                }).then(data => {
+                    if (data) {
+                        this.jsonLocations = data;
+                        this.scheduleOpenArray = [];
+                        this.$dispatch('amlocator-load-location');
+                        this.prepareMap();
+                    }
+                });
+            },
+            calculateDistance() {
+                const measurement = this.distanceConfig;
+
+                if (typeof MarkerClusterer === 'function') {
+                    for (var location in this.jsonLocations.items) {
+                        let distance = MarkerClusterer.prototype.distanceBetweenPoints_(
+                            new google.maps.LatLng(
+                                this.latitude,
+                                this.longitude
+                            ),
+                            new google.maps.LatLng(
+                                this.jsonLocations.items[location].lat,
+                                this.jsonLocations.items[location].lng
+                            )
+                        );
+
+                        let measurementLabel = "<?= $escaper->escapeJs(__("km")) ?>";
+
+                        if (measurement == 'mi') {
+                            distance /= 1.609344;
+                            measurementLabel = "<?= $escaper->escapeJs(__("mi")) ?>";
+                        };
+
+                        const locationId = this.jsonLocations.items[location].id;
+                        const distanceText = parseInt(distance) + ' ' + measurementLabel;
+                        const distanceHtmlElement = document.getElementById('amasty_distance_' + locationId);
+
+                        if (distanceHtmlElement) {
+                            distanceHtmlElement.classList.remove('hidden');
+                            distanceHtmlElement.querySelector('span.amasty_distance_number').innerHTML = distanceText;
+                        }
+                    }
+                }
+            },
+            prepareMap() {
+                this.deleteMarkers(this.mapId);
+                this.processLocation();
+
+                if (this.enableClustering) {
+                    if (typeof MarkerClusterer !== 'function') {
+                        const script = document.createElement('script');
+                        script.type = 'text/javascript';
+                        script.src = '<?= $escaper->escapeUrl($block->getViewFileUrl("Amasty_Storelocator::js/cluster.js"))?>';
+                        script.nonce = crypto.randomUUID();
+                        script.onload = () => {
+                            markerCluster = new MarkerClusterer(
+                                map[this.mapId],
+                                marker[this.mapId],
+                                { imagePath: this.imageLocations + '/m' }
+                            );
+                            if (
+                                navigator.geolocation
+                                && this.enableCountingDistance
+                                && this.latitude
+                                && this.longitude
+                            ) {
+                                this.calculateDistance();
+                            }
+                        };
+                        document.head.appendChild(script);
+                    }
+                    else {
+                        markerCluster = new MarkerClusterer(
+                            map[this.mapId],
+                            marker[this.mapId],
+                            { imagePath: this.imageLocations + '/m' }
+                        );
+                    }
+                }
+
+                this.geocoder = new google.maps.Geocoder();
+
+                if (
+                    navigator.geolocation
+                    && this.enableCountingDistance
+                ) {
+                    if (!this.latitude && !this.longitude) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            this.latitude = position.coords.latitude;
+                            this.longitude = position.coords.longitude;
+                            this.calculateDistance();
+                        }.bind(this))
+                    } else {
+                        this.calculateDistance();
+                    }
+                }
+            },
+            initializeMap() {
+                const myOptions = {
+                    zoom: 9,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                marker[this.mapId] = [];
+                map[this.mapId] = new google.maps.Map(document.getElementById(this.mapId), myOptions);
+
+                if (this.showSearch) {
+                    const autocompleteOptions = {
+                        componentRestrictions: { country: this.allowedCountries },
+                        fields: [ 'geometry.location' ]
+                    };
+                    const autocomplete = new google.maps.places.Autocomplete(this.$refs.searchInput, autocompleteOptions);
+
+                    window.addEventListener('amlocator:search-location', function () {
+                        autocomplete.getPlace()?.geometry
+                            ? this.searchLocations()
+                            : dispatchMessages([{
+                                  type: "error",
+                                 // text: "<?= $escaper->escapeJs(__("You need to choose address from the dropdown with suggestions.")) ?>"
+                              }], 5000);
+                    }.bind(this));
+
+                    google.maps.event.addListener(autocomplete, 'place_changed', function (e) {
+                        const place = autocomplete.getPlace();
+
+                        if (place?.geometry) {
+                            this.latitude = place.geometry.location.lat();
+                            this.longitude = place.geometry.location.lng();
+
+                            if (this.enableSuggestionClickSearch) {
+                                this.searchLocations();
+                            }
+
+                            if (this.enableCountingDistance) {
+                                this.calculateDistance();
+                            }
+                        }
+                    }.bind(this));
+                }
+
+                if (this.automaticLocate) {
+                    this.navigateMe();
+                }
+
+                if (navigator.geolocation && this.enableCountingDistance) {
+                    if (!this.latitude && !this.longitude) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            this.latitude = position.coords.latitude;
+                            this.longitude = position.coords.longitude;
+                            this.calculateDistance();
+                        }.bind(this))
+                    } else {
+                        this.calculateDistance();
+                    }
+                }
+            },
+            resetMap() {
+                this.latitude = null;
+                this.longitude = null;
+                this.idActiveStore = 0;
+                this.searchString = '';
+                this.needGoTo = false;
+                this.showResetButton = false;
+                this.makeAjaxCall();
+            },
+            searchLocations() {
+                if (this.radius !== this.$refs.radiusInput.value) {
+                    this.radius = this.$refs.radiusInput.value;
+                }
+
+                this.navigateMe(1);
+                this.showResetButton = true;
+            },
+            processLocation() {
+                let locations = this.jsonLocations;
+
+                this.bounds = new google.maps.LatLngBounds();
+
+                locations.items.map(location => {
+
+                    let curtemplate = location.popup_html;
+
+                    this.createMarker(
+                        location.lat,
+                        location.lng,
+                        curtemplate,
+                        location.id,
+                        location.marker_url
+                    );
+                })
+
+                for (var locationId in marker[this.mapId]) {
+                    if (marker[this.mapId].hasOwnProperty(locationId)) {
+                        this.bounds.extend(marker[this.mapId][locationId].getPosition());
+                    }
+                }
+                map[this.mapId].fitBounds(this.bounds);
+
+                if (!this.productId) {
+                    if (locations.totalRecords === 1 || this.needGoTo) {
+                        google.maps.event.addListenerOnce(map[this.mapId], 'bounds_changed', function () {
+                            map[this.mapId].setZoom(this.mapZoom);
+                        }.bind(this));
+                    }
+                }
+
+                if (locations.totalRecords === 0) {
+                    google.maps.event.addListenerOnce(map[this.mapId], 'bounds_changed', function () {
+                        map[this.mapId].setCenter(
+                            new google.maps.LatLng(
+                                0,
+                                0
+                            )
+                        );
+                        map[this.mapId].setZoom(2);
+                        this.isPopup
+                            ? alert("<?= $escaper->escapeJs(__("Sorry, no locations were found.")) ?>")
+                            : dispatchMessages([{
+                                type: "warning",
+                                text: "<?= $escaper->escapeJs(__("Sorry, no locations were found.")) ?>"
+                            }], 5000);
+                    }.bind(this));
+                }
+
+                if (this.$refs.storeList) {
+                    this.$refs.storeList.innerHTML = locations.block;
+
+                    if (locations.totalRecords > 0 && this.needGoTo) {
+                        this.gotoPoint(locations.items[0].id);
+                    }
+                } else if (this.productId && this.$refs.searchInput.value) {
+                    if (locations.totalRecords > 0 && this.needGoTo) {
+                        this.gotoPoint(locations.items[0].id);
+                    }
+                }
+            },
+            gotoPoint(locationId) {
+                const mapId = this.mapId;
+
+                this.closeAllInfoWindows(mapId);
+
+                this.idActiveStore = locationId;
+
+                map[mapId].setCenter(
+                    new google.maps.LatLng(
+                        marker[mapId][locationId].position.lat(),
+                        marker[mapId][locationId].position.lng()
+                    )
+                );
+
+                map[mapId].setZoom(this.mapZoom);
+                marker[mapId][locationId].infowindow.open(
+                    this.map[mapId],
+                    marker[mapId][locationId]
+                );
+            },
+            createMarker(lat, lon, html, locationId, markerValue) {
+                let newmarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(lat, lon),
+                    map: map[this.mapId],
+                    icon: markerValue || ''
+                });
+
+                newmarker.infowindow = new google.maps.InfoWindow({
+                    content: html
+                });
+                newmarker.locationId = locationId;
+                google.maps.event.addListener(newmarker, 'click', function () {
+                    this.gotoPoint(locationId);
+                    this.idActiveStore = locationId;
+                }.bind(this));
+
+                // using locationId instead 0, 1, 2, i counter
+                marker[this.mapId][locationId] = newmarker;
+
+            },
+            closeAllInfoWindows(mapId) {
+                if (typeof marker[mapId] !== 'undefined') {
+                    for (let markerValue in marker[mapId]) {
+                        if (marker[mapId].hasOwnProperty(markerValue)) {
+                            marker[mapId][markerValue].infowindow.close();
+                        }
+                    }
+                }
+            },
+            deleteMarkers(mapId) {
+                if (Object.keys(markerCluster).length) {
+                    markerCluster.clearMarkers();
+                }
+
+                for (let markerValue in marker[mapId]) {
+                    if (marker[mapId].hasOwnProperty(markerValue)) {
+                        marker[mapId][markerValue].setMap(null);
+                    }
+                }
+                marker[mapId] = [];
+            },
+            chooseStore(locationId) {
+                locationId = (typeof locationId === "string" || typeof locationId === "number")
+                    ? locationId : Number(this.$el.dataset.currentStoreId);
+                this.idActiveStore = locationId;
+                this.closeAllInfoWindows()
+                this.gotoPoint(locationId);
+            },
+            resetFilters() {
+                this.$refs.filtersForm.reset();
+                this.makeAjaxCall();
+            },
+            fetchSchedule (storeId, fetchUrl) {
+                storeId = (typeof storeId === "string" || typeof storeId === "number")
+                    ? storeId : this.$el.dataset.currentStoreId;
+                fetchUrl = (typeof fetchUrl === "string")
+                    ? fetchUrl : this.$el.dataset.locationScheduleUrl;
+
+                fetch(fetchUrl, {
+                    method: 'GET',
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text()
+                    } else {
+                        dispatchMessages([{
+                            type: "error",
+                            text: "<?= $escaper->escapeJs(__("Issue with fetching data. Please try letter")) ?>"
+                        }], 5000);
+                    }
+                }).then(text => {
+                    const contentHtmlElement = document.querySelector('.amlocator-week-container-' + storeId);
+
+                    contentHtmlElement.innerHTML = text;
+                });
+            },
+            toggleSchedule (storeId) {
+                storeId = (typeof storeId === "string" || typeof storeId === "number")
+                    ? storeId : this.$el.dataset.currentStoreId;
+
+                let openStores = this.scheduleOpenArray;
+
+                if (!openStores.includes(storeId)) {
+                    openStores.push(storeId)
+                } else {
+                    openStores = openStores.filter(store => store !== storeId)
+                }
+                this.scheduleOpenArray = openStores;
+            },
+            loadNewPage () {
+                const url = this.$el.dataset.pageUrl;
+                const params = this.collectParams(true, false);
+
+                fetch(url, {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    method: 'POST',
+                    body: new URLSearchParams(params)
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text()
+                    } else {
+                        dispatchMessages([{
+                            type: "error",
+                            text: "<?= $escaper->escapeJs(__("Issue with fetching data. Please try letter")) ?>"
+                        }], 5000);
+                    }
+                }).then(text => {
+                    const responseObject = JSON.parse(text);
+                    this.jsonLocations = responseObject;
+                    this.scheduleOpenArray = [];
+                    this.$refs.storeList.innerHTML = responseObject.block;
+
+                    this.prepareMap();
+                });
+            }
+        }
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data('storeLocator', storeLocator),
+        { once: true }
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

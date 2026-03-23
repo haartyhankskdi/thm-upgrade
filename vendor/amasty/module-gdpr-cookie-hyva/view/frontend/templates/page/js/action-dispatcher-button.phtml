@@ -1,0 +1,36 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    'use strict';
+
+    function initAmCookieActionDispatcherBtn() {
+        return {
+            actiondispatchHandler: function (event) {
+                const { dispatchAction, dispatchPayload } = event.currentTarget.dataset;
+                this.$dispatch(dispatchAction, this.parsePayload(dispatchPayload));
+            },
+            parsePayload: function (payload) {
+                try {
+                    return JSON.parse(payload);
+                } catch (e) {
+                    return null;
+                }
+            }
+        };
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data('initAmCookieActionDispatcherBtn', initAmCookieActionDispatcherBtn),
+        { once: true }
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

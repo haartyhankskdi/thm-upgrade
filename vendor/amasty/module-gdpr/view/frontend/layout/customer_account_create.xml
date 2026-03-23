@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amgdpr_popup" />
+    <body>
+        <referenceContainer name="form.additional.info">
+            <block class="Amasty\Gdpr\Block\Checkbox" name="amasty_gdpr_create_account"/>
+        </referenceContainer>
+    </body>
+</page>

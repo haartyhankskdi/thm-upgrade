@@ -1,0 +1,6 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+?>
+
+The Brippo account <?=$block->escapeHtml($block->getData('account_id'));?> has <a href="https://dashboard.brippo.com/accounts/dashboard?filter=uncaptured#payments" target="_blank"><?=$block->escapeHtml($block->getData('total_uncaptured'));?> transactions</a> pending to be captured.

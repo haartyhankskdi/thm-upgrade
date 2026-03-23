@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Mageplaza_RewardPoints::css/hyva-cart-style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <block class="Mageplaza\RewardPoints\Block\ShowMessage" name="reward.show_message_to_guests" ifconfig="rewardpoints/earning/notice_reward_to_guest" />
+        <referenceContainer name="checkout.quote-summary.section">
+            <block name="mp.checkout.reward.spend-points"
+                   template="Mageplaza_RewardPoints::hyva/checkout/spend-points.phtml" after="checkout.price-summary.section" ifconfig="rewardpoints/general/enabled">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        \Mageplaza\RewardPoints\Magewire\Checkout\SpendPoints
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="price-summary.total-segments">
+            <block name="price-summary.total-segment.reward-discount"
+                   as="mp_reward_discount"
+                   template="Mageplaza_RewardPoints::hyva/checkout/price-summary/total-segments/reward-discount.phtml" ifconfig="rewardpoints/general/enabled"/>
+            <block name="price-summary.total-segment.reward-spent"
+                   as="mp_reward_spent"
+                   template="Mageplaza_RewardPoints::hyva/checkout/price-summary/total-segments/reward-spent.phtml" ifconfig="rewardpoints/general/enabled"/>
+            <block class="Mageplaza\RewardPoints\Block\Hyva\Checkout\RewardEarn" name="price-summary.total-segment.reward-earn"
+                   as="mp_reward_earn"
+                   template="Mageplaza_RewardPoints::hyva/checkout/price-summary/total-segments/reward-earn.phtml" ifconfig="rewardpoints/general/enabled"/>
+        </referenceBlock>
+
+    </body>
+</page>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Pricing\Render\Amount">
+        <plugin name="mp_reward_sell_product" type="Mageplaza\RewardPointsUltimate\Plugin\Product\Points"/>
+    </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="mp_reward_minicart_points" type="Mageplaza\RewardPointsUltimate\Plugin\Minicart\Item\Points"/>
+    </type>
+    <type name="Magento\Checkout\Block\Cart\Item\Renderer">
+        <plugin name="mp_reward_cart_points" type="Mageplaza\RewardPointsUltimate\Plugin\Checkout\Cart\Item\Points"/>
+    </type>
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="mp_rw_update_item" type="Mageplaza\RewardPointsUltimate\Plugin\Checkout\Cart\UpdateItem"/>
+    </type>
+    <type name="Magento\SendFriend\Model\SendFriend">
+        <plugin name="mp_rw_send_email_to_friend" type="Mageplaza\RewardPointsUltimate\Plugin\Customer\SendEmailToFriend"/>
+    </type>
+    <type name="Magento\Framework\Message\Manager">
+        <plugin name="mp_rw_referral" type="Mageplaza\RewardPointsUltimate\Plugin\Customer\MessageManager"/>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item">
+        <plugin name="mp_rw_add_item_sell_by_points" type="Mageplaza\RewardPointsUltimate\Plugin\Model\Quote\RewardItem"/>
+    </type>
+    <type name="Magento\Catalog\Block\Product\AbstractProduct">
+        <plugin name="mp_rw_add_button_sell_by_points_to_category_page" type="Mageplaza\RewardPointsUltimate\Plugin\Listing\Button"/>
+    </type>
+
+    <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
+        <plugin name="mp_rw_sell_by_points_wrapper" type="Mageplaza\RewardPointsUltimate\Plugin\Product\View"/>
+    </type>
+</config>

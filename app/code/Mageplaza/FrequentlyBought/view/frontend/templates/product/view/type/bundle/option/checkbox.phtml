@@ -1,0 +1,63 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php /* @var $block \Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Checkbox */ ?>
+<?php $_option = $block->getOption() ?>
+<?php $productId = $block->getProduct()->getId();?>
+<?php $_selections = $_option->getSelections() ?>
+<div class="mg-fbt-field-option field option <?php /* @noEscape */ echo $_option->getRequired() ? ' required': ''; ?>" id="mp-fbt-bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @noEscape */ echo $_option->getId();?>" data-price-amount="0">
+    <label class="label">
+        <span><?php echo $block->escapeHtml($_option->getTitle()) ?></span>
+    </label>
+    <div class="control">
+        <div class="nested options-list mg-fbt-options-list">
+            <?php if ($block->showSingle()): ?>
+                <?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selections[0]) ?>
+                <input type="hidden"
+                       class="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>  product bundle option"
+                       data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                       name="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                       value="<?php /* @escapeNotVerified */ echo $_selections[0]->getSelectionId() ?>"/>
+            <?php else:?>
+                <?php foreach ($_selections as $_selection): ?>
+                    <div class="field choice">
+                        <input class="mp-fbt-multi-select bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?> checkbox product bundle option change-container-classname"
+                               data-price-amount="0"
+                               data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                               id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"
+                               type="checkbox"
+                               <?php /* @noEscape */ if ($_option->getRequired()) { echo 'data-validate="{\'validate-one-required-by-name\':\'input[name^=&quot;bundle_option[' . $productId . '][' . $_option->getId() . ']&quot;]:checked\'}"'; }?>
+                               name="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                               data-selector="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                               <?php if ($block->isSelected($_selection)) { echo ' checked="checked"'; } ?>
+                               <?php if (!$_selection->isSaleable()) { echo ' disabled="disabled"'; } ?>
+                               value="<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"/>
+                        <label class="label"
+                               for="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>">
+                            <span><?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selection) ?></span>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+                <div id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-container"></div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

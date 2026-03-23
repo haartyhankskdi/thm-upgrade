@@ -1,0 +1,80 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Amasty\Shopby\Block\Navigation\Widget\HideMoreOptions;
+use Amasty\Shopby\Model\Source\DisplayMode;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var Escaper $escaper */
+/** @var HideMoreOptions $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+$uniqueId = "_" . uniqid();
+$dataAmJsAttribute = 'data-am-js=%s';
+$dataTextMore = __('Show (%1) more', '<span class="am-counter" data-am-counter="counter"></span>');
+
+if ($block->getIsState()) {
+    $buttonSelector = sprintf($dataAmJsAttribute, 'show-more_button_state');
+    $itemSelector = '[' . sprintf($dataAmJsAttribute, 'shopby-container') . ']';
+    $numberUnfoldedOptions = $block->getUnfoldedOptions();
+    $isModeDropdown = false;
+    $filterItem = '.amshopby-remove-item';
+    $filterCode = '';
+} else {
+    $filterSetting = $block->getFilterSetting();
+    $isModeDropdown = $filterSetting->getDisplayMode() == DisplayMode::MODE_DROPDOWN;
+    $filterCode = $escaper->escapeHtml($filterSetting->getAttributeCode());
+    $buttonSelector = sprintf($dataAmJsAttribute, 'am-filter-items-' . $filterCode . '-show-more');
+    $itemSelector = '.am-filter-items-' . $filterCode;
+    $filterItem = '.item';
+    $numberUnfoldedOptions = $filterSetting->getNumberUnfoldedOptions();
+}
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<?php if (!$isModeDropdown): ?>
+    <div class="am-show-more px-6" x-data="amShopbyFilterHideMoreOptions<?= $escaper->escapeHtml($uniqueId) ?>()"
+         x-init="initHideMore($el)"
+         x-spread="eventListeners"
+         x-bind="eventListeners"
+         data-unfolded-options="<?= $escaper->escapeHtmlAttr($numberUnfoldedOptions) ?>">
+        <template x-if="isActive">
+            <button class="flex items-center mt-4"
+                    @click="triggerOptions()"
+                    :title="title"
+                    :aria-expanded="showMore ? 'true' : 'false' "
+            >
+                <span class="more-text" x-html="title"></span>
+                <span class="py-1 px-1 rounded">
+                    <?= $heroicons->chevronDownHtml(
+                        'transition-transform transform duration-300 ease-in-out',
+                        20,
+                        20,
+                        [":class" => "{ 'rotate-180': !showMore }"]
+                    ); ?>
+                </span>
+            </button>
+        </template>
+    </div>
+    <script>
+      function amShopbyFilterHideMoreOptions<?= $escaper->escapeHtml($uniqueId)?>() {
+          return deepMerge({}, amShopbyFilterHideMoreOptions(), {
+              numberUnfoldedOptions: <?= $escaper->escapeHtml($numberUnfoldedOptions) ?>,
+              selectors: {
+                  filterItem: '<?= $escaper->escapeHtml($filterItem) ?>',
+              }
+          });
+      }
+    </script>
+<?php endif; ?>

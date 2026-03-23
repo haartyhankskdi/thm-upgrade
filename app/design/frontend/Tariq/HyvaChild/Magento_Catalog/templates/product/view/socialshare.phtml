@@ -1,0 +1,86 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $product */
+$product = $block->getLayout()->getBlock('product.info')->getProduct();
+?>
+<div 
+    x-data="{ open: false }" 
+    class="relative social-media-icons float-right lg:absolute lg:right-0 lg:top-[-83px]"
+>
+    <!-- Share Icon-->
+   <button 
+        @click="open = !open"
+        class="flex items-center gap-2 px-4 py-1 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition md:w-[90px] flex bg-[#3B7E48] text-white mt-2"
+        aria-label="Toggle share options"
+    >
+        <span class="text-sm font-normal flex justify-between w-full items-center">Share  <img width="15" height="11" alt="share-icon"  src="<?= $block->getViewFileUrl('images/social-share.png'); ?>" alt="social-share-icon" class="h-[11px}" /> </span>
+    </button>
+
+    <!-- Share List -->
+    <ul 
+        x-show="open" 
+        @click.outside="open = false" 
+        x-transition 
+        class="social-share-list absolute mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-2 items-center"
+    >
+        <!-- WhatsApp share -->
+        <li>
+            <a 
+                href="https://wa.me/?text=<?= urlencode($product->getName() . ' - ' . $product->getProductUrl()); ?>" 
+                target="_blank" 
+                title="Share on WhatsApp"
+            >
+                <img 
+                    src="<?= $block->getViewFileUrl('images/whatsapp.webp'); ?>" 
+                    alt="WhatsApp" 
+                    class=""
+                    width="25"
+                    height="25"
+                />
+            </a>
+        </li>
+
+        <!-- Instagram -->
+       <!--  <li>
+            <a 
+                href="https://www.instagram.com/yourusername"
+                @click.prevent="navigator.clipboard.writeText('<?= $product->getProductUrl(); ?>'); alert('Product link copied! Open Instagram to share.');"
+                title="Share on Instagram"
+            >
+                <img 
+                    src="<?//= $block->getViewFileUrl('images/instagram.png'); ?>" 
+                    alt="Instagram" 
+                    class="w-5 h-5"
+                />
+            </a>
+        </li> -->
+
+        <!-- Facebook share -->
+        <li>
+            <a 
+                href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($product->getProductUrl()); ?>" 
+                @click.prevent="window.open($el.href, '', 'width=640,height=480');"
+                title="Share on Facebook"
+            >
+                <img 
+                    src="<?= $block->getViewFileUrl('images/fb.webp'); ?>" 
+                    alt="Facebook" 
+                    class=""
+                    width="25"
+                    height="25"
+                />
+            </a>
+        </li>
+       
+
+        <!-- Twitter share -->
+ 
+        <li>
+            <a class="tw-share-icon" 
+                   href="https://twitter.com/intent/tweet?text=<?php echo urlencode($product->getName()); ?>&url=<?php echo urlencode($product->getProductUrl()); ?>" 
+                   onclick="window.open(this.href, '', 'width=640,height=480'); return false;" 
+                   title="Share on Twitter">
+                    <img src="<?php echo $block->getViewFileUrl('images/twn3.webp'); ?>" alt="Twitter" width="15" height="15" >
+                </a>
+            </li>
+    </ul>
+</div>

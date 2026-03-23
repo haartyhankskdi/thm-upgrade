@@ -1,0 +1,61 @@
+//
+//  Amasty Shop by Brand Subscription Functionality Module
+//  ______________________________________________
+
+//
+//  Common
+//  --------------------------------------------------
+
+& when (@media-common = true) {
+    .ambrand-info {
+        display: flex;
+        margin-bottom: 2rem;
+    }
+
+    .ambrand-info::before {
+        content: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gPHBhdGggZD0iTTcuMDAwMDEgMEM4Ljg1NjY2IDAgMTAuNjM3MyAwLjczNzU1MSAxMS45NTAxIDIuMDUwNEMxMy4yNjMgMy4zNjMyNSAxNC4wMDA1IDUuMTQzODUgMTQuMDAwNSA3LjAwMDVDMTQuMDAwNSA4Ljg1NzE1IDEzLjI2MyAxMC42Mzc4IDExLjk1MDEgMTEuOTUwNkMxMC42MzczIDEzLjI2MzQgOC44NTY2NiAxNC4wMDEgNy4wMDAwMSAxNC4wMDFDNS4xNDMzNiAxNC4wMDEgMy4zNjI3NiAxMy4yNjM0IDIuMDQ5OTEgMTEuOTUwNkMwLjczNzA2MiAxMC42Mzc4IC0wLjAwMDQ4ODI4MSA4Ljg1NzE1IC0wLjAwMDQ4ODI4MSA3LjAwMDVDLTAuMDAwNDg4MjgxIDUuMTQzODUgMC43MzcwNjIgMy4zNjMyNSAyLjA0OTkxIDIuMDUwNEMzLjM2Mjc2IDAuNzM3NTUxIDUuMTQzMzYgMCA3LjAwMDAxIDBaTTguMDUwMDEgNC4yOThDOC41NzAwMSA0LjI5OCA4Ljk5MjAxIDMuOTM3IDguOTkyMDEgMy40MDJDOC45OTIwMSAyLjg2NyA4LjU2OTAxIDIuNTA2IDguMDUwMDEgMi41MDZDNy41MzAwMSAyLjUwNiA3LjExMDAxIDIuODY3IDcuMTEwMDEgMy40MDJDNy4xMTAwMSAzLjkzNyA3LjUzMDAxIDQuMjk4IDguMDUwMDEgNC4yOThaTTguMjMzMDEgOS45MjVDOC4yMzMwMSA5LjgxOCA4LjI3MDAxIDkuNTQgOC4yNDkwMSA5LjM4Mkw3LjQyNzAxIDEwLjMyOEM3LjI1NzAxIDEwLjUwNyA3LjA0NDAxIDEwLjYzMSA2Ljk0NDAxIDEwLjU5OEM2Ljg5ODY0IDEwLjU4MTMgNi44NjA3MiAxMC41NDkgNi44MzcwNyAxMC41MDY4QzYuODEzNDIgMTAuNDY0NiA2LjgwNTYgMTAuNDE1NCA2LjgxNTAxIDEwLjM2OEw4LjE4NTAxIDYuMDRDOC4yOTcwMSA1LjQ5MSA3Ljk4OTAxIDQuOTkgNy4zMzYwMSA0LjkyNkM2LjY0NzAxIDQuOTI2IDUuNjMzMDEgNS42MjUgNS4wMTYwMSA2LjUxMkM1LjAxNjAxIDYuNjE4IDQuOTk2MDEgNi44ODIgNS4wMTcwMSA3LjA0TDUuODM4MDEgNi4wOTNDNi4wMDgwMSA1LjkxNiA2LjIwNjAxIDUuNzkxIDYuMzA2MDEgNS44MjVDNi4zNTUyOCA1Ljg0MjY4IDYuMzk1NjUgNS44Nzg5OCA2LjQxODQ2IDUuOTI2MDlDNi40NDEyNyA1Ljk3MzIxIDYuNDQ0NyA2LjAyNzM5IDYuNDI4MDEgNi4wNzdMNS4wNzAwMSAxMC4zODRDNC45MTMwMSAxMC44ODggNS4yMTAwMSAxMS4zODIgNS45MzAwMSAxMS40OTRDNi45OTAwMSAxMS40OTQgNy42MTYwMSAxMC44MTIgOC4yMzQwMSA5LjkyNUg4LjIzMzAxWiIgZmlsbD0iIzE5NzlDMiIvPiA8L3N2Zz4=');
+        display: flex;
+        height: 1.6rem;
+        line-height: 2.2rem;
+        margin-right: .5rem;
+        width: 1.6rem;
+    }
+
+    .ambrand-info-value {
+        margin-bottom: 0;
+    }
+
+    .ambrand-info-block {
+        width: 100%;
+
+        .ambrand-info {
+            margin-bottom: 0;
+        }
+    }
+
+    .ambrand-info-separator {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+
+    .ambrand-info-title {
+        font-size: 1.4rem;
+        line-height: 3rem;
+    }
+
+    .additional-attributes .data:has(>.ambrand-info-block) {
+        width: 100%;
+    }
+}
+
+//
+//  Mobile
+//  --------------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    //  Removing the colon from ::before on mobile screens.
+    .additional-attributes-wrapper.table-wrapper
+    .data.additional-attributes .col.data:has(>.ambrand-info-block)::before {
+        content: none;
+    }
+}

@@ -1,0 +1,27 @@
+<!--
+/**
+ * Copyright © 2017 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+
+
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+            name="payment[method]"
+            class="radio"
+            data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <div class="payment-icon sagepaysuite-payment-icon opayo-payment-method-logo"></div>
+            <span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <span class="message error"
+              data-bind="attr: {id: getCode() + '-payment-errors'}">
+            ebizmarts Payment Suite 10 license is not activated.
+        </span>
+    </div>
+</div>
+

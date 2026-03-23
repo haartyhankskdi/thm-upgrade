@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceContainer name="head.additional">
+            <block name="js.sticky.header" template="Magento_Theme::page/js/sticky-header.phtml">
+                <arguments>
+                    <argument name="hide_on_scroll_down" xsi:type="boolean">true</argument> <!-- Hide sticky header on scroll down (true/false) -->
+                    <argument name="scroll_offset" xsi:type="number">100</argument> <!-- Offset before the helper reflects the scrollDir -->
+                    <argument name="enable_css_only_sticky_style" xsi:type="boolean">false</argument> <!-- Enable CSS only solution (true/false) -->
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block name="js.scroll.helpers" template="Magento_Theme::page/js/scroll-helpers.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

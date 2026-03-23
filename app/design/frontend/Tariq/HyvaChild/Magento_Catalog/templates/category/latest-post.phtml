@@ -1,0 +1,112 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$currentCatBlock = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$category = $currentCatBlock->getCurrentCategory();
+$categoryCollection = $currentCatBlock->getCategoryCollection();
+
+$currentCategory = $block->getCurrentCategory()
+    ?: ($block->getLayout()->getBlock('category.products.list')
+        ? $block->getLayout()->getBlock('category.products.list')->getLayer()->getCurrentCategory()
+        : null);
+
+$matched = false;
+$posts = null;
+
+if ($currentCategory) {
+    $currentWords = explode(" ", strtolower($currentCategory->getName()));
+    $currentFirstWord = $currentWords[0];
+
+    foreach ($categoryCollection as $cat) {
+        $blogWords = explode(" ", strtolower($cat->getTitle()));
+        $blogFirstWord = $blogWords[0];
+
+        if ($currentFirstWord === $blogFirstWord) {
+            $posts = $block->getLayout()
+                ->createBlock("Magefan\Blog\Block\Widget\Recent")
+                ->setNoRepeatPostsEnable(1)
+                ->setNumberOfPosts(4)
+                ->setCategoryId($cat->getId())
+                ->getPostCollection();
+            $matched = true;
+            break;
+        }
+    }
+
+    if (!$matched && $currentCategory->getParentCategory()) {
+        $parentCategory = $currentCategory->getParentCategory();
+        $parentWords = explode(" ", strtolower($parentCategory->getName()));
+        $parentFirstWord = $parentWords[0];
+
+        foreach ($categoryCollection as $cat) {
+            $blogWords = explode(" ", strtolower($cat->getTitle()));
+            $blogFirstWord = $blogWords[0];
+
+            if ($parentFirstWord === $blogFirstWord) {
+                $posts = $block->getLayout()
+                    ->createBlock("Magefan\Blog\Block\Widget\Recent")
+                    ->setNoRepeatPostsEnable(1)
+                    ->setNumberOfPosts(4)
+                    ->setCategoryId($cat->getId())
+                    ->getPostCollection();
+                $matched = true;
+                break;
+            }
+        }
+    }
+}
+
+if (!$matched) {
+    $posts = $block->getLayout()
+        ->createBlock("Magefan\Blog\Block\Widget\Recent")
+        ->setNoRepeatPostsEnable(1)
+        ->setNumberOfPosts(4)
+        ->getPostCollection();
+}
+?>
+
+<section class="py-12 category-post">
+
+    <div class="section-title text-center mb-12 scroll-item">
+        <h2 class="text-2xl md:text-[38px] font-bold text-black"><strong class="font-bold">Trends</strong> & Stories</h2>
+        <p class="text-base md:text[17px] text-black my-4">
+            Explore expert insights, tips, and stories
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div> 
+
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 scroll-item">
+            <?php if ($posts && $posts->getSize()): ?>
+                <?php foreach ($posts as $post): ?>
+                    <div class="overflow-hidden hover:-translate-y-2 transition transform duration-300">
+                        <a href="<?= $post->getPostUrl() ?>" class="block">
+                            <?php if ($post->getFeaturedImage()): ?>
+                                <img src="<?= $post->getFeaturedImage() ?>"
+                                     alt="<?= $block->escapeHtml($post->getTitle()) ?>"
+                                     class="w-full h-56 object-cover transform transition-transform duration-500 hover:scale-110">
+                            <?php endif; ?>
+                        </a>
+                        <div class="py-6 px-0">
+                            <p class="text-gray-400 text-xs uppercase font-semibold mb-2">
+                                <?= date('F d, Y', strtotime($post->getPublishTime())) ?>
+                            </p>
+                            <a href="<?= $post->getPostUrl() ?>" class="block">
+                                <h3 class="text-xl font-semibold text-black hover:text-red-600 mb-3 line-clamp-2">
+                                    <?= $block->escapeHtml($post->getTitle()) ?>
+                                </h3>
+                            </a>
+                             <?php if($post->getShortContent()){?>
+                            <p class="text-base text-black text-[17px] line-clamp-3">
+                             <?= $block->escapeHtml(strip_tags(
+                              html_entity_decode($post->getShortContent(), ENT_QUOTES, 'UTF-8'))) ?>
+
+                            </p>
+                              <?php }?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

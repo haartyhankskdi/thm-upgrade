@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Amasty\GdprCookie\Api\Data\CookieInterface" type="Amasty\GdprCookie\Model\Cookie" />
+    <preference for="Amasty\GdprCookie\Api\CookieRepositoryInterface" type="Amasty\GdprCookie\Model\Repository\CookieRepository" />
+    <preference for="Amasty\GdprCookie\Api\CookieManagementInterface" type="Amasty\GdprCookie\Model\Cookie\CookieManagement" />
+
+    <preference for="Amasty\GdprCookie\Api\Data\CookieGroupsInterface" type="Amasty\GdprCookie\Model\CookieGroup" />
+    <preference for="Amasty\GdprCookie\Api\CookieGroupsRepositoryInterface" type="Amasty\GdprCookie\Model\Repository\CookieGroupsRepository" />
+
+    <preference for="Amasty\GdprCookie\Api\Data\CookieConsentInterface" type="Amasty\GdprCookie\Model\CookieConsent" />
+    <preference for="Amasty\GdprCookie\Api\CookieConsentRepositoryInterface" type="Amasty\GdprCookie\Model\Repository\CookieConsentRepository" />
+
+    <type name="Amasty\GdprCookie\Model\StoreData\ScopedFieldsProvider">
+        <arguments>
+            <argument name="entityRelationMapping" xsi:type="array">
+                <item name="cookie_store_relation" xsi:type="array">
+                    <item name="entityTable" xsi:type="string">amasty_gdprcookie_cookie</item>
+                    <item name="storeEntityTable" xsi:type="string">amasty_gdprcookie_cookie_store_data</item>
+                </item>
+                <item name="group_store_relation" xsi:type="array">
+                    <item name="entityTable" xsi:type="string">amasty_gdprcookie_group</item>
+                    <item name="storeEntityTable" xsi:type="string">amasty_gdprcookie_group_store_data</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Amasty\GdprCookie\Api\Data\CookieInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">amasty_gdprcookie_cookie</item>
+                    <item name="identifierField" xsi:type="string">id</item>
+                </item>
+                <item name="Amasty\GdprCookie\Api\Data\CookieGroupsInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">amasty_gdprcookie_group</item>
+                    <item name="identifierField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="amasty_gdprcookie_cookie_consent_listing_data_source" xsi:type="string">Amasty\GdprCookie\Model\ResourceModel\CookieConsent\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\GdprCookie\Model\ResourceModel\CookieConsent\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_gdprcookie_cookie_consents</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\GdprCookie\Model\HtmlPreprocessor">
+        <arguments>
+            <argument name="allowedTags" xsi:type="array">
+                <item name="div" xsi:type="string">div</item>
+                <item name="a" xsi:type="string">a</item>
+                <item name="p" xsi:type="string">p</item>
+                <item name="span" xsi:type="string">span</item>
+                <item name="em" xsi:type="string">em</item>
+                <item name="strong" xsi:type="string">strong</item>
+                <item name="ul" xsi:type="string">ul</item>
+                <item name="li" xsi:type="string">li</item>
+                <item name="ol" xsi:type="string">ol</item>
+                <item name="h5" xsi:type="string">h5</item>
+                <item name="h4" xsi:type="string">h4</item>
+                <item name="h3" xsi:type="string">h3</item>
+                <item name="h2" xsi:type="string">h2</item>
+                <item name="h1" xsi:type="string">h1</item>
+                <item name="tbody" xsi:type="string">tbody</item>
+                <item name="tr" xsi:type="string">tr</item>
+                <item name="td" xsi:type="string">td</item>
+                <item name="th" xsi:type="string">th</item>
+                <item name="tfoot" xsi:type="string">tfoot</item>
+                <item name="hr" xsi:type="string">hr</item>
+                <item name="figure" xsi:type="string">figure</item>
+                <item name="button" xsi:type="string">button</item>
+                <item name="i" xsi:type="string">i</item>
+                <item name="u" xsi:type="string">u</item>
+                <item name="br" xsi:type="string">br</item>
+                <item name="b" xsi:type="string">b</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

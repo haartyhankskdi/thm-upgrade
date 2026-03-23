@@ -1,0 +1,17 @@
+@layer utilities {
+    .amlocator-info-popup {
+        .amlocator-name {
+            @apply text-primary text-3xl my-2;
+
+            .amlocator-map-pin {
+                @apply hidden;
+            }
+        }
+
+        .amlocator-image {
+            img {
+                @apply max-w-[150px] mb-2;
+            }
+        }
+    }
+}

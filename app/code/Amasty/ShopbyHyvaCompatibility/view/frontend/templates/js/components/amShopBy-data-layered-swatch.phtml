@@ -1,0 +1,133 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\Shopby\Block\Navigation\SwatchRenderer;
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function dataLayeredSwatch() {
+        return {
+            activeTooltipItem: false,
+            tooltipPositionElement: false,
+
+            /**
+             *
+             * @param typeNumber
+             * @returns {string}
+             */
+            getSwatchType(typeNumber) {
+                switch (String(typeNumber)) {
+                    case '1':
+                        return 'color';
+                    case '2':
+                        return 'image';
+                    case '3':
+                        return '<?= /** @noEscape */ SwatchRenderer::SWATCH_TYPE_OPTION_IMAGE; ?>';
+                    case '0':
+                    default:
+                        return 'text';
+                }
+            },
+
+            /**
+             *
+             * @param type
+             * @param value
+             * @param image
+             * @returns {string}
+             */
+            getSwatchBackgroundStyle(type, value, image) {
+                const swatchType = this.getSwatchType(type);
+
+                switch (swatchType) {
+                    case 'color':
+                        return 'background-color:' + value;
+                    case 'image':
+                        return 'background: #ffffff url("' + image + '") no-repeat center';
+                    case '<?= /** @noEscape */ SwatchRenderer::SWATCH_TYPE_OPTION_IMAGE; ?>':
+                        return 'background: #ffffff url("' + image + '") no-repeat center; background-size: contain;';
+                    default:
+                        return '';
+                }
+            },
+
+            /**
+             *
+             * @returns {string}
+             */
+            getTooltipImageStyle() {
+                const type = this.activeTooltipItem.type;
+                const swatchType = this.getSwatchType(type);
+
+                switch (swatchType) {
+                    case 'color':
+                        return `bg-${this.activeTooltipItem.value} w-110 h-90`;
+                    case 'image':
+                    case '<?= /** @noEscape */ SwatchRenderer::SWATCH_TYPE_OPTION_IMAGE; ?>':
+                        return 'bg-cover bg-no-repeat bg-center w-110 h-90';
+                    default:
+                        return 'hidden';
+                }
+            },
+
+            /**
+             *
+             * @returns {boolean}
+             */
+            isTooltipVisible() {
+                return this.activeTooltipItem
+            },
+
+            /**
+             *
+             * @returns {string|string}
+             */
+            getTooltipPosition() {
+                if (this.tooltipPositionElement) {
+                    return `top: ${this.tooltipPositionElement.offsetTop + 5}px; left: ${this.tooltipPositionElement.offsetLeft}px;`
+                }
+                return '';
+            },
+
+            /**
+             *
+             * @returns {string}
+             */
+            getTooltipLabel() {
+                return this.activeTooltipItem.label || '';
+            },
+
+            /**
+             *
+             * @returns {boolean}
+             */
+            isVisualSwatch() {
+                return this.getSwatchType(this.activeTooltipItem.type) !== 'text';
+            },
+
+            /**
+             *
+             * @returns {boolean}
+             */
+            isFirstItemCol() {
+                const left = this.tooltipPositionElement.offsetLeft;
+                const leftParent = this.tooltipPositionElement.parentNode.offsetLeft;
+                const width = this.tooltipPositionElement.offsetWidth;
+
+                return left - leftParent < width;
+            }
+        }
+    }
+</script>

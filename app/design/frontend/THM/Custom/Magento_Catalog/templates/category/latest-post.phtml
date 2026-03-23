@@ -1,0 +1,56 @@
+<?php
+$current_cat = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$category = $current_cat->getCurrentCategory();
+$currentcat_name = $category->getName();
+$categoryCollection = $current_cat->getCategoryCollection();
+$matched = false;
+?> 
+
+<div class="category_post">
+    <div class="section-title">
+        <strong>Trends</strong> & Stories
+    </div>
+    <div class="subtitle">
+        Explore expert insights, tips, and stories
+    </div>
+    <div class="underline"></div>
+</div>
+
+<?php
+$currentWords = explode(" ", strtolower($currentcat_name));
+
+$currentFirstWord = $currentWords[0];
+
+foreach ($categoryCollection as $category) {
+    $blogWords = explode(" ", strtolower($category->getTitle()));
+    $blogFirstWord = $blogWords[0];
+
+    if ($currentFirstWord === $blogFirstWord) { ?>
+        <div class="footer-blog reveal1">
+            <?php echo $this->getLayout()
+                ->createBlock("Magefan\Blog\Block\Widget\Recent")
+                ->setNoRepeatPostsEnable(1)
+                ->setNumberOfPosts(4)
+                ->setCategoryId($category->getId())
+                //->setTagId(0)
+                //->setAuthorId(0)
+                ->toHtml(); ?>
+        </div>
+        <?php
+        $matched = true;
+        break;
+        }
+}
+?>
+
+<?php if (!$matched): ?>
+    <div class="footer-blog reveal1">
+        <?php echo $this->getLayout()
+            ->createBlock("Magefan\Blog\Block\Widget\Recent")
+            ->setNoRepeatPostsEnable(1)
+            ->setNumberOfPosts(4)
+            ->toHtml(); ?>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">amasty_gdprcookie_cookie_group_form.amasty_gdprcookie_cookie_gorm_form_data_source</item>
+            <item name="deps" xsi:type="string">amasty_gdprcookie_cookie_group_form.amasty_gdprcookie_cookie_group_form_data_source</item>
+        </item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">amasty_gdprcookie_cookie_group_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="array">
+                <item name="name" xsi:type="string">back</item>
+                <item name="label" xsi:type="string" translate="true">Back</item>
+                <item name="class" xsi:type="string">back</item>
+                <item name="url" xsi:type="string">*/*/</item>
+            </item>
+            <item name="delete" xsi:type="string">Amasty\GdprCookie\Block\Adminhtml\Form\Edit\DeleteButton</item>
+            <item name="save" xsi:type="string">Amasty\GdprCookie\Block\Adminhtml\Form\Edit\SaveButton</item>
+            <item name="save_and_continue" xsi:type="string">Amasty\GdprCookie\Block\Adminhtml\Form\Edit\SaveAndContinueButton</item>
+        </item>
+    </argument>
+    <dataSource name="amasty_gdprcookie_cookie_group_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Amasty\GdprCookie\Ui\DataProvider\Form\CookieGroupDataProvider</argument>
+            <argument name="name" xsi:type="string">amasty_gdprcookie_cookie_group_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="settings">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Settings</item>
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="opened" xsi:type="boolean">true</item>
+                <item name="dataScope" xsi:type="string">cookiegroup</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <field name="is_enabled">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="label" xsi:type="string" translate="true">Enabled</item>
+                    <item name="dataScope" xsi:type="string">is_enabled</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">general</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="default" xsi:type="string">1</item>
+                </item>
+            </argument>
+        </field>
+        <field name="is_essential">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="label" xsi:type="string" translate="true">Is Essential</item>
+                    <item name="dataScope" xsi:type="string">is_essential</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">general</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="default" xsi:type="string">0</item>
+                </item>
+            </argument>
+        </field>
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Cookie Group Name</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="description">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/wysiwyg</item>
+                    <item name="template" xsi:type="string">ui/form/field</item>
+                    <item name="elementTmpl" xsi:type="string">ui/content/content</item>
+                    <item name="label" xsi:type="string" translate="true">Description</item>
+                    <item name="formElement" xsi:type="string">wysiwyg</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="wysiwyg" xsi:type="boolean">true</item>
+                    <item name="rows" xsi:type="number">8</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="activeEditorPath" xsi:type="string">amcookie_wysiwyg_config</item>
+                        <item name="add_variables" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
+                        <item name="is_pagebuilder_enabled" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="cookies">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Assigned Cookies</item>
+                    <item name="additionalClasses" xsi:type="string">amagdprcookie-multiselect</item>
+                    <item name="component" xsi:type="string">Amasty_GdprCookie/js/form/element/multiselect</item>
+                    <item name="dataType" xsi:type="string">multiselect</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                </item>
+                <item name="options" xsi:type="object">Amasty\GdprCookie\Model\OptionSource\CookieGroup\CookieList</item>
+            </argument>
+        </field>
+        <field name="sort_order">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Sort Order</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="integer" xsi:type="boolean">true</item>
+                        <item name="validate-zero-or-greater" xsi:type="boolean">true</item>
+                        <item name="validate-digits" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string" translate="true">Sort Order of cookie groups in the cookie bar.</item>
+                    </item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

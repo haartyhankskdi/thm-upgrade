@@ -1,0 +1,59 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchProductItem() {
+        return {
+            productItemSmallImageLabel() {
+                return this.product.small_image.label
+            },
+            productItemAddToCartClickEvent(event) {
+                return this.addToCart(this.product, this.$event)
+            },
+            productItemAddToWishlistClickEvent() {
+                return this.addToWishlist(this.product)
+            },
+            productItemAddToCompareClickEvent() {
+                return this.addToCompare(this.product)
+            },
+            productItemUrl() {
+                return this.getProductUrl(this.product)
+            },
+            productItemName() {
+                return this.product.name
+            },
+            isShowProductItemSkuConfig() {
+                return this.config.isShowSku
+            },
+            isProductItemReviewsBlockEnabledConfig() {
+                return this.config.isProductReviewsBlockEnabled
+            },
+            isProductItemAddToCartBlockEnabledAndSalable() {
+                return this.config.isProductAddToCartBlockEnabled && this.product.is_salable
+            },
+            ['!isProductItemAddToCartBlockEnabledAndSalable']() {
+                return this.config.isProductAddToCartBlockEnabled && !this.product.is_salable
+            },
+            productItemSmallImageUrl() {
+                return this.getProductImageUrl(this.product)
+            },
+            productItemSku() {
+                return this.product.sku
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

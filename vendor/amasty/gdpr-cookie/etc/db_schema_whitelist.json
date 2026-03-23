@@ -1,0 +1,95 @@
+{
+    "amasty_gdprcookie_cookie": {
+        "column": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "cookie_lifetime": true,
+            "is_enabled": true,
+            "provider": true,
+            "type": true,
+            "lifetime": true,
+            "group_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_NAME": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_GROUP_ID_AMASTY_GDPRCOOKIE_GROUP_ID": true
+        }
+    },
+    "amasty_gdprcookie_group": {
+        "column": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "is_essential": true,
+            "is_enabled": true,
+            "sort_order": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_gdprcookie_cookie_store_data": {
+        "column": {
+            "id": true,
+            "cookie_id": true,
+            "store_id": true,
+            "description": true,
+            "is_enabled": true,
+            "lifetime": true,
+            "group_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_STORE_DATA_STORE_ID_STORE_STORE_ID": true,
+            "FK_4AB35A6CA89885ABC6BC8854410F0F40": true,
+            "FK_D3C67C42C86EC6996D297B90BCE486AD": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_STORE_DATA_COOKIE_ID_STORE_ID": true
+        }
+    },
+    "amasty_gdprcookie_group_store_data": {
+        "column": {
+            "id": true,
+            "group_id": true,
+            "store_id": true,
+            "name": true,
+            "description": true,
+            "is_enabled": true,
+            "sort_order": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPRCOOKIE_GROUP_STORE_DATA_STORE_ID_STORE_STORE_ID": true,
+            "FK_C87EA7EBF0C822C21D88190A8C069A2C": true
+        }
+    },
+    "amasty_gdprcookie_cookie_consents": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "date_recieved": true,
+            "consent_status": true,
+            "website": true,
+            "customer_ip": true,
+            "groups_status": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_CONSENTS_CSTR_ID_CSTR_ENTT_ENTT_ID": true,
+            "AMASTY_GDPRCOOKIE_COOKIE_CONSENTS_WS_STORE_WS_WS_ID": true
+        }
+    },
+    "amasty_gdprcookie_cookie_consent_status": {
+        "column": {
+            "cookie_consents_id": true,
+            "group_id": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_E1BA44F6400C82ECB37760EE1093D718": true,
+            "FK_24A6327C3ABA70FD4301DF6D98DFC567": true
+        }
+    }
+}

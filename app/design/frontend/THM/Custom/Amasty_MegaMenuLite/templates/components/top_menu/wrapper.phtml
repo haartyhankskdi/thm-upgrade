@@ -1,0 +1,50 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Mega Menu Core Base for Magento 2
+ */
+// @codingStandardsIgnoreFile
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\MegaMenuLite\ViewModel\Store\Menu $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+$colorSettings = $viewModel->getColorSettings();
+$isIconsAvailable = $block->getParentBlock()->getJsConfig()['is_icons_available'] ?? false;
+?>
+
+<?php if (!empty($block->getItems())): ?>
+<!-- ko if: !$data.isMobile() -->
+    <div class="ammenu-nav-sections -topmenu <?= /* @noEscape */ $viewModel->isHamburger() ? '-hamburger' : '' ?>"
+             data-bind="
+                css: {
+                    '-sticky': $data.isSticky() && ($data.isOpen ? !$data.isOpen() : true)
+                }">
+    <nav class="ammenu-main-container"
+         aria-label="<?= /* @noEscape */ __('Main Menu') ?>"
+         data-action="navigation"
+         style="
+                 background-color: <?= $escaper->escapeHtmlAttr($colorSettings['main_menu_background']) ?>;
+                 color: <?= $escaper->escapeHtmlAttr($colorSettings['main_menu_text']) ?>;">
+        <ul class="ammenu-items -root" role="menubar">
+            <?php foreach ($block->getItems() as $key => $item): ?>
+                <?= $block->getChildBlock('ammenu.top.menu.item')->setData('item', $item)->setData('key', $key)->setData('isIconsAvailable', $isIconsAvailable)->toHtml() ?>
+            <?php endforeach; ?>
+        </ul>
+        
+    </nav>
+
+
+</div>
+<style>
+    @media (max-width: <?= /* @noEscape */ $viewModel->getMobileMenuWidth() ?>px) {
+        .ammenu-nav-sections.-topmenu {
+            display: none;
+        }
+    }
+</style>
+<!-- /ko -->
+<?php endif; ?>

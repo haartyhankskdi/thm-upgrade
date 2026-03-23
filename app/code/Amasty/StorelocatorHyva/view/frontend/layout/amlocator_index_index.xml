@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */-->
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    layout="1column"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <head>
+        <remove src="Amasty_Storelocator::vendor/chosen/chosen.min.css"/>
+    </head>
+
+    <body>
+         <referenceBlock name="breadcrumbs">
+    <action method="addCrumb">
+        <argument name="crumbName" xsi:type="string">home</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="label" xsi:type="string" translate="true">Home</item>
+            <item name="title" xsi:type="string" translate="true">Go to Home Page</item>
+            <item name="link" xsi:type="string">/</item>
+        </argument>
+    </action>
+    <action method="addCrumb">
+        <argument name="crumbName" xsi:type="string">Store Locator</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="label" xsi:type="string" translate="true">Store Locator</item>
+            <item name="title" xsi:type="string" translate="true">Store Locator</item>
+        </argument>
+    </action>
+</referenceBlock>
+        <referenceBlock name="amasty.locator.center" class="Amasty\StorelocatorHyva\Block\Location">
+            <block
+                class="Amasty\StorelocatorHyva\Block\Location"
+                name="amasty.locator.js"
+                template="Amasty_Storelocator::js/store-locator.phtml"
+            />
+
+            <block name="loading" template="Hyva_Theme::ui/loading.phtml"/>
+
+        </referenceBlock>
+    </body>
+</page>

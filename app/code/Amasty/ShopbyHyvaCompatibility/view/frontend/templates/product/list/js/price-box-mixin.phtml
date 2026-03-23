@@ -1,0 +1,48 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+?>
+<script>
+    // Overridden for exception handling
+    function initPriceBox() {
+        return {
+            updatePrice(priceData) {
+                const regularPriceLabel = this.$root.querySelector('.normal-price .price-label');
+                const regularPriceElement = this.$root.querySelector('.normal-price [data-price-type=finalPrice].price-wrapper .price');<?php //phpcs:ignore?>
+                const basePriceElement = this.$root.querySelector('.normal-price [data-price-type=basePrice].price-wrapper .price');<?php //phpcs:ignore?>
+
+                // Ensure regularPriceLabel exists before accessing classList
+                if (regularPriceLabel) {
+                    if (priceData.finalPrice.amount < priceData.oldPrice.amount) {
+                        regularPriceLabel.classList.add('hidden');
+                    } else {
+                        regularPriceLabel.classList.remove('hidden');
+                    }
+                }
+
+                // Ensure regularPriceElement exists before setting innerText
+                if (regularPriceElement) {
+                    regularPriceElement.innerText = hyva.formatPrice(priceData.finalPrice.amount);
+                }
+
+                // Ensure basePriceElement exists before setting innerText
+                if (basePriceElement) {
+                    basePriceElement.innerText = hyva.formatPrice(priceData.basePrice.amount);
+                }
+            }
+        }
+    }
+</script>

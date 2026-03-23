@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amasty_xsearch" translate="label" type="text" sortOrder="10419" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <group id="hyva_themes"
+                   translate="label"
+                   type="text"
+                   sortOrder="99" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Hyva Themes</label>
+                <field id="header_search_type"
+                       translate="label"
+                       type="select"
+                       sortOrder="20" showInDefault="1"   showInWebsite="1" showInStore="1">
+                <label>Select Search Form Wrap Header</label>
+                <source_model>Amasty\XsearchHyvaCompatibility\Model\System\Config\Source\SearchHeaders</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

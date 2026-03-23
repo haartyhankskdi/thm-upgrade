@@ -1,0 +1,161 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Express\Button as ExpressButton;
+use Ebizmarts\BrippoPayments\Model\Config\Source\ExpressLocation;
+
+/** @var ExpressButton $block */
+if ($block->getIsEnabled()) {
+    $agreements = $block->getAgreements();
+    $source = ExpressLocation::CART;
+    $mountElementUniqueId = $block->getUniqueElementId('brippo-express-cart');
+    ?>
+
+    <span id="<?= $block->escapeHtml($mountElementUniqueId) ?>-errors" class="message error" style="display: none;"></span>
+    <?php if (!empty($agreements)) { ?>
+        <div class="brippoExpressAgreements <?= $block->escapeJs($source); ?>">
+            <div class="content">
+                <ul>
+                    <?php foreach ($agreements as $agreement): ?>
+                        <li>
+                            <div class="agreement-item-content checkout-agreements-block" id="agreement-item-<?= $block->escapeHtmlAttr($source) . $block->escapeHtmlAttr($agreement->getAgreementId()) ?>">
+                                <label class="label action-show">
+                                    <a>
+                                        <?php if ($agreement->getIsHtml()):?>
+                                            <?= /* @noEscape */ trim($agreement->getCheckboxText()) ?>
+                                        <?php else:?>
+                                            <?= /* @noEscape */ trim($block->escapeHtml($agreement->getCheckboxText())) ?>
+                                        <?php endif; ?>
+                                    </a>
+                                </label>
+                                <input type="checkbox"
+                                       id="agreement-<?= (int) $agreement->getAgreementId() ?>"
+                                       name="agreement[<?= (int) $agreement->getAgreementId() ?>]"
+                                       value="1"
+                                       title="<?= $block->escapeHtml(trim($agreement->getCheckboxText())) ?>"
+                                       class="checkbox"/>
+                            </div>
+                        </li>
+                        <div class="brippoAgreementsModal" id="brippoAgreementsModal_<?= $block->escapeHtml($source. $agreement->getAgreementId()) ?>">
+                            <div class="content">
+                                <?php if ($agreement->getIsHtml()):?>
+                                    <?= /* @noEscape */ $agreement->getContent() ?>
+                                <?php else:?>
+                                    <?= $block->escapeHtml($agreement->getContent()) ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <script>
+                            require([
+                                'domReady!.modman/brippo-payments/view/frontend/templates/cart/express',
+                                'brippo_payment_request_button',
+                                'jquery'
+                            ], function(domReady, scExpress, $) {
+                                $('#agreement-item-<?= $block->escapeHtmlAttr($source) . $block->escapeHtmlAttr($agreement->getAgreementId()) ?> label').click(function() {
+                                    scExpress.showAgreementsModal('<?= $block->escapeJs($source) ?>', '<?= $block->escapeJs($agreement->getAgreementId()) ?>');
+                                });
+                            });
+                        </script>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+        </div>
+    <?php } ?>
+    <div id="<?= $block->escapeHtml($mountElementUniqueId) ?>" style="display: none; position: relative;"></div>
+
+    <div class="scExpressSeparator cart">
+        <div class="separator separatorL"></div>
+        <h6>Or</h6>
+        <div class="separator separatorR"></div>
+    </div>
+
+    <script>
+        require([
+            'Magento_Customer/js/customer-data',
+            'brippo_payment_request_button',
+            'Magento_Checkout/js/model/quote',
+            'Magento_Checkout/js/model/cart/cache'
+        ], function(customerData, scExpress, quote, cartCache) {
+            let cart = customerData.get('cart');
+            window.brippoCartInitApiTimer = null;
+
+            let initAPI = function(origin)
+            {
+                scExpress.initPaymentRequest(
+                    {
+                        pKey: "<?= $block->escapeJs($block->getPublishableKey()); ?>",
+                        isEnabled: "<?= $block->escapeJs($block->getIsEnabled()); ?>",
+                        accountId: "<?= $block->escapeJs($block->getAccountId()); ?>",
+                        buttonType: "<?= $block->escapeJs($block->getButtonType()); ?>",
+                        buttonTheme: "<?= $block->escapeJs($block->getButtonTheme()); ?>",
+                        buttonHeight: "<?= $block->escapeJs($block->getButtonHeight()); ?>",
+                        thresholdMinimum: "<?= $block->escapeJs($block->getMinimumThreshold($source)); ?>",
+                        thresholdMaximum: "<?= $block->escapeJs($block->getMaximumThreshold($source)); ?>"
+                    },
+                    {
+                        source: '<?= $block->escapeJs($source); ?>',
+                        elementId: '<?= $block->escapeJs($mountElementUniqueId) ?>'
+                    }
+                );
+            };
+            window.brippoCartInitApiTimer = setTimeout(initAPI, 1000);
+
+            cart.subscribe(function ()
+            {
+                clearTimeout(window.brippoCartInitApiTimer);
+                window.brippoCartInitApiTimer = setTimeout(initAPI, 500);
+            });
+
+            quote.shippingMethod.subscribe(
+                function (method) {
+                    if (method) {
+                        let selectedMethod = method.carrier_code + "_" + method.method_code;
+
+                        let shippingData = {
+                            amount: Number(parseFloat(method.amount) * 100),
+                            label: method.carrier_title + " - " + method.method_title,
+                            id: selectedMethod,
+                            detail: "",
+                        };
+
+                        window.addEventListener('brippo_shipping_estimate', () => {
+                            let addressData = {
+                                country: cartCache.get('address').countryId,
+                                postalCode: cartCache.get('address').postcode,
+                                region: cartCache.get('address').regionCode,
+                                phone: null
+                            };
+
+                            if (window.brippoCartInitApiTimer !== null) {
+                                // clear timeout to avoid multiple requests
+                                clearTimeout(window.brippoCartInitApiTimer);
+                            }
+
+                            scExpress.onShippingAddressChange({
+                                shippingAddress: addressData,
+                                updateWith: (data) => {
+                                    if (data.status == "success") {
+                                        scExpress.onShippingOptionChange({
+                                            shippingOption: shippingData,
+                                            updateWith: (shippingDataResponse) => {
+                                                if (shippingDataResponse.status == "success") {
+                                                    initAPI('estimate');
+                                                    window.dispatchEvent(new Event("brippo_shipping_estimate_success"));
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        initAPI('estimate_failed');
+                                    }
+                                }
+                            });
+                        }, {once: true});
+                    }
+                },
+                this
+            );
+        });
+
+    </script>
+<?php } ?>

@@ -1,0 +1,55 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    (function () {
+        'use strict';
+
+        window.addEventListener('cookiebar-action-accept', (event) => {
+            const groups = event.detail?.include_checked_groups ? Alpine.store('AmastyCookieGroups').getCheckedGroupIds() : [];
+            const url = `${BASE_URL}amcookie/cookie/savegroups`;
+            const contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+            const body = new URLSearchParams({
+                form_key: hyva.getFormKey()
+            });
+            groups.length && groups.map(groupId => body.append('groups[]', groupId));
+
+            fetch(url, {method: 'POST', body, headers: {'Content-Type': contentType}})
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+
+                    return Promise.reject(`${response.status} ${response.statusText}`);
+                })
+                .then(data => {
+                    !!data.success && Alpine.store('AmastyCookieGroups').updateGroupData(true);
+                })
+                .catch(error => {
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages([
+                        {
+                            type: "error",
+                            text: error
+                        }
+                    ]);
+                })
+                .finally(() => {
+                    amastyCookieManager.processManageableCookies();
+                    window.dispatchEvent(new CustomEvent('cookiebar-action-accept-finish'));
+                    window.dispatchEvent(new CustomEvent('amasty-cookie-group-updated'));
+                    // Wait cookiebar close animation
+                    setTimeout(() => {
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    }, 100);
+                });
+        });
+    })();
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

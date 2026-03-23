@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
+        <plugin name="ebizmarts_brippo_payments_customer_repository_getbyid" type="Ebizmarts\BrippoPayments\Plugin\CustomerRepository\GetById" />
+    </type>
+    <type name="Magento\Backend\Controller\Adminhtml\Dashboard">
+        <plugin name="ebizmarts_brippo_payments_uncaptured_payments_notification" type="Ebizmarts\BrippoPayments\Plugin\Notification\UncapturedTransactions" />
+    </type>
+    <type name="Magento\Email\Model\Template\Config">
+        <plugin name="ebizmarts_brippo_email_template_config_plugin" type="Ebizmarts\BrippoPayments\Plugin\Email\TemplateIdConfigPlugin" />
+    </type>
+    <type name="Magento\Sales\Ui\Component\Listing\Column\ViewAction">
+        <plugin name="brippo_payments_order_actions" type="Ebizmarts\BrippoPayments\Plugin\Order\ListingActions" sortOrder="10" />
+    </type>
+    <virtualType name="SalesOrderViewWidgetContext" type="\Magento\Backend\Block\Widget\Context">
+        <arguments>
+            <argument name="buttonList" xsi:type="object">Ebizmarts\BrippoPayments\Block\Adminhtml\Order\View\ButtonList
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <arguments>
+            <argument name="context" xsi:type="object">SalesOrderViewWidgetContext</argument>
+        </arguments>
+    </type>
+
+    <!-- quote validator -->
+    <type name="Magento\Quote\Model\ValidationRules\QuoteValidationComposite">
+        <arguments>
+            <argument name="validationRules" xsi:type="array">
+                <item name="BrippoQuoteValidationRule" xsi:type="object">Ebizmarts\BrippoPayments\Model\Quote\ValidationRule\QuoteValidationRule</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Shipping restrictions compatibility-->
+    <type name="\Ebizmarts\BrippoPayments\Helper\Express">
+        <plugin name="ebizmarts_brippo_payments_shipping_restrictions_compatibility_plugin" type="Ebizmarts\BrippoPayments\Plugin\Shipping\ShippingRestrictions" />
+    </type>
+
+    <type name="Magento\Config\Model\Config">
+        <plugin name="brippo_settings_monitor" type="Ebizmarts\BrippoPayments\Plugin\Settings\Monitor"/>
+    </type>
+</config>

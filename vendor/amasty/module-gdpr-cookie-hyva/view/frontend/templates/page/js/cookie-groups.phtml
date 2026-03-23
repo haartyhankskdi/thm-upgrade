@@ -1,0 +1,65 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    'use strict';
+
+    function initAmCookieGroups() {
+        return {
+            /**
+             * @withContext x-for: $store.AmastyCookieGroups.groupData
+             * @returns {string}
+             */
+            getInputGroupId: function () {
+                return `amcookie-${this.$el.dataset.groupPrefix}group-${this.group.groupId}`
+            },
+
+            /**
+             * @withContext x-for: $store.AmastyCookieGroups.groupData
+             * @returns {{"!bg-gray-400": boolean}}
+             */
+            getInputStyles: function () {
+                return {
+                    '!bg-gray-400': this.group.isEssential
+                }
+            },
+
+            /**
+             * @withContext x-for: $store.AmastyCookieGroups.groupData
+             * @returns {void}
+             */
+            toggleGroup: function () {
+                this.group.checked = !this.group.checked;
+            },
+
+            /**
+             * @withContext x-for: $store.AmastyCookieGroups.groupData
+             * @returns {void}
+             */
+            moreInfoClickHandler: function () {
+                this.$dispatch(this.$el.dataset.dispatchAction, this.group);
+            },
+
+            moreInformationAboutCookieGroup: function () {
+                return hyva.str('<?= $escaper->escapeJs(__('About "%1" Cookie Group')) ?>', this.group.name);
+            }
+        }
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data('initAmCookieGroups', initAmCookieGroups),
+        {once: true}
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

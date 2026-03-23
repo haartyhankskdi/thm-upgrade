@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Mageplaza_RewardPoints::earning" title="Earning" module="Mageplaza_RewardPoints" sortOrder="5" resource="Mageplaza_RewardPoints::earning" parent="Mageplaza_RewardPoints::reward_points"/>
+        <update id="Mageplaza_RewardPoints::earning_rate" parent="Mageplaza_RewardPoints::earning" resource="Mageplaza_RewardPoints::earning_rate_pro"/>
+        <add id="Mageplaza_RewardPoints::earning_catalog" title="Catalog Rules" module="Mageplaza_RewardPointsPro" sortOrder="30" action="mpreward/earning_catalog/index" resource="Mageplaza_RewardPoints::earning_catalog" parent="Mageplaza_RewardPoints::earning"/>
+        <add id="Mageplaza_RewardPoints::earning_shopping_cart" title="Shopping Cart Rules" module="Mageplaza_RewardPointsPro" sortOrder="40" action="mpreward/earning_shoppingcart/index" resource="Mageplaza_RewardPoints::earning_shopping_cart" parent="Mageplaza_RewardPoints::earning"/>
+        <add id="Mageplaza_RewardPoints::spending" title="Spending" module="Mageplaza_RewardPoints" sortOrder="15" resource="Mageplaza_RewardPoints::spending" parent="Mageplaza_RewardPoints::reward_points"/>
+        <update id="Mageplaza_RewardPoints::spending_rate" parent="Mageplaza_RewardPoints::spending" resource="Mageplaza_RewardPoints::spending_rate_pro"/>
+        <add id="Mageplaza_RewardPoints::spending_shopping_cart" title="Shopping Cart Rules" module="Mageplaza_RewardPointsPro" sortOrder="30" action="mpreward/spending_shoppingcart/index" resource="Mageplaza_RewardPoints::spending_shopping_cart" parent="Mageplaza_RewardPoints::spending"/>
+    </menu>
+</config>
+

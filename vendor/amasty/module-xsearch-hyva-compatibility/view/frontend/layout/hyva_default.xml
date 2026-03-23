@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="amasty.xsearch.head" remove="true"/>
+        <referenceBlock name="amasty.xsearch.autocomplete" remove="true"/>
+        <referenceBlock name="amsearch.overlay.section" remove="true"/>
+        <referenceBlock name="amsearch.full_with.trigger" remove="true"/>
+
+        <referenceBlock name="top.search">
+            <arguments>
+                <argument name="expand" xsi:type="array">
+                    <item name="products" xsi:type="string">amXsearchProductsComponent</item>
+                    <item name="autocomplete" xsi:type="string">amXsearchAutocompleteComponent</item>
+                    <item name="analytics" xsi:type="string">amXsearchAnalytics</item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+        <referenceBlock name="header-search"
+                        template="Amasty_XsearchHyvaCompatibility::header-search/form-wrapper.phtml">
+            <arguments>
+                <argument name="expand" xsi:type="array">
+                    <item name="products" xsi:type="string">amXsearchProductsComponent</item>
+                    <item name="autocomplete" xsi:type="string">amXsearchAutocompleteComponent</item>
+                    <item name="autocompleteHyvaUI" xsi:type="string">amXsearchAutocompleteHyvaUIHeaderCompat</item>
+                    <item name="analytics" xsi:type="string">amXsearchAnalytics</item>
+                </argument>
+            </arguments>
+
+            <block
+                name="amasty.xsearch.header.search.scripts"
+                template="Amasty_XsearchHyvaCompatibility::js/header-search-scripts.phtml"
+            >
+                <block
+                    name="amasty.xsearch.recent.searches.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/recent-searches.phtml"
+                />
+                <block
+                    name="amasty.xsearch.recent.viewed.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/recently-viewed.phtml"
+                />
+                <block
+                    name="amasty.xsearch.popular.searches.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/popular-searches.phtml"
+                />
+                <block
+                    name="amasty.xsearch.products.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/products.phtml"
+                />
+                <block
+                    name="amasty.xsearch.pages.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/pages.phtml"
+                />
+                <block
+                    name="amasty.xsearch.landing.page.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/landing-page.phtml"
+                />
+                <block
+                    name="amasty.xsearch.faq.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/faq.phtml"
+                />
+                <block
+                    name="amasty.xsearch.faq.questions.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/faq-questions.phtml"
+                />
+                <block
+                    name="amasty.xsearch.category.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/category.phtml"
+                />
+                <block
+                    name="amasty.xsearch.browsing.history.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/browsing-history.phtml"
+                />
+                <block
+                    name="amasty.xsearch.brands.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/brands.phtml"
+                />
+                <block
+                    name="amasty.xsearch.blog.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/blog.phtml"
+                />
+                <block
+                    name="amasty.xsearch.bestsellers.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/sections/bestsellers.phtml"
+                />
+
+                <block
+                    name="amasty.xsearch.product.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/components/product.phtml"
+                />
+                <block
+                    name="amasty.xsearch.rating.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/components/rating.phtml"
+                />
+                <block
+                    name="amasty.xsearch.product.slider.item.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/components/product-slider-item.phtml"
+                />
+                <block
+                    name="amasty.xsearch.price.script"
+                    template="Amasty_XsearchHyvaCompatibility::js/components/price.phtml"
+                />
+            </block>
+        </referenceBlock>
+
+        <referenceContainer name="head.additional">
+            <block name="amsearch.purify.js" template="Amasty_XsearchHyvaCompatibility::js/purify.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="page.main.title">
+            <block name="ambrand.brand_info.after_title" after="-"
+                   template="Amasty_ShopByBrandSubscriptionFunctionality::brand/info.phtml">
+                <arguments>
+                    <argument name="brand_info_view_model"
+                              xsi:type="object">Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\BrandInfoAfterTitle</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="category.view.container">
+            <block name="ambrand.brand_info.after_description" after="category.description"
+                   template="Amasty_ShopByBrandSubscriptionFunctionality::brand/info.phtml">
+                <arguments>
+                    <argument name="brand_info_view_model"
+                              xsi:type="object">Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\BrandInfoAfterDescription</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block name="ambrand.brand_info.above_footer" after="-"
+                   template="Amasty_ShopByBrandSubscriptionFunctionality::brand/info.phtml">
+                <arguments>
+                    <argument name="brand_info_view_model"
+                              xsi:type="object">Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\BrandInfoAboveFooter</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

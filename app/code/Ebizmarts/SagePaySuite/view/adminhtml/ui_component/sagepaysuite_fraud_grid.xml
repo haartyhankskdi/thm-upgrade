@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">sagepaysuite_fraud_grid.sagepaysuite_fraud_report_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <deps>
+            <dep>sagepaysuite_fraud_grid.sagepaysuite_fraud_report_data_source</dep>
+        </deps>
+        <spinner>sagepaysuitefraudreport_columns</spinner>
+    </settings>
+    <dataSource name="sagepaysuite_fraud_report_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">transaction_id</param>
+            </storageConfig>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="sagepaysuite_fraud_report_data_source">
+            <settings>
+                <requestFieldName>transaction_id</requestFieldName>
+                <primaryFieldName>transaction_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <columns name="sagepaysuitefraudreport_columns">
+        <column name="transaction_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="dataType" xsi:type="string">number</item>
+                    <item name="sorting" xsi:type="string">asc</item>
+                    <item name="label" xsi:type="string" translate="true">Transaction #</item>
+                </item>
+            </argument>
+        </column>
+        <column name="increment_id" class="Ebizmarts\SagePaySuite\Ui\Component\Grid\Fraud\Column\Fraud">
+            <settings>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <filter>text</filter>
+                <dataType>text</dataType>
+                <label translate="true">Order #</label>
+            </settings>
+        </column>
+        <column name="txn_id">
+            <settings>
+                <filter>text</filter>
+                <dataType>text</dataType>
+                <label translate="true">Opayo VPSTxID</label>
+            </settings>
+        </column>
+        <column name="fraudid">
+            <settings>
+                <label translate="true">Fraud #</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+        <column name="recommendation">
+            <settings>
+                <label translate="true">Recommendation</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+        <column name="detail">
+            <settings>
+                <label translate="true">Detail</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+        <column name="provider">
+            <settings>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <label translate="true">Provider</label>
+            </settings>
+        </column>
+        <column name="rules">
+            <settings>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <label translate="true">Rules</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+    </columns>
+</listing>

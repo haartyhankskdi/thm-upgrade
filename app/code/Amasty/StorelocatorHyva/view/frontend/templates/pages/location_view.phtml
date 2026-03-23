@@ -1,0 +1,402 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\Slider;
+use Amasty\Storelocator\Block\View\Location;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/**
+ * @var \Amasty\Storelocator\Block\View\Location $block
+ * @var \Hyva\Theme\ViewModel\Slider $slider
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ * @var \Hyva\Theme\Model\ViewModelRegistry $viewModels
+ */
+$location = $block->getCurrentLocation();
+
+if (!$location) {
+    return;
+}
+
+$galleryImages = $block->getLocationGallery();
+$addressString = $location->getCity() . ', ' . $location->getAddress() . ', ' . $location->getZip();
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$storelocatorIcons = $viewModels->require(Amasty\StorelocatorHyva\ViewModel\StorelocatorIcons::class);
+$custom = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+?>
+
+<div
+    x-data="{ ...storeLocatorPage(), ...hyva.modal()}"
+    class="amlocator-location-main"
+    @map-loaded.window="initStoreLocatorPage()"
+>
+    <div class="amlocator-location-container flex flex-col px-6 md:flex-row lg:w-[930px] justify-between mx-auto md:px-0">
+        <div class="amlocator-column -left bg-container-lighter md:w-[390px]">
+            <div
+                class="
+                    amlocator-block -route amlocator-route-creator
+                    bg-[#3B7E48] pt-5 px-3 pb-6
+                "
+            >
+                <div
+                    class="amlocator-modes flex justify-center"
+                    role="radiogroup"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Travel Modes')) ?>"
+                >
+                    <button
+                        class="
+                            amlocator-travel-mode -driving
+                            flex justify-center items-center
+                            mr-1 w-9 h-9 rounded-full bg-center bg-no-repeat transition-all
+                        "
+                        :class="travelMode === 'DRIVING' ? 'bg-primary-lighter' : ''"
+                        type="button"
+                        role="radio"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Driving')) ?>"
+                        @click="changeMode('DRIVING')"
+                        :aria-checked="travelMode === 'DRIVING'"
+                    >
+                        <?= $storelocatorIcons->renderHtml('driving', 'h-4 w-4') ?>
+                    </button>
+                    <button
+                        class="
+                            amlocator-travel-mode -transit
+                            flex justify-center items-center
+                            mr-1 w-9 h-9 rounded-full bg-center bg-no-repeat transition-all
+                        "
+                        :class="travelMode === 'TRANSIT' ? 'bg-primary-lighter' : ''"
+                        type="button"
+                        role="radio"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Transit')) ?>"
+                        @click="changeMode('TRANSIT')"
+                        :aria-checked="travelMode === 'TRANSIT'"
+                    >
+                        <?= $storelocatorIcons->renderHtml('transit', 'h-4 w-4') ?>
+                    </button>
+                    <button
+                        class="
+                            amlocator-travel-mode -walking
+                            flex justify-center items-center
+                            mr-1 w-9 h-9 rounded-full bg-center bg-no-repeat transition-all
+                        "
+                        :class="travelMode === 'WALKING' ? 'bg-primary-lighter' : ''"
+                        type="button"
+                        role="radio"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Walking')) ?>"
+                        @click="changeMode('WALKING')"
+                        :aria-checked="travelMode === 'WALKING'"
+                    >
+                        <?= $storelocatorIcons->renderHtml('walking', 'h-4 w-4') ?>
+                    </button>
+                    <button
+                        class="
+                            amlocator-travel-mode -bicycling
+                            flex justify-center items-center
+                            w-9 h-9 rounded-full bg-center bg-no-repeat transition-all
+                        "
+                        :class="travelMode === 'BICYCLING' ? 'bg-primary-lighter' : ''"
+                        type="button"
+                        role="radio"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Cycling')) ?>"
+                        @click="changeMode('BICYCLING')"
+                        :aria-checked="travelMode === 'BICYCLING'"
+                    >
+                        <?= $storelocatorIcons->renderHtml('cycling', 'h-4 w-4') ?>
+                    </button>
+                </div>
+
+                <div class="amlocator-addresses mt-2.5 flex items-center justify-between">
+                    <div
+                        class="
+                            amlocator-route-icon flex flex-col w-3.5 h-16
+                            items-center justify-between
+                        "
+                    >
+                        <span
+                            class="
+                                amlocator-icon -start
+                                w-3 h-3 border-2 rounded-full block
+                            "
+                        ></span>
+                        <span
+                            class="
+                                amlocator-icon -dot
+                                w-1 h-1 rounded-full bg-primary-lighter block
+                            "
+                        ></span>
+                        <span
+                            class="
+                                amlocator-icon -dot
+                                w-1 h-1 rounded-full bg-primary-lighter block
+                            "
+                        ></span>
+                        <span
+                            class="
+                                amlocator-icon -dot
+                                w-1 h-1 rounded-full bg-primary-lighter block
+                            "
+                        ></span>
+                        <span
+                            class="
+                                amlocator-icon -end
+                                w-4 h-5 bg-center bg-no-repeat
+                            "
+                        >
+                            <?= $storelocatorIcons->renderHtml('end', 'h-4 w-4') ?>
+                        </span>
+                    </div>
+                    <div
+                        class="amlocator-inputs flex flex-col flex-1 mx-6"
+                        :class="swapMode ? 'flex-col-reverse' : ''"
+                    >
+                        <input
+                            class="amlocator-address -start w-full"
+                            x-ref="originPoint"
+                            type="text"
+                            :aria-label="
+                                swapMode ?
+                                '<?= $escaper->escapeHtmlAttr(__('Destination')) ?>' :
+                                '<?= $escaper->escapeHtmlAttr(__('Origin')) ?>'
+                            "
+                        />
+                        <input
+                            class="amlocator-address -end w-full"
+                            x-ref="destinationPoint"
+                            type="text"
+                            readonly
+                            value="<?= $escaper->escapeHtmlAttr($addressString); ?>"
+                            :aria-label="
+                                swapMode ?
+                                '<?= $escaper->escapeHtmlAttr(__('Origin')) ?>' :
+                                '<?= $escaper->escapeHtmlAttr(__('Destination')) ?>'
+                            "
+                        />
+                    </div>
+                    <button
+                        class="
+                            amlocator-swap w-5 h-9 bg-center bg-no-repeat transition-all
+                        "
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Reverse starting point and destination')) ?>"
+                        role="checkbox"
+                        @click="swap()"
+                        :aria-checked="swapMode"
+                    >
+                        <?= $storelocatorIcons->renderHtml('swap', 'h-7') ?>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="
+                    amlocator-block -directions amlocator-directions-wrapper
+                    flex-col px-4
+                "
+                x-cloak
+                :class="showDierctions ? 'flex' : 'hidden'"
+            >
+                <div
+                    class="amlocator-collapse-title flex justify-between pt-1 pb-2.5"
+                    :aria-expanded="directionsExpanded"
+                >
+                    <strong>
+                        <?= $escaper->escapeHtml(__('Directions')); ?>
+                    </strong>
+                    <button
+                        @click="directionsExpanded = !directionsExpanded"
+                        :aria-expanded="directionsExpanded"
+                        aria-controls="amlocator-directions-container"
+                    >
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtml(__('Toggle directions information')) ?>
+                        </span>
+                        <?= $heroicons->chevronDownHtml(
+                            'transition-transform transform duration-300 ease-in-out',
+                            24,
+                            24,
+                            [
+                                ":class" => "{
+                                    'rotate-180': directionsExpanded
+                                }",
+                                "aria-hidden" => "true"
+                            ]
+                        ); ?>
+                    </button>
+                </div>
+                <div
+                    id="amlocator-directions-container"
+                    class="amlocator-directions-container"
+                    :class="directionsExpanded ? 'block': 'hidden'"
+                >
+                    <div
+                        class="text-sm max-h-[500px] overflow-auto"
+                        x-ref="directionsPanel"
+                        tabindex="-1"
+                    ></div>
+                </div>
+            </div>
+
+            <div class="amlocator-block -separator m-2 h-px bg-container-darker"></div>
+
+            <div class="amlocator-block amlocator-location-info px-0 text-lg">
+                <?= $block->getChildHtml('extra_info') ?>
+                 <div class="amlocator-block mb-2">
+                   <!--  <span class="add-title">
+                        <strong><?//= $escaper->escapeHtml(__('Address: '))?></strong>
+                    </span> -->
+                    <span class="amlocator-text">
+                        <?= $escaper->escapeHtml($location->getAddress())?>
+                    </span>
+                </div>
+                <div class="amlocator-block mb-2">
+                   <!--  <span class="add-title">
+                        <strong><?//= $escaper->escapeHtml(__('City: '))?></strong>
+                    </span> -->
+                    <span>
+                        <?= $escaper->escapeHtml($location->getCity())?>, <?= $escaper->escapeHtml($location->getZip())?>
+                    </span>
+                </div>
+                
+                
+                <!-- <div class="amlocator-block mb-2.5">
+                    <span class="add-title">
+                        <strong><?//= $escaper->escapeHtml(__('Country: '))?></strong>
+                    </span>
+                    <span>
+                        <?//= $escaper->escapeHtml($block->getLocationCountryName($location->getCountry()))?>
+                    </span>
+                </div> -->
+               <!--  <?//php if ($stateName = $block->getStateName($location->getState())): ?>
+                    <div class="amlocator-block mb-2.5">
+                        <span class="add-title">
+                            <strong><?//= $escaper->escapeHtml(__('State: '))?></strong>
+                        </span>
+                        <span>
+                            <?//= $escaper->escapeHtml($stateName)?>
+                        </span>
+                    </div>
+                <?//php endif;?> -->
+                
+               
+                <div class="amlocator-block -contact">
+                    <?php if (!empty($location->getWebsite())): ?>
+                        <div class="amlocator-block flex items-center mb-2.5">
+                            <span
+                                class="
+                                    amlocator-icon -website
+                                    h-5 w-5 rounded-full bg-primary bg-center
+                                    bg-no-repeat mr-4 flex items-center justify-center
+                                "
+                            >
+                                <?= $storelocatorIcons->renderHtml('website', 'h-3 w-3') ?>
+                            </span>
+                            <a href="<?= $escaper->escapeUrl($location->getWebsite())?>"
+                                class="amlocator-link hover:underline"
+                                title="<?= $escaper->escapeHtml($location->getName()); ?>"
+                                target="_blank"
+                            >
+                                <?=  $escaper->escapeUrl($location->getWebsite())?>
+                            </a>
+                        </div>
+                    <?php endif;
+                    if (!empty($location->getPhone())): ?>
+                        <div class="amlocator-block flex items-center mb-1">
+                          
+                        Tel: <a href="tel:<?= $escaper->escapeHtml($location->getPhone())?>"
+                                class="amlocator-link text-[#3B7E48] underline hover:no-underline pl-1"
+                            > <?=$escaper->escapeHtml($location->getPhone())?>
+                            </a>
+                        </div>
+                    <?php endif;
+                    if (!empty($location->getEmail())): ?>
+                        <div class="amlocator-block flex items-center mb-2">
+                            Email: <a
+                                href="mailto:<?= $escaper->escapeUrl($location->getEmail())?>"
+                                class="amlocator-link text-[#3B7E48] underline hover:no-underline pl-1"
+                                title="<?= $escaper->escapeHtml($location->getName()); ?>"
+                            > <?= $escaper->escapeUrl($location->getEmail()) ?>
+                            </a>
+                        </div>
+                    <?php endif;?>
+                </div>
+             <!--    <div class="amlocator-block">
+                    <button
+                        @click="initPanorama"
+                        class="amlocator-link pb-2.5 hover:underline"
+                    >
+                        <?//= $escaper->escapeHtml(__('Street View')) ?>
+                    </button>
+                </div> -->
+            </div>
+
+          
+            <?= $block->getLayout()
+                ->createBlock(\Amasty\StorelocatorHyva\Block\View\Reviews::class)
+                ->setData('location', $location)
+                ->toHtml(); ?>
+        </div>
+
+        <div class="amlocator-column -right md:w-1/2 md:ml-4 md:mt-[-70px]">
+            <div
+                id="amlocation-map"
+                class="amlocator-block -map mt-4 md:mt-0 h-full md:h-[450px]"
+            >
+            </div>
+            <?= $block->getChildBlock('amasty_store_location_page_attributes')
+                ->setData('location', $location)
+                ->toHtml();
+            ?>
+            <div class="amlocator-description-grey bg-container-lighter px-7">
+                <?= /** @escapeNotVerified */ $location->getDescription() ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?= $block->getChildHtml("store.page.script") ?>
+
+<div class="bg-[#F5F9F7] py-6 md:py-12 pb-0 my-4 md:my-12">
+<div class="md:flex items-start space-x-6 px-4 py-2 md:px-0 w-full gap-10 lg:w-[930px] md:justify-between mx-auto">
+    <?php if (!empty($location->getWorkingTimeToday())): ?>
+        <div class="time-section w-full md:w-[390px] mb-6 md:mb-0">
+        <div class="opening-hours flex-shrink-0 w-full md:w-[320px]">
+            <div class="flex items-center space-x-2 mb-3">
+                <?= $heroicons->clockHtml("w-5 h-5 text-blue-400", 24, 24, ['aria-hidden' => 'true']) ?>
+                <span class="text-xl text-black font-semibold">
+                    <?= $escaper->escapeHtml(__('Opening Hours:')); ?>
+                </span>
+            </div>
+            <div class="text-base text-black mt-1">
+                <?= $block->getChildBlock('amasty_store_locator_schedule')->setData('location', $location)->toHtml(); ?>
+            </div>
+        </div>
+    </div>
+     <?php else:?>
+       <div class="w-full md:w-[390px]">
+        <div class="opening-hours flex-shrink-0 w-full md:w-[320px]">
+           
+        
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($galleryImages)): ?>
+        <div class="gallery flex-shrink flex space-x-0 md:w-[465px]">
+            <?php
+                $sliderViewModel = $viewModels->require(Slider::class);
+                $itemsTemplate   = 'Amasty_Storelocator::pages/slide.phtml';
+                $sliderHtml = $sliderViewModel->getSliderForItems($itemsTemplate, $galleryImages)
+                    ->setData('location', $location)
+                    ->setData('maybe_purged_tailwind_section_classes', 'my-0 text-gray-700 body-font')
+                    ->toHtml();
+                echo $sliderHtml;
+            ?>
+        </div>
+    <?php endif; ?>
+</div>
+</div>

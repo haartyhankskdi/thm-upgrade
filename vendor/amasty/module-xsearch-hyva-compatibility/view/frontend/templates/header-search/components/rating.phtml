@@ -1,0 +1,94 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<div
+    class="py-1"
+    :class="ratingWrapperClass"
+>
+    <div
+        class="rating-summary cursor-pointer text-center inline-block"
+        :class="ratingSummaryClass"
+        :title="ratingSummaryTitle"
+        data-title="<?= $escaper->escapeHtmlAttr(__('Be the first to review this product')) ?>"
+    >
+        <div class="flex">
+            <template x-for="starFilled in ratingStarsFilled">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg" class="fill-current w-6 h-6" viewBox="3 0 20 20"
+                    :style="ratingStarYellowStyle"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371
+                        1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
+                        1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                        1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                </svg>
+            </template>
+
+            <template x-if="isRatingStarFragment">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="3 0 20 20" fill="currentColor" class="w-6 h-6">
+                    <defs>
+                        <linearGradient :id="svgProductId">
+                            <stop offset="0%" :stop-color="ratingStarYellowHex"/>
+                            <stop :offset="ratingStarFragmentPercent" :stop-color="ratingStarYellowHex"/>
+                            <stop :offset="ratingStarFragmentPercent" :stop-color="ratingStarGreyHex"/>
+                            <stop offset="100%" :stop-color="ratingStarGreyHex"/>
+                        </linearGradient>
+                    </defs>
+                    <g :fill="svgFill">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969
+                        0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
+                        1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1
+                        0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </g>
+                </svg>
+            </template>
+
+            <template x-for="starEmpty in ratingStarsEmpty">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="fill-current w-6 h-6"
+                    :style="ratingStarGreyStyle"
+                    viewBox="3 0 20 20"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0
+                        1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
+                        1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                        1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                </svg>
+            </template>
+        </div>
+
+        <template x-if="isProductRatingSummary">
+            <a
+                :href="productUrl"
+                class="inline-block reviews-link text-blue-700 hover:text-blue-800"
+            >
+                <span
+                    class="ml-2 text-sm"
+                    x-html="productReviewsCountHtml"
+                ></span>
+                <?= $escaper->escapeHtml(__('Reviews')) ?>
+            </a>
+        </template>
+    </div>
+</div>

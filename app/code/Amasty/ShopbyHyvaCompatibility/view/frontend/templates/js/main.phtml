@@ -1,0 +1,158 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+$pageLayout = $productListAjax->getPageLayout() ?: $block->getLayout()->getUpdate()->getPageLayout();
+$isOneColumn = $pageLayout === '1column' || $pageLayout === 'cms-full-width' || $pageLayout === 'product-full-width';
+?>
+<script>
+    /**
+     * Cut zeroes from value
+     *
+     * @param {Number} digits - signs after dot
+     * @param hideDigitsAfterDot
+     * @returns {String | Number}
+     */
+    // eslint-disable-next-line no-extend-native
+    Number.prototype.amToFixed = function (digits, hideDigitsAfterDot) {
+        let value = this.toFixed(digits);
+
+        if (hideDigitsAfterDot && parseInt(value)) {
+            value = parseInt(value)
+        }
+        return value;
+    };
+
+    function getPageLayoutWildcard() {
+        const bodyClassList = document.querySelector('body').classList;
+        let wildcard = '1column';
+
+        for (let i = 0; i < bodyClassList.length; i++) {
+            const match = bodyClassList[i].match(/^page-layout-(.*)$/);
+            if (match) {
+                wildcard = match[1];
+                break;
+            }
+        }
+
+        return wildcard;
+    }
+
+    function deepMerge(target, ...sources) {
+        if (!sources.length) {
+            return target;
+        }
+
+        const source = sources.shift();
+
+        if (typeof target !== 'object' || typeof source !== 'object') {
+            return target;
+        }
+
+        for (let key in source) {
+            if (source.hasOwnProperty(key)) {
+                if (source[key] instanceof Array) {
+                    target[key] = target[key] || [];
+                    target[key] = target[key].concat(source[key]);
+                } else if (typeof source[key] === 'object') {
+                    target[key] = deepMerge(target[key] || {}, source[key]);
+                } else {
+                    target[key] = source[key];
+                }
+            }
+        }
+
+        return deepMerge(target, ...sources);
+    }
+
+    function initSelectorsILN() {
+        return {
+            selectors: {
+                // main
+                columns: '.columns',
+                body: '#html-body',
+
+                // sidebar
+                sidebar: '.sidebar',
+                sidebarList: '.sidebar.sidebar-main #narrow-by-list',
+                layeredFilter: '#layered-filter-block',
+                blockFilter: '.block-filter-top',
+
+                // slider
+                sliderWrapper: "[data-amshopby-slider-id='slider']",
+                sliderInput: "[data-amshopby-slider-id='value']",
+                sliderHandles: ".noUi-handle",
+                sliderConnect: ".noUi-connect",
+                sliderTooltip: ".noUi-tooltip",
+                widgetFrom: "[data-amshopby-fromto='from']",
+                widgetTo: "[data-amshopby-fromto='to']",
+
+                // top nav
+                topNav: '<?= $isOneColumn ? '.sidebar-topnav' : '.amasty-catalog-topnav'?>',
+                topNavigation: '.catalog-topnav .block-filter-top',
+
+                // apply button
+                button: '.am_shopby_apply_filters',
+
+                // filter wrapper
+                showMoreButton: '.am-show-more',
+                collapsedItems: '.item-category .collapsed',
+                highlighted: '.marked',
+
+                // filter
+                filter: '.filter-option',
+                filterState: '.am-filter-state',
+                filterTitle: '.filter-options-title',
+                filterItem: '.am-filter',
+                filterContent: '.filter-content',
+                filterOption: '.filter-option',
+                filterWrapper: '.am-filter',
+                filterForm: 'form[data-amshopby-filter]',
+                filterFormAttr: 'form[data-amshopby-filter={attr}]',
+                filterItems: '[class*="am-filter-items"]',
+                filterName: '[name="amshopby[{name}][]"]',
+                filterRequestVar: '[data-amshopby-filter-request-var="cat"]',
+                filterOptionsContent: '.filter-options-content',
+                filterOptionsItem: '.filter-option',
+
+                showMore: '.am-show-more > button',
+                selectedClass: '.amshopby-link-selected',
+
+                titleHead: '[data-ui-id="page-title-wrapper"]',
+                productsWrapper: '#amasty-shopby-product-list, .search.results',
+
+                // from to
+                fromToWidget: '[data-am-js="fromto-widget"]',
+
+                // remove
+                removeItems: '.filter-current .items .radio-remove-item',
+                removeAllItems: '.filter-current .items .amshopby-remove-item',
+            },
+            toolbarElements: {
+                mode: '[data-role="mode-switcher"]',
+                sortDir: '.sorter-action',
+                sort: '[data-role="sorter"]',
+                limiter: '[data-role="limiter"]'
+            },
+        }
+    }
+</script>
+<?= /* @noEscape */ $block->getChildHtml(); ?>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <amasty_gdprcookie>
+            <microsoft_mode>
+                <consent_types>{"item1":{"consent_type":"ad_storage","default_status":"0","cookie_group":"0"}}</consent_types>
+            </microsoft_mode>
+        </amasty_gdprcookie>
+    </default>
+</config>

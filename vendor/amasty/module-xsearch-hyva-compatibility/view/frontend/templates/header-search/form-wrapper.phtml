@@ -1,0 +1,440 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopup;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Amasty\XsearchHyvaCompatibility\ViewModel\ComponentsRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var ComponentsRegistry $componentRegistry */
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+$popupViewModel = $viewModels->require(SearchPopup::class);
+$blocks = $popupViewModel->getBlockPositions();
+$componentRegistry = $viewModels->require(ComponentsRegistry::class);
+$hyvaUIHeaderVariant = $popupViewModel->getHyvaUIHeaderVariant();
+$expandArray = array_values($block->getData('expand'));
+?>
+<?= /** @noEscape */ $componentRegistry->renderOnce('search-js-products') ?>
+<?= /** @noEscape */ $componentRegistry->renderOnce('search-js-autocomplete') ?>
+<?= /** @noEscape */ $componentRegistry->renderOnce('search-js-carousel') ?>
+
+<?php if (!empty($popupViewModel->getHyvaUIHeaderVariant())): ?>
+    <?= /** @noEscape  */ $componentRegistry->renderOnce('search-js-hyva-ui-header-compat') ?>
+<?php endif ?>
+<div
+    x-data="amXsearchFormWrapperData"
+    x-init="amXsearchFormWrapperInit"
+    :class="headerSearchFormWrapperClass hidden"
+    x-cloak
+>
+    <?= /** @noEscape */ $componentRegistry->render('loading') ?>
+
+    <div
+        x-show="showOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 bg-black/50 z-20 w-full h-full top-0 left-0 right-0 bottom-0"
+        @click.prevent="overlayClickEvent"
+        @keydown.window.escape="closeSearch"></div>
+
+    <div
+        class="form mini-search z-20 relative"
+        :class="headerSearchWrapperClass"
+    >
+        <form
+            id="search_mini_form"
+            @submit.prevent="redirect"
+            action="<?= $escaper->escapeUrl($popupViewModel->getResultsPageUrl()) ?>"
+            :class="headerSearchFormClass"
+            class="flex"
+            method="GET"
+        >
+            <label class="sr-only" for="search" data-role="mini-search-label">
+                <span><?= $escaper->escapeHtml(__('Search')) ?></span>
+            </label>
+            <div
+                class="w-full flex align-center justify-center"
+                :style="inputWrapperStyle"
+            >
+                <div class="relative w-full">
+                    <input
+                        id="search"
+                        x-ref="searchInput"
+                        maxlength="<?= $escaper->escapeHtml($popupViewModel->getMaxQueryLength()) ?>"
+                        form="search_mini_form"
+                        type="text"
+                        name="<?= $escaper->escapeHtml($popupViewModel->getQueryParamName()) ?>"
+                        value="<?= $escaper->escapeHtml($popupViewModel->getQueryText()) ?>"
+                        autocomplete="off"
+                        placeholder="<?= $escaper->escapeHtmlAttr(__('Search entire store here...')) ?>"
+                        class="p-2 text-lg leading-normal transition appearance-none text-grey-800 relative z-20
+                            focus:outline-none focus:border-transparent lg:text-xl flex-am-search-sidebar"
+                        :class="inputSearchClass"
+                        data-searchButton="<?= $escaper->escapeHtmlAttr($popupViewModel->showSearchButton()) ?>"
+                        :style="inputStyle"
+                        @focus="doSearch"
+                        @search="checkSearchInput"
+                        @keydown.enter="redirect"
+                        @input.debounce.<?= $escaper->escapeHtml($popupViewModel->getSearchInputDelayInMS()) ?>="doSearch"
+                        <?php if (!empty($hyvaUIHeaderVariant) && $hyvaUIHeaderVariant !== 'c'): ?>
+                            x-intersect:enter.once="inputEnterOnceEvent"
+                        <?php endif ?>
+                        @keydown.arrow-down.prevent="inputArrowDownEvent"
+                        @keydown.enter.prevent="submitSearchForm"
+                    />
+
+                    <button
+                        class="absolute right-1.5 top-2 bg-white p-1 z-20"
+                        x-show="showSearchQuery"
+                        @click.prevent="clearSearchQuery"
+                    >
+                        <?= $heroicons->xHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
+                    </button>
+                </div>
+                <?php if ($popupViewModel->showSearchButton()): ?>
+                    <button
+                        type="submit"
+                        title="<?= $escaper->escapeHtml(__('Search')) ?>"
+                        aria-live="polite"
+                        class="am-custom-search-button  h-full action search w-auto btn btn-primary
+                            justify-center text-sm mb-3 md:mb-0 mr-auto rounded-none"
+                        x-bind:disabled="searchButtonDisabledStatus"
+                        :class="searchButtonClass"
+                        data-layout="<?= $escaper->escapeHtmlAttr($popupViewModel->isCustomLayoutEnabled() ? 'true' : 'false') ?>"
+                        aria-label="Search"
+                        :aria-disabled="searchButtonAriaDisabled"
+                    >
+                        <?php if (!empty($hyvaUIHeaderVariant)): ?>
+                            <?= $heroicons->searchHtml(
+                                "w-8 h-8 md:h-6 md:w-6",
+                                25,
+                                25,
+                                [
+                                    "aria-hidden" => "true"
+                                ]
+                            ) ?>
+                        <?php else: ?>
+                            <?= $escaper->escapeHtml(__('Search')) ?>
+                        <?php endif ?>
+                    </button>
+                <?php endif ?>
+            </div>
+        </form>
+        <template x-if="searchInitialized">
+            <div
+                class="w-full -right-position -bottom-position top-15 bg-white shadow-lg
+                    max-h-screen-75 overflow-auto text-sm amsearch-container"
+                :class="searchInitBlockClass"
+                tabindex="-1"
+                x-cloak
+                :style="searchInitBlockStyle"
+                x-show="showSearchInitBlock"
+            >
+                <div
+                    class="flex w-full content-start flex-wrap box-border relative"
+                    :class="horizontalViewClass"
+                >
+                    <div
+                        class="w-full md:border-r pt-6 am-search-sidebar"
+                        :class="searchViewClass"
+                    >
+                        <?php foreach ($blocks as $blockName => $position): ?>
+                            <template
+                                x-if="ifItemsLength"
+                                data-view="<?= $escaper->escapeHtmlAttr($blockName === 'products' ? '1' : '0') ?>"
+                                data-block="<?= $escaper->escapeHtmlAttr($blockName) ?>"
+                            >
+                                <div
+                                    x-show="showSearchBlock"
+                                    data-block="<?= $escaper->escapeHtmlAttr($blockName) ?>"
+                                    x-cloak>
+                                    <?= /** @noEscape */ $componentRegistry->render('search-' . $blockName) ?>
+                                </div>
+                            </template>
+                        <?php endforeach ?>
+                    </div>
+                    <div
+                        class="relative"
+                        :class="searchViewBlockClass"
+                    >
+                        <div class="flex flex-nowrap flex-col" x-show="showSearchResault" x-cloak>
+                            <div>
+                                <template x-for="component in getBlockOrder" :key="component">
+                                    <div x-show="showRenderComponent">
+                                        <?php if ($popupViewModel->isBestsellersEnabled()): ?>
+                                            <template x-if="isComponentBestsellers">
+                                                <?= /** @noEscape */ $componentRegistry->render('search-bestsellers') ?>
+                                            </template>
+                                        <?php endif ?>
+
+                                        <?php if ($popupViewModel->isRecentlyViewedEnabled()): ?>
+                                            <template x-if="isComponentRecentlyViewed">
+                                                <?= /** @noEscape */ $componentRegistry->render('search-recentlyViewed') ?>
+                                            </template>
+                                        <?php endif ?>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <template x-if="isItemsLengthAndQueryLength">
+                            <?= /** @noEscape */ $componentRegistry->render('search-products') ?>
+                        </template>
+
+                        <div
+                            class="p-4 box-border w-full h-full flex"
+                            x-show="showResault"
+                            role="alert"
+                            aria-live="assertive"
+                            x-cloak
+                        >
+                            <div
+                                class="flex justify-center content-center flex-row items-center flex-wrap align-center
+                                    w-full h-full max-h-[90vh] text-center text-xl word-break bg-gray-100"
+                                x-html="showMessage"
+                                data-message="<?= $escaper->escapeHtmlAttr(__('😔 We could not find anything for&nbsp;<strong>"%s"</strong>'), ['strong']) ?>"
+                            ></div>
+                        </div>
+
+                        <div class="p-4 box-border w-full h-full flex" x-show="showResaultErrorMessage" x-cloak>
+                            <div
+                                class="text-center flex align-center w-full text-xl justify-center content-center
+                                    flex-row bg-gray-100 items-center flex-wrap h-full max-h-[90vh] word-break"
+                                x-html="errorMessage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<?= $block->getChildHtml('amasty.xsearch.header.search.scripts') ?>
+
+<script>
+    function amXsearchFormWrapper() {
+        const expand = <?= /** @noEscape */ json_encode($expandArray) ?>;
+
+        let mergedInitFunction = [];
+
+        const collectedResults = expand.reduce((acc, item) => {
+            if (window[item] && typeof window[item] === 'function') {
+                const feature = window[item]();
+                deepMerge(acc, feature);
+                if (typeof feature.init === 'function') {
+                    mergedInitFunction.push(feature.init);
+                }
+            }
+            return acc;
+        }, {});
+
+        return deepMerge({amXsearchCarouselComponent}, collectedResults, {init: mergeFunctions(mergedInitFunction)});
+    }
+
+    function amXsearchFormWrapperData() {
+        return Object.assign(
+            amXsearchFormWrapper(),
+            amXsearchHeaderScripts(),
+            {
+                searchButtonAriaDisabled() {
+                    return this.isLoading || this.latestQuery.length < this.minSearchLength
+                },
+
+                searchViewClass() {
+                    return {
+                        'border-gray-600': this.showSideBar() && this.getResultProductsCount() > 0,
+                        'hidden': this.latestQuery.length < this.minSearchLength && (
+                                !this.showOnFirstClick('recentSearches') && !this.showOnFirstClick('popularSearches') && !this.showOnFirstClick('browsingHistory')
+                            ) || this.isSidebarSectionsDisabled(),
+                        'am-search-horizontal-view': this.isHorizontalView
+                    }
+                },
+
+                searchViewBlockClass() {
+                    return {
+                        'am-search-content p-2 pt-6': this.latestQuery.length >= this.minSearchLength || (
+                            this.showOnFirstClick('recentSearches') || this.showOnFirstClick('popularSearches') || this.showOnFirstClick('browsingHistory')
+                        ),
+                        'w-full': this.latestQuery.length < this.minSearchLength && (
+                            !this.showOnFirstClick('recentSearches') && !this.showOnFirstClick('popularSearches') && !this.showOnFirstClick('browsingHistory')
+                        ),
+                        'am-search-horizontal-view': this.isHorizontalView,
+                        'p-2 pt-6': this.slider.recentlyViewed || this.slider.bestsellers,
+                        'am-search-sidebar-disabled': this.isSidebarSectionsDisabled()
+                    }
+                },
+
+                headerSearchFormWrapperClass() {
+                    return {
+                        'container': !this.config.isFullScreenMode,
+                        'relative py-2 mx-auto text-black z-20': true,
+                        'max-w-none px-0': this.isHyvaUiHeader() && this.isFullWidthSearch,
+                        'px-0': this.isHyvaUiHeader() && this.isHorizontalView
+                    }
+                },
+
+                headerSearchWrapperClass() {
+                    return {
+                        'right-0': !this.isHyvaUiHeader(),
+                        'md:flex md:justify-center': this.checkHyvaUiHeaderVariant('c') && !this.isDefaultSearchInput && !this.isFullWidthSearch
+                    }
+                },
+
+                headerSearchFormClass() {
+                    return {
+                        'w-full absolute right-0': this.checkHyvaUiHeaderVariant('a') && !this.isDefaultSearchInput && !this.isFullWidthSearch,
+                        'justify-end': !this.checkHyvaUiHeaderVariant('c')
+                    }
+                },
+
+                inputSearchClass() {
+                    return {
+                        'rounded-tl': this.isHyvaUiHeader(),
+                        'rounded-tr': !`${this.$el.dataset.searchButton}` && this.isHyvaUiHeader()
+                    }
+                },
+
+                searchButtonClass() {
+                    return {
+                        'opacity-50': this.isLoading || this.latestQuery.length < this.minSearchLength,
+                        'am-custom-search-button': (this.$el.dataset.layout === 'true'),
+                        'rounded-tr': this.isHyvaUiHeader()
+                    }
+                },
+
+                searchInitBlockClass() {
+                    return {
+                        'absolute': !this.config.isFullScreenMode || this.isHyvaUiHeader(),
+                        'rounded-br rounded-bl': this.isHyvaUiHeader(),
+                        'right-0': !this.checkHyvaUiHeaderVariant('c'),
+                        'top-12': this.checkHyvaUiHeaderVariant('c') && !this.isHorizontalView,
+                        'top-14': this.checkHyvaUiHeaderVariant('a') && this.isHorizontalView
+                    }
+                },
+
+                horizontalViewClass() {
+                    return {
+                        'flex-col': this.isHorizontalView,
+                        'flex-col md:flex-row': !this.isHorizontalView
+                    }
+                },
+
+                overlayClickEvent(event) {
+                    return this.closeSearch()
+                },
+
+                searchButtonDisabledStatus() {
+                    return this.isLoading || this.latestQuery.length < this.minSearchLength
+                },
+
+                submitSearchForm() {
+                    if (!this.isLoading || this.latestQuery.length >= this.minSearchLength) {
+                        this.redirect();
+                    }
+                },
+
+                inputEnterOnceEvent() {
+                    return this.applyHyvaUiHeaderConfig()
+                },
+
+                showMessage() {
+                    return `${this.$el.dataset.message}`.replace('%s', this.latestQuery)
+                },
+
+                ifItemsLength() {
+                    const blockName = this.$el.dataset.block;
+                    const itemsLength = this.sections?.[`${blockName}`]?.items?.length;
+
+                    if (parseInt(this.$el.dataset.view)) {
+                        return this.isHorizontalView && !this.noResultsFound && itemsLength;
+                    }
+
+                    return itemsLength;
+                },
+
+                isComponentBestsellers() {
+                    return this.component === 'bestsellers'
+                },
+
+                isComponentRecentlyViewed() {
+                    return this.component === 'recentlyViewed'
+                },
+
+                isItemsLengthAndQueryLength() {
+                    return !this.noResultsFound && !this.isHorizontalView && this.latestQuery.length >= this.minSearchLength
+                },
+
+                amXsearchFormWrapperInit() {
+                    return this.dynamicLayout(this.$el)
+                },
+
+                inputArrowDownEvent(event) {
+                    return this.focusElement(this.$el.querySelector('[tabindex]'))
+                },
+
+                showSearchBlock() {
+                    return (this.latestQuery.length >= this.minSearchLength || this.showOnFirstClick(`${this.$el.dataset.block}`))
+                },
+
+                showSearchResault() {
+                    return this.latestQuery.length < this.minSearchLength
+                },
+
+                showRenderComponent() {
+                    return this.shouldRenderComponent(this.component)
+                },
+
+                showResault() {
+                    return this.noResultsFound && !this.errorMessage
+                },
+
+                showResaultErrorMessage() {
+                    return this.noResultsFound && this.errorMessage
+                },
+
+                showSearchQuery() {
+                    return this.searchQuery.length
+                },
+
+                showSearchInitBlock() {
+                    return !this.isLoading && this.showOverlay
+                },
+
+                inputWrapperStyle() {
+                    return `max-width: ${!this.isDefaultSearchInput && !this.isFullWidthSearch ? this.searchPopupWidth + 'px' : '100%'}`
+                },
+
+                inputStyle() {
+                    return `width: ${this.checkHyvaUiHeaderVariant('c') && !this.isDefaultSearchInput && !this.isFullWidthSearch ? this.searchPopupWidth + 'px' : '100%'}`
+                },
+
+                searchInitBlockStyle() {
+                    return `${!this.isDefaultSearchInput && !this.isFullWidthSearch ? 'max-width:' + this.searchPopupWidth + 'px' : ''}; ${!this.isHorizontalView && this.checkHyvaUiHeaderVariant('a') ? 'top: 44px; margin-top: 1px;' : ''}`
+                }
+            }
+        )
+    }
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data(
+            'amXsearchFormWrapperData',
+            amXsearchFormWrapperData
+        ),
+        {once: true}
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

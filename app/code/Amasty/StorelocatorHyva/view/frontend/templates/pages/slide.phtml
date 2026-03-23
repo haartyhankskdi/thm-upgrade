@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+$image = $block->getData('item');
+?>
+
+<a
+    href="<?= $escaper->escapeUrl($image['path']) ?>"
+    class="amlocator-link"
+    data-fancybox="gallery"
+    data-src="<?= $escaper->escapeUrl($image['path']) ?>"
+>
+    <img
+        class="amlocator-image"
+        alt="<?= $escaper->escapeHtmlAttr(__('Store photo')) ?>"
+        src="<?= $escaper->escapeUrl($image['path']) ?>"
+    />
+</a>

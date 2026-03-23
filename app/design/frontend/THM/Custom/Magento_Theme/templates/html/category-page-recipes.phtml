@@ -1,0 +1,101 @@
+<?php 
+$block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+$currentCategoryBlock = $block->getLayout()->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$currentCategory = $currentCategoryBlock->getCurrentCategory();
+$recipe_catid = $currentCategory ? $currentCategory->getData('recipe_cat_id') : null;
+
+$postCollection = $block->getPostCollection(); 
+$baseUrl = $block->getBaseUrl();
+
+$postCollection->addFieldToFilter('enabled', 1);
+$postCollection->setOrder('publish_date', 'DESC');
+$postCollection->setCurPage(1);
+
+$filteredPosts = [];
+
+if (!empty($recipe_catid)) {
+    foreach ($postCollection as $post) {
+        $postModel = $post->load($post->getId());
+        $categoryIds = $postModel->getCategoryIds();
+
+        if (in_array($recipe_catid, $categoryIds) && $postModel->getShortDescription()) {
+            $filteredPosts[] = $postModel;
+        }
+        if (count($filteredPosts) >= 2) break;
+    }
+} else {
+    foreach ($postCollection as $post) {
+        if ($post->getShortDescription()) {
+            $filteredPosts[] = $post;
+        }
+        if (count($filteredPosts) >= 2) break;
+    }
+}
+?>
+
+<div class="video-section">
+    <h1 class="main-title">Watch. Learn. Cook with Confidence.</h1>
+    <p class="subtitle">
+        From mouth-watering halal recipes to expert butchery tips - discover the secrets behind every cut.
+    </p>
+
+    <div class="video-grid">
+        <?php if (count($filteredPosts)): ?>
+            <?php foreach ($filteredPosts as $post): ?>
+                <div class="video-card">
+                    <?php echo $post->getShortDescription(); ?>
+                    <span><?php echo $post->getName(); ?></span>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No videos found.</p>
+        <?php endif; ?>
+    </div>
+ <div class="cta-button">
+        <a href="<?php echo $baseUrl ?>recipes" class="view-all">VIEW ALL RECIPES</a>
+    </div>
+</div>
+
+<style>
+.video-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+.main-title {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+.subtitle {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #666;
+}
+.video-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.video-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 470px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    background: #fafafa;
+}
+.cta-button {
+    margin-top: 30px;
+}
+.view-all {
+    text-decoration: none;
+    background-color: #f00;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.view-all:hover {
+    background-color: #c00;
+}
+</style>

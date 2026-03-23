@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mageplaza_fbt_product_link" resource="default" engine="innodb"
+           comment="Frequently Bought Together Product To Product Linkage Table">
+        <column xsi:type="int" name="link_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Link ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Product ID"/>
+        <column xsi:type="int" name="linked_product_id" padding="10" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Linked Product ID"/>
+        <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="false" identity="false" default="0"
+                comment="Position"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="link_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FBT_PRD_LNK_LNKED_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="catalog_product_link"
+                    column="linked_product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FBT_PRODUCT_LINK_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="catalog_product_link" column="product_id" referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="FBT_PRODUCT_ID_LINKED_PRODUCT_ID">
+            <column name="product_id"/>
+            <column name="linked_product_id"/>
+        </constraint>
+        <index referenceId="CATALOG_PRODUCT_LINK_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+        <index referenceId="CATALOG_PRODUCT_LINK_LINKED_PRODUCT_ID" indexType="btree">
+            <column name="linked_product_id"/>
+        </index>
+    </table>
+</schema>

@@ -1,0 +1,176 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/**
+ * @var Location $block
+ * @var Escaper $escaper
+ * @var ViewModelRegistry $viewModels
+ * @var HeroiconsOutline $heroicons
+ */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+?>
+<form
+    class="
+        amlocator-search-container bg-container-lighter px-3.5 py-1
+        md:mb-2.5 md:w-1/3
+    "
+    @submit.prevent
+>
+    <fieldset>
+        <legend class="sr-only">
+            <?= $escaper->escapeHtml(__('Search your store')); ?>
+        </legend>
+        <div class="amlocator-block -current amlocator-current-location mb-4">
+            <div class="amlocator-wrapper mt-1">
+                <label for="amlocator-text" class="mb-0">
+                    <?= $escaper->escapeHtml(__('Searched location')); ?>
+                </label>
+                <div class="relative">
+                    <input
+                        id="amlocator-text"
+                        class="w-full"
+                        type="text"
+                        value=""
+                        name="address"
+                        placeholder="<?= $escaper->escapeHtmlAttr(__('Current location')); ?>"
+                        autocomplete="off"
+                        x-model="searchString"
+                        x-ref="searchInput"
+                    >
+                    <button
+                        id="amlocator-search-btn"
+                        class="absolute right-2 top-2"
+                        x-show="notShowResetButton"
+                        @click="$refs.searchInput.value ? $dispatch('amlocator:search-location') : ''"
+                        @keydown.enter.prevent="$refs.searchInput.value ? $dispatch('amlocator:search-location') : ''"
+                    >
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtml(__('Search location')) ?>
+                        </span>
+                        <?= $heroicons->searchHtml() ?>
+                    </button>
+                    <button
+                        class="amlocator-reset -hidden absolute right-2 top-2"
+                        x-show="showResetButton"
+                        @click="resetMap()"
+                        @keydown.enter.prevent="resetMap()"
+                    >
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtml(__('Reset searched value')) ?>
+                        </span>
+                        <?= $heroicons->xHtml() ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="amlocator-block -search amlocator-search-radius mb-2">
+            <?php if ($block->getDistanceConfig() == 'choose'): ?>
+                <label for="amlocator-measurement" class="mb-0">
+                    <?= $escaper->escapeHtml(__('Choose unit of distance')); ?>
+                </label>
+                <select
+                    id="amlocator-measurement"
+                    class="w-full amlocator-select -measurement"
+                    name="measurement"
+                    x-model="distanceConfig"
+                >
+                    <option value="km">
+                        <?= $escaper->escapeHtml(__('kilometer')); ?>
+                    </option>
+                    <option selected="selected" value="mi">
+                        <?= $escaper->escapeHtml(__('mile')); ?>
+                    </option>
+                </select>
+            <?php else:?>
+                <input
+                    type="hidden"
+                    id="amlocator-measurement"
+                    x-model="distanceConfig"
+                    value="<?= $escaper->escapeHtmlAttr($block->getDistanceConfig()) ?>"
+                >
+            <?php endif ?>
+            <div class="mb-4">
+                <label
+                    id="range_radius"
+                    class="mb-0"
+                    for="radius"
+                >
+                    <?php if ($block->getDistanceConfig() == 'choose'): ?>
+                        <?= $escaper->escapeHtml(__('Search Radius')); ?>
+                    <?php else:?>
+                        <?= $escaper->escapeHtml(__('Search Radius in')); ?>
+                        <?= $escaper->escapeHtml($block->getDistanceConfig()) ?>
+                    <?php endif ?>
+                </label>
+                <?php if ($block->getRadiusType() == 'select' || empty($block->getRadiusType())): ?>
+                    <select
+                        id="radius"
+                        name="radius"
+                        x-model="radius"
+                        x-ref="radiusInput"
+                        class="w-full amlocator-select"
+                    >
+                        <?php foreach ($block->getSearchRadius() as $index => $range): ?>
+                            <option value="<?= $escaper->escapeHtmlAttr(is_numeric($range) ? (int)$range : ''); ?>">
+                                <?= $escaper->escapeHtml($range) ?>
+                            </option>
+                        <?php endforeach;?>
+                    </select>
+                <?php else:?>
+                    <div class="amlocator-range-slider">
+                        <div class="amlocator-handle ui-slider-handle relative pb-8 mx-2">
+                            <span
+                                class="
+                                    amlocator-handle-info absolute px-1 py-0.5 text-white text-xs
+                                    whitespace-nowrap bg-primary rounded-sm -translate-x-1/2
+                                    after:-translate-x-1/2 after:translate-y-1/2 after:rotate-45
+                                    after:content-[''] after:absolute after:bottom-0 after:left-1/2
+                                    after:w-1 after:h-1 after:bg-primary
+                                "
+                                :style="
+                                    radius ?
+                                    'left:' + (( radius  - minRadiusValue ) / (maxRadiusValue - minRadiusValue)) * 100  + '%' :
+                                    'left:' + (( minRadiusValue  - minRadiusValue ) / (maxRadiusValue - minRadiusValue)) * 100  + '%'
+                                "
+                            >
+                                <span x-text="radius ? radius : minRadiusValue"></span>
+                                <span x-text="distanceConfig === 'choose' ? 'km' : distanceConfig"></span>
+                            </span>
+                        </div>
+                        <input
+                            id="radius"
+                            name="radius"
+                            class="w-full"
+                            type="range"
+                            x-model="radius"
+                            x-ref="radiusInput"
+                            value="<?= $escaper->escapeHtmlAttr((int)$block->getMaxRadiusValue()); ?>"
+                            min="<?= $escaper->escapeHtmlAttr((int)$block->getMinRadiusValue()); ?>"
+                            max="<?= $escaper->escapeHtmlAttr((int)$block->getMaxRadiusValue()); ?>"
+                        />
+                    </div>
+                <?php endif ?>
+            </div>
+            <button
+                type="button"
+                class="btn btn-primary w-full"
+                @click="searchLocations()"
+            >
+                <span class="w-full text-center">
+                    <?= $escaper->escapeHtml(__('Locate Nearby')); ?>
+                </span>
+            </button>
+        </div>
+    </fieldset>
+</form>

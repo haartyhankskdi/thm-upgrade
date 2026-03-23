@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Amasty Shop By Brand GraphQl for Magento 2 (System)
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- https://github.com/magento/magento2/issues/27112 -->
+    <type name="Magento\Elasticsearch\SearchAdapter\Query\Builder\Sort">
+        <arguments>
+            <argument name="skippedFields" xsi:type="array">
+                <item name="null" xsi:type="string"></item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\ShopbyBrand\Block\Widget\BrandList">
+        <plugin name="Amasty_ShopbyBrandGraphQl::addConfig" type="Amasty\ShopbyBrandGraphQl\Plugin\Block\Widget\AddWidgetParams" />
+    </type>
+
+    <type name="Amasty\ShopbyBrand\Block\Widget\BrandSlider">
+        <plugin name="Amasty_ShopbyBrandGraphQl::addConfig" type="Amasty\ShopbyBrandGraphQl\Plugin\Block\Widget\AddWidgetParams" />
+    </type>
+
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="amshopby_brand_general_topmenu_enabled" xsi:type="string">amshopby_brand/general/topmenu_enabled</item>
+                <item name="amshopby_brand_general_menu_item_label" xsi:type="string">amshopby_brand/general/menu_item_label</item>
+                <item name="amshopby_brand_product_page_width" xsi:type="string">amshopby_brand/product_page/width</item>
+                <item name="amshopby_brand_product_page_height" xsi:type="string">amshopby_brand/product_page/height</item>
+                <item name="amshopby_brand_listing_brand_logo_width" xsi:type="string">amshopby_brand/product_listing_settings/listing_brand_logo_width</item>
+                <item name="amshopby_brand_listing_brand_logo_height" xsi:type="string">amshopby_brand/product_listing_settings/listing_brand_logo_height</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

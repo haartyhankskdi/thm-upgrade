@@ -1,0 +1,22 @@
+{
+    "name": "amasty/module-improved-layered-navigation-page-import-entity",
+    "description": "Improved Layered Navigation Page Import Entity by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.15.0",
+        "amasty/module-import-core": ">=1.7.2",
+        "amasty/module-improved-layered-navigation-page": ">=2.8.0"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\ImprovedLayeredNavigationPageImportEntity\\": ""
+        }
+    }
+}

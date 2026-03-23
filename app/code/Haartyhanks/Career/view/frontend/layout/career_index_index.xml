@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		 <referenceBlock name="breadcrumbs">
+    <action method="addCrumb">
+        <argument name="crumbName" xsi:type="string">Home</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="title" xsi:type="string">Home</item>
+            <item name="label" xsi:type="string">Home</item>
+            <item name="link" xsi:type="string">{{baseUrl}}</item>
+        </argument>
+    </action>
+    <action method="addCrumb">
+        <argument name="crumbName" xsi:type="string">Careers</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="title" xsi:type="string">Careers</item>
+            <item name="label" xsi:type="string">Careers</item>
+        </argument>
+    </action>
+</referenceBlock>
+
+          <referenceBlock name="page.main.title">
+
+            <action method="setPageTitle">
+                
+                <argument translate="true" name="title" xsi:type="string">Careers</argument>
+            </action>
+        </referenceBlock>
+		<referenceContainer name="content">
+			<block class="Magento\Cms\Block\Block" name="career_before_identifier">
+				<arguments>
+					<argument name="block_id" xsi:type="string">career_before_identifier</argument>
+				</arguments>
+			</block>
+			<block name="career.index.index" class="Haartyhanks\Career\Block\Index\Index" template="Haartyhanks_Career::index/index.phtml"/>
+			<block class="Magento\Cms\Block\Block" name="career_after_identifier">
+				<arguments>
+					<argument name="block_id" xsi:type="string">career_after_identifier</argument>
+				</arguments>
+			</block>
+		</referenceContainer>
+	</body>
+</page>

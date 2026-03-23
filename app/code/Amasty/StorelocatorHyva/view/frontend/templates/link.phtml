@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+
+/** @var \Amasty\Storelocator\Block\Location $block */
+
+if ($block->getProduct()) {
+    if (!$block->getRequest()->getParam('product')) {
+        $productId = $block->getProduct()->getId();
+    }
+    $locationCollection = $block->getLocationCollection();
+
+    if (!count($locationCollection) > 0 && !$block->isNeedToShowLink($locationCollection, $block->getProduct())) {
+        return '';
+    }
+
+    $target = $block->getTarget();
+    $linkText = $block->getLinkText();
+}
+?>
+
+<div class="mt-4 text-right">
+    <a
+        class="text-blue-600 hover:underline"
+        href="<?= $escaper->escapeHtml($block->getLinkToMap(["product" => $productId]))?>"
+        <?= $escaper->escapeHtml($target) ?>
+    >
+        <?= $escaper->escapeHtml($linkText) ?>
+    </a>
+</div>

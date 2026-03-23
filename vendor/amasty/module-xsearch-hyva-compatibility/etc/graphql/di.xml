@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="amasty_xsearch_general_full_screen"
+                    xsi:type="string">amasty_xsearch/general/full_screen</item>
+                <item name="amasty_xsearch_layout_search_button"
+                    xsi:type="string">amasty_xsearch/layout/search_button</item>
+                <item name="amasty_xsearch_layout_search_button_text"
+                    xsi:type="string">amasty_xsearch/layout/search_button_text</item>
+                <item name="amasty_xsearch_product_popup_display"
+                    xsi:type="string">amasty_xsearch/product/popup_display</item>
+                <item name="amasty_xsearch_product_show_sku"
+                    xsi:type="string">amasty_xsearch/product/show_sku</item>
+                <item name="amasty_xsearch_product_desc_length"
+                    xsi:type="string">amasty_xsearch/product/desc_length</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

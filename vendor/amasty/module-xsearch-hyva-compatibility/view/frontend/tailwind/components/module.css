@@ -1,0 +1,23 @@
+/* Custom module styles */
+
+#header .navigation {
+    @apply z-10;
+}
+
+.product-item {
+    &.list-view {
+        width: 100%;
+
+        &:nth-child(even) {
+            @apply mr-0;
+        }
+
+        @media (min-width: 1024px) {
+            width: 48%;
+
+            &:nth-child(even) {
+                @apply mr-5;
+            }
+        }
+    }
+}

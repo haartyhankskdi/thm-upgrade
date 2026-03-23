@@ -1,0 +1,11 @@
+<!--@subject Your personal data has been anonymized @-->
+{{template config_path="design/email/header_template"}}
+
+{{trans "Dear %customer_name" customer_name=$customerName|escape}},
+<br><br>
+{{trans "In response to your recent request, your account was anonymized. Please, notice that all changes couldn't be reverted."}}
+{{trans "To login please use the following anonymized e-mail address: %anonymous_email" anonymous_email=$anonymousEmail|escape}}
+<br><br>
+{{trans "Best regards"}}
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <head>
+    <css src="Kdi_Category::css/category-top-filters.css"/>
+  </head>
+  <body>
+    <referenceContainer name="content">
+      <container name="category.top.filters.container"
+                 as="category_top_filters"
+                 label="Category Top Filters Container"
+                 htmlTag="div"
+                 htmlClass="category-top-filters-wrapper"
+                 before="category.products.list"/>
+    </referenceContainer>
+    <move element="catalog.leftnav" destination="category.top.filters.container" />
+    <referenceContainer name="page.wrapper">
+    <attribute name="layout" xsi:type="string">1column</attribute>
+</referenceContainer>
+  </body>
+</page>

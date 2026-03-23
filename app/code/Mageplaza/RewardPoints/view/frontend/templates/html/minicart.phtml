@@ -1,0 +1,36 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+
+if ($helperPoints->getAccountHelper()->isCustomerLoggedIn() && $helperPoints->checkHyvaTheme()) : ?>
+    <div class="mp-reward-cart">
+        <template x-if="cart && cart.rewardEarn">
+            <div>
+                <span style="float: left; margin-left: 6%; margin-right: 1%; margin-top: 0.5%"><?= $helperPoints->getIconHtml() ?></span>
+                <span><?= $escaper->escapeHtml(__('Checkout now to earn')) ?></span>
+                <strong class="mp-rw-highlight" x-text="cart.rewardEarn"></strong>
+            </div>
+        </template>
+    </div>
+<?php endif; ?>

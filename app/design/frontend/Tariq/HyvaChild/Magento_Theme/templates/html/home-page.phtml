@@ -1,0 +1,59 @@
+<!-- After Slider Content -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Cms\Block\Block::class)
+    ->setBlockId('after_banner')
+    ->toHtml();
+    ?>
+<div class="container">    
+<!-- Best Seller Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate('Magento_Theme::html/bestseller.phtml')
+    ->toHtml();
+?>
+ <!-- Popup for delivery information --> 
+<!-- <?//php echo $this->getLayout()
+    //->createBlock(\Magento\Framework\View\Element\Template::class)
+    //->setTemplate('Magento_Theme::html/home_popup.phtml')
+   // ->toHtml();
+?> -->
+<!-- Review Section Static Block -->
+<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('review_section_category')->toHtml();
+?>
+ 
+<!-- Category Section -->
+<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home_category_section')->toHtml();
+?>
+ 
+<!-- Restaurant Offers section -->
+<?= $this->getLayout()->createBlock("RM\Homeproductcoll\Block\Products")->setTemplate("RM_Homeproductcoll::groceries.phtml")->toHtml() ?>
+
+<!-- Recipies Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate('Magento_Theme::html/homepage-recipes.phtml')
+    ->toHtml();
+?>
+ 
+<!-- Delivery Partners Section -->
+<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('delivery_partners')->toHtml();
+?>
+</div>
+
+
+<!-- Exotic Indulgence Product Section-->
+   <?= $this->getLayout()->createBlock("RM\Homeproductcoll\Block\Products")->setTemplate("RM_Homeproductcoll::freshmeat.phtml")->toHtml() ?>
+ 
+<div class="container"> 
+<!-- Home Latest Blog Posts trends & stories Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate('Magento_Theme::html/latest-trends-post.phtml')
+    ->toHtml();
+?>
+</div>
+
+<div class="home-bottom-sec">
+<!-- Mobile App Section -->
+<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('mobile_app_section')->toHtml();
+?></div>

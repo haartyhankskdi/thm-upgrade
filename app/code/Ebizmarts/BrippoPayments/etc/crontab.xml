@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="brippo_payments_monitor" instance="Ebizmarts\BrippoPayments\Cron\PaymentsMonitor" method="execute">
+            <schedule>*/30 * * * *</schedule>
+        </job>
+        <job name="brippo_payments_update_uncaptured_transactions"
+             instance="Ebizmarts\BrippoPayments\Cron\UpdateUncapturedTransactionsCount" method="execute">
+            <schedule>5 10-20/2 * * *</schedule>
+        </job>
+        <job name="brippo_recover_checkout_automated_notifications"
+             instance="Ebizmarts\BrippoPayments\Cron\RecoverCheckoutAutomaticNotifications" method="execute">
+            <schedule>1 * * * *</schedule>
+        </job>
+        <job name="brippo_pay_by_link_email_queue" instance="Ebizmarts\BrippoPayments\Cron\PayByLinkEmailQueue" method="processQueue">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="brippo_soft_fail_recover" instance="Ebizmarts\BrippoPayments\Cron\SoftFailRecoverCheck" method="checkOrders">
+            <schedule>25 * * * *</schedule>
+        </job>
+    </group>
+</config>

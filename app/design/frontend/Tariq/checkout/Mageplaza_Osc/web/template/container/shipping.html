@@ -1,0 +1,91 @@
+<!--
+/**
+ * Mageplaza OSC - Custom Shipping Dropdown
+ */
+-->
+
+<div id="opc-shipping_method"
+     class="checkout-shipping-method"
+     data-bind="fadeVisible: visible()"
+     role="presentation">
+
+    <div class="checkout-shipping-method">
+
+        <!-- Title -->
+        <div class="step-title" data-role="title">
+            <span data-bind="i18n: 'Delivery Options'"></span>
+        </div>
+
+        <!-- Before Region -->
+        <!-- ko foreach: getRegion('before-shipping-method-form') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+
+        <div id="checkout-step-shipping_method"
+             class="step-content col-mp mp-12"
+             data-role="content"
+             role="tabpanel"
+             aria-hidden="false"
+             data-bind="blockLoader: isLoading">
+
+            <!-- ko if: rates().length -->
+
+            <form class="form methods-shipping"
+                  id="co-shipping-method-form"
+                  data-bind="submit: setShippingInformation"
+                  novalidate="novalidate">
+
+                <div class="mp-shipping-dropdown">
+
+                    <select class="mp-select"
+                        data-bind="
+                            options: rates,
+                            optionsText: function(item) {
+                                return item.carrier_title + ' - ' + item.method_title + ' (£' + item.price_excl_tax + ')';
+                            },
+                            optionsValue: function(item) {
+                                return item.carrier_code + '_' + item.method_code;
+                            },
+                            optionsCaption: $t('Select An Option'),
+                            event: {
+                                change: function (_, event) {
+                                    var selected = event.target.value;
+                                    rates().forEach(function (method) {
+                                        if (method.carrier_code + '_' + method.method_code === selected) {
+                                            selectShippingMethod(method);
+                                        }
+                                    });
+                                }
+                            }
+                        ">
+                    </select>
+
+                </div>
+
+                <!-- Additional shipping content -->
+                <div id="onepage-checkout-shipping-method-additional-load">
+                    <!-- ko foreach: getRegion('shippingAdditional') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+
+                <!-- Error message -->
+                <!-- ko if: errorValidationMessage().length > 0 -->
+                <div class="message notice">
+                    <span data-bind="i18n: errorValidationMessage()"></span>
+                </div>
+                <!-- /ko -->
+
+            </form>
+
+            <!-- /ko -->
+
+            <!-- ko ifnot: rates().length -->
+            <div class="no-quotes-block">
+                <!-- ko i18n: 'Sorry, no delivery options are available for this order at this time.' --><!-- /ko -->
+            </div>
+            <!-- /ko -->
+
+        </div>
+    </div>
+</div>

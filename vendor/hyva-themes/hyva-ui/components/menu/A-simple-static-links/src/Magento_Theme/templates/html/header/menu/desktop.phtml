@@ -1,0 +1,86 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+
+/** @var Navigation $viewModelNavigation */
+$viewModelNavigation = $viewModels->require(Navigation::class, $block);
+
+// Order is important here: 1. build the menu data, 2. then set the cache tags from the view model identities
+$menu = $block->getMenuItems() ?: [
+    [
+        'url' => '/what-is-new.html',
+        'name' => 'New arrivals'
+    ],
+    [
+        'url' => '/women.html',
+        'name' => 'Women'
+    ],
+    [
+        'url' => '/men.html',
+        'name' => 'Men'
+    ],
+    [
+        'url' => '/sale.html',
+        'name' => 'Sale',
+        'isCta' => true
+    ],
+    [
+        'url' => '/contact',
+        'name' => 'Contact'
+    ]
+];
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+?>
+
+<nav
+    class="navigation hidden lg:block"
+    aria-label="<?= $escaper->escapeHtmlAttr(__('Main menu')) ?>"
+    x-data="initMenuDesktop"
+    x-ref="nav-desktop"
+    @load.window="setActiveMenu"
+>
+    <ul class="flex flex-wrap gap-x-8">
+        <?php foreach ($menu as $item): ?>
+            <li>
+                <a
+                    href="<?= $escaper->escapeUrl($item['url']) ?>"
+                    title="<?= $escaper->escapeHtmlAttr($item['name']) ?>"
+                    class="level-0 flex py-2 border-b-2 border-transparent hover:border-blue-500
+                        aria-[current=page]:font-medium <?= isset($item['isCta']) ? 'text-red-700' : '' ?>"
+                >
+                    <?= $escaper->escapeHtml($item['name']) ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</nav>
+<script>
+    function initMenuDesktop() {
+        return {
+            setActiveMenu() {
+                Array.from(this.$root.querySelectorAll('a')).forEach(link => {
+                    if (link.href === `${window.location.origin}${window.location.pathname}`) {
+                        link.setAttribute('aria-current', 'page');
+                    }
+                });
+            }
+        }
+    }
+    window.addEventListener('alpine:init', () => Alpine.data('initMenuDesktop', initMenuDesktop), {once: true})
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

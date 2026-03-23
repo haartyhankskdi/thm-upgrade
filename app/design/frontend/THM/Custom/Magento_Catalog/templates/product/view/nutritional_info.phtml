@@ -1,0 +1,48 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+$product = $block->getProduct();
+
+$calories = $product->getData('calories');
+$protein = $product->getData('protein');
+$sodium = $product->getData('sodium');
+$satFat = $product->getData('sat_fat');
+$sugar = $product->getData('sugar');
+?>
+
+<?php if ($calories || $protein || $sodium || $satFat || $sugar): ?>
+    <div class="product-nutrition">
+        <h3 class="nutrition-title">Nutritional Information</h3>
+        <div class="nutrition-list">
+            <?php if ($calories): ?>
+                <div class="nutrition-item">
+                    <div class="nutrition-value"><?= $block->escapeHtml($calories) ?></div>
+                    <div class="nutrition-label">Calories</div>
+                </div>
+            <?php endif; ?>
+            <?php if ($protein): ?>
+                <div class="nutrition-item">
+                    <div class="nutrition-value"><?= $block->escapeHtml($protein) ?></div>
+                    <div class="nutrition-label">Protein</div>
+                </div>
+            <?php endif; ?>
+            <?php if ($sodium): ?>
+                <div class="nutrition-item">
+                    <div class="nutrition-value"><?= $block->escapeHtml($sodium) ?></div>
+                    <div class="nutrition-label">Sodium</div>
+                </div>
+            <?php endif; ?>
+            <?php if ($satFat): ?>
+                <div class="nutrition-item">
+                    <div class="nutrition-value"><?= $block->escapeHtml($satFat) ?></div>
+                    <div class="nutrition-label">Sat. Fat</div>
+                </div>
+            <?php endif; ?>
+            <?php if ($sugar): ?>
+                <div class="nutrition-item">
+                    <div class="nutrition-value"><?= $block->escapeHtml($sugar) ?></div>
+                    <div class="nutrition-label">Sugar</div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>

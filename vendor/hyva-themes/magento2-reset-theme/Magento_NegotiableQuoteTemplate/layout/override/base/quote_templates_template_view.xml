@@ -1,0 +1,492 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content.top">
+<!--            <block name="template.message" template="Magento_NegotiableQuoteTemplate::quote-template/message.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="message_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\MessageProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+<!--            <block name="template.badge" template="Magento_NegotiableQuoteTemplate::quote-template/view/badge.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="button_data_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="template_doc_info" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\TemplateDocs-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+        </referenceContainer>
+<!--        <move element="template.message" destination="content.top" before="page.main.title"/>-->
+<!--        <move element="template.badge" destination="content.top" before="page.main.title"/>-->
+        <referenceBlock name="page.main.title">
+<!--            <block name="template.rename" template="Magento_NegotiableQuoteTemplate::quote-template/view/rename.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="actions_manager" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                    </argument>-->
+<!--                    <argument name="button_data_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+<!--            <block name="template.status"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::quote-template/view/status.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="status_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\StatusInfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+<!--            <referenceBlock name="quote.rename" remove="true"/>-->
+<!--            <referenceBlock name="quote.status" remove="true"/>-->
+<!--            <referenceBlock name="quote.message" remove="true"/>-->
+<!--            <referenceContainer name="quote.references.container" remove="true"/>-->
+<!--            <referenceBlock name="quote.date" remove="true"/>-->
+<!--            <block name="template.info"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::quote-template/view/info.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="actions_manager" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                    </argument>-->
+<!--                    <argument name="button_data_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="company_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\CompanyInfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="creator_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\CreatorInfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="date_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\DateInfoProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+<!--            <referenceBlock name="quote.actions.container" remove="true"/>-->
+        </referenceBlock>
+        <referenceContainer name="content">
+<!--            <block class="Magento\Framework\View\Element\Html\Calendar"-->
+<!--                   name="html_calendar"-->
+<!--                   as="html_calendar"-->
+<!--                   template="Magento_Theme::js/calendar.phtml"/>-->
+            <referenceBlock name="quote.view" class="Magento\NegotiableQuoteTemplate\Block\Template\View">
+<!--                <arguments>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="recalculation_data_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\Recalculation-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--                <action method="setTemplate">-->
+<!--                    <argument name="template" xsi:type="string">-->
+<!--                        Magento_NegotiableQuoteTemplate::quote-template/view.phtml-->
+<!--                    </argument>-->
+<!--                </action>-->
+                <referenceBlock name="quote_items">
+<!--                    <arguments>-->
+<!--                        <argument name="actions_manager" xsi:type="object">-->
+<!--                            Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                        </argument>-->
+<!--                        <argument name="template_info_provider" xsi:type="object">-->
+<!--                            Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                        </argument>-->
+<!--                    </arguments>-->
+<!--                    <action method="setTemplate">-->
+<!--                        <argument name="template" xsi:type="string">-->
+<!--                            Magento_NegotiableQuoteTemplate::quote-template/view/items.phtml-->
+<!--                        </argument>-->
+<!--                    </action>-->
+                    <referenceBlock name="quote_items.item_popup">
+                        <referenceBlock name="quote_item.item_popup.qty">
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/item-popup/qty.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+<!--                            <arguments>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+                        </referenceBlock>
+                    </referenceBlock>
+                    <referenceBlock name="checkout.cart.item.renderers">
+                        <referenceBlock name="checkout.cart.item.renderers.default">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.default.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.simple">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.simple.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.bundle">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.bundle.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.configurable">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.configurable.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.grouped">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.grouped.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.downloadable">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.downloadable.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                        <referenceBlock name="checkout.cart.item.renderers.giftcard">
+<!--                            <arguments>-->
+<!--                                <argument name="actions_manager" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                </argument>-->
+<!--                                <argument name="template_info_provider" xsi:type="object">-->
+<!--                                    Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                            <action method="setTemplate">-->
+<!--                                <argument name="template" xsi:type="string">-->
+<!--                                    Magento_NegotiableQuoteTemplate::quote-template/view/item/default.phtml-->
+<!--                                </argument>-->
+<!--                            </action>-->
+                            <referenceBlock name="checkout.cart.item.renderers.giftcard.item_notes">
+<!--                                <arguments>-->
+<!--                                    <argument name="actions_manager" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                                    </argument>-->
+<!--                                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                                    </argument>-->
+<!--                                </arguments>-->
+<!--                                <action method="setTemplate">-->
+<!--                                    <argument name="template" xsi:type="string">-->
+<!--                                        Magento_NegotiableQuoteTemplate::quote-template/view/item/item_notes.phtml-->
+<!--                                    </argument>-->
+<!--                                </action>-->
+                            </referenceBlock>
+                        </referenceBlock>
+                    </referenceBlock>
+<!--                    <referenceBlock name="quote_items.update_warning_modal" remove="true"/>-->
+                </referenceBlock>
+            </referenceBlock>
+<!--            <block class="Magento\NegotiableQuote\Block\Quote\Comments"-->
+<!--                   name="comment.form"-->
+<!--                   template="Magento_NegotiableQuote::quote/comments/form.phtml"/>-->
+<!--            <referenceBlock name="negotiable.quote.info.buttons" remove="true"/>-->
+            <referenceBlock name="quote_info">
+                <referenceBlock name="quote.address">
+<!--                    <action method="setTemplate">-->
+<!--                        <argument name="template" xsi:type="string">-->
+<!--                            Magento_NegotiableQuoteTemplate::quote-template/view/address.phtml-->
+<!--                        </argument>-->
+<!--                    </action>-->
+                </referenceBlock>
+            </referenceBlock>
+<!--            <referenceBlock name="comment.form" remove="true"/>-->
+<!--            <block class="Magento\NegotiableQuote\Block\Quote\Comments"-->
+<!--                   name="template.comment.form"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::quote-template/view/comments/form.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="actions_manager" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+<!--            <block name="negotiable.template.buttons"-->
+<!--                   template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/container.phtml">-->
+<!--                <arguments>-->
+<!--                    <argument name="actions_manager" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                    </argument>-->
+<!--                    <argument name="template_info_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                    </argument>-->
+<!--                    <argument name="button_data_provider" xsi:type="object">-->
+<!--                        Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                    </argument>-->
+<!--                </arguments>-->
+<!--                <block name="template.active.buttons"-->
+<!--                       template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/active-buttons.phtml">-->
+<!--                    <block name="template.generate.quote.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/generate-quote.phtml"-->
+<!--                           before="-">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                    <block name="template.active.cancel.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/cancel.phtml">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                </block>-->
+<!--                <block name="template.inreview.buttons"-->
+<!--                       template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/inreview-buttons.phtml">-->
+<!--                    <block name="template.accept.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/accept.phtml"-->
+<!--                           before="-">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                    <block name="template.send.review.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/send-for-review.phtml"-->
+<!--                           after="template.accept.button">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                    <block name="template.cancel.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/cancel.phtml"-->
+<!--                           after="template.send.review.button">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                    <block name="template.delete.button"-->
+<!--                           template="Magento_NegotiableQuoteTemplate::quote-template/view/buttons/delete.phtml"-->
+<!--                           after="template.send.review.button">-->
+<!--                        <arguments>-->
+<!--                            <argument name="actions_manager" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ActionsManager-->
+<!--                            </argument>-->
+<!--                            <argument name="button_data_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\View\ButtonDataProvider-->
+<!--                            </argument>-->
+<!--                            <argument name="template_info_provider" xsi:type="object">-->
+<!--                                Magento\NegotiableQuoteTemplate\ViewModel\Template\InfoProvider-->
+<!--                            </argument>-->
+<!--                        </arguments>-->
+<!--                    </block>-->
+<!--                </block>-->
+<!--            </block>-->
+        </referenceContainer>
+    </body>
+</page>

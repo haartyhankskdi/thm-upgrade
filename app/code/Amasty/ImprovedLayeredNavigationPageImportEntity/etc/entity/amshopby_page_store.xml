@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Improved Layered Navigation Page Import Entity
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_ImportCore:etc/am_import.xsd">
+    <entity code="amshopby_page_store">
+        <name>Amasty Improved Layered Navigation Page Store</name>
+        <group>Amasty Improved Layered Navigation</group>
+        <description>Amasty Improved Layered Navigation Page Store Import Entity</description>
+        <enabledChecker class="Amasty\ImportCore\Import\Config\IsModuleEnabled">
+            <arguments>
+                <argument name="moduleName" xsi:type="string">Amasty_ShopbyPage</argument>
+            </arguments>
+        </enabledChecker>
+        <fieldsConfig>
+            <fieldsClass class="Amasty\ImportCore\Import\FieldsClass\Describe">
+                <arguments>
+                    <argument name="tableName" xsi:type="string">amasty_amshopby_page_store</argument>
+                </arguments>
+            </fieldsClass>
+            <fields>
+                <field name="page_id" isIdentity="true">
+                    <actions>
+                        <trim apply="beforeValidate"/>
+                    </actions>
+                    <validation>
+                        <integer/>
+                        <nonNegative/>
+                        <notEmpty/>
+                        <tableRowExists tableName="amasty_amshopby_page"
+                                        idFieldName="page_id"
+                                        error="Page with specified 'page_id' doesn't exist"
+                                        rootOnly="true">
+                            <excludeBehaviors>
+                                <deleteDirect/>
+                            </excludeBehaviors>
+                        </tableRowExists>
+                    </validation>
+                    <required/>
+                </field>
+                <field name="store_id">
+                    <validation>
+                        <storeExists/>
+                    </validation>
+                    <filter>
+                        <type>store</type>
+                    </filter>
+                    <required/>
+                </field>
+            </fields>
+            <sampleData>
+                <row>
+                    <field name="page_id">1</field>
+                    <field name="store_id">1</field>
+                </row>
+            </sampleData>
+        </fieldsConfig>
+        <behaviors>
+            <custom class="Amasty\ImportCore\Import\Behavior\TableWithCompositePKey"
+                    code="save_page_store"
+                    name="Add/Update">
+                <arguments>
+                    <argument name="tableName" xsi:type="string">amasty_amshopby_page_store</argument>
+                    <argument name="identityKey" xsi:type="string">page_id</argument>
+                    <argument name="primaryKeyFields" xsi:type="array">
+                        <item name="pageId" xsi:type="string">page_id</item>
+                        <item name="storeId" xsi:type="string">store_id</item>
+                    </argument>
+                </arguments>
+                <executeOnParent>
+                    <addDirect/>
+                    <addUpdateDirect/>
+                    <updateDirect/>
+                </executeOnParent>
+            </custom>
+            <deleteDirect name="Delete">
+                <tableName>amasty_amshopby_page_store</tableName>
+                <idField>page_id</idField>
+            </deleteDirect>
+        </behaviors>
+    </entity>
+    <relation code="amshopby_page_page_store">
+        <parent_entity>amshopby_page</parent_entity>
+        <child_entity>amshopby_page_store</child_entity>
+        <sub_entity_field_name>amshopby_page_store</sub_entity_field_name>
+        <type>one_to_many</type>
+        <arguments>
+            <argument name="parent_field_name" xsi:type="string">page_id</argument>
+            <argument name="child_field_name" xsi:type="string">page_id</argument>
+        </arguments>
+    </relation>
+</config>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Google Consent Mode
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amasty_gdprcookie">
+            <group id="consent_mode">
+                <field id="consent_types" translate="label comment" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Consent Types</label>
+                    <frontend_model>Amasty\GoogleConsentMode\Block\Adminhtml\System\Config\Form\Field\ConsentTypes</frontend_model>
+                    <backend_model>Amasty\GoogleConsentMode\Model\Config\Backend\Serialized\ConsentTypesArraySerialized</backend_model>
+                    <comment><![CDATA[More information about Tag Manager consent types can be found <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank">here</a>.]]></comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <dev>
+            <js>
+                <minify_exclude>
+                    <sagepaysuitepi>sagepay</sagepaysuitepi>
+                </minify_exclude>
+            </js>
+        </dev>
+        <sagepaysuite>
+            <global>
+                <active>0</active>
+                <license>[Request from ebizmarts]</license>
+                <vendorname>testebizmarts</vendorname>
+                <mode>test</mode>
+                <protocol>4.00</protocol>
+                <currency>base_currency</currency>
+                <repeat_transaction>1</repeat_transaction>
+                <token>0</token>
+                <sync_order>0</sync_order>
+                <sync_orders_attempt>1</sync_orders_attempt>
+                <reporting_password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </global>
+            <advanced>
+                <debug_mode>0</debug_mode>
+                <prevent_personal_data_logging>1</prevent_personal_data_logging>
+                <threedsecure>UseMSPSetting</threedsecure>
+                <avscvc>UseMSPSetting</avscvc>
+                <fraud_autoinvoice>0</fraud_autoinvoice>
+                <fraud_autoinvoice_score>80</fraud_autoinvoice_score>
+                <hold_order>0</hold_order>
+                <basket_format>Sage50</basket_format>
+                <max_token>3</max_token>
+                <same_site_cookies>0</same_site_cookies>
+                <quote_validator>1</quote_validator>
+                <cancel_pending_payment_cron>30 MINUTE</cancel_pending_payment_cron>
+                <reporting_api_hash_algorithm>sha256</reporting_api_hash_algorithm>
+            </advanced>
+        </sagepaysuite>
+        <payment>
+            <sagepaysuiteform>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\Form</model>
+                <payment_action>PAYMENT</payment_action>
+                <send_email>1</send_email>
+                <title>FORM</title>
+                <encrypted_password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <allowspecific>0</allowspecific>
+            </sagepaysuiteform>
+            <sagepaysuitepi>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\PI</model>
+                <payment_action>Payment</payment_action>
+                <challengewindowsize>Medium</challengewindowsize>
+                <title>Pi</title>
+                <cctypes>AE,VI,MC,DI,JCB</cctypes>
+                <allowspecific>0</allowspecific>
+                <use_dropin>1</use_dropin>
+                <threed_new_window>0</threed_new_window>
+                <validate_acs_url>1</validate_acs_url>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </sagepaysuitepi>
+            <sagepaysuitepimoto>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\PiMoto</model>
+                <payment_action>Payment</payment_action>
+                <title>Pi Moto</title>
+                <cctypes>AE,VI,MC,DI,JCB</cctypes>
+                <allowspecific>0</allowspecific>
+                <use_dropin>1</use_dropin>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </sagepaysuitepimoto>
+            <sagepaysuiteserver>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\Server</model>
+                <payment_action>PAYMENT</payment_action>
+                <title>SERVER</title>
+                <payment_pages_layout>MODAL</payment_pages_layout>
+                <profile>0</profile>
+                <cctypes>AE,VI,MC,DI,JCB</cctypes>
+                <allowspecific>0</allowspecific>
+            </sagepaysuiteserver>
+            <sagepaysuitepaypal>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\Paypal</model>
+                <payment_action>PAYMENT</payment_action>
+                <billing_agreement>0</billing_agreement>
+                <title>PayPal</title>
+                <force_xml>1</force_xml>
+                <allowspecific>0</allowspecific>
+            </sagepaysuitepaypal>
+            <sagepaysuiterepeat>
+                <active>0</active>
+                <model>Ebizmarts\SagePaySuite\Model\Repeat</model>
+                <payment_action>REPEAT</payment_action>
+                <title>REPEAT</title>
+                <allowspecific>0</allowspecific>
+            </sagepaysuiterepeat>
+        </payment>
+    </default>
+</config>

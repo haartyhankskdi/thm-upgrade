@@ -1,0 +1,23 @@
+@layer utilities {
+    .amlocator-stores-wrapper {
+        .amlocator-store-desc {
+            &.active {
+                a {
+                    @apply text-white;
+                }
+            }
+        }
+
+        .amlocator-store-information {
+            @apply text-sm;
+        }
+
+        .amlocator-title {
+            @apply font-bold text-base;
+        }
+
+        .amlocator-map-pin {
+            @apply hidden;
+        }
+    }
+}

@@ -1,0 +1,235 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+/**
+ * @var \Amasty\Storelocator\Model\Location $location
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\Storelocator\Block\View\Location $block
+ */
+$location = $block->getCurrentLocation();
+
+$galleryImages = $block->getLocationGallery();
+
+$addressString = $location->getCity() . ', ' . $location->getAddress() . ', ' . $location->getZip();
+?>
+<div class="amlocator-location-main">
+    <div class="amlocator-location-container">
+        <div class="amlocator-column -left">
+            <div class="amlocator-block -route amlocator-route-creator" data-amlocator-js="route-creator">
+                <div class="amlocator-modes"
+                     role="radiogroup"
+                     aria-label="<?= $escaper->escapeHtmlAttr(__('Travel Modes')) ?>">
+                    <button class="amlocator-travel-mode radio-checked -driving"
+                            aria-checked="true"
+                            type="button"
+                            role="radio"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Driving')) ?>"
+                            data-amlocator-js="travel-mode"
+                            data-travel-mode-value="DRIVING"></button>
+                    <button class="amlocator-travel-mode -transit"
+                            aria-checked="false"
+                            type="button"
+                            role="radio"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Transit')) ?>"
+                            data-amlocator-js="travel-mode"
+                            data-travel-mode-value="TRANSIT"></button>
+                    <button class="amlocator-travel-mode -walking"
+                            aria-checked="false"
+                            type="button"
+                            role="radio"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Walking')) ?>"
+                            data-amlocator-js="travel-mode"
+                            data-travel-mode-value="WALKING"></button>
+                    <button class="amlocator-travel-mode -bicycling"
+                            aria-checked="false"
+                            type="button"
+                            role="radio"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Cycling')) ?>"
+                            data-amlocator-js="travel-mode"
+                            data-travel-mode-value="BICYCLING"></button>
+                </div>
+
+                <div class="amlocator-addresses">
+                    <div class="amlocator-route-icon">
+                        <span class="amlocator-icon -start"></span>
+                        <span class="amlocator-icon -dot"></span>
+                        <span class="amlocator-icon -dot"></span>
+                        <span class="amlocator-icon -dot"></span>
+                        <span class="amlocator-icon -end"></span>
+                    </div>
+                    <div class="amlocator-inputs">
+                        <input class="amlocator-address -start" data-amlocator-js="origin-point" type="text"/>
+                        <input class="amlocator-address -end"
+                               data-amlocator-js="destination-point"
+                               type="text"
+                               readonly
+                               value="<?= $escaper->escapeHtml($addressString); ?>"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Destination')) ?>"/>
+                    </div>
+                    <button class="amlocator-swap"
+                            type="button"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Reverse starting point and destination')) ?>"
+                            role="checkbox"
+                            data-checked="false"
+                            aria-checked="false"
+                            data-amlocator-js="swap-mode"></button>
+                </div>
+            </div>
+
+            <div class="amlocator-block -directions amlocator-directions-wrapper" data-amlocator-js="directions"
+                 style="display: none;">
+                <div class="amlocator-collapse-title"
+                     data-amlocator-js="collapse-trigger"
+                     role="button"
+                     tabindex="0"
+                     aria-expanded="true">
+                    <span><?= $escaper->escapeHtml(__('Directions')); ?></span>
+                    <span class="amlocator-arrow" data-amlocator-js="collapse-indicator"></span>
+                </div>
+                <div class="amlocator-directions-container" data-amlocator-js="collapse-content">
+                    <div data-amlocator-js="directions-panel"></div>
+                </div>
+            </div>
+
+            <div class="amlocator-block -separator"><hr class="hr"/></div>
+            <div class="amlocator-block amlocator-location-info">
+                <?= $block->getChildHtml('extra_info') ?>
+                <div class="amlocator-block">
+                    <span><?= $escaper->escapeHtml(__('Zip: '))?></span>
+                    <span><?= $escaper->escapeHtml($location->getZip())?></span>
+                </div>
+                <div class="amlocator-block">
+                    <span><?= $escaper->escapeHtml(__('Country: '))?></span>
+                    <span><?= $escaper->escapeHtml($block->getLocationCountryName($location->getCountry()))?></span>
+                </div>
+                <?php if ($stateName = $block->getStateName($location->getState())): ?>
+                    <div class="amlocator-block">
+                        <span><?= $escaper->escapeHtml(__('State: '))?></span>
+                        <span><?= $escaper->escapeHtml($stateName)?></span>
+                    </div>
+                <?php endif;?>
+                <div class="amlocator-block">
+                    <span><?= $escaper->escapeHtml(__('City: '))?></span>
+                    <span><?= $escaper->escapeHtml($location->getCity())?></span>
+                </div>
+                <div class="amlocator-block">
+                    <span><?= $escaper->escapeHtml(__('Address: '))?></span>
+                    <span class="amlocator-text -bold"><?= $escaper->escapeHtml($location->getAddress())?></span>
+                </div>
+                <div class="amlocator-block -contact">
+                    <?php if (!empty($location->getWebsite())): ?>
+                        <div class="amlocator-block">
+                            <span class="amlocator-icon -website"></span>
+                            <a href="<?= $escaper->escapeUrl($location->getWebsite())?>"
+                               class="amlocator-link"
+                               title="<?= $escaper->escapeHtml($location->getName()); ?>"
+                               target="_blank"><?= $escaper->escapeUrl($location->getWebsite())?></a>
+                        </div>
+                    <?php endif;
+                    if (!empty($location->getPhone())): ?>
+                        <div class="amlocator-block">
+                            <span class="amlocator-icon -phone"></span>
+                            <a href="tel:<?= $escaper->escapeHtml($location->getPhone())?>" class="amlocator-link">
+                                <?= $escaper->escapeHtml($location->getPhone())?>
+                            </a>
+                        </div>
+                    <?php endif;
+                    if (!empty($location->getEmail())): ?>
+                        <div class="amlocator-block">
+                            <span class="amlocator-icon -email"></span>
+                            <a href="mailto:<?= $escaper->escapeUrl($location->getEmail())?>"
+                               class="amlocator-link"
+                               title="<?= $escaper->escapeHtml($location->getName()); ?>">
+                                <?= $escaper->escapeUrl($location->getEmail()) ?>
+                            </a>
+                        </div>
+                    <?php endif;?>
+                </div>
+                <div class="amlocator-block">
+                    <a href="#" class="amlocator-link" data-amlocator-js="locator-panorama">
+                        <?= $escaper->escapeHtml(__('Street View')) ?>
+                    </a>
+                </div>
+            </div>
+
+            <?php if (!empty($location->getWorkingTimeToday())): ?>
+                <div class="amlocator-block">
+                    <div class="amlocator-schedule-container">
+                        <div class="amlocator-today"
+                             data-amlocator-js="collapse-trigger"
+                             role="button"
+                             tabindex="0"
+                             aria-expanded="false">
+                            <strong><?= $escaper->escapeHtml(__('Work Time Today:')); ?></strong>
+                            <span class="amlocator-time">
+                                <span class="amlocator-today-opening-hours">
+                                    <?= $escaper->escapeHtml($location->getWorkingTimeToday()); ?>
+                                </span>
+                                <span class="amlocator-arrow -down" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <?= $block->getChildBlock('amasty_store_locator_schedule')->setData('location', $location)->toHtml(); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (count($galleryImages)): ?>
+                <div class="amlocator-block -separator"><hr class="hr"/></div>
+                <div class="amlocator-block amlocator-location-gallery">
+                    <span class="amlocator-title"><?= $escaper->escapeHtml(__('Photos'))?></span>
+                    <div class="amlocator-wrapper" data-amlocator-js="locator-gallery">
+                        <?php foreach ($galleryImages as $image): ?>
+                            <a class="amlocator-link"
+                               href="<?= $escaper->escapeHtml($image['path']) ?>"
+                               data-amlocator-js="location-image"
+                               data-fancybox="gallery">
+                                <img class="amlocator-image"
+                                     title="<?= $escaper->escapeHtml($location->getName()) ?>"
+                                     src="<?= $escaper->escapeHtml($image['path']) ?>"/>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif;?>
+            <?= $block->getLayout()
+                ->createBlock(\Amasty\Storelocator\Block\View\Reviews::class)
+                ->setData('location', $location)
+                ->toHtml(); ?>
+        </div>
+
+        <div class="amlocator-column -right">
+            <div class="amlocator-block -map" data-amlocator-js="location-map"></div>
+            <?= $block->getChildBlock('amasty_store_location_page_attributes')
+                ->setData('location', $location)
+                ->toHtml();
+            ?>
+            <div class="amlocator-description-grey">
+                <?= /** @escapeNotVerified */ $location->getDescription() ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script async src="https://maps.googleapis.com/maps/api/js?libraries=places,marker&loading=async&callback=amLocatorInit&v=3&key=<?= $escaper->escapeHtml(
+    $block->configProvider->getApiKey()
+); ?>"></script>
+<script>
+    function amLocatorInit() {
+        require([
+            'jquery',
+            'Amasty_Storelocator/js/location-view',
+            'domReady!'
+        ], function ($) {
+            $('[data-amlocator-js="location-map"]').amLocationPage({
+                locationData: {
+                    lat: <?= (float)$location->getLat() ?>,
+                    lng: <?= (float)$location->getLng() ?>,
+                    marker_url: '<?= $escaper->escapeHtml($location->getMarkerImageUrl()) ?>',
+                    mapId: '<?= $escaper->escapeHtml($block->generateMapId()) ?>'
+                }
+            });
+        });
+    }
+</script>

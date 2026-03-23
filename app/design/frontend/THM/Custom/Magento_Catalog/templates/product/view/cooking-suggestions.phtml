@@ -1,0 +1,11 @@
+<?php
+$_product = $block->getProduct();
+$cooking = $_product->getData('cooking_suggestions');
+
+if (!$cooking) {
+    return; 
+}
+?>
+<div class="product-tab-content cooking-suggestions-tab">
+    <p><?= $block->escapeHtml($cooking) ?></p>
+</div>

@@ -1,0 +1,103 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\CookieBarSettings;
+use Amasty\GdprCookieHyva\ViewModel\Settings;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+
+$groupBlockName = $block->getData('group_block_name');
+$settings = $viewModels->require(Settings::class);
+?>
+
+<div x-data="initCookieBarSettings" x-bind="eventListeners">
+    <div x-cloak
+         x-bind="overlay"
+         class="fixed inset-0 flex flex-col items-center justify-center text-left bg-gray-500/50
+            z-50 <?= /* @noEscape */ CookieBarSettings::REF_NAME ?>"
+    >
+        <div x-ref="<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>"
+             role="dialog"
+             aria-modal="true"
+             aria-label="<?= $escaper->escapeHtml(__('Cookie Bar Settings')) ?>"
+             class="bg-ambar-settings-bar-group-background relative inline-block max-h-screen overflow-auto
+                max-w-[90vw] shadow-xl rounded-lg p-10 text-gray-700"
+        >
+            <button @click="hideHandler"
+                    aria-label="<?= $escaper->escapeHtml(__('Close Cookie Bar Settings')) ?>"
+                    x-ref="ambar-settings-close"
+                    class="absolute right-2 top-2 text-gray-300 transition
+                        hover:text-black focus:drop-shadow-md hover:drop-shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div id="cookiebar-groups">
+                <?= $block->getChildHtml($groupBlockName ?: 'amasty.cookie.cookiebar.groups') ?>
+            </div>
+            <div class="w-full flex">
+                <button type="button"
+                        class="ambar-action-btn rounded-sm text-center text-sm transition-colors focus:drop-shadow hover:drop-shadow px-2 py-4 w-full text-xs font-semibold uppercase bg-ambar-settings-bar-button
+                            hover:bg-ambar-settings-bar-button-hover text-ambar-settings-bar-button-text
+                            hover:text-ambar-settings-bar-button-hover-text"
+                        x-data="initAmCookieActionDispatcherBtn"
+                        @click.prevent="actiondispatchHandler"
+                        x-ref="ambar-settings-done"
+                        data-dispatch-action="cookiebar-action-accept"
+                        data-dispatch-payload='<?=$escaper->escapeHtmlAttr(\json_encode(['include_checked_groups' => true])) ?>'
+                >
+                    <?= $escaper->escapeHtml($settings->getCookieSettingsBarDoneButtonText()) ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script data-cfasync="false">
+    'use strict';
+
+    function initCookieBarSettings() {
+        return {
+            ...hyva.modal({
+                dialog: '<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>'
+            }),
+            eventListeners: {
+                ['@<?= /* @noEscape */ CookieBarSettings::CLOSE_ACTION ?>.window']() {
+                    this.hideHandler();
+                },
+                ['@<?= /* @noEscape */ CookieBarSettings::OPEN_ACTION ?>.window']() {
+                    !this.opened['<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>'] &&
+                    this.show('<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>');
+                },
+                ['@cookiebar-action-accept-finish.window']() {
+                    this.hideHandler();
+                }
+            },
+            hideHandler: function () {
+                !!this.opened['<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>'] &&
+                this.hide('<?= /* @noEscape */ CookieBarSettings::REF_NAME ?>');
+            },
+            focusDoneButton: function () {
+                this.$refs['ambar-settings-done']?.focus();
+            },
+            focusCloseButton: function () {
+                this.$refs['ambar-settings-close']?.focus();
+            }
+        }
+    }
+
+    window.addEventListener('alpine:init', () => Alpine.data('initCookieBarSettings', initCookieBarSettings), { once: true });
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

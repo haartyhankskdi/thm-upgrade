@@ -1,0 +1,298 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Mollie\Payment\Block\Product\View\ApplePay $block */
+
+if (!$block->isEnabled()) {
+    return;
+}
+
+$product = $block->getProduct();
+?>
+<script>
+    function initMollieProductPageApplePay<?= (int)$product->getId() ?>() {
+        const objectToFormData = (object, prefix = null, formDataObject = null) => {
+            const formData = formDataObject || new FormData();
+            Object.keys(object).forEach(key => {
+                const value = object[key];
+                const name = prefix ? `${prefix}[${key}]` : key;
+                if (value instanceof Object) {
+                    objectToFormData(value, name, formData);
+                } else {
+                    formData.append(name, value);
+                }
+            });
+
+            return new URLSearchParams(formData).toString();
+        }
+
+        return {
+            startApplePayPayment() {
+                let currencyCode = "<?= $block->escapeJs($block->getCurrencyCode()); ?>";
+                let countryCode = "<?= $block->escapeJs($block->getCountryCode()); ?>";
+                let storeName = "<?= $block->escapeJs($block->getStoreName()); ?>";
+                let supportedNetworks = <?= json_encode($block->getSupportedNetworks()); ?>;
+
+                const form = document.getElementById('product_addtocart_form');
+
+                if (!form.reportValidity()) {
+                    return;
+                }
+
+                const getProductPrice = () => {
+                    return "<?= $block->getProductPrice() ?>";
+                }
+
+                let cartId, quoteTotals, postalCode, shippingMethods, selectedShippingMethod;
+
+                const request = {
+                    countryCode: countryCode,
+                    currencyCode: currencyCode,
+                    supportedNetworks: supportedNetworks,
+                    merchantCapabilities: ['supports3DS'],
+                    total: {
+                        type: 'final',
+                        label: storeName,
+                        amount: getProductPrice(),
+                    },
+                    shippingType: 'shipping',
+                    requiredBillingContactFields: [
+                        'postalAddress',
+                        'name',
+                        'email',
+                        'phone'
+                    ],
+                    requiredShippingContactFields: [
+                        'postalAddress',
+                        'name',
+                        'email',
+                        'phone'
+                    ]
+                }
+
+                let session = new ApplePaySession(10, request);
+
+                const getLineItems = () => {
+                    let totals = [...quoteTotals];
+                    totals = totals.filter(item => item.code !== 'grand_total');
+
+                    const payload = { lineItems: totals };
+                    window.dispatchEvent(new CustomEvent('mollie-applepay-lineitems', {
+                        detail: payload,
+                    }));
+
+                    return payload.lineItems;
+                }
+
+                const getTotal = () => {
+                    const total = quoteTotals.find(item => item.code === 'grand_total') || quoteTotals[quoteTotals.length - 1];
+
+                    total.label = storeName;
+
+                    const payload = { total };
+                    window.dispatchEvent(new CustomEvent('mollie-applepay-total', {
+                        detail: payload,
+                    }));
+
+                    return payload.total;
+                }
+
+                const handleAjaxError = (message) => {
+                    if (session) session.abort();
+
+                    dispatchMessages([
+                        {
+                            text: message,
+                            type: 'error'
+                        }
+                    ]);
+                }
+
+                session.onvalidatemerchant = (event) => {
+                    const formData = new FormData(form),
+                          formDataObject = {};
+                    formData.forEach((value, key) => {
+                        formDataObject[key] = value;
+                    });
+                    formDataObject["product"] = <?= (int)$product->getId() ?>;
+                    formDataObject["validationURL"] = event.validationURL;
+
+                    fetch(`${BASE_URL}mollie/applePay/buyNowValidation?form_key=${hyva.getFormKey()}`, {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        },
+                        body: objectToFormData({
+                            product: <?= (int)$product->getId() ?>,
+                            validationURL: event.validationURL
+                        }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Merchant validation failed');
+                            }
+
+                            return response.json()
+                        })
+                        .then(result => {
+                            cartId = result.cartId;
+
+                            session.completeMerchantValidation(result.validationData);
+                        })
+                        .catch(error => {
+                            handleAjaxError(error);
+                        });
+
+                };
+
+                session.onshippingcontactselected = (event) => {
+                    countryCode = event.shippingContact.countryCode;
+                    postalCode = event.shippingContact.postalCode;
+
+                    fetch(`${BASE_URL}mollie/applePay/shippingMethods?form_key=${hyva.getFormKey()}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                        },
+                        body: objectToFormData({
+                            cartId: cartId,
+                            countryCode: event.shippingContact.countryCode,
+                            postalCode: event.shippingContact.postalCode
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            shippingMethods = result.shipping_methods;
+                            selectedShippingMethod = result.shipping_methods[0];
+                            quoteTotals = result.totals;
+
+                            session.completeShippingContactSelection(
+                                ApplePaySession.STATUS_SUCCESS,
+                                result.shipping_methods,
+                                getTotal(),
+                                getLineItems()
+                            );
+                        })
+                        .catch(error => {
+                            handleAjaxError(error);
+                        });
+                };
+
+                session.onshippingmethodselected = (event) => {
+                    selectedShippingMethod = event.shippingMethod;
+
+                    fetch(`${BASE_URL}mollie/applePay/shippingMethods?form_key=${hyva.getFormKey()}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                        },
+                        body: objectToFormData({
+                            cartId: cartId,
+                            shippingMethod: selectedShippingMethod,
+                            countryCode: countryCode,
+                            postalCode: postalCode
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            quoteTotals = result.totals;
+
+                            session.completeShippingMethodSelection(
+                                ApplePaySession.STATUS_SUCCESS,
+                                getTotal(),
+                                getLineItems()
+                            );
+                        })
+                        .catch(error => {
+                            handleAjaxError(error);
+                        });
+
+                };
+
+                session.onpaymentauthorized = (event) => {
+                    fetch(`${BASE_URL}mollie/applePay/buyNowPlaceOrder?form_key=${hyva.getFormKey()}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                        },
+                        body: objectToFormData({
+                            cartId: cartId,
+                            shippingMethod: selectedShippingMethod,
+                            billingAddress: event.payment.billingContact,
+                            shippingAddress: event.payment.shippingContact,
+                            applePayPaymentToken: JSON.stringify(event.payment.token),
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            if (!session) {
+                                console.warn('Payment canceled');
+                                return;
+                            }
+
+                            if (result.error) {
+                                handleAjaxError(result.error_message);
+                                return;
+                            }
+
+                            if (!result.url) {
+                                handleAjaxError('Something went wrong, please try again later.');
+                                return;
+                            }
+
+                            session.completePayment(ApplePaySession.STATUS_SUCCESS);
+
+                            setTimeout(() => {
+                                location.href = result.url;
+                            }, 1000);
+                        })
+                        .catch(error => {
+                            handleAjaxError(error);
+                        });
+                };
+
+                session.oncancel = (event) => {
+                    session = null;
+                    shippingMethods = null;
+                    selectedShippingMethod = null;
+                };
+
+                session.begin();
+            }
+        }
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data('initMollieProductPageApplePay<?= (int)$product->getId() ?>', initMollieProductPageApplePay<?= (int)$product->getId() ?>),
+        {once: true}
+    )
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>
+
+<div id="product-page-mollie-apple-pay-button" x-data="initMollieProductPageApplePay<?= (int)$product->getId() ?>">
+    <div class="<?= $escaper->escapeHtmlAttr($block->getButtonClasses()); ?> h-full block cursor-pointer ml-2"
+         @click="startApplePayPayment"
+    >
+        <span class="sr-only">Apple Pay</span>
+    </div>
+</div>

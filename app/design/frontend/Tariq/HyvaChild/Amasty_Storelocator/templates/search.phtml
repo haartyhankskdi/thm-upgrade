@@ -1,0 +1,209 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/**
+ * @var Location $block
+ * @var Escaper $escaper
+ * @var ViewModelRegistry $viewModels
+ * @var HeroiconsOutline $heroicons
+ */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+?>
+<div class="mt-6 md:mt-12 mb-4">
+    <h2 class="text-2xl text-black font-bold lg:text-[38px] lg:leading-[44px] mb-2">Let’s Help You Find a Store!</h2>
+    <p class="text-base lg:text-[17px] text-black">Enter your city, postcode or use your current location and we’ll show you the closest stores with all the info you need.</p>
+</div>
+<form
+    class="
+        amlocator-search-container bg-white px-0 py-4 md:mb-2 md:w-full
+    "
+    @submit.prevent
+>
+    <fieldset>
+        <legend class="sr-only">
+            <?= $escaper->escapeHtml(__('Search your store')); ?>
+        </legend>
+        <div class="amlocator-block -current amlocator-current-location mb-4">
+            <div class="amlocator-wrapper mt-1">
+                <label for="amlocator-text" class="mb-0 hidden">
+                    <?= $escaper->escapeHtml(__('Searched location')); ?>
+                </label>
+                <div class="relative">
+                    <input
+                        id="amlocator-text"
+                        class="w-full bg-[#3B7E48] text-white text-basefont-normal pl-8 pr-12 md:px-10 py-5 rounded-full lg:h-[70px] focus:outline-none focus:ring-0 placeholder-white"
+                        type="text"
+                        value=""
+                        name="address"
+                        placeholder="<?= $escaper->escapeHtmlAttr(__('Search location')); ?>"
+                        autocomplete="off"
+                        x-model="searchString"
+                        x-ref="searchInput"
+                    >
+                    <button
+                        id="amlocator-search-btn"
+                        class="absolute right-6 top-5 md:right-10 md:top-6 text-white"
+                        x-show="notShowResetButton"
+                        @click="$refs.searchInput.value ? $dispatch('amlocator:search-location') : ''"
+                        @keydown.enter.prevent="$refs.searchInput.value ? $dispatch('amlocator:search-location') : ''"
+                    >
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtml(__('Search location')) ?>
+                        </span>
+                        <?= $heroicons->searchHtml() ?>
+                    </button>
+                    <button
+                        class="amlocator-reset -hidden absolute right-6 top-5 md:right-10 md:top-6 text-white"
+                        x-show="showResetButton"
+                        @click="resetMap()"
+                        @keydown.enter.prevent="resetMap()"
+                    >
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtml(__('Reset searched value')) ?>
+                        </span>
+                        <?= $heroicons->xHtml() ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="amlocator-block -search amlocator-search-radius mb-2">
+            <?php if ($block->getDistanceConfig() == 'choose'): ?>
+                <label for="amlocator-measurement" class="mb-0">
+                    <?= $escaper->escapeHtml(__('Choose unit of distance')); ?>
+                </label>
+                <select
+                    id="amlocator-measurement"
+                    class="w-full amlocator-select -measurement"
+                    name="measurement"
+                    x-model="distanceConfig"
+                >
+                    <option value="km">
+                        <?= $escaper->escapeHtml(__('kilometer')); ?>
+                    </option>
+                    <option selected="selected" value="mi">
+                        <?= $escaper->escapeHtml(__('mile')); ?>
+                    </option>
+                </select>
+            <?php else:?>
+                <input
+                    type="hidden"
+                    id="amlocator-measurement"
+                    x-model="distanceConfig"
+                    value="<?= $escaper->escapeHtmlAttr($block->getDistanceConfig()) ?>"
+                >
+            <?php endif ?>
+            <div class="mb-4">
+                <label
+                    id="range_radius"
+                    class="mb-0 text-center hidden"
+                    for="radius"
+                >
+                    <?php if ($block->getDistanceConfig() == 'choose'): ?>
+                        <?= $escaper->escapeHtml(__('Search Radius')); ?>
+                    <?php else:?>
+                        <?= $escaper->escapeHtml(__('Search Radius in Miles')); ?>
+                        <!-- <?//= $escaper->escapeHtml($block->getDistanceConfig()) ?> -->
+                    <?php endif ?>
+                </label>
+                <?php if ($block->getRadiusType() == 'select' || empty($block->getRadiusType())): ?>
+                    <select
+                        id="radius"
+                        name="radius"
+                        x-model="radius"
+                        x-ref="radiusInput"
+                        class="w-full amlocator-select"
+                    >
+                        <?php foreach ($block->getSearchRadius() as $index => $range): ?>
+                            <option value="<?= $escaper->escapeHtmlAttr(is_numeric($range) ? (int)$range : ''); ?>">
+                                <?= $escaper->escapeHtml($range) ?>
+                            </option>
+                        <?php endforeach;?>
+                    </select>
+                <?php else:?>
+                    <div class="amlocator-range-slider hidden">
+                        <div class="amlocator-handle ui-slider-handle relative pb-8 mx-2">
+                            <span
+                                class="
+                                    amlocator-handle-info absolute px-1 py-0.5 text-white text-xs
+                                    whitespace-nowrap bg-[#3B7E48] rounded-sm -translate-x-1/2
+                                    after:-translate-x-1/2 after:translate-y-1/2 after:rotate-45
+                                    after:content-[''] after:absolute after:bottom-0 after:left-1/2
+                                    after:w-1 after:h-1 after:bg-blue-500
+                                "
+                                :style="
+                                    radius ?
+                                    'left:' + (( radius  - minRadiusValue ) / (maxRadiusValue - minRadiusValue)) * 100  + '%' :
+                                    'left:' + (( minRadiusValue  - minRadiusValue ) / (maxRadiusValue - minRadiusValue)) * 100  + '%'
+                                "
+                            >
+                                <span x-text="radius ? radius : minRadiusValue"></span>
+                                <span x-text="distanceConfig === 'choose' ? 'km' : distanceConfig"></span>
+                            </span>
+                        </div>
+                        <input
+                            id="radius"
+                            name="radius"
+                            class="w-full"
+                            type="range"
+                            x-model="radius"
+                            x-ref="radiusInput"
+                            value="<?= $escaper->escapeHtmlAttr((int)$block->getMaxRadiusValue()); ?>"
+                            min="<?= $escaper->escapeHtmlAttr((int)$block->getMinRadiusValue()); ?>"
+                            max="<?= $escaper->escapeHtmlAttr((int)$block->getMaxRadiusValue()); ?>"
+                        />
+                    </div>
+                <?php endif ?>
+            </div>
+            <button
+                type="button"
+                class="w-full text-black text-base font-normal px-0 py-3transition-all duration-300 ease-in-out underline text-left mt-2"
+                @click="searchLocations()"
+            >
+                <span class="w-full text-center flex gap-3 items-center">
+                    <img src="<?= $this->getViewFileUrl('images/nearby-lcation-icon.webp') ?>" alt="Locate Nearby" />
+                    <?= $escaper->escapeHtml(__('Locate Nearby')); ?>
+                </span>
+            </button>
+        </div>
+    </fieldset>
+</form>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  document.querySelectorAll('input[type="range"]').forEach((range) => {
+
+    const updateBackground = () => {
+      const min = range.min ? Number(range.min) : 0;
+      const max = range.max ? Number(range.max) : 100;
+      const value = Number(range.value);
+
+      const percent = ((value - min) / (max - min)) * 100;
+
+      range.style.background = `linear-gradient(
+        to right,
+        #3B7E48 0%,
+        #3B7E48 ${percent}%,
+        #CFE5D6 ${percent}%,
+        #CFE5D6 100%
+      )`;
+    };
+
+    updateBackground(); // page load
+    range.addEventListener('input', updateBackground);
+  });
+
+});
+</script>

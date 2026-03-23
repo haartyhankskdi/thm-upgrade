@@ -1,0 +1,816 @@
+.brippo-section.section-config.active > .admin__collapsible-block + input + fieldset {
+    margin-left: 40px;
+}
+
+.brippo-section .brippo-payments-logo {
+    background-color: #0C3C60;
+    width: auto;
+    padding: 25px 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.brippo-section .brippo-payments-logo .logo {
+    background: url(https://ebizmarts-website.s3.amazonaws.com/Logo_brippo3b_onlyname_white.png) no-repeat 0 0% / 18rem auto;
+    height: 43px;
+    width: 178px;
+}
+
+.brippo-section .brippo-payments-text {
+    display: inline-block;
+    vertical-align: middle;
+    width: 50%;
+}
+
+.brippo-section .brippo-payments-text p {
+    margin-bottom: 0.5rem;
+}
+
+.brippo-section .button-container {
+    float: right;
+}
+
+.button.primaryBrippo {
+    background-color: #0C3C60;
+    color: #fff;
+    border: none;
+    letter-spacing: 1.5px;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 1.4rem;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px #aaa;
+}
+
+.button.primaryBrippo.small {
+    letter-spacing: 1.2px;
+    font-size: 1.3rem;
+    padding: 0.6rem .7em 0.5rem;
+}
+
+.button.modalPrimaryBrippo {
+    background-color: #0C3C60;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+}
+
+.button.modalPrimaryBrippo:hover,
+.button.primaryBrippo:hover {
+    background-color:#2c597a;
+}
+
+.button.secondaryBrippo {
+    background-color: #d3b8bd;
+    color: #0C3C60;
+    border: none;
+    letter-spacing: 1.5px;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 1.4rem;
+    border-radius: 3px;
+}
+
+.button.secondaryBrippo:hover {
+    background-color:#d3b8bdbd;
+}
+
+.stripeConnectStatus {
+    background-color: #efefef;
+    padding: 10px;
+    border: 1px solid #adadad;
+}
+
+.brippoPaymentMethodsStatus {
+    padding-bottom: 2px;
+}
+
+.stripeConnectStatus button {
+    margin-bottom: 5px;
+}
+
+.stripeConnectStatus td {
+    padding: 1rem 1.5rem .8rem 0 !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.stripeConnectStatus tr:first-child td {
+    padding-top: 0 !important;
+}
+
+.brippo-section .version {
+    color: gray;
+    font-size: 1.1rem;
+}
+
+.redText {
+    color: #D8000C;
+}
+
+.greenText {
+    color: #4DAD52;
+}
+
+.wallets-multiselect {
+    height: 150px !important;
+}
+
+.statusTable,
+.brippoDomainsTable {
+    letter-spacing: 1px;
+    font-family: sans-serif;
+}
+
+.statusTable .title,
+.brippoDomainsTable .title {
+    min-width: 100px;
+    color: #0C3C60;
+}
+
+.order-information-table.brippoPayments td.result.charge.authorized,
+.order-information-table.brippoPayments td.result.pass {
+    color: #4DAD52;
+}
+
+.order-information-table.brippoPayments td.result img {
+    display: none;
+}
+
+.order-information-table.brippoPayments td.result.pass img.passed,
+.stripeConnectStatus img.passed {
+    display: inline-block;
+    width: 14px;
+    position: relative;
+    top: 1px;
+}
+
+.order-information-table.brippoPayments td.result.charge.issuer_declined,
+.order-information-table.brippoPayments td.result.charge.blocked,
+.order-information-table.brippoPayments td.result.charge.invalid,
+.order-information-table.brippoPayments td.result.fail,
+.order-information-table.brippoPayments td.result.highest,
+.brippoPayments-info-box .refund-detail p.failed {
+    color: #f84454;
+}
+
+.order-information-table.brippoPayments td.result.fail img.failed {
+    display: inline-block;
+}
+
+.order-information-table.brippoPayments td.result.unchecked,
+.order-information-table.brippoPayments td.result.unknown {
+    color: #9E9E9E;
+}
+
+.order-information-table.brippoPayments td.result.charge.manual_review,
+.order-information-table.brippoPayments td.result.radar.elevated,
+.brippoPayments-info-box .refund-detail p.pending {
+    color: orange;
+}
+
+.order-information-table.brippoPayments td.result {
+    font-weight: bold;
+}
+
+.brippoPayments-info-box .info-header {
+    border: 1px solid #e3e3e3;
+    text-align: left;
+}
+
+.brippoPayments-info-box {
+    position: relative;
+    padding: 1px 0px 0px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.brippoPayments-info-box .brand-icon {
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+.brippoAdminModal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    letter-spacing: 1px;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.brippoAdminModal .box {
+    background-color: #fff;
+    margin: 0 auto;
+    width: 500px;
+    box-shadow: 2px 2px 5px #0000007d;
+}
+
+.brippoAdminModal .header {
+    background-color: #0C3C60;
+    color: #fff;
+    padding: 10px;
+    position: relative;
+}
+
+.brippoAdminModal .header h2 {
+    color:#fff;
+    margin: 0;
+    letter-spacing: 1.5px;
+    font-size: 1.5rem;
+}
+
+.brippoAdminModal .btnClose {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    color: #fff;
+    font-family:sans-serif;
+    font-weight: 100;
+    height: 100%;
+    padding: 0;
+    cursor: pointer;
+    letter-spacing: 2px;
+    background-color: #0C3C60;
+    z-index: 100000;
+}
+
+.brippoAdminModal .btnClose div {
+    margin: 11px 10px 8px;
+}
+
+.brippoAdminModal .btnClose:hover {
+    background-color: #2c597a;
+}
+
+.brippoAdminModal .warning {
+    width: 80%;
+    margin-bottom: 20px;
+    color: #0C3C60;
+}
+
+.brippoAdminModal .content {
+    padding: 20px 20px;
+    position: relative;
+}
+
+.brippoAdminModal label {
+    display: block;
+    margin-bottom: 2px;
+    margin-top: 20px;
+}
+
+.brippoAdminModal label:first-of-type {
+    margin-top: 5px;
+}
+
+.brippoAdminModal textarea {
+    min-height: 100px;
+}
+
+.brippoAdminModal .fieldSeparator {
+    margin-bottom: 20px;
+}
+
+.brippoAdminModal input,
+.brippoAdminModal textarea {
+    border-radius: 0;
+    border-color: #aaa;
+    border-style:solid;
+    border-width: 1px;
+    color: #333;
+    width: 100%;
+    padding: 6px 8px;
+}
+
+#brippoRecoverOrderModal_messageSMS {
+    min-height: 50px;
+}
+
+.brippoAdminModal input:disabled,
+.brippoAdminModal textarea:disabled {
+    border-color: #ccc;
+    color: #aaa;
+}
+
+.brippoAdminModal .footer {
+    padding: 20px 20px;
+    text-align: right;
+}
+
+.brippoAdminModal .footer button {font-size: 1.6rem;}
+
+.brippoAdminModal .terms {
+    margin-top: 5px;
+    color: #707070;
+    font-size: 1.2rem;
+}
+
+.brippoAdminModal .testModeBadge {
+    top: -15px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: #9e4212;
+    background-color: #f8e5b9;
+    padding: 3px 7px;
+    border-radius: 3px;
+    width: fit-content;
+    position: relative;
+    float: right;
+}
+
+.brippoPayments-info-box td.result {
+    color: #9E9E9E;
+}
+
+.brippoPayments-info-box td.result.fraud-level.elevated {
+    color: orange;
+}
+
+.brippoPayments-info-box td.result.pass {
+    color: #4DAD52;
+}
+
+.brippoPayments-info-box td.result img {
+    display: none;
+}
+
+.brippoPayments-info-box td.result.pass img.passed,
+.brippoPayments-info-box td.result.fail img.failed {
+    display: inline-block;
+    width: 14px;
+    position: relative;
+    top: 2px;
+}
+
+.brippoPayments-info-box td.result.fail img.failed {
+    display: inline-block;
+}
+
+.wallet-logo img {
+    height: 25px;
+    margin-bottom: -5px;
+}
+
+.brippoPayments-info-box .refund-detail {
+    border-top: 1px solid #dedede;
+    padding: 10px 0px;
+}
+
+.brippoPayments-info-box .refund-detail:first-child {
+    border-top: none;
+    padding: 5px 0px;
+}
+
+.brippoPayments-info-box .refund-detail:last-child {
+    padding: 10px 0px 5px;
+}
+
+.brippoPayments-info-box .refund-detail h5 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.brippoPayments-info-box .refund-detail p {
+    color: #aaa;
+    font-size: 1.2rem;
+}
+
+.info-icon {
+    background-color: #0C3C60;
+    padding: 0px 5px;
+    color: #fff;
+    font-weight: bolder;
+    border-radius: 3px;
+    font-family: serif;
+}
+
+.brippoPayments-info-box .dashboard-link {
+    font-size: 1.2rem;
+}
+
+.brippoPayments-info-box a.receipt {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.brippo-fraud-risk,
+.brippo-fraud-check {
+    background-color: #aaa;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    border-radius: 5px;
+    text-align: center;
+    color: #ddd;
+    font-size: 1.9rem;
+    font-family: system-ui;
+}
+
+.brippo-fraud-risk.highest {
+    background-color: #ea3d3d;
+    color: #fff;
+}
+
+.brippo-fraud-risk.elevated {
+    background-color: #ff972f;
+    color: #fff;
+}
+
+.brippo-fraud-risk.normal,
+.brippo-fraud-check.pass {
+    background-color: #63a449;
+    color: #fff;
+}
+
+.brippo-fraud-check.fail {
+    background-color: #ea3d3d;
+    color: #840000;
+    position: relative;
+}
+
+.brippo-fraud-check.fail:before,
+.brippo-fraud-check.fail:after {
+    position: absolute;
+    left: 11.6px;
+    content: ' ';
+    height: 17px;
+    width: 2px;
+    background-color: #fff;
+    border-radius: 5px;
+    top: 4px;
+}
+
+.brippo-fraud-check.fail:before {
+    transform: rotate(45deg);
+}
+
+.brippo-fraud-check.fail:after {
+    transform: rotate(-45deg);
+}
+
+.brippoPayments-info-box .tag,
+.brippoTag {
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 1.3rem;
+    position: relative;
+}
+
+.brippoPayments-info-box .tag.success,
+.brippoTag.success{
+    background-color: #d7f7c2;
+    color: #006908;
+}
+
+.brippoPayments-info-box .tag.neutral,
+.brippoTag.neutral {
+    background-color: lightgray;
+    color: #545969;
+}
+
+.brippoPayments-info-box .tag.danger,
+.brippoTag.danger {
+    background-color: #ffe7f2;
+    color: #b30a3d;
+}
+
+.brippoTag.inTransit {
+    background-color: #cff5f6;
+    color: #0055bc;
+}
+
+.brippoPayments-info-box h4 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 20px 0 0;
+}
+
+
+.card-brand-logo {
+    height: 20px;
+    width: 32px;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    margin: 0 0 0 auto;
+}
+
+.card-brand-logo.visa {
+    background-position-x: 0;
+}
+
+.card-brand-logo.mastercard {
+    background-position-x: -32px;
+}
+
+.card-brand-logo.amex {
+    background-position-x: -64px;
+}
+
+.brippoStatementDescriptorPreview .descriptorPreview {
+    background-color: #eee;
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: gray;
+    font-weight: 600;
+}
+
+.brippoDomainsRegistrationThrobber .throbber {
+    border: 2px solid #b8b8b8;
+    border-top: 2px solid #0C3C60;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: brippoSpinnerAnimationSpin 1s linear infinite;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10000000000;
+    top: calc(50% - 25px);
+}
+
+@keyframes brippoSpinnerAnimationSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.brippoDomainsTable img {
+    min-width: 14px;
+    position: relative;
+    top: 1px;
+    width: 14px;
+}
+
+.brippoDomainsTable tr:last-child td {
+    border: 0 none;
+    padding-bottom: 0 !important;
+}
+
+#brippo_recover_order {
+    background-color: #0C3C60;
+    color: #fff;
+    border-color: #0C3C60;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.brippoThrobberVeil {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    top: 0;
+    right: 0;
+    opacity: .4;}
+
+.brippoThrobberVeil .throbber,
+.brippoThrobberModal .throbber,
+.brippoInlineThrobber .throbber {
+    border: 4px solid #464646;
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: brippoVeilSpinnerAnimationSpin 1s linear infinite;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10000000000;
+    top: calc(50% - 25px);
+}
+
+.brippoThrobberModal {
+    display: none;
+    width: 100%;
+    height: 150px;
+    top: 0;
+    right: 0;
+    opacity: .4;
+    position: relative;
+}
+
+@keyframes brippoVeilSpinnerAnimationSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.brippoRecoverLink {
+    word-wrap: break-word;
+    background-color: #eee;
+    font-size: 1.2rem;
+    padding: 6px 10px;
+    border: 1px solid #aaa;
+}
+
+.brippoAdminModal .errorFeedback {
+    display: none;
+    background-color: #e03e6f;
+    color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.brippoAdminModal .successFeedback {
+    display: none;
+    background-color: #15b67c;
+    color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+#brippoOnboardingRequiredModal .stepsToSetupBrippo {
+    list-style:none;
+}
+
+#brippoOnboardingRequiredModal .stepsToSetupBrippo li {
+    margin-top: 20px;
+    padding-left: 35px;
+    position: relative;
+}
+
+#brippoOnboardingRequiredModal .stepsToSetupBrippo .stepNumber {
+    background-color: #FBC436;
+    color: #886918;
+    font-weight: bold;
+    padding: 2px 7px 3px 9px;
+    border-radius: 50%;
+    min-width: 25px;
+    position: absolute;
+    text-align: center;
+    margin: 0 10px 0 0;
+    left: 0;
+    top: 2px;
+}
+
+#brippoOnboardingRequiredModal .stepsToSetupBrippo .timeEstimation {
+    background-color: #cff5f6;
+    color: #0055bc;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 1.2rem;
+}
+
+#brippoProcessPaymentInTerminalModal ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+#brippoProcessPaymentInTerminalModal ul li {
+    margin-bottom: 7px;
+    border: 1px solid #fff;
+    padding: 10px 10px;
+}
+
+#brippoProcessPaymentInTerminalModal ul li:first-of-type {
+    margin-top: 10px;
+}
+
+#brippoProcessPaymentInTerminalModal ul li input {
+    float: left;
+    width: 30px;
+    position: relative;
+    top: 3px;
+}
+
+#brippoProcessPaymentInTerminalModal ul li label {margin: 0;}
+
+#brippoProcessPaymentInTerminalModal ul li:has(input[type="radio"]:checked) {
+    background-color: #efefef;
+    box-shadow: 1px 1px 2px #ddd;
+    border: 1px solid #ccc;
+}
+
+.brippoSubtitleModalThrobber {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.brippoInlineThrobber {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    top: 1px;
+    opacity: .4;
+    position: relative;
+}
+
+.brippoInlineThrobber .throbber {
+    height: 12px;
+    width: 12px;
+    display: block;
+    border: 1px solid #464646;
+    border-top: 1px solid #ffffff;
+    top: 0px;
+}
+
+.brippoButtonProcessInTerminal {
+    display: block;
+    margin: 10px 0 0 auto;
+}
+
+label[for=brippoTerminalBackendCardInputMethod] {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#brippoTerminalBackendCardInputMethod {
+    padding: 8px 10px;
+    background-color: #efefef;
+    box-shadow: 1px 1px 2px #ddd;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.brippoTerminalBackendCardInputMethodContainer {
+    padding: 10px;
+}
+
+.brippoRecoverOrderModal_checkboxContainer {
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.brippoRecoverOrderModal_checkboxContainer label {
+    flex: 1;
+}
+
+.brippoRecoverOrderModal_checkboxContainer input {
+    width: auto;
+    margin: 2px 5px 0 0;
+    position: relative;
+    top: 0px;
+}
+
+.brippoRecoverOrderModal_messagePhoneContainer {
+    display: flex;
+    gap: 15px;
+}
+
+.payment-logo {
+    display: inline-block;
+    height: 20px;
+    width: 32px;
+    background: url('../img/paymentLogos.png') no-repeat;
+    background-size: auto 100%;
+    vertical-align: middle;
+    zoom: 1.2;
+}
+
+.payment-logo.card,
+.payment-logo.card_present {
+    display: none;
+}
+
+.payment-logo.visa {
+    background-position-x: 0;
+}
+
+.payment-logo.mastercard {
+    background-position-x: -33px;
+}
+
+.payment-logo.amex {
+    background-position-x: -66px;
+}
+
+.payment-logo.applepay {
+    background-position-x: -99px;
+}
+
+.payment-logo.googlepay {
+    background-position-x: -132px;
+}
+
+.payment-logo.link {
+    width: 27px;
+    background-position-x: -165px;
+}
+
+.payment-logo.klarna {
+    width: 47px;
+    background-position-x: -193px;
+}
+
+.payment-logo.clearpay,
+.payment-logo.afterpay_clearpay {
+    width: 105px;
+    background-position-x: -241px;
+}
+
+.payment-logo.pay_by_bank {
+    width: 35px;
+    background-position-x: -347px;
+}

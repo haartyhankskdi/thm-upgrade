@@ -1,0 +1,25 @@
+{
+  "name": "mw/custom-api",
+  "description": "Mehta Websolution Custom Api",
+  "require": {
+    "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0|~7.2.0|~7.3.0"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": [],
+  "authors": [
+    {
+      "name": "Mehta Websolution",
+      "email": "info@mehtawebsolution.com",
+      "homepage": "https://mehtawebsolution.com"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Mw\\Extension\\": ""
+    }
+  }
+}

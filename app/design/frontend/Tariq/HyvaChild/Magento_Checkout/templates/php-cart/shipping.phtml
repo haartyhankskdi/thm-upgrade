@@ -1,0 +1,246 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Cart\TotalsOutput;
+use Magento\Checkout\Block\Cart\Shipping;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Shipping $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var TotalsOutput $totalsOutput */
+$totalsOutput = $viewModels->require(TotalsOutput::class);
+
+?>
+<script>
+function initShippingEstimation() {
+    return {
+        showEstimateShipping: false,
+        cart: false,
+        cartIsVirtual: <?= (int) $block->getQuote()->isVirtual() ?>,
+        customer: false,
+        availableShippingMethods: [],
+        isLoading: false,
+        cartData: {
+            address: {
+                countryId: window.checkoutConfig.defaultCountryId,
+                regionId: window.checkoutConfig.defaultRegionId,
+                postcode: window.checkoutConfig.defaultPostcode
+            },
+            cartVersion: Math.floor(Date.now()/1000),
+            rates: [],
+            shippingCarrierCode: null,
+            shippingMethodCode: null,
+        },
+        checkoutData: {
+            shippingAddressFromData: {
+                country_id: window.checkoutConfig.defaultCountryId,
+                region: window.checkoutConfig.defaultRegionId,
+                postcode: window.checkoutConfig.defaultPostcode
+            }
+        },
+        directoryData: false,
+        shippingMethod: false,
+        init() {
+            this.showEstimateShipping = true;
+            const selectedShippingMethod = window.checkoutConfig.selectedShippingMethod;
+            if (selectedShippingMethod) {
+                this.shippingMethod = `${selectedShippingMethod.carrier_code}_${selectedShippingMethod.method_code}`;
+            }
+
+            this.refreshCartIdFromConfig();
+        },
+
+        abortShippingController: null,
+        fetchShippingMethods() {
+            if (this.abortShippingController) {
+                this.abortShippingController.abort();
+            }
+            this.isLoading = true;
+            this.$dispatch('update-shipping-method-start', {});
+
+            const path = this.customer && this.customer.fullname
+                ? '/V1/carts/mine/estimate-shipping-methods'
+                : '/V1/guest-carts/' + this.cart.cartId + '/estimate-shipping-methods';
+
+            this.abortShippingController = new AbortController();
+
+            fetch(BASE_URL + 'rest/' + CURRENT_STORE_CODE + path + '?form_key=' + hyva.getFormKey(), {
+                signal: this.abortShippingController.signal,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ address: this.cartData.address })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (!Array.isArray(result)) result = [];
+                this.availableShippingMethods = result;
+                if (this.availableShippingMethods.length > 0) {
+                    const method = this.availableShippingMethods[0];
+                    const methodKey = method.carrier_code + '_' + method.method_code;
+
+                    if (this.shippingMethod !== methodKey) {
+                        this.shippingMethod = methodKey;
+                        this.updateShippingMethod();
+                    }
+                } else {
+                    this.shippingMethod = false;
+                    this.$dispatch('update-shipping-method', { method: false });
+                }
+            })
+            .catch(this.displayError)
+            .finally(() => {
+                this.$dispatch('update-shipping-method-end', {});
+                this.fetchTotals();
+                this.isLoading = false;
+            });
+        },
+
+        updateShippingMethod() {
+            this.$dispatch('update-shipping-method', { method: this.shippingMethod });
+            this.fetchTotals();
+        },
+
+        abortTotalsController: null,
+        fetchTotals() {
+    if (this.abortTotalsController) this.abortTotalsController.abort();
+    this.$dispatch('update-totals-start', {});
+
+    let carrierCode = null;
+    let methodCode = null;
+    if (this.shippingMethod) {
+        const split = this.shippingMethod.split('_');
+        carrierCode = split[0];
+        methodCode = this.shippingMethod.replace(carrierCode + '_', '') || null;
+    }
+
+    const path = (this.customer && this.customer.fullname)
+        ? '/V1/carts/mine/totals-information'
+        : '/V1/guest-carts/' + this.cart.cartId + '/totals-information';
+
+    this.abortTotalsController = new AbortController();
+
+    fetch(BASE_URL + 'rest/' + CURRENT_STORE_CODE + path + '?form_key=' + hyva.getFormKey(), {
+        signal: this.abortTotalsController.signal,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            addressInformation: {
+                shipping_carrier_code: carrierCode,
+                shipping_method_code: methodCode,
+                address: this.cartData.address
+            }
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        try {
+            if (result && Array.isArray(result.total_segments)) {
+                result.total_segments = result.total_segments.map(seg => {
+                    if (seg.code === 'shipping') {
+                        const ext = seg.extension_attributes || {};
+                        const selected = this.selectedMethod;
+                        const methodTitle = ext.method_title || (selected && selected.method_title) || '';
+                        seg.title = methodTitle || seg.title || 'Shipping';
+                    }
+                    return seg;
+                });
+            }
+        } catch (e) {
+            console.warn('Totals title override error', e);
+        }
+
+        try {
+            if (!window.checkoutConfig) window.checkoutConfig = {};
+            if (!window.checkoutConfig.totalsData) window.checkoutConfig.totalsData = {};
+            window.checkoutConfig.totalsData.total_segments = result.total_segments || window.checkoutConfig.totalsData.total_segments || [];
+        } catch (e) {
+            console.warn('Could not write checkoutConfig.totalsData', e);
+        }
+
+        this.$dispatch('update-totals', { data: result });
+    })
+    .catch(err => {
+        this.displayError(err);
+        console.error('[shipping] fetchTotals error', err);
+    })
+    .finally(() => {
+        this.$dispatch('update-totals-end', {});
+    });
+}
+,
+        receiveCustomerData(data) {
+            if (data.cart) this.cart = data.cart;
+            if (data.customer) this.customer = data.customer;
+            if (data['directory-data']) this.directoryData = data['directory-data'];
+            if (data['cart-data']) this.cartData = data['cart-data'];
+            if (data['checkout-data']) this.checkoutData = data['checkout-data'];
+
+            this.populateCartData();
+            this.fetchShippingMethods();
+        },
+
+        populateCartData() {
+            const checkoutAddress = this.checkoutData?.shippingAddressFromData || {};
+            if (Object.keys(checkoutAddress).length) {
+                this.cartData.address.countryId = checkoutAddress['country_id'] || this.cartData.address.countryId;
+                this.cartData.address.region = checkoutAddress['region'] || this.cartData.address.region;
+                this.cartData.address.postcode = checkoutAddress['postcode'] || this.cartData.address.postcode;
+            }
+        },
+
+    }
+}
+</script>
+<div id="block-shipping"
+     class="flex flex-col pb-0 my-2 border-0 border-gray-300 estimate-shipping-form"
+     x-data="initShippingEstimation()"
+     @private-content-loaded.window="receiveCustomerData($event.detail.data)">
+</div>
+
+<template x-if="selectedMethod">
+    <div class="py-2 px-3 border rounded bg-gray-50 flex justify-between items-center">
+        <span x-text="selectedMethod.method_title"></span>
+        <span x-text="(selectedMethod.amount !== undefined) ? hyva.formatPrice(selectedMethod.amount) : ''"></span>
+    </div>
+</template>
+
+<?= $block->getChildHtml() ?>
+<?= $block->getLayout()
+    ->createBlock(\Magento\Checkout\Block\Onepage\Link::class)
+    ->setTemplate('Magento_Checkout::php-cart/onepage-link.phtml')
+    ->toHtml(); ?>
+
+ <!-- Payment Logo Section -->
+    <div class="hidden md:block items-center bg-[#FFF5F5] py-4 px-8 gap-4">
+        <div class="flex gap-2 mb-2">
+        <span class="text-sm font-normal text-black">Guaranteed safe checkout</span>
+        <img src="<?= $block->getViewFileUrl('images/strip-logo.png') ?>" 
+     alt="Strip" 
+     class="strip-img" 
+     /></div>
+     <span class="w-[1px] h-[17px] bg-[#989898] mx-2 hidden"></span>
+  <img src="<?= $block->getViewFileUrl('images/payment_cart_detail_img.png') ?>" 
+     alt="Payment logo" 
+     class="payment-img" 
+     />
+</div>    
+
+<?= $block->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate('Magento_Checkout::php-cart/mobile-bestselling.phtml')
+    ->toHtml(); ?>

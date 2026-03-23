@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+<script>
+    ((config) => {
+        const productInput = document.querySelector(config.productIdSelector);
+        if (!productInput) {
+            return;
+        }
+
+        const params = new URLSearchParams({
+            form_key: hyva.getFormKey(),
+            isAjax: "1",
+            "telemetry[0][type]": "product_view",
+            "telemetry[0][product_id]": productInput.value
+        });
+        fetch(BASE_URL + config.endpoint + params.toString(), { method: 'GET' });
+    })({
+        endpoint: 'amasty_xsearch/analytics/collect?',
+        productIdSelector: '#product_addtocart_form [name="product"]'
+    });
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?> 

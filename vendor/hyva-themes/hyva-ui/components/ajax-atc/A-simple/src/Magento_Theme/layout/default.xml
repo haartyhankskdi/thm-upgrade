@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceBlock name="script-alpine-js">
+            <block name="alpine-plugin-ajax-cart" template="Magento_Theme::page/js/plugins/ajax-cart.phtml">
+                <arguments>
+                    <argument name="delay" xsi:type="number">500</argument> <!-- Extra delay in milliseconds added to the loader (true/false) -->
+                    <argument name="show_sku" xsi:type="boolean">true</argument> <!-- Show Sku (true/false) -->
+                    <argument name="display_on_success" xsi:type="string">modal</argument> <!-- What to show on success (false/minicart/modal) -->
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Mageplaza\RewardPoints\Helper\Data" type="Mageplaza\RewardPointsUltimate\Helper\StandardData"/>
+    <virtualType name="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Behavior\AssociatedEntityMap" type="Magento\Framework\DataObject">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="website" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_behavior_website</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">website_id</item>
+                </item>
+                <item name="customer_group" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_behavior_customer_group</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">customer_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Referral\AssociatedEntityMap" type="Magento\Framework\DataObject">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="website" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_refer_website</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">website_id</item>
+                </item>
+                <item name="customer_group" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_refer_customer_group</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">customer_group_id</item>
+                </item>
+                <item name="referral_group" xsi:type="array">
+                    <item name="associations_table" xsi:type="string">mageplaza_reward_referral_group</item>
+                    <item name="rule_id_field" xsi:type="string">rule_id</item>
+                    <item name="entity_id_field" xsi:type="string">referral_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Mageplaza\RewardPoints\Model\ActionFactory">
+        <arguments>
+            <argument name="map" xsi:type="array">
+                <item name="earning_sign_up" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\SignUp</item>
+                <item name="earning_newsletter_subscriber" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\NewsletterSubscriber</item>
+                <item name="earning_review_product" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\ReviewProduct</item>
+                <item name="earning_customer_birthday" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\Birthday</item>
+                <item name="earning_customer_comeback" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\Comeback</item>
+                <item name="earning_send_email_to_friend" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\SendEmailToFriend</item>
+                <item name="earning_like_facebook" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\LikeFacebook</item>
+                <item name="earning_unlike_facebook" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\UnlikeFacebook</item>
+                <item name="earning_tweet_twitter" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\TweetTwitter</item>
+                <item name="earning_share_facebook" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\ShareFacebook</item>
+                <item name="sell_points_order" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\SellPoints\Order</item>
+                <item name="sell_points_order_refund" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\SellPoints\Refund</item>
+                <item name="referral_earning" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Referral\Earning</item>
+                <item name="referral_refund" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Referral\Refund</item>
+                <item name="import_transaction" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Import\Transaction</item>
+                <item name="earning_points_allocation" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\PointsAllocation</item>
+                <item name="earning_lifetime_amount" xsi:type="string">Mageplaza\RewardPointsUltimate\Model\Action\Earning\LifetimeAmount</item>
+                
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\Block\Form\Login\Info">
+        <plugin name="mp_rw_customer_login" type="Mageplaza\RewardPointsUltimate\Plugin\Customer\Login"/>
+    </type>
+    <type name="Magento\Newsletter\Block\Subscribe">
+        <plugin name="mp_rw_customer_subscribe" type="Mageplaza\RewardPointsUltimate\Plugin\Customer\Subscribe"/>
+    </type>
+    <type name="Magento\Customer\Block\Widget\Dob">
+        <plugin name="mp_rw_birthday" type="Mageplaza\RewardPointsUltimate\Plugin\Customer\Birthday"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Cart\Add">
+        <plugin name="mp_rw_before_add_product" type="Mageplaza\RewardPointsUltimate\Plugin\Product\BeforeAdd"/>
+    </type>
+    <type name="Magento\Sales\Controller\Order\Reorder">
+        <plugin name="mp_rw_before_reorder" type="Mageplaza\RewardPointsUltimate\Plugin\Sales\BeforeReorder"/>
+    </type>
+    <type name="Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer">
+        <plugin name="mp_rw_points_render" type="Mageplaza\RewardPointsUltimate\Plugin\Order\Item\PointsItemRender"/>
+    </type>
+    <type name="Magento\Sales\Block\Order\Email\Items\Order\DefaultOrder">
+        <plugin name="mp_rw_email_items_default" type="Mageplaza\RewardPointsUltimate\Plugin\Order\Email\Items\DefaultOrder"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Items\AbstractItems">
+        <plugin name="mp_rw_email_default_items" type="Mageplaza\RewardPointsUltimate\Plugin\Order\Email\DefaultItems"/>
+    </type>
+    <type name="Mageplaza\RewardPoints\Model\Api\SpendingManagement">
+        <plugin name="mp_rw_items" type="Mageplaza\RewardPointsUltimate\Model\Api\SpendingManagement" sortOrder="666"/>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mp_reward_reports_earned_listing_data_source" xsi:type="string">\Mageplaza\RewardPointsUltimate\Model\ResourceModel\Reports\Earned\Collection</item>
+                <item name="mp_reward_reports_spent_listing_data_source" xsi:type="string">\Mageplaza\RewardPointsUltimate\Model\ResourceModel\Reports\Spent\Collection</item>
+                <item name="mp_reward_milestone_listing_data_source" xsi:type="string">\Mageplaza\RewardPointsUltimate\Model\ResourceModel\Milestone\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Reports\Spent\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_order</argument>
+            <argument name="resourceModel" xsi:type="string">Magento\Sales\Model\ResourceModel\Order</argument>
+        </arguments>
+    </type>
+    <type name="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Reports\Earned\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mageplaza_reward_transaction</argument>
+            <argument name="resourceModel" xsi:type="string">Mageplaza\RewardPoints\Model\ResourceModel\Transaction</argument>
+        </arguments>
+    </type>
+
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\InvitationInterface" type="Mageplaza\RewardPointsUltimate\Model\Invitation"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\InvitationSearchResultInterface" type="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Invitation\Collection"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\InvitationRepositoryInterface" type="Mageplaza\RewardPointsUltimate\Model\InvitationRepository"/>
+
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\ReferralInterface" type="Mageplaza\RewardPointsUltimate\Model\Referral"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\ReferralSearchResultInterface" type="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Referral\Collection"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\ReferralRepositoryInterface" type="Mageplaza\RewardPointsUltimate\Model\ReferralRepository"/>
+
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\BehaviorInterface" type="Mageplaza\RewardPointsUltimate\Model\Behavior"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\Data\BehaviorSearchResultInterface" type="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Behavior\Collection"/>
+    <preference for="Mageplaza\RewardPointsUltimate\Api\BehaviorRepositoryInterface" type="Mageplaza\RewardPointsUltimate\Model\BehaviorRepository"/>
+
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="mp_reward_add_review_earning_point" type="Mageplaza\RewardPointsUltimate\Plugin\Product\ProductRepository"/>
+    </type>
+    <preference for="Mageplaza\RewardPoints\Model\Account" type="Mageplaza\RewardPointsUltimate\Model\Account"/>
+    <preference for="Mageplaza\RewardPoints\Model\ResourceModel\Account" type="Mageplaza\RewardPointsUltimate\Model\ResourceModel\Account"/>
+    <type name="Magento\Quote\Model\Quote\Item\Repository">
+        <plugin name="mp_reward_add_to_customer_api" type="Mageplaza\RewardPointsUltimate\Plugin\Quote\CartItemRepository"/>
+    </type>
+    <type name="Mageplaza\Reports\Block\Menu">
+        <plugin name="mp_get_grid_name" type="Mageplaza\RewardPointsUltimate\Plugin\Reports\Block\Menu"/>
+    </type>
+    <type name="Magento\Customer\Model\AccountManagement">
+        <plugin name="mp_reward_refer_code" type="Mageplaza\RewardPointsUltimate\Plugin\Model\CreateRewardAccount"/>
+    </type>
+    <type name="Mageplaza\RewardPointsPro\Plugin\Helper\Calculation">
+        <plugin name="mp_reward_is_show_spending" type="Mageplaza\RewardPointsUltimate\Plugin\Helper\RewardCalculation"/>
+    </type>
+    <!--  Calculate max spent points with sell points  -->
+    <type name="Mageplaza\RewardPoints\Helper\Calculation">
+        <plugin name="mp_spent_with_sell_points" type="Mageplaza\RewardPointsUltimate\Plugin\Helper\SpentWithSellPoints"/>
+    </type>
+</config>

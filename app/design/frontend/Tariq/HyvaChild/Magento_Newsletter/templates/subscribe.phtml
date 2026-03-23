@@ -1,0 +1,127 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\ReCaptcha;
+use Magento\Framework\Escaper;
+use Magento\Newsletter\Block\Subscribe;
+
+/** @var Subscribe $block */
+/** @var Escaper $escaper */
+/** @var HyvaCsp $hyvaCsp */
+/** @var ViewModelRegistry $viewModels */
+/** @var ReCaptcha $recaptcha */
+/** @var HeroiconsOutline $heroicons */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+// Do not replace this with $viewModels->require(ReCaptcha::class); that might break the dependency
+// on the Magento_ReCaptchaNewsletter module
+$recaptcha = $block->getData('viewModelRecaptcha');
+?>
+<div class="w-full" x-data="{ openTab: null }">
+
+    <div class="news-letter-sec border-b md:border-none pb-3 md:pb-0">
+
+      <button 
+        @click="openTab = (openTab === 1 ? null : 1)" 
+        class="flex justify-between items-center w-full py-2 md:cursor-default md:pointer-events-none category-subscribe-btn">
+
+        <h3 class="text-[13px] md:text-lg font-bold text-white uppercase md:mb-8 tracking-wide">SIGN UP TO NEWSLETTER</h3>
+
+        <!-- Ultra slow arrow animation -->
+        <img src="/media/wysiwyg/footer-link-arrow.svg" class="w-4 h-4 transition-transform duration-[1000ms] md:hidden"
+          :class="openTab === 1 ? 'rotate-90' : 'rotate-0'" alt="Arrow Link" width="16" height="8" >
+
+      </button>
+
+      <!-- Extra slow accordion -->
+      <div 
+        x-show="openTab === 1 || window.innerWidth >= 768"
+        x-transition.duration.500ms
+        class="space-y-4 mt-3 md:mt-0 text-base md:text-[17px] md:block">
+         <p class="text-base text-white font-normal lg:text-[17px] mt-0 mb-6 hide-cat">For special offers & discounts</p>
+    <form
+        class="form subscribe"
+        action="<?= $escaper->escapeUrl($block->getFormActionUrl()) ?>"
+        method="post"
+        x-data="initNewsletterForm"
+        @submit.prevent="submitForm"
+        id="newsletter-validate-detail"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Subscribe to Newsletter')) ?>"
+    >
+          
+        <div class="flex flex-wrap justify-center gap-2 md:justify-start relative">
+        
+            <input
+                name="email"
+                type="email"
+                required
+                id="newsletter-subscribe"
+                class="form-input flex-grow px-5 py-3 rounded-full text-white placeholder-white bg-[#2a2a2a] focus:outline-none border-0 focus:ring-2 focus:ring-gray-500 w-full h-[58px] lg:px-8 lg:pr-[50px]"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Your Email id')) ?>"
+                autocomplete="email"
+                aria-describedby="footer-newsletter-heading"
+            >
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $recaptcha ? $recaptcha->getInputHtml(ReCaptcha::RECAPTCHA_FORM_ID_NEWSLETTER) : '' ?>
+            <button class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-r-full transition absolute top-0 right-0 h-[58px] !bg-transparent">
+               <img src="<?php echo $this->getBaseUrl() . 'media/wysiwyg/sub-arrow.svg'; ?>" alt="SIGN UP TO NEWSLETTER" class="w-auto"  width="20" height="12"  />
+            </button>
+        </div>
+        <div>
+            <template x-if="displayErrorMessage">
+                <p class="flex items-center text-red">
+                    <span class="inline-block w-8 h-8 mr-3">
+                        <?= $heroicons->exclamationCircleHtml('', 24, 24, ['aria-hidden' => true]); ?>
+                    </span>
+                    <template x-for="errorMessage in errorMessages">
+                        <span x-html="errorMessage"></span>
+                    </template>
+                </p>
+            </template>
+        </div>
+    </form>
+    <div class="w-full">
+        <?= $recaptcha ? $recaptcha->getLegalNoticeHtml(ReCaptcha::RECAPTCHA_FORM_ID_NEWSLETTER) : '' ?>
+    </div>
+      </div>
+    </div>
+    <script>
+        function initNewsletterForm() {
+            return {
+                errors: 0,
+                hasCaptchaToken: 0,
+                displayErrorMessage: false,
+                errorMessages: [],
+                setErrorMessages(messages) {
+                    this.errorMessages = [messages]
+                    this.displayErrorMessage = this.errorMessages.length
+                },
+                submitForm() {
+                    // Do not rename $form, the variable is expected to be declared in the recaptcha output
+                    const $form = document.querySelector('#newsletter-validate-detail');
+                    <?= $recaptcha ? $recaptcha->getValidationJsHtml(ReCaptcha::RECAPTCHA_FORM_ID_NEWSLETTER) : '' ?>
+
+                    if (this.errors === 0) {
+                        $form.submit();
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('alpine:init', () => Alpine.data('initNewsletterForm', initNewsletterForm), {once: true})
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+</div>
+
+
+
+ 

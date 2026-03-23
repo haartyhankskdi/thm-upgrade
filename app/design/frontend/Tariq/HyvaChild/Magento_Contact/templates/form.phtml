@@ -1,0 +1,274 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Contact\Block\ContactForm;
+use Magento\Contact\Helper\Data as ContactHelper;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\ReCaptcha;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/** @var ContactForm $block */
+/** @var Escaper $escaper */
+/** @var ReCaptcha $recaptcha|null */
+
+$formId = 'contact';
+/** @var ContactHelper $contactHelper */
+$contactHelper = $this->helper(ContactHelper::class);
+
+// Do not replace this with $viewModels->require(ReCaptcha::class); that would break the dependency
+// on the Magento_ReCaptchaContact module
+$recaptcha = $block->getData('viewModelRecaptcha');
+?>
+<div class="w-full bg-white py-16">
+  <div class="max-w-6xl mx-auto px-0">
+    
+    <div class="flex flex-col gap-6 
+                sm:flex-row sm:items-center sm:justify-space-around justify-evenly">
+
+      <!-- Address -->
+      <div class="flex items-center gap-4">
+        <span class="w-16 h-16 flex items-center justify-center 
+                     border border-black rounded-full">
+          <!-- Location Icon -->
+          <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 11a3 3 0 100-6 3 3 0 000 6z"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z"/>
+          </svg>
+        </span>
+        <p class="text-base text-black font-medium leading-[22px]">
+          259 Water Road, Wembley, London, HA0 1HX
+        </p>
+      </div>
+
+      <!-- Phone -->
+      <div class="flex items-center gap-4">
+        <span class="w-16 h-16 flex items-center justify-center 
+                     border border-black rounded-full">
+          <!-- Phone Icon -->
+          <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 5a2 2 0 012-2h3l2 5-2 1a11 11 0 005 5l1-2 5 2v3a2 2 0 01-2 2A16 16 0 013 5z"/>
+          </svg>
+        </span>
+        <a href="tel:+442089089440"
+           class="text-base text-black font-medium hover:underline">
+          +44 (0) 208 908 9440
+        </a>
+      </div>
+
+      <!-- Email -->
+      <div class="flex items-center gap-4">
+        <span class="w-16 h-16 flex items-center justify-center 
+                     border border-black rounded-full">
+          <!-- Mail Icon -->
+          <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 8l9 6 9-6"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 8v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8"/>
+          </svg>
+        </span>
+        <a href="mailto:info@tariqhalalmeats.com"
+           class="text-base text-black font-medium hover:underline">
+          info@tariqhalalmeats.com
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+ 
+
+<section class="w-full py-10">
+  <div class="px-0">
+
+    <div class="flex flex-col lg:flex-row gap-8">
+
+ <div class="hidden md:block lg:w-1/2 w-full">
+        <img
+          src="<?= $this->getViewFileUrl('images/contact-img.png') ?>"
+          alt="Contact"
+          class="w-full h-full object-cover rounded-md"
+        />
+      </div>
+
+
+<div class="lg:w-1/2 w-full bg-[#fdeeee] py-6 md:p-6">
+    <form class="form contact space-y-6"
+          action="<?= $escaper->escapeUrl($block->getFormAction()) ?>"
+          id="<?= $escaper->escapeHtmlAttr($formId) ?>"
+          method="post"
+          x-data="initContactForm()"
+          @submit.prevent="submitForm()"
+    >
+        <fieldset class="">
+            <div class="flex flex-col text-left w-full mb-6 py-2 px-4">
+                <h2 class="sm:text-2xl text-xl font-medium title-font text-black">
+                    <span><?= $escaper->escapeHtml(__('Enquiry Form')) ?></span>
+                </h2>
+                
+            </div>
+            <div class="flex flex-wrap px-2">
+                <div class="field name required p-2 w-full md:w-1/2 text-left box-border">
+                    <label class="label text-black" for="name">
+                        <span><?= $escaper->escapeHtml(__('Name')) ?></span>
+                    </label>
+                    <input name="name" id="name" required title="<?= $escaper->escapeHtmlAttr(__('Name')) ?>"
+                           value="<?= $escaper->escapeHtmlAttr(
+                               $contactHelper->getPostValue('name')
+                                   ?: $contactHelper->getUserName()
+                           ) ?>"
+                           class="w-full bg-white border-0 focus:outline-none focus:border-black py-4 focus:ring-0 focus:shadow-none box-border"
+                           type="text"
+                           placeholder="<?= $escaper->escapeHtml(__('Name')) ?>"
+                    />
+                </div>
+                <div class="field email required p-2 w-full md:w-1/2 text-left box-border">
+                    <label class="label text-black" for="email">
+                        <span><?= $escaper->escapeHtml(__('Email')) ?></span>
+                    </label>
+                    <input name="email" id="email" required title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                           value="<?= $escaper->escapeHtmlAttr(
+                               $contactHelper->getPostValue('email')
+                                   ?: $contactHelper->getUserEmail()
+                           ) ?>"
+                           class="w-full bg-white border-0 focus:outline-none focus:border-black py-4 focus:ring-0 focus:shadow-none box-border"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                           type="email"/>
+                </div>
+                <div class="field telephone p-2 w-full md:w-1/2 text-left box-border">
+                    <label class="label text-black" for="telephone">
+                        <span><?= $escaper->escapeHtml(__('Phone Number')) ?></span>
+                    </label>
+                    <input name="telephone" id="telephone"
+                           title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                           value="<?= $escaper->escapeHtmlAttr(
+                               $contactHelper->getPostValue('telephone')
+                           ) ?>"
+                           class="w-full bg-white border-0 focus:outline-none focus:border-black py-4 focus:ring-0 focus:shadow-none box-border"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                           type="text"/>
+                </div>
+                <div class="field comment required p-2 w-full md:w-full text-left box-border">
+                    <label class="label text-black" for="comment">
+                        <span><?= $escaper->escapeHtml(__('What’s on your mind?')) ?></span>
+                    </label>
+                    <textarea name="comment" id="comment" required
+                              title="<?= $escaper->escapeHtmlAttr(__('What’s on your mind?')) ?>"
+                              class="w-full bg-white border-0 focus:outline-none focus:border-black py-4 h-28 focus:ring-0 focus:shadow-none box-border" cols="5" rows="3"><?= $escaper->escapeHtml(
+                                  $contactHelper->getPostValue('comment')
+                              ) ?></textarea>
+                </div>
+                    <div class="field gdpr required w-full p-2">
+            
+            <div class="control register-field-container field required box-border">
+                 <label class="label text-black register-floating-label" for="comment" ><span><?= $block->escapeHtml(__('Communication Preference')) ?></span></label>
+                <select name="communication_preference" id="communication_preference" class="required-entry validate-select w-full bg-white border-0 focus:outline-none focus:border-black py-4 focus:ring-0 focus:shadow-none box-border" data-validate="{required:true}" onclick="this.setAttribute('value', this.value);" value="" required>
+                            <option value="">Select Preference</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Email">Email</option>
+                            <option value="Any">Any</option>
+                        </select>
+               
+            </div>
+        </div>
+          <div class="field required w-full my-4 p-2">
+            
+            <div class="control gdpr-terms flex gap-4">
+                <input class="input-text mt-1" name="terms_and_conditions_approval" id="terms_approval_reg" type="checkbox" value="1" data-validate="{required:true}" data-msg-required="Please accept our privacy policy">
+                        <label for="terms_approval_reg">By ticking this box you confirm you have read, understood and accept our <a href="/privacy-policy" target="_blank" title="Privacy Policy">Privacy Policy</a>.</label>
+                         
+            </div>
+        </div>
+                <?= $block->getChildHtml('form.additional.info') ?>
+                <div class="pl-2"><?= $recaptcha ? $recaptcha->getInputHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?></div>
+            </div>
+        </fieldset>
+        <div class="w-full px-4">
+            <?= $block->getBlockHtml('formkey') ?>
+            <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Submit')) ?>" class="bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-sm  md:text-base  font-normal px-12 py-3 rounded-full transition duration-400 uppercase w-auto">
+                <span><?= $escaper->escapeHtml(__('Submit')) ?></span>
+            </button>
+        </div>
+        <div class="w-full px-4">
+            <?= $block->getChildHtml('form.additional.after') ?>
+            <?= $recaptcha ? $recaptcha->getLegalNoticeHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?>
+        </div>
+    </form>
+
+   
+    <!-- <div class="card lg:w-1/2 md:w-1/3">
+        <?//= $block->getChildHtml('contact.details') ?>
+    </div> -->
+</div>
+</div>
+</div>
+ 
+
+<div class="contact-map mt-8">
+  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d9925.785180451505!2d-0.2892882!3d51.5417149!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4876122114875737%3A0x4ddd62b7cac88b33!2s259%20Water%20Rd%2C%20Wembley%20HA0%201HX%2C%20UK!5e0!3m2!1sen!2sin!4v1615999918054!5m2!1sen!2sin" width="100%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+  </div>
+
+  <script>
+function initContactForm() {
+    return {
+        errors: 0,
+        hasCaptchaToken: 0,
+        submitForm() {
+            const $form = document.querySelector('#<?= $escaper->escapeJs($formId) ?>');
+            <?= $recaptcha ? $recaptcha->getValidationJsHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?>
+
+            if (this.errors === 0) {
+                $form.submit();
+            }
+        }
+    }
+}
+
+function emailValidation() {
+    return {
+        email: '',
+        error: false,
+        errorMessage: '',
+        // regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/,
+        regex: /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/,
+
+        validate() {
+            const value = this.email.trim();
+
+            // Blank → browser required handles this
+            if (value === '') {
+                this.error = false;
+                this.errorMessage = '';
+                return true;
+            }
+
+            if (!this.regex.test(value)) {
+                this.error = true;
+                this.errorMessage = 'Please enter a valid email address';
+                return false;
+            }
+
+            this.error = false;
+            this.errorMessage = '';
+            return true;
+        }
+    }
+}
+</script>

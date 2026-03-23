@@ -1,0 +1,75 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function advancedSearchPriceComponentData() {
+        return Object.assign(
+            {
+                ...amXsearchPriceComponent(this.product)
+            }, {
+                isPriceInclAndExclTax() {
+                    return this.product.price_range?.minimum_price?.regular_price && !this.product?.hide_price_html
+                }
+            }
+        )
+    }
+    function hidePriceHandler(el) {
+        return {
+            el,
+            productId: null,
+
+            init() {
+                this.productId = this.el.dataset.productId;
+
+                const observer = new MutationObserver(() => {
+                    const selector = `a[data-amhide="AmastyHidePricePopup"][data-product-id="${this.productId}"]`;
+                    const linkNode = this.el.querySelector(selector) ?? document.querySelector(selector);
+
+                    if (linkNode) {
+                        linkNode.addEventListener('click', () => {
+                            const event = new CustomEvent('open-am-hideprice-popup', {
+                                detail: {
+                                    productId: this.productId,
+                                    productName: this.cleanText(this.el.dataset.name),
+                                },
+                            });
+                            window.dispatchEvent(event);
+                        });
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+            },
+
+            cleanText(input) {
+                const div = document.createElement('div');
+                div.innerHTML = input;
+                return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+            },
+        }
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => {
+            Alpine.data('advancedSearchPriceComponentData', advancedSearchPriceComponentData);
+            Alpine.data('hidePriceHandler', hidePriceHandler);
+        },
+        { once: true }
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

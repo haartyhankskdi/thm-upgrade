@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Express\PaymentElementFailsafe;
+
+/** @var PaymentElementFailsafe $block */
+
+if ($block->getIsEnabled()) { ?>
+    <div id="brippoFailsafePaymentElementModal">
+        <div class="content">
+            <span id="brippo-failsafe-paymentelement-errors" class="message error">
+            </span>
+            <form id="brippo-failsafe-paymentelement-form">
+                <div id="brippo-failsafe-paymentelement"></div>
+            </form>
+        <div class="footer">
+            <button class="button action primary" type="button" id="brippo-failsafe-paymentelement-pay" style="padding: 14px 17px; font-size: 1.8rem;">Pay</button>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>

@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <method name="mollie_methods_applepay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_alma">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_bancontact">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_bancomatpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_banktransfer">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_belfius">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_billie">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_blik">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_creditcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_directdebit">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_eps">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_giftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_googlepay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_ideal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_in3">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_kbc">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_klarna">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_klarnapaylater">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_klarnapaynow">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_klarnasliceit">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_mbway">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_multibanco">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_mybank">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_paybybank">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_paypal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_paymentlink">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_paysafecard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_pointofsale">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_payconiq">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_przelewy24">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_riverty">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_satispay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_sofort">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_swish">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_trustly">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_twint">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="mollie_methods_voucher">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

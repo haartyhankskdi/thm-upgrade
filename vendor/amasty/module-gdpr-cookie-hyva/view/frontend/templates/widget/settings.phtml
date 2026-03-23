@@ -1,0 +1,97 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookie\Block\Widget\Settings;
+use Amasty\GdprCookieHyva\ViewModel\CookieBarSettings;
+use Amasty\GdprCookieHyva\ViewModel\CookieGroupInfo;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Settings $block */
+/** @var Escaper $escaper */
+
+if (!$block->isNeedToShow()) {
+    return;
+}
+
+$groupInfoPrefix = 'widget-';
+$openGroupInfoAction = $groupInfoPrefix . CookieGroupInfo::OPEN_ACTION;
+$groupInfoBlock = $block->getLayout()
+    ->createBlock(Template::class, 'amasty.cookie.cookiewidget.groups.info')
+    ->setTemplate('Amasty_GdprCookieHyva::modal/cookie-group-info.phtml')
+    ->setData('prefix', $groupInfoPrefix);
+?>
+
+<section x-data="initAmCookieGroups" class="w-full flex flex-col <?= /* @noEscape */ CookieBarSettings::REF_NAME ?>">
+    <div class="md:mb-2 flex items-center justify-center
+                            px-4 flex-wrap sm:flex-nowrap sm:justify-between">
+        <h3 class="text-lg font-semibold">
+            <?= $escaper->escapeHtml(__('Cookie Settings')) ?>
+        </h3>
+        <div class="flex">
+            <button type="button"
+                    class="p-4 ml-4 mb-2 w-full text-xs font-semibold rounded-xs
+                           leading-none text-center text-white uppercase bg-primary btn-primary"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Allow All Cookies')) ?>"
+                    x-data="initAmCookieActionDispatcherBtn"
+                    data-dispatch-action="cookiebar-action-allow"
+                    @click.prevent="actiondispatchHandler"
+            >
+                <?= $escaper->escapeHtml(__('Allow All Cookies')) ?>
+            </button>
+            <button type="button"
+                    class="p-4 ml-4 mb-2 w-full text-xs font-semibold rounded-xs
+                           leading-none text-center text-white uppercase bg-primary btn-primary"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Save')) ?>"
+                    x-data="initAmCookieActionDispatcherBtn"
+                    data-dispatch-action="cookiebar-action-accept"
+                    data-dispatch-payload="<?= $escaper->escapeHtmlAttr(\json_encode(['include_checked_groups' => true])) ?>"
+                    @click.prevent="actiondispatchHandler"
+            >
+                <?= $escaper->escapeHtml(__('Save')) ?>
+            </button>
+        </div>
+    </div>
+
+    <template x-for="group in $store.AmastyCookieGroups.groupData" :key="group.groupId">
+        <div class="mb-2">
+            <div class="header flex justify-between items-start py-2">
+                <h3 class="text-lg font-semibold pr-6" x-text="group.name"></h3>
+                <div>
+                    <input type="checkbox"
+                           :name="getInputGroupId"
+                           data-group-prefix="<?= $escaper->escapeHtmlAttr($groupInfoPrefix) ?>"
+                           @change="toggleGroup"
+                           :checked="group.checked"
+                           :id="getInputGroupId"
+                           :disabled="group.isEssential"
+                           :value="group.groupId"
+                           class="amsettings-bar-input-toggle"
+                           :class="getInputStyles">
+                    <label data-group-prefix="<?= $escaper->escapeHtmlAttr($groupInfoPrefix) ?>"
+                           :for="getInputGroupId" class="sr-only" x-text="group.name">
+                    </label>
+                </div>
+            </div>
+            <template x-if="group.description">
+                <p class="py-2 text-sm" x-html="group.description"></p>
+            </template>
+            <button class="btn btn-primary uppercase text-xs text-center text-white font-semibold leading-none
+                        p-4 mt-4 rounded-xs before:content-none after:content-none
+                        focus:drop-shadow-xs hover:drop-shadow-xs"
+                    type="button"
+                    data-dispatch-action="<?= $escaper->escapeHtmlAttr($openGroupInfoAction) ?>"
+                    title="<?= $escaper->escapeHtmlAttr(__('More Information')) ?>"
+                    @click="moreInfoClickHandler"
+            >
+                <?= $escaper->escapeHtml(__('More Information')) ?>
+            </button>
+        </div>
+    </template>
+</section>
+
+<?= $groupInfoBlock->toHtml() ?>

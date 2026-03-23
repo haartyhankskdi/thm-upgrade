@@ -1,0 +1,161 @@
+<?php
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+ 
+$viewModelNavigation = $viewModels->require(Navigation::class, $block);
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+$uniqueId = '_' . uniqid();
+
+$menuItems = $viewModelNavigation->getNavigation(4);
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+$baseurl= $block->getBaseUrl();
+?>
+
+<div x-data="megaMenu<?= $uniqueId ?>()" x-cloak class="hidden lg:block justify-start w-full z-20">
+  <div x-ref="nav-desktop" class="container hidden lg:block lg:px-0">
+    <nav class="relative w-full" aria-label="Main menu">
+      <ul class="flex justify-left flex-wrap gap-x-6 pt-4">
+        <?php foreach ($menuItems as $index => $menuItem): ?>
+          <?php $hasChildren = !empty($menuItem['childData']); ?>
+          <li class="<?php if($menuItem['name']=="Fresh Meats"){ echo "full-menu";}?> menu-1 mr-1 border-b-2 border-transparent <?php if($menuItem['name']!="Fresh Meats" && $menuItem['name']!="Frozen" ){ echo "relative";}?>"
+              @mouseenter="openMenu('<?= $index ?>')" 
+              @mouseleave="closeMenu()" 
+              :class="{'border-primary': activeId === '<?= $index ?>'}">
+            <span class="text-white flex items-center">
+              <a href="<?= $escaper->escapeUrl($menuItem['url']) ?>"
+                 class="text-lg font-medium px-0 pb-6 border-b-2 border-transparent hover:text-red hover:border-[#E63833] hover:bg-transparent transition">
+                <?= $escaper->escapeHtml($menuItem['name']) ?>
+              </a>
+            </span>
+
+            <?php if ($hasChildren): ?>
+              <?php 
+              $hasGrandChild = false;
+              foreach ($menuItem['childData'] as $child) {
+                  if (!empty($child['childData'])) {
+                      $hasGrandChild = true;
+                      break;
+                  }
+              }
+
+              $childCount = count($menuItem['childData']);
+              if ($hasGrandChild) {
+                if ($childCount <= 2) {
+                  $grid = 'md:grid-cols-2';
+                  $width = 'md:w-[500px]';
+                } elseif ($childCount <= 4) {
+                  $grid = 'md:grid-cols-3';
+                  $width = 'md:w-full';
+                } else {
+                  $grid = 'md:grid-cols-4';
+                  $width = 'md:w-[1100px]';
+                }
+              } else {
+                $grid = 'grid-cols-1';
+                $width = 'w-[260px]';
+              }
+              ?>
+              
+              <div x-ref="menu_<?= $index ?>"
+                   class="absolute top-18 left-0 bg-white border-0 rounded-0 z-20 p-6 !pb-0 md:pr-0 opacity-0 invisible transform -translate-y-3 transition-all duration-500 ease-out <?= $width ?>"
+                   :class="{
+                     'opacity-100 visible translate-y-0': activeId === '<?= $index ?>',
+                     'opacity-0 invisible -translate-y-3': activeId !== '<?= $index ?>',
+                     'right-0 left-auto': rightAlignId === '<?= $index ?>'
+                   }">
+
+                <?php if ($hasGrandChild): ?>
+                  <h3 class="font-semibold text-black text-[28px] lg:w-auto inline-block"><?= $escaper->escapeHtml($menuItem['name']) ?></h3>
+                  <span class="block w-10 h-0.5 bg-red-600 mt-3 mb-6"></span>
+                  <div class="flex gap-6 md:grid-cols-4 <?= $grid ?>">
+                    <?php foreach ($menuItem['childData'] as $child): ?>
+                      <div class="submenu-1">
+                        <h4 class="font-bold text-black text-xl mb-3">
+                          <a href="<?= $escaper->escapeUrl($child['url']) ?>" class="hover:text-primary transition">
+                            <?= $escaper->escapeHtml($child['name']) ?>
+                          </a>
+                        </h4>
+                        <?php if (!empty($child['childData'])): ?>
+                          <ul class="space-y-2 font-Medium text-black text-[17px] mb-10">
+                            <?php foreach ($child['childData'] as $sub): ?>
+                              <li>
+                                <a href="<?= $escaper->escapeUrl($sub['url']) ?>"
+                                   class="font-Medium text-black text-[17px] hover:text-red-600 inline-block transition transition-transform duration-300 ease-in-out hover:translate-x-2">
+                                  <?= $escaper->escapeHtml($sub['name']) ?>
+                                </a>
+                              </li>
+                            <?php endforeach; ?> 
+                          </ul>
+                        <?php endif; ?>
+                      </div>
+                    <?php endforeach; ?>
+                    <?php
+                    if ($menuItem['name']=="Fresh Meats"){?>
+                       <div class="bg-[#f5f9f7] rounded-xl p-0 menu-vid-sec lg:mt-[-105px] md:flex justify-between"> 
+                       <ul class="bg-[#f5f9f7] mb-0 p-6 text-xl font-bold text-black-700 lg:h-[380px]  lg:flex flex-col items-start justify-center">
+        <li class="mb-4"><a href="<?php echo $baseurl.'fresh-meats.html'?>" class="hover:text-red-600">Shop All Fresh Meats</a></li>
+        <li class="mb-4"><a href="<?php echo $baseurl.'fresh-meats.html'?>" class="hover:text-red-600">New this Month</a></li>
+        <li class="mb-4"><a href="<?php echo $baseurl.'festive.html'?>" class="hover:text-red-600">Offers in Category</a></li>
+        <li class="mb-4"><a href="<?php echo $baseurl?>" class="hover:text-red-600">Best Sellers</a></li>
+      </ul> 
+    <div class="bg-black text-white p-0 mt-0 shadow-lg max-w-full mx-0 md:h-[380px] md:flex flex-col items-center justify-center insights-img">
+      <p class="font-semibold mb-2 normal-case capitalize">Insights by Tariq Halal</p>
+      <iframe src="https://www.youtube.com/embed/h76QLjSdk1k"
+              class="w-full h-40 rounded-lg mb-2"
+              frameborder="0" allowfullscreen></iframe>
+      <p class="text-sm normal-case capitalize">Common Mistakes in Kitchen</p>
+    </div>
+    </div>
+    <?php }?>
+                  </div>
+                <?php else: ?>
+                  <ul class="space-y-1 font-Medium text-black text-[17px] pb-6">
+                    <?php foreach ($menuItem['childData'] as $child): ?>
+                      <li>
+                        <a href="<?= $escaper->escapeUrl($child['url']) ?>"
+                           class="block font-Medium text-black text-[17px] hover:text-red-600 pt-1 transition  transition-transform duration-300 ease-in-out hover:translate-x-2">
+                          <?= $escaper->escapeHtml($child['name']) ?>
+                        </a>
+                      </li>
+                    <?php endforeach; ?>
+                  </ul>
+
+                <?php endif; ?>
+              </div>
+            <?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </nav>
+
+
+  </div>
+</div>
+
+<script>
+function megaMenu<?= $uniqueId ?>() {
+  return {
+    activeId: null,
+    rightAlignId: null,
+    openMenu(id) {
+      this.activeId = id;
+      this.$nextTick(() => this.fixPosition(id));
+    },
+    closeMenu() { this.activeId = null; },
+    fixPosition(id) {
+      const menu = this.$refs[`menu_${id}`];
+      if (!menu) return;
+      const rect = menu.getBoundingClientRect();
+      const viewport = window.innerWidth || document.documentElement.clientWidth;
+      this.rightAlignId = (rect.right > viewport - 20) ? id : null;
+    }
+  }
+}
+</script>

@@ -1,0 +1,147 @@
+.account-nav li {
+    & a,
+    & strong {
+        @apply flex justify-between text-secondary py-1;
+    }
+
+    & a:hover {
+        @apply text-black;
+    }
+
+    & strong {
+        @apply underline text-black font-normal;
+    }
+}
+
+.actions-toolbar {
+    @apply mt-6 border-t border-container-darker pt-4 flex justify-between flex-row-reverse items-center;
+
+    & a.back {
+        @apply text-secondary-darker underline;
+    }
+
+    @layer components {
+        & .primary button {
+            @apply btn btn-primary;
+        }
+    }
+}
+
+@layer components {
+    .customer-account-login {
+        .page-title-wrapper {
+            @apply hidden;
+        }
+    }
+    .customer-account-create {
+        .page-title-wrapper {
+            @apply hidden;
+        }
+    }
+ 
+    form .field.field-reserved,
+    fieldset .field.field-reserved {
+      @apply !mb-[10px];
+    }
+
+    .account-nav ul li a{
+      @apply !block !px-0 !py-3 text-black border-b border-[#d7d7d7];
+    }  
+ 
+     
+    .account-nav ul li.current strong {
+      @apply !block !px-0 !py-3 text-[#3B7E48] font-bold no-underline border-b border-[#d7d7d7];
+    }
+ 
+    
+    .account-nav ul li.current {
+        @apply !py-0; 
+    }
+
+    .account-nav ul li.current a {
+        @apply !p-0;
+    }
+
+ 
+    .block-reward-dashboard .box-balance {
+      @apply rounded-[5px] h-[65px];
+    }
+
+    .item-balance .available {
+      @apply bg-[#39E070];
+    }
+
+    .item-balance .holding {
+      @apply bg-[#25B9F6];
+    }
+
+    .item-balance .earned {
+      @apply bg-[#0249D3];
+    }
+
+    .item-balance .paid {
+      @apply bg-[#5865F2];
+    }
+
+    .customer-address-form .page-title-wrapper,
+    .customer-referral-index .page-title-wrapper,
+    .customer-milestone-index .page-title-wrapper {
+        @apply mt-10;
+    }
+    .customer-rewards-index .page-title-wrapper,
+    .membership-manage-index .page-title-wrapper {
+        @apply mt-10 mb-8;
+    }
+ 
+    .customer-rewards-transaction .page-title-wrapper {
+        @apply mt-10 mb-4;
+    }
+    .account.customer-rewards-index .page-title-wrapper .custom.container,
+    .account.customer-referral-index .page-title-wrapper .custom.container,
+    .account.customer-rewards-transaction .page-title-wrapper .custom.container {
+        @apply !px-0;
+    }
+
+    .account .form-edit-account {
+        @apply bg-[#F5F9F7] py-1 px-8 mt-8;
+    }
+    .form-edit-account .form-select,
+    .form-edit-account .form-input,
+    .form-address-edit .form-select,
+    .form-address-edit .form-input {
+        @apply !bg-white;
+    }
+    #my-orders-table {
+        @apply bg-white;
+    }
+
+    #c_pass {
+        @apply md:w-[240px];
+    }
+
+    .sales-order-history .actions-toolbar {
+        @apply flex-row;
+    }
+    
+    
+
+}
+
+@media screen and (max-width: 767px) {
+    .block-addresses-list .action-box,
+    .block-reward-dashboard-transaction .action-box {
+        @apply border-b border-black pb-5 mb-5;
+    }
+}
+
+
+@layer utilities {
+  [type='checkbox']:checked:hover,
+  [type='checkbox']:checked:focus,
+  [type='radio']:checked:hover,
+  [type='radio']:checked:focus {
+    @apply border-transparent bg-black accent-blue-600;
+  }
+} 
+
+ 

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.cart.methods">
+            <block class="Ebizmarts\BrippoPayments\Block\Express\Button"
+                   name="brippopayments.express.checkout"
+                   template="Ebizmarts_BrippoPayments::cart/express.phtml"
+                   before="checkout.cart.methods.onepage.bottom"
+                   ifconfig="payment/brippo_payments_express/active"/>
+        </referenceBlock>
+    </body>
+</page>

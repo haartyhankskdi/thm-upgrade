@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Head;
+
+/** @var Head $block */
+try {
+    $nonce = $block->cspNonceProvider && method_exists($block->cspNonceProvider, 'generateNonce') 
+        ? $block->cspNonceProvider->generateNonce() 
+        : '';
+} catch (Exception $e) {
+    $nonce = '';
+}
+
+if ($block->isBrippoActive()) { ?>
+    <link rel="stylesheet" type="text/css" href="<?= $block->escapeHtmlAttr($block->getViewFileUrl('Ebizmarts_BrippoPayments::css/brippo.css')) ?>"/>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script nonce="<?= /* @noEscape */ $nonce ?>">
+        window.brippoConfigurationUrl = '<?= $block->escapeJs($block->getConfigurationUrl()) ?>';
+    </script>
+    <script src="<?= $block->escapeHtmlAttr($block->getViewFileUrl('Ebizmarts_BrippoPayments::js/payments/brippo.js')) ?>"></script>
+    <script src="<?= $block->escapeHtmlAttr($block->getViewFileUrl('Ebizmarts_BrippoPayments::js/payments/express-checkout-element.js')) ?>"></script>
+    <script src="<?= $block->escapeHtmlAttr($block->getViewFileUrl('Ebizmarts_BrippoPayments::js/payments/payment-element.js')) ?>"></script>
+<?php }
+
+if ($block->isRecoverCheckout()) { ?>
+    <script src="<?= $block->escapeHtmlAttr($block->getViewFileUrl('Ebizmarts_BrippoPayments::js/payments/recover.js')) ?>"></script>
+<?php } ?>

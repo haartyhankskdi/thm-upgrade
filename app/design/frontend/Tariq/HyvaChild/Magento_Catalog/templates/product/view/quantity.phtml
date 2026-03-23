@@ -1,0 +1,96 @@
+<?php
+/**
+ * Custom Quantity Box for Hyvä Theme
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductStockItem;
+use Magento\Catalog\Block\Product\View;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+
+/** @var View $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var Product $product */
+$product = $block->getProduct();
+
+/** @var ProductStockItem $stockItemViewModel */
+$stockItemViewModel = $viewModels->require(ProductStockItem::class);
+$minSalesQty = $stockItemViewModel->getMinSaleQty($product);
+$maxSalesQty = $stockItemViewModel->getMaxSaleQty($product);
+$defaultQty = $block->getProductDefaultQty() * 1;
+
+$step = $stockItemViewModel->getQtyIncrements($product)
+    ? $stockItemViewModel->getQtyIncrements($product)
+    : 1;
+
+if ($step) {
+    $minSalesQty = ceil($minSalesQty / $step) * $step;
+    $maxSalesQty = floor($maxSalesQty / $step) * $step;
+    $defaultQty = ceil($defaultQty / $step) * $step;
+}
+?>
+
+<?php if ($block->shouldRenderQuantity()): ?>
+<script>
+    function initQtyField() {
+        return {
+            qty: <?= /** @noEscape */ $defaultQty ?>,
+            productId: '<?= (int)$product->getId() ?>',
+            increase() {
+                if (!this.qty) this.qty = <?= /** @noEscape */ $minSalesQty ?: 1 ?>;
+                this.qty += <?= /** @noEscape */ $step ?>;
+                this.$dispatch('update-qty-' + this.productId, this.qty);
+            },
+            decrease() {
+                if (this.qty > <?= /** @noEscape */ $minSalesQty ?: 1 ?>) {
+                    this.qty -= <?= /** @noEscape */ $step ?>;
+                    this.$dispatch('update-qty-' + this.productId, this.qty);
+                }
+            }
+        };
+    }
+</script>
+        <label class="hidden">
+            <?= $escaper->escapeHtml(__('Quantity')) ?>
+        </label>
+<div x-data="initQtyField()" class="flex items-center space-x-0">
+
+    <?php if ($product->isSaleable()): ?>
+        <label for="qty[<?= (int)$product->getId() ?>]" class="sr-only">
+            <?= $escaper->escapeHtml(__('Quantity')) ?>
+        </label>
+
+        <div class="flex items-center border border-gray-300 rounded-none overflow-hidden w-32 lg:w-[145px]">
+            <!-- Minus Button -->
+            <button type="button"
+                class="bg-black text-white px-4 py-3 hover:bg-green-800 transition"
+                @click="decrease()"
+            >−</button>
+
+            <!-- Input -->
+            <input
+                name="qty"
+                id="qty[<?= (int)$product->getId() ?>]"
+                form="product_addtocart_form"
+                type=""
+                min="<?= /** @noEscape */ $minSalesQty ?>"
+                max="<?= /** @noEscape */ $maxSalesQty ?>"
+                step="<?= /** @noEscape */ $step ?>"
+                x-model.number="qty"
+                @input="$dispatch('update-qty-<?= (int)$product->getId() ?>', qty)"
+                class="text-center w-full border-0 focus:ring-0 focus:outline-none py-3"
+            />
+
+            <!-- Plus Button -->
+            <button type="button"
+                class="bg-black text-white px-4 py-3 hover:bg-green-800 transition"
+                @click="increase()"
+            >+</button>
+        </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>

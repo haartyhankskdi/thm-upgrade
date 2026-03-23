@@ -1,0 +1,158 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Product\RadioPriceRenderer;
+
+
+
+/** @var Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Radio $block */
+/** @var Magento\Framework\Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var RadioPriceRenderer $radioPriceRenderer */
+$radioPriceRenderer = $viewModels->require(RadioPriceRenderer::class);
+
+$option = $block->getOption();
+$selections = $option->getSelections();
+$default = $option->getDefaultSelection();
+list($defaultQty, $canChangeQty) = $block->getDefaultValues();
+$productId = $block->getProduct()->getId();
+
+$optionId = $option->getId();
+$activeSelectOptions = [];
+?>
+<?php if ($block->showSingle()): ?>
+    <?php /* @noEscape */ echo $block->getSelectionTitlePrice($selections[0]) ?>
+
+    <input type="hidden"
+           id="bundle-option-<?= (int)$optionId ?>-<?= (int)$selections[0]->getSelectionId() ?>"
+           name="bundle_option[<?=(int)$productId ?>][<?= (int)$optionId ?>]"
+           form="mageplaza-fbt-form"
+           class="bundle-option-<?= (int)$optionId ?>  product bundle option"
+           value="<?= (int)$selections[0]->getSelectionId() ?>"
+           checked
+           data-option-id="<?= (int)$optionId ?>"
+           data-selection-id="<?= (int)$selections[0]->getSelectionId() ?>"
+    />
+    <?php if ((int)$selections[0]->getSelectionId()) {
+        array_push($activeSelectOptions, (int)$selections[0]->getSelectionId());
+    } ?>
+<?php else: ?>
+    <?php if (!$option->getRequired()): ?>
+        <div class="field choice mt-1 flex items-center gap-x-2">
+            <input type="radio"
+                   id="bundle-option-<?= (int)$optionId ?>"
+                   name="bundle_option[<?=(int)$productId ?>][<?= (int)$optionId ?>]"
+                   form="mageplaza-fbt-form"
+                   class="radio product bundle option"
+                   <?= ($default && $default->isSalable())?'':' checked ' ?>
+                   value=""
+                   x-on:change="
+                        activeSelectOptions['<?= (int)$optionId ?>'] = [$event.target.value];
+                        $nextTick(() => {calculateTotalPrice()});
+                   "
+            />
+            <label
+                class="label text-sm"
+                for="bundle-option-<?= (int)$optionId ?>"
+            >
+                <?= $escaper->escapeHtml(__('None')) ?>
+            </label>
+        </div>
+    <?php endif; ?>
+    <div role="radiogroup"
+         class="field field-reserved"
+         aria-label="<?= $escaper->escapeHtmlAttr(__('%1 options', $option->getTitle())) ?>"
+    >
+        <?php foreach ($selections as $selection): ?>
+            <?php $selectionId = $selection->getSelectionId(); ?>
+            <?php $optionSelectionId = $optionId . '-' . $selectionId ?>
+            <div class=" choice mt-1 flex items-center gap-x-2">
+                <input type="radio"
+                    id="bundle-option-<?= $escaper->escapeHtmlAttr($optionSelectionId) ?>"
+                    name="bundle_option[<?=(int)$productId ?>][<?= (int)$optionId ?>]"
+                    form="mageplaza-fbt-form"
+                    class="radio product bundle option change-container-classname"
+                    <?= $option->getRequired()
+                        ? 'data-validate=\'{"validate-one-required-by-name":"true"}\''
+                        : '' ?>
+                    <?php if ($block->isSelected($selection)) {
+                            array_push($activeSelectOptions, $selectionId);
+                            echo 'checked = "checked"';
+                    } ?>
+                    <?php if (!$selection->isSaleable()): ?>
+                            disabled
+                    <?php endif; ?>
+                    value="<?= (int)$selectionId ?>"
+                    data-option-id="<?= $escaper->escapeHtmlAttr($optionSelectionId) ?>"
+                    x-on:change="
+                            activeSelectOptions['<?= (int)$optionId ?>'] = [$event.target.value];
+                            $nextTick(() => {calculateTotalPrice()});
+                    "
+                />
+                <label
+                    class="label text-sm"
+                    for="bundle-option-<?= $escaper->escapeHtmlAttr($optionSelectionId) ?>"
+                >
+                    <?= /* @noEscape */ $block->getSelectionTitlePrice($selection) ?>
+                </label>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<div class="field qty qty-holder mt-2">
+    <label
+        class="label font-semibold mr-4"
+        for="bundle-option-<?= (int)$optionId ?>-qty-input"
+    >
+        <?= $escaper->escapeHtml(__('Quantity')) ?>
+    </label>
+    <input
+        aria-describedby="option-label-<?= (int)$optionId ?>"
+        id="bundle-option-<?= (int)$optionId ?>-qty-input"
+        form="mageplaza-fbt-form"
+        name="bundle_option_qty[<?=(int)$productId ?>][<?= (int)$optionId ?>]"
+        class="form-input w-20 disabled:opacity-75"
+        type="number"
+        min="0"
+        value="<?= $escaper->escapeHtmlAttr($defaultQty) ?>"
+            :value="getQtyValue(<?= (int)$optionId ?>)"
+        x-on:change="
+            setQtyValue(<?= (int)$optionId ?>, $event.target.value);
+            calculateTotalPrice($dispatch)"
+        <?php if (!$canChangeQty): ?> disabled <?php endif; ?>
+        :disabled="getQtyDisabled(<?= (int)$optionId ?>)"
+    />
+</div>
+
+<?php
+/**
+ * Set the initial values on activeSelectOptions
+ * Because we can't tell which options are selected when configuring a product that is in
+ * the cart (through checkout/cart/configure) in the main Alpine component
+ */
+?>
+<div @set-selected-options.window="activeSelectOptions['<?= (int)$optionId ?>'] =
+        <?= $escaper->escapeHtmlAttr(json_encode($activeSelectOptions)) ?>">
+</div>

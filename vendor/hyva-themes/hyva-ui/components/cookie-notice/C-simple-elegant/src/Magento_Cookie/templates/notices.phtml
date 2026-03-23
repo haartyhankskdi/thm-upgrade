@@ -1,0 +1,120 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Hyva\Theme\ViewModel\Store as StoreViewModel;
+use Magento\Cookie\Block\Html\Notices;
+use Magento\Framework\Escaper;
+use Magento\Cookie\Helper\Cookie;
+
+/** @var Notices $block */
+/** @var Escaper $escaper */
+/** @var Cookie $cookieHelper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var StoreViewModel $storeViewModel */
+$storeViewModel = $viewModels->require(StoreViewModel::class);
+
+/** @var StoreConfig $storeConfigModel */
+$storeConfigModel = $viewModels->require(StoreConfig::class);
+
+$cookieHelper = $block->getData('cookieHelper');
+
+/** You can edit the store name at `Stores -> Configuration -> General -> Store Information -> Store Name` */
+$storeName = $storeConfigModel->getStoreConfig('general/store_information/name') ?? 'Hyvä';
+?>
+
+<?php if ($cookieHelper->isCookieRestrictionModeEnabled()): ?>
+    <script>
+        function initCookieBanner() {
+            const isUserAllowedSaveCookieName = '<?= /* @noEscape */ Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>';
+            const currentWebsiteId = <?= (int) $storeViewModel->getStore()->getWebsiteId() ?>;
+
+            const isAllowedSaveCookie = () => {
+                const allowedCookies = hyva.getCookie(isUserAllowedSaveCookieName);
+                const allowedCookieWebsites = allowedCookies
+                    ? JSON.parse(unescape(allowedCookies))
+                    : [];
+
+                return allowedCookieWebsites[currentWebsiteId] !== undefined
+                    ? !! allowedCookieWebsites[currentWebsiteId]
+                    : false;
+            };
+
+            return {
+                showCookieBanner: false,
+                cookieName: isUserAllowedSaveCookieName,
+                cookieValue: '<?= /* @noEscape */ $cookieHelper->getAcceptedSaveCookiesWebsiteIds() ?>',
+                cookieLifetime: '<?= /* @noEscape */ $cookieHelper->getCookieRestrictionLifetime() ?>',
+                noCookiesUrl: '<?= $escaper->escapeJs($block->getUrl('cookie/index/noCookies')) ?>',
+                checkAcceptCookies() {
+                    this.showCookieBanner = ! isAllowedSaveCookie();
+                },
+                hideCookieBanner() {
+                    this.showCookieBanner = false;
+                },
+                setAcceptCookies() {
+                    const cookieExpires = this.cookieLifetime / 60 / 60 / 24;
+                    hyva.setCookie(this.cookieName, this.cookieValue, cookieExpires);
+                    if (!hyva.getCookie(this.cookieName)) {
+                        window.location.href = this.noCookiesUrl;
+                    } else {
+                        window.dispatchEvent(new CustomEvent('user-allowed-save-cookie'));
+                    }
+                    this.showCookieBanner = false;
+                }
+            }
+        }
+        window.addEventListener('alpine:init', () => Alpine.data('initCookieBanner', initCookieBanner), {once: true})
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+
+    <section
+        id="notice-cookie-block"
+        aria-label="<?= $escaper->escapeHtml(__('We use cookies to make your experience better.')) ?>"
+        x-data="initCookieBanner"
+        x-init="checkAcceptCookies"
+        x-defer="idle"
+    >
+        <template x-if="showCookieBanner">
+            <div
+                role="dialog"
+                aria-modal="true"
+                class="z-30 fixed bottom-6 left-6 right-6 shadow-md rounded-xl overflow-hidden flex flex-col"
+            >
+                <div class="bg-white p-6">
+                    <p class="text-xl text-gray-900 text-center">
+                        <strong class="font-bold"><?= $escaper->escapeHtml(__('Cookies & %1', $storeName)) ?></strong>
+                    </p>
+                    <p class="font-medium text-gray-500 text-center mt-2">
+                        <?= $escaper->escapeHtml(__('We use cookies to make your experience better.')) ?>
+                    </p>
+                </div>
+                <div class="flex flex-col gap-3 bg-neutral-100 p-3 md:flex-row md:justify-end">
+                    <a
+                        href="<?= $escaper->escapeUrl($block->getPrivacyPolicyLink()) ?>"
+                        class="btn"
+                    >
+                        <?= $escaper->escapeHtml(__('Learn more')) ?>
+                    </a>
+                    <button
+                        type="button"
+                        id="btn-cookie-allow"
+                        class="btn btn-primary"
+                        @click="setAcceptCookies"
+                    >
+                        <?= $escaper->escapeHtml(__('Accept & continue')) ?>
+                    </button>
+                </div>
+            </div>
+        </template>
+    </section>
+<?php endif; ?>

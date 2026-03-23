@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_register_success">
+        <observer name="mageplaza_reward_customer_register_success" instance="Mageplaza\RewardPointsUltimate\Observer\CustomerRegisterSuccess"/>
+    </event>
+    <event name="customer_login">
+        <observer name="mpRewardComeBackLogin" instance="Mageplaza\RewardPointsUltimate\Observer\ComeBackLogin"/>
+    </event>
+    <event name="newsletter_subscriber_save_after">
+        <observer name="mageplaza_reward_behavior_newsletter_subscriber" instance="Mageplaza\RewardPointsUltimate\Observer\NewsletterSubscriber"/>
+    </event>
+    <event name="review_save_after">
+        <observer name="mageplaza_reward_behavior_review" instance="Mageplaza\RewardPointsUltimate\Observer\ReviewProduct"/>
+    </event>
+    <event name="checkout_cart_product_add_after">
+        <observer name="mageplaza_reward_checkout_cart_product_add_after" instance="Mageplaza\RewardPointsUltimate\Observer\ProductAddAfter"/>
+    </event>
+    <event name="sales_model_service_quote_submit_success">
+        <observer name="mageplaza_reward_quote_submit_success" instance="Mageplaza\RewardPointsUltimate\Observer\QuoteSubmitSuccess"/>
+    </event>
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="mageplaza_reward_convert_quote_to_order" instance="Mageplaza\RewardPointsUltimate\Observer\QuoteSubmitBefore"/>
+    </event>
+    <event name="order_cancel_after">
+        <observer name="mageplaza_reward_order_cancel" instance="Mageplaza\RewardPointsUltimate\Observer\OrderCancel"/>
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="mageplaza_reward_order_refund" instance="Mageplaza\RewardPointsUltimate\Observer\SalesOrderCreditmemoSaveAfter"/>
+    </event>
+    <event name="mpreward_earning_points_after">
+        <observer name="mageplaza_reward_referral_earning" instance="Mageplaza\RewardPointsUltimate\Observer\ReferralsEarning"/>
+    </event>
+    <event name="mpreward_spending_points_after">
+        <observer name="mageplaza_reward_spending_points_with_coupon" instance="Mageplaza\RewardPointsUltimate\Observer\SpendingPointsWithCoupon"/>
+    </event>
+    <event name="mpreward_spending_refer_points_before">
+        <observer name="mageplaza_reward_calculate_customer_discount" instance="Mageplaza\RewardPointsUltimate\Observer\CalculateCustomerDiscount"/>
+    </event>
+    <event name="sales_order_invoice_save_after">
+        <observer name="mageplaza_reward_invoice_save_after" instance="Mageplaza\RewardPointsUltimate\Observer\SalesOrderInvoiceSaveAfter"/>
+        <observer name="mageplaza_reward_earning_lifetime_amount" instance="Mageplaza\RewardPointsUltimate\Observer\LifetimeAmount"/>
+    </event>
+    <event name="sales_order_save_after">
+        <observer name="mageplaza_reward_order_save_after" instance="Mageplaza\RewardPointsUltimate\Observer\SalesOrderSaveAfter"/>
+    </event>
+    <event name="mpreward_before_earning_points">
+        <observer name="mageplaza_reward_before_earn" instance="Mageplaza\RewardPointsUltimate\Observer\BeforeEarnPoint"/>
+    </event>
+    <event name="mpreward_before_spending_points">
+        <observer name="mageplaza_reward_before_earn" instance="Mageplaza\RewardPointsUltimate\Observer\BeforeSpendPoint"/>
+    </event>
+    <event name="checkout_cart_product_update_after">
+        <observer name="mageplaza_reward_update_cart_item_sell_by_points" instance="Mageplaza\RewardPointsUltimate\Observer\Checkout\Cart\UpdateItem"/>
+    </event>
+    <!-- reorder with item sell by points -->
+    <event name="sales_quote_product_add_after">
+        <observer name="mageplaza_reward_reorder_item_sell_by_points" instance="Mageplaza\RewardPointsUltimate\Observer\Model\Quote\Reorder"/>
+    </event>
+</config>

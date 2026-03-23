@@ -1,0 +1,15 @@
+{
+  "ebizmarts_notifications": {
+    "column": {
+      "id": true,
+      "notification_id": true,
+      "updated_at": true
+    },
+    "constraint": {
+      "PRIMARY": true
+    },
+    "index": {
+      "STORE_NOTIFICATION_ID": true
+    }
+  }
+}

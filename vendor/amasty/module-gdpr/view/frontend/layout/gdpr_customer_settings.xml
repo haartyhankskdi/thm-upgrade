@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Amasty\Gdpr\Block\Settings"
+                   name="customer_account_gdpr_settings"
+                   as="settings"
+                   cacheable="false">
+                <action method="setVisibleBlock">
+                    <argument name="visibleBlock" xsi:type="string">policies_text,download,anonymise,delete,consent_opting,dpo_info</argument>
+                </action>
+                <action method="setNeedPassword">
+                    <argument name="needPassword" xsi:type="boolean">true</argument>
+                </action>
+                <action method="setIsOrder">
+                    <argument name="isOrder" xsi:type="boolean">false</argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

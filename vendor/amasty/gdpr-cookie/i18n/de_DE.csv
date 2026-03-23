@@ -1,0 +1,146 @@
+"Are you sure you want to do this?","Sind Sie sicher, dass Sie fortfahren möchten?"
+Delete,Löschen
+"Save and Continue Edit","Speichern und weiter bearbeiten"
+Save,Speichern
+"Cookie Settings","Cookie Einstellungen"
+"You deleted the cookie.","Sie haben das Cookie gelöscht."
+"We can't delete cookie right now. Please review the log and try again.","Wir können Cookies derzeit nicht löschen. Bitte überprüfen Sie das Protokoll und versuchen Sie es erneut."
+"New Cookie","Neues Cookie"
+"Edit Cookie %1","Cookie bearbeiten %1"
+Cookies,Cookies
+"%1 cookie(s) has been successfully deleted","%1 Cookie(s) wurde(n) erfolgreich gelöscht"
+"An error has occurred","Ein Fehler ist aufgetreten"
+"You saved the item.","Sie haben das Element gespeichert."
+"An error has occurred.","Ein Fehler ist aufgetreten."
+"Cookie Consents Log","Cookie-Zustimmungsprotokoll"
+"You deleted the cookie group.","Sie haben die Cookie-Gruppe gelöscht."
+"We can't delete cookie group right now. Please review the log and try again.","Wir können die Cookie-Gruppe derzeit nicht löschen. Bitte überprüfen Sie das Protokoll und versuchen Sie es erneut."
+"New Cookie Group","Neue Cookie-Gruppe"
+"Edit Cookie Group %1","Cookie-Gruppe %1 bearbeiten"
+"Cookie Groups","Cookie-Gruppen"
+"%1 cookie group(s) has been successfully deleted","%1 Cookie-Gruppe(n) wurde(n) erfolgreich gelöscht"
+"An error has occured","Ein Fehler ist aufgetreten"
+"You saved your cookie settings!","Sie haben Ihre Cookie-Einstellungen gespeichert!"
+Footer,Fußzeile
+Top,Kopfzeile
+Classic,Klassisch
+"Side Bar","Seitenleiste"
+"Pop Up","Popup"
+"All Countries","Alle Länder"
+"EEA Countries","EWR-Länder"
+"Specified Countries","Bestimmte Länder"
+None,Keine
+"1st Party","1st Party"
+"3rd Party","3rd Party"
+No,Nein
+"No (Recommended)","Nein (Empfohlen)"
+Yes,Ja
+"Unable to save cookie consent with ID %1. Error: %2","Cookie-Einwilligung mit ID %1 kann nicht gespeichert werden. Fehler: %2"
+"Unable to save new withConsent. Error: %1","Neu speichern mit Zustimmung nicht möglich. Fehler: %1"
+"Cookie Consent with specified ID ""%1"" not found.","Cookie-Einwilligung mit angegebener ID ""%1"" nicht gefunden."
+"Unable to remove Cookie Consent with ID %1. Error: %2","Die Cookie-Zustimmung mit der ID %1 kann nicht entfernt werden. Fehler: %2"
+"Unable to remove Cookie Consent. Error: %1","Cookie-Einwilligung kann nicht entfernt werden. Fehler: %1"
+"Unable to save cookie group with ID %1. Error: %2","Die Cookie-Gruppe mit der ID %1 kann nicht gespeichert werden. Fehler: %2"
+"Unable to save new cookie group. Error: %1","Neue Cookie-Gruppe kann nicht gespeichert werden. Fehler: %1"
+"Cookie group with specified ID ""%1"" not found.","Cookie-Gruppe mit der angegebenen ID ""%1"" nicht gefunden."
+"Unable to remove cookie group with ID %1. Error: %2","Die Cookie-Gruppe mit der ID %1 kann nicht entfernt werden. Fehler: %2"
+"Unable to remove cookie group. Error: %1","Cookie-Gruppe kann nicht entfernt werden. Fehler: %1"
+"Unable to save cookie with ID %1. Error: %2","Cookie mit ID %1 kann nicht gespeichert werden. Fehler: %2"
+"Unable to save new cookie. Error: %1","Neues Cookie kann nicht gespeichert werden. Fehler: %1"
+"Cookie with specified ID ""%1"" not found.","Cookie mit angegebener ID ""%1"" nicht gefunden."
+"Cookie with specified Name ""%1"" not found.","Cookie mit dem angegebenen Namen ""%1"" nicht gefunden."
+"Unable to remove cookie with ID %1. Error: %2","Cookie mit ID %1 kann nicht entfernt werden. Fehler: %2"
+"Unable to remove cookie. Error: %1","Cookie kann nicht entfernt werden. Fehler: %1"
+Guest,Gast
+"All Allowed","Alle erlaubt"
+"None cookies allowed","Keine Cookies erlaubt"
+"[STORE VIEW]","[STORE VIEW]"
+"Amasty GDPR cookie error: cookies ""%1"" are in different groups ""%2"".","Amasty DSGVO-Cookie-Fehler: Cookies ""%1"" befinden sich in verschiedenen Gruppen ""%2""."
+Allowed,Erlaubt
+"Accept Cookies","Cookies akzeptieren"
+"Decline Cookies","Cookies ablehnen"
+"Allow all Cookies","Alle Cookies zulassen"
+"Custom Settings","Benutzerdefinierte Einstellungen"
+"More Information","Mehr Informationen"
+Done,Fertig
+"Cookie Name","Cookie-Name"
+"Cookie Provider","Cookie-Anbieter"
+"Cookie Description","Cookie-Beschreibung"
+"Cookie Lifetime","Cookie-Lebensdauer"
+"Cookie Type","Cookie-Typ"
+"Allow all","Alle zulassen"
+"Please select and accept your Cookies Group","Bitte wählen und akzeptieren Sie Ihre Cookie-Gruppen"
+"Cookie Consent","Cookie-Zustimmung"
+"General Settings","Allgemeine Einstellungen"
+"Enable Cookie Policy Bar","Cookie-Richtlinien-Leiste aktivieren"
+"Hide the Cookie Bar if No Decision Was Taken","Cookie-Leiste ausblenden, wenn keine Entscheidung getroffen wurde"
+"According to the GDPR requirements, the cookie bar should be displayed in case the customer did not interact with it. Set 'Yes' if you don't want the Cookie Bar to be displayed to customers on new pages unless they accept or decline cookies on the bar.","Gemäß den DSGVO-Anforderungen, soll die Cookie-Leiste angezeigt werden, wenn der Kunde damit nicht interagiert hat. Stellen Sie “Ja” ein, wenn Sie keine Cookie-Leiste auf neuen Seiten anzeigen wollen, soweit der Kunde Cookies auf der Leiste akzeptiert oder ablehnt."
+"The cookie bar will not be displayed to customers on new pages if they don't accept or decline cookies on the bar. Thus the customer will less be distracted from purchasing.","Die Cookie-Leiste wird Kunden auf neuen Seiten nicht angezeigt, wenn sie Cookies aus der Cookie-Leiste nicht akzeptieren oder diese ablehnen. Dadurch wird der Kunde weniger vom Kauf abgelenkt."
+"Countries Restrictions","Länderbeschränkung"
+"It is possible to adjust the visibility of Cookie Policy Bar on frontend according to customer location. Enable the Cookie Policy Bar for All Countries, EEA Countries or specific Countries selected in the list below..","Es ist möglich, die Sichtbarkeit der Cookie-Richtlinienleiste im Frontend je nach Kundenstandort anzupassen. Aktivieren Sie die Cookie-Richtlinienleiste für alle Länder, EWR-Länder oder bestimmte Länder, die in der Liste unten ausgewählt sind."
+"Display for Specific Countries","Anzeige für bestimmte Länder"
+"Log Guest Cookie Consent","Cookie-Zustimmung für Gäste protokollieren"
+"If enabled, guest users who give the consent will be logged and displayed in Consent Log.","Wenn aktiviert, werden Gastbenutzer, die die Zustimmung geben, protokolliert und im Zustimmungsprotokoll angezeigt."
+"Cookie Log Auto-Cleaning Period (Days)","Dauer der automatischen Bereinigung des Cookie-Protokolls (Tage)"
+"All records that been stored for the longer period will be automatically removed from the Cookie Consent Log and your database.","Alle Aufzeichnungen, die für einen längeren Zeitraum gespeichert wurden, werden automatisch aus dem Cookie-Zustimmungsprotokoll und Ihrer Datenbank entfernt."
+"Cookie Bar Customization","Anpassung der Cookie-Leiste"
+"Cookie Bar Style","Stil der Cookie-Leiste"
+"Classic Bar","Klassische Leiste"
+"Cookie Bar Location","Position der Cookie-Leiste"
+"Notification Text","Benachrichtigungstext"
+"You can use any HTML-tags in this field. Please, mind the security.","Sie können in diesem Feld beliebige HTML-Tags verwenden. Bitte achten Sie auf die Sicherheit."
+"Background Color","Hintergrundfarbe"
+"Policy Text Color","Farbe des Richtlinientexts"
+"Links Color","Farbe der Links"
+"Accept Button","Schaltfläche „Akzeptieren“."
+"Button Name","Schaltflächenname"
+"Sort Order","Sortierung"
+"Button Color","Schaltflächenfarbe"
+"Button Color on Hover","Hover Schaltflächenfarbe"
+"Text Color","Textfarbe"
+"Text Color on Hover","Hover Textfarbe"
+"Decline Button","Schaltfläche „Ablehnen“."
+Enable,Aktivieren
+"Custom Settings Button","Schaltfläche „Benutzerdefinierte Einstellungen“."
+"Cookie Group Title Text Color","Textfarbe des Cookie-Gruppentitels"
+"Cookie Group Description Text Color","Cookie-Gruppen Beschreibung Textfarbe"
+"Allow All Button","Schaltfläche „Alles zulassen“."
+"Customer Id","Kunden-ID"
+"Customer Name","Kundenname"
+"Customer Email","Kunden-E-Mail"
+"Ip Address","IP Adresse"
+Website,Website
+Date,Datum
+"Consent Status","Einwilligungsstatus"
+Back,Zurück
+Settings,Einstellungen
+Enabled,Aktiviert
+Description,Beschreibung
+"Cookie Group","Cookie-Gruppe"
+"Is Essential","Ist essentiell"
+"Cookie Group Name","Name der Cookie-Gruppe"
+"Assigned Cookies","Zugewiesene Cookies"
+"Sort Order of cookie groups in the cookie bar.","Sortierreihenfolge der Cookie-Gruppen in der Cookie-Leiste."
+"Add New Group","Neue Gruppe hinzufügen"
+"Delete Cookie Groups","Cookie-Gruppen löschen"
+"Are you sure you want to delete selected cookie groups?","Möchten Sie die ausgewählten Cookie-Gruppen wirklich löschen?"
+ID,ID
+from,von
+to,bis
+Cancel,Abbrechen
+"Apply Filters","Filter anwenden"
+"per page","pro Seite"
+"Select All on This Page","Alles auf dieser Seite auswählen"
+records found,Datensätze gefunden
+Filters,Filter
+Is Enabled,Ist Aktiviert
+Edit,Bearbeiten
+"Add New Cookie","Neues Cookie hinzufügen"
+"Select Cookie Group..","Cookie-Gruppe auswählen.."
+"Delete Cookies","Cookies löschen"
+"Are you sure you want to delete selected cookies?","Möchten Sie die ausgewählten Cookies wirklich löschen?"
+"Click the field to choose color","Klicken Sie auf das Datenfeld, um die Farbe zu wählen"
+Configuration,Konfiguration
+"Select Cookie Group..","Wählen Sie eine Cookie-Gruppe aus"
+Accepted,Akzeptiert
+Rejected,Abgelehnt

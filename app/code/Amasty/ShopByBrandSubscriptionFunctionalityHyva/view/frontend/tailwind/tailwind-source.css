@@ -1,0 +1,29 @@
+@layer components {
+    .ambrand-info-value > a {
+        @apply underline;
+    }
+
+    .category-view .ambrand-info {
+        @apply px-6;
+    }
+
+    .page-wrapper .container:has(.ambrand-info) {
+        @apply md:flex-col;
+    }
+
+    .container .ambrand-info {
+        @apply mb-8 mt-8 leading-4;
+
+        .ambrand-info-value {
+            @apply mb-0 text-base leading-6 font-normal;
+        }
+    }
+
+    .page-wrapper .ambrand-widget-brand-info .ambrand-info {
+        @apply mb-0 mt-0;
+    }
+
+    .additional-attributes .ambrand-info-block .ambrand-info {
+        @apply mb-0 mt-0;
+    }
+}

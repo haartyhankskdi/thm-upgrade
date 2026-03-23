@@ -1,0 +1,91 @@
+<!-- Child Category Section -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Catalog::category/featured-category.phtml")
+    ->toHtml(); ?>
+
+<div class="container">
+<!-- After Category Section --> 
+<?php echo $block
+    ->getLayout()
+    ->createBlock(\Magento\Cms\Block\Block::class)
+    ->setBlockId("category_premium_block")
+    ->toHtml(); ?>
+
+<!-- Tender Lamb Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("tender_lamb_section")
+    ->toHtml(); ?>
+
+
+<!-- Top Deals Section -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Catalog::category/top-deals.phtml")
+    ->toHtml(); ?>
+
+<!-- Newsletter Subscription Section -->
+  <?php echo $this->getLayout()
+      ->createBlock(\Magento\Framework\View\Element\Template::class)
+      ->setTemplate("Magento_Catalog::category/newsletter-subscription.phtml")
+      ->toHtml(); ?>
+
+<!-- Review Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("review_section_category")
+    ->toHtml(); ?> 
+
+<!-- No Mess No Fuss Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("no_mess_category")
+    ->toHtml(); ?>
+
+
+<!-- The Great British BBQ Section -->
+<?php echo $this->getLayout()->createBlock("RM\Homeproductcoll\Block\Products")
+    ->setTemplate("Magento_Catalog::category/great-british.phtml")
+    ->toHtml() ?>
+
+<!-- Tag List Section -->
+<div class="tag-list flex flex-wrap gap-4 justify-center mt-10 mb-12 scroll-item">
+      <a href="<?= $block->getBaseUrl() ?>peri-peri-chicken-sausages.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Chicken Sausages</div>
+  </a>
+    <a href="<?= $block->getBaseUrl() ?>tariq-halal-chicken-liver.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Chicken Liver (1Kg)</div>
+  </a>
+    <a href="<?= $block->getBaseUrl() ?>tariq-halal-chicken-gizzards.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Chicken Gizzards (1Kg)</div>
+  </a>
+    <a href="<?= $block->getBaseUrl() ?>beef-knuckle-steak.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Beef Steak</div>
+  </a>
+    <a href="<?= $block->getBaseUrl() ?>tariq-halal-lamb-liver.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Lamb Liver</div>
+  </a>
+    <a href="<?= $block->getBaseUrl() ?>wagyu-ribeye-boneless-steak-9-bms-ax-280-300g.html">
+  <div class="tag bg-gray-100 text-black px-6 py-1.5 rounded-lg hover:bg-[#E63833] hover:text-white cursor-pointer bg-[#F5F9F7] transition duration-400">Wagyu Steak</div>
+  </a>
+</div>
+
+<!-- Trends & Stories Section --> 
+<?php echo $this->getLayout()
+     ->createBlock(\Magento\Framework\View\Element\Template::class)
+     ->setTemplate("Magento_Catalog::category/latest-post.phtml")
+     ->toHtml(); ?>
+
+<!-- Convenient Online Ordering Home Delivery Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("online_ordering")
+    ->toHtml(); ?> 
+
+<!-- Delivery Partners Section -->
+<?php echo $this->getLayout()
+      ->createBlock("Magento\Cms\Block\Block")
+      ->setBlockId("delivery_partners")
+      ->toHtml(); ?>
+</div>

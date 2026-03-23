@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Recover Checkout</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Ebizmarts\BrippoPayments\Block\Payments\Recover" name="brippo_recover.page" template="Ebizmarts_BrippoPayments::recover.phtml" />
+        </referenceContainer>
+    </body>
+</page>

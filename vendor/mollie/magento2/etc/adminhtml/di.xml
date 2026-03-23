@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <plugin name="mollie_payment_sales_order_view_buttons" type="Mollie\Payment\Plugin\Sales\Block\Adminhtml\Order\View" />
+    </type>
+
+    <type name="Mollie\Payment\Plugin\Sales\Block\Adminhtml\Order\View">
+        <arguments>
+            <argument name="buttons" xsi:type="array">
+                <item xsi:type="object" name="payment_link_button">Mollie\Payment\Plugin\Sales\Block\Adminhtml\Order\Buttons\MarkAsPaidButton</item>
+                <item xsi:type="object" name="second_chance_button">Mollie\Payment\Plugin\Sales\Block\Adminhtml\Order\Buttons\SecondChanceButton</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Mollie\Payment\Service\Order\SecondChanceEmail">
+        <arguments>
+            <argument name="url" xsi:type="object">Magento\Framework\Url</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Email\Model\Template\Config">
+        <plugin name="mollie_payment_fix_the_path" type="Mollie\Payment\Plugin\Email\Model\Template\Config" />
+    </type>
+
+    <type name="Mollie\Payment\Controller\Adminhtml\Action\SelfTest">
+        <arguments>
+            <argument name="tests" xsi:type="array">
+                <item name="phpVersion" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestPhpVersion</item>
+                <item name="jsonExtension" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestJsonExtension</item>
+                <item name="defaultBankTransferStatus" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestDefaultBankTransferStatus</item>
+                <item name="appCodeInstall" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestAppCodeInstall</item>
+                <item name="extensionAttributes" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestExtensionAttributes</item>
+                <item name="webhooksDisabled" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestWebhooksDisabled</item>
+                <item name="applePayDomainValidationFile" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestApplePayDomainValidationFile</item>
+                <item name="isDateofbirthEnabled" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\TestIsDobEnabled</item>
+                <item name="areHyvaModulesInstalled" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\AreHyvaModulesInstalled</item>
+                <item name="isHyvaThemesJsonCorrect" xsi:type="object">Mollie\Payment\Service\Mollie\SelfTests\IsHyvaThemesJsonCorrect</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\Message\MessageConfigurationsPool">
+        <arguments>
+            <argument name="configurationsMap" xsi:type="array">
+                <item name="MollieUnavailableMethodsMessage" xsi:type="array">
+                    <item name="renderer" xsi:type="const">\Magento\Framework\View\Element\Message\Renderer\BlockRenderer::CODE</item>
+                    <item name="data" xsi:type="array">
+                        <item name="template" xsi:type="string">Mollie_Payment::system/config/message/unavailable-methods.phtml</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Tax\Helper\Data">
+        <plugin name="mollie_add_payment_fee_to_tax_total" type="Mollie\Payment\Plugin\Tax\Helper\DataPlugin" />
+    </type>
+
+    <type name="Mollie\Payment\Service\Magento\PaymentLinkUrl">
+        <arguments>
+            <argument name="urlBuilder" xsi:type="object">Magento\Framework\Url</argument>
+        </arguments>
+    </type>
+</config>

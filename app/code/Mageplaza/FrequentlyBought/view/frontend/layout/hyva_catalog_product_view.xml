@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="Magento_Swatches::css/swatches.css"/>
+        <remove src="Mageplaza_FrequentlyBought::css/style.css"/>
+        <remove src="Mageplaza_Core::css/magnific-popup.css"/>
+        <remove src="Mageplaza_Core::css/font-awesome.min.css"/>
+        <remove src="Mageplaza_Core::css/owl.carousel.css"/>
+        <remove src="Mageplaza_Core::css/owl.theme.css"/>
+    </head>
+    <update handle="hyva_form_validation"/>
+    <update handle="hyva_modal"/>
+    <update handle="hyva_mp_add_js_css"/>
+
+    <body>
+        <!-- Define multiple custom JS/Css files -->
+        <referenceBlock name="mp_add_js_css">
+            <action method="setFiles">
+                <argument name="files" xsi:type="array">
+                    <item name="splide_js" xsi:type="string">Mageplaza_Core::js/splide.min.js</item>
+                    <item name="splide_css" xsi:type="string">Mageplaza_Core::css/splide.min.css</item>
+                    <item name="style_css" xsi:type="string">Mageplaza_FrequentlyBought::css/style.css</item>
+                </argument>
+            </action>
+        </referenceBlock>
+
+        <block name="mageplaza.frequently.bought.product.swatch.item" template="Mageplaza_FrequentlyBought::hyva/product/swatch-item.phtml"/>
+
+        <referenceBlock name="mageplaza.frequently.bought.product.info.options">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_FrequentlyBought::hyva/product/view/options/options.phtml</argument>
+            </action>
+            <block class="Magento\Catalog\Block\Product\View\Options\Type\DefaultType" as="default" template="Mageplaza_FrequentlyBought::hyva/product/view/options/type/default.phtml"/>
+            <block class="Magento\Catalog\Block\Product\View\Options\Type\Text" as="text" template="Mageplaza_FrequentlyBought::hyva/product/view/options/type/text.phtml"/>
+            <block class="Magento\Catalog\Block\Product\View\Options\Type\File" as="file" template="Mageplaza_FrequentlyBought::hyva/product/view/options/type/file.phtml"/>
+            <block class="Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Select" as="select" template="Mageplaza_FrequentlyBought::hyva/product/view/options/type/select.phtml"/>
+            <block class="Mageplaza\FrequentlyBought\Block\Product\View\Options\Type\Date" as="date" template="Mageplaza_FrequentlyBought::hyva/product/view/options/type/date.phtml"/>
+        </referenceBlock>
+
+
+        <referenceBlock name="mageplaza.fbt.product.info.bundle.options">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_FrequentlyBought::hyva/product/view/type/bundle/options.phtml</argument>
+            </action>
+            <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Select" name="mageplaza.fbt.product.info.bundle.options.select" as="select" template="Mageplaza_FrequentlyBought::hyva/product/view/type/bundle/option/select.phtml">
+                <arguments>
+                    <argument name="validateQuantityViewModel" xsi:type="object">Mageplaza\FrequentlyBought\Model\ViewModel\Product\Bundle\ValidateQuantity</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Multi" name="mageplaza.fbt.product.info.bundle.options.multi" as="multi" template="Mageplaza_FrequentlyBought::hyva/product/view/type/bundle/option/multi.phtml"/>
+            <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Radio" name="mageplaza.fbt.product.info.bundle.options.radio" as="radio" template="Mageplaza_FrequentlyBought::hyva/product/view/type/bundle/option/radio.phtml">
+                <arguments>
+                    <argument name="validateQuantityViewModel" xsi:type="object">Mageplaza\FrequentlyBought\Model\ViewModel\Product\Bundle\ValidateQuantity</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Checkbox" name="mageplaza.fbt.product.info.bundle.options.checkbox" as="checkbox" template="Mageplaza_FrequentlyBought::hyva/product/view/type/bundle/option/checkbox.phtml"/>
+        </referenceBlock>
+
+    </body>
+</page>

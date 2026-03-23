@@ -1,0 +1,81 @@
+<!-- After Slider Content -->
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Cms\Block\Block::class)
+    ->setBlockId("after_banner")
+    ->toHtml(); ?> 
+
+    <!-- Pick up where you left off(Recently View)Section-->
+    <?php
+    $customerSession = $block
+        ->getLayout()
+        ->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+    $isLoggedIn = $customerSession->getCustomerData()->isLoggedIn();
+    if ($isLoggedIn) {
+        echo $this->getLayout()
+            ->createBlock(\Magento\Framework\View\Element\Template::class)
+            ->setTemplate("Magento_Theme::html/recent-view.phtml")
+            ->toHtml();
+    }
+    ?>
+   
+<!-- Deals based on your shopping Section --> 
+<?php if ($isLoggedIn) {
+    echo $this->getLayout()
+        ->createBlock(\Magento\Framework\View\Element\Template::class)
+        ->setTemplate("Magento_Theme::html/deals-offer.phtml")
+        ->toHtml();
+} ?>
+<!-- Best Seller Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Theme::html/bestseller.phtml")
+    ->toHtml(); ?>
+<!-- Review Section Static Block -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("review_section_category")
+    ->toHtml(); ?>
+<!-- Category Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("home_category_section")
+    ->toHtml(); ?>
+<!-- Restaurant Offers section -->
+   <?= $this->getLayout()
+       ->createBlock("RM\Homeproductcoll\Block\Products")
+       ->setTemplate("RM_Homeproductcoll::groceries.phtml")
+       ->toHtml() ?>
+
+<!-- Recipies Section --> 
+<?php echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Theme::html/homepage-recipes.phtml")
+    ->toHtml(); ?>
+<!-- Delivery Partners Section -->
+  <?php echo $this->getLayout()
+      ->createBlock("Magento\Cms\Block\Block")
+      ->setBlockId("delivery_partners")
+      ->toHtml(); ?>
+<!-- Exotic Indulgence Product Section-->
+   <?= $this->getLayout()
+       ->createBlock("RM\Homeproductcoll\Block\Products")
+       ->setTemplate("RM_Homeproductcoll::freshmeat.phtml")
+       ->toHtml() ?>
+<!-- Latest Blog Posts Section --> 
+<div class="header">
+    <h2 class="section-title"><strong>Trends</strong> & Stories</h2>
+    <p class="section-subtitle">Explore expert insights, tips, and stories</p>
+<?php echo $this->getLayout()
+    ->createBlock("Magefan\Blog\Block\Widget\Recent")
+    ->setNoRepeatPostsEnable(1)
+    ->setNumberOfPosts(4)
+    ->toHtml(); ?>
+
+
+<!-- Mobile App Section -->
+<?php echo $this->getLayout()
+    ->createBlock("Magento\Cms\Block\Block")
+    ->setBlockId("mobile_app_section")
+    ->toHtml(); ?>
+
+    

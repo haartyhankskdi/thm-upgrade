@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+      <head>
+        <script src="js/custom.js" /> 
+        <css src="css/custom.css" />
+        <css src="css/source/custom.less"/> 
+    </head>
+    <body>
+             <referenceContainer name="page.top">
+            <block class="Magento\Theme\Block\Html\Breadcrumbs" name="breadcrumbs" before="-"/>
+        </referenceContainer>
+
+        <!-- Move breadcrumbs block above the page title -->
+        <move element="breadcrumbs" destination="page.top" before="page.main.title"/>
+         <move element="top.search" destination="header-wrapper" after="logo"/>
+        <referenceContainer name="header.panel.wrapper" remove="true" />
+      
+        <referenceContainer name="header-wrapper">
+    <block class="Magento\Wishlist\Block\Link" name="wishlist-after-search" before="minicart" template="Magento_Wishlist::link.phtml" cacheable="false"/>
+ 
+    </referenceContainer> 
+          <referenceContainer name="footer-container">
+            
+            <referenceContainer name="footer">
+            <block class="Magento\Framework\View\Element\Template" name="custom.footer.block" template="Magento_Theme::html/footer_html.phtml" />
+        </referenceContainer>
+     </referenceContainer>
+
+      <referenceBlock name="ammenu.top.menu">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.nav.right"
+                   template="Magento_Theme::html/custom_links.phtml"
+                   after="-"/>
+        </referenceBlock>
+
+        <referenceContainer name="form.subscribe" remove="1"/> 
+        <referenceContainer name="search-term-popular-link" remove="1"/>
+        <referenceContainer name="contact-us-link" remove="1"/>
+        <referenceContainer name="catalog-search-advanced-link" remove="1"/>
+        <referenceContainer name="sales-guest-form-link" remove="1"/>
+        <referenceContainer name="privacy-policy-link" remove="1"/>
+        <referenceBlock name="catalog.compare.link" remove="true"/>
+    </body>
+</page>
+
+

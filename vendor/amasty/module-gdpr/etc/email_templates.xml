@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="amasty_gdpr_email_notification_deletion_notification_deny_notification_deny_template"
+              label="Amasty GDPR Deny Deletion"
+              file="amasty_gdpr_request_deletion_notification_template.html"
+              type="html"
+              module="Amasty_Gdpr"
+              area="frontend"
+    />
+    <template id="amasty_gdpr_email_notification_anonymization_notification_template"
+              label="Amasty GDPR Anonymization"
+              file="amasty_gdpr_anonymisation_notification_template.html"
+              type="html"
+              module="Amasty_Gdpr"
+              area="frontend"
+    />
+    <template id="amasty_gdpr_email_notification_deletion_notification_approve_notification_template"
+              label="Amasty GDPR Approve Deletion"
+              file="amasty_gdpr_approve_request_deletion_notification_template.html"
+              type="html"
+              module="Amasty_Gdpr"
+              area="frontend"
+    />
+    <template id="amasty_gdpr_email_notification_deletion_notification_manager_notification_admin_template"
+              label="Amasty GDPR Delete Request Notification"
+              file="amasty_gdpr_request_deletion_admin_notification_template.html"
+              type="html"
+              module="Amasty_Gdpr"
+              area="frontend"
+    />
+    <template id="amasty_gdpr_email_notification_policy_change_notification_template"
+              label="Amasty GDPR Privacy Policy Changes"
+              file="amasty_gdpr_policy_change_notification_template.html"
+              type="html"
+              module="Amasty_Gdpr"
+              area="frontend"
+    />
+</config>

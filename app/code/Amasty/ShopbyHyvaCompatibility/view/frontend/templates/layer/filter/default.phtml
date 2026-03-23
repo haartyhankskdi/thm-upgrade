@@ -1,0 +1,153 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\Shopby\Block\Navigation\FilterRenderer;
+use Amasty\Shopby\Model\Layer\Filter\CategoryItems;
+use Amasty\ShopbyBase\Model\FilterSetting;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var FilterRenderer $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var FilterSetting $filterSetting */
+/** @var CategoryItems $filterItems */
+
+/** @var Hyva\Theme\ViewModel\StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(Hyva\Theme\ViewModel\StoreConfig::class);
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+
+$filterUniqId = uniqid();
+$filterCode = $escaper->escapeHtml($filterSetting->getAttributeCode());
+$isPriceType = $filterSetting->getAttributeModel()
+    && $filterSetting->getAttributeModel()->getFrontendInput() === 'price';
+$hideDigitsAfterDot = $filterSetting->getHideZeros();
+$expandedMode = $filterSetting->getData('is_expanded');
+$isSidebar = $block->getParentBlock()->getNameInLayout() === "catalog.leftnav" ? 'sidebar' : 'top';
+$filterName = $block->getFilter()->getName();
+$isAjaxEnabled = $productListAjax->canShowBlock();
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<?php if ($filterSetting->isShowSearchBox(count($filterItems))): ?>
+    <?= /* @noEscape */ $block->getSearchForm(); ?>
+<?php endif; ?>
+
+<form class="am-filter p-4 pb-2 bg-white am-ranges <?= $isPriceType ? 'price-ranges' : '' ?>"
+      id="am-ranges-<?= $escaper->escapeHtmlAttr($filterCode . '_' . $filterUniqId)?>"
+      data-am-js="ranges"
+      aria-label="<?= $escaper->escapeHtml(__('Filter %1 in %2 filters', $filterName, $isSidebar)) ?>"
+      data-amshopby-filter="<?= $escaper->escapeHtmlAttr($filterCode);?>"
+      data-amshopby-filter-request-var="<?= $escaper->escapeHtmlAttr($block->getFilter()->getRequestVar()); ?>"
+      <?= $isPriceType ? 'data-amshopby-js="price-ranges"' : '' ?>
+      <?= $expandedMode ? "data-amshopby-expanded=" . $escaper->escapeHtml($expandedMode) : "data-amshopby-expanded='0'"; ?>
+      autocomplete="off">
+    <ol role="list"
+        aria-label="<?= $escaper->escapeHtml(__('Filter %1 in %2 filters', $filterName, $isSidebar)) ?>"
+        class="items am-filter-items-<?= /* @noEscape */ $filterCode;?>
+        <?= /* @noEscape */ $block->getEnableOverflowScroll($filterSetting) > 0 ? '-am-overflow overflow-auto pr-2' : '' ?>
+        <?= /* @noEscape */ $block->isMultiselect($filterSetting) ? '-am-multiselect' : '-am-singleselect' ?>"
+        <?php if ($block->getEnableOverflowScroll($filterSetting) > 0): ?>
+            style="max-height:<?= $escaper->escapeHtml($block->getOverflowScrollValue($filterSetting)) ?>px;"
+        <?php endif; ?>>
+        <?php /** @var \Amasty\Shopby\Model\Layer\Filter\Item $filterItem */?>
+        <?php foreach ($filterItems as $filterItem): ?>
+            <?php
+            $inputType = !$block->isMultiselect($filterSetting) ||
+            in_array($filterCode, ['rating', 'stock']) ? 'radio' : 'checkbox';
+            $optionLabel = $filterItem->getOptionLabel();
+            $filterItemId = uniqid();
+            $filterItemUrl = $filterItem->getUrl();
+            $style = ($inputType == 'radio' && !$block->getRadioAllowed())
+            || in_array($filterCode, ['rating', 'stock']) ? 'display: none;' : '';
+            $isSelected = $block->checkedFilter($filterItem);
+            ?>
+            <script>
+              function initInput_<?= $escaper->escapeHtml($filterItemId); ?>() {
+                return Object.assign({}, initInput(), {
+                  isSelected: Boolean(<?= /** @noEscape */ $isSelected; ?>),
+                  value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                  name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>',
+                  type: '<?= /* @noEscape */ $inputType; ?>'
+                });
+              }
+            </script>
+            <li x-data="initInput_<?= $escaper->escapeHtml($filterItemId); ?>()"
+                x-bind="eventListeners"
+                x-spread="eventListeners"
+                :class="{ 'amshopby-link-selected text-blue-600': isSelected }"
+                class="item <?= (!$filterItem->getCount()) ? '-empty-value' : '' ?> flex justify-between py-1 hover:text-black"
+                data-label="<?= /* @noEscape */ trim(preg_replace('/\s+/', ' ', $block->stripTags($optionLabel))) . ($filterCode == 'rating' ? __(' star(s)') : ''); ?>">
+            <?php if ($filterItem->getCount() >= 0): ?>
+                <div class="filter-row w-full flex items-center"
+                     data-container="<?= /* @noEscape */ $block->getFilter()->getRequestVar() ?>"
+                     data-value="<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>">
+                    <input class="<?= /* @noEscape */ $inputType; ?> mr-2"
+                           name="amshopby[<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>][]"
+                           value="<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>"
+                           type="<?= /* @noEscape */ $inputType; ?>"
+                           data-digits-after-dot="<?= /* @noEscape */ $hideDigitsAfterDot ? '1' : '0' ?>"
+                           aria-labelledby="amfilterrow-id-<?= $escaper->escapeHtml($filterItemId) ?>"
+                           tabindex="0"
+                           style="<?= /* @noEscape */ $style ?>"
+                           @change="$dispatch('amApplyInputChanged', {
+                               value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                               element: $event.currentTarget,
+                               name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>'
+                           })"
+                           :checked="isSelected"
+                    />
+                    <a class="am-filter-item-<?= /* @noEscape */$escaper->escapeHtml($filterItemId) ?>
+                              <?= ($block->isShowProductQuantities($filterSetting->getShowProductQuantities())) ? 'whitespace-nowrap ' : '' ?>
+                              flex items-top w-full items-center max-w-full"
+                       data-am-js="filter-item-default"
+                       id="amfilterrow-id-<?= $escaper->escapeHtml($filterItemId) ?>"
+                       href="<?= $escaper->escapeUrl($filterItem->getUrl()) ?>"
+                       :class="{ 'amshopby-link-selected text-blue-600': isSelected }"
+                       @click.prevent.stop="$dispatch('amApplyInputChanged', {
+                           value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                           element: $event.currentTarget,
+                           name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>'
+                       })"
+                       <?= /* @noEscape */ $filterSetting->isAddNofollow() ? ' rel="nofollow"' : '' ?>>
+                        <span class="label mr-1"><?= /* @noEscape */ $optionLabel;?></span>
+                        <?php if ($block->isShowProductQuantities($filterSetting->getShowProductQuantities())): ?>
+                            <span class="count text-primary ml-auto">
+                                <?= /* @noEscape */ "(" . $filterItem->getCount() . ")"; ?>
+                                <span class="filter-count-label sr-only">
+                                    <?php $title = ($filterItem->getCount() == 1) ? __('item') : __('items'); ?>
+                                    <?= /* @noEscape */ $escaper->escapeHtml($title) ?>
+                                </span>
+                            </span>
+                        <?php endif; ?>
+                    </a>
+                </div>
+            <?php else: ?>
+                <span class="label"><?= /* @noEscape */ $optionLabel;?></span>
+                <?php if ($block->isShowProductQuantities($filterSetting->getShowProductQuantities())): ?>
+                    <span class="count">
+                        <?= /* @noEscape */ "(" . $filterItem->getCount() . ")"; ?>
+                        <span class="filter-count-label sr-only">
+                            <?php $title = ($filterItem->getCount() == 1) ? __('item') : __('items');?>
+                            <?= $escaper->escapeHtml($title) ?>
+                        </span>
+                    </span>
+                <?php endif; ?>
+            <?php endif; ?>
+            </li>
+        <?php endforeach ?>
+    </ol>
+</form>
+
+<?php if ($filterSetting->getAddFromToWidget() && isset($fromToConfig) && is_array($fromToConfig)): ?>
+    <?= /* @noEscape */ $block->getFromToWidget('default') ?>
+<?php endif;?>

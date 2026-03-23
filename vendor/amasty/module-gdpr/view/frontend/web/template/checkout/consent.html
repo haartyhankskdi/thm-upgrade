@@ -1,0 +1,20 @@
+<!-- ko if:isEnabled -->
+<!-- ko foreach: { data: items, afterRender: initModal } -->
+    <div data-role="amasty-gdpr-consent" data-bind="visible: $data.visible, attr: {class: $data.required ? 'amasty-gdpr-consent required' : 'amasty-gdpr-consent'}">
+        <input type="hidden" value="0" data-bind="attr: {'name': name}">
+        <input type="checkbox"
+               value="1"
+               data-bind="attr: {'title': title, 'name': name, 'id': checkbox_code + $parent.getUniqId(),
+               'data-gdpr-checkbox-code': checkbox_code,
+               'data-consent-id': consent_id,
+               'data-validate': $data.required ? '{required:true}' : null,
+                class: $data.required ? 'required-entry' : null}"
+        >
+        <label data-bind="attr: {'for': checkbox_code + $parent.getUniqId()}">
+            <span class="action" data-bind="html: checkbox_text"></span>
+        </label>
+    </div>
+</div>
+<!-- /ko -->
+<input hidden name="am-gdpr-checkboxes-from" data-bind="attr: {'value': metaInfo.where}">
+<!-- /ko -->

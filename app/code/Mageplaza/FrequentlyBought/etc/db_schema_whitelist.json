@@ -1,0 +1,20 @@
+{
+    "mageplaza_fbt_product_link": {
+        "column": {
+            "link_id": true,
+            "product_id": true,
+            "linked_product_id": true,
+            "position": true
+        },
+        "index": {
+            "MAGEPLAZA_FBT_PRODUCT_LINK_PRODUCT_ID": true,
+            "MAGEPLAZA_FBT_PRODUCT_LINK_LINKED_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEPLAZA_FBT_PRD_LNK_LNKED_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "MAGEPLAZA_FBT_PRD_LNK_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "MAGEPLAZA_FBT_PRODUCT_LINK_PRODUCT_ID_LINKED_PRODUCT_ID": true
+        }
+    }
+}

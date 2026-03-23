@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Amasty_GdprCookie::gdpr_cookie"
+             title="Cookie Consent"
+             translate="title"
+             module="Amasty_GdprCookie"
+             sortOrder="110"
+             parent="Magento_Customer::customer"
+             resource="Amasty_GdprCookie::gdpr_cookie"/>
+        <add id="Amasty_GdprCookie::cookies"
+             title="Cookies"
+             translate="title"
+             module="Amasty_GdprCookie"
+             sortOrder="10"
+             parent="Amasty_GdprCookie::gdpr_cookie"
+             action="amasty_gdprcookie/cookie/index"
+             resource="Amasty_GdprCookie::cookies"/>
+        <add id="Amasty_GdprCookie::cookie_group"
+             title="Cookie Groups"
+             translate="title"
+             module="Amasty_GdprCookie"
+             sortOrder="20"
+             parent="Amasty_GdprCookie::gdpr_cookie"
+             action="amasty_gdprcookie/cookieGroup/index"
+             resource="Amasty_GdprCookie::cookie_group"/>
+        <add id="Amasty_GdprCookie::cookie_consent"
+             title="Cookie Consents Log"
+             translate="title"
+             module="Amasty_GdprCookie"
+             sortOrder="30"
+             parent="Amasty_GdprCookie::gdpr_cookie"
+             action="amasty_gdprcookie/cookieConsent/index"
+             resource="Amasty_GdprCookie::cookie_consent"/>
+    </menu>
+</config>

@@ -1,0 +1,22 @@
+{
+    "name": "haartyhanks/module-ecommerceanalytics",
+    "description": "Hi my name is nilesh i have created this extension for ecommerce purpose so that website can send values to google for tracking purpose",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "email": "info@mage2gen.com",
+            "name": "Mage2Gen"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Haartyhanks\\EcommerceAnalytics\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}

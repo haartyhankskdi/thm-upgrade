@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Ebizmarts\BrippoPayments\Block\Express\Button"
+                   name="brippo.payment.button"
+                   template="Ebizmarts_BrippoPayments::product/express.phtml"
+                   ifconfig="payment/brippo_payments_express/active"/>
+        </referenceContainer>
+    </body>
+</page>
+

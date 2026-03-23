@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_predispatch_adminhtml_system_config_edit">
+        <observer name="brippo_system_config_edit" instance="Ebizmarts\BrippoPayments\Observer\SystemConfigEdit" />
+    </event>
+    <event name="shortcut_buttons_container">
+        <observer name="brippopayments_shortcut_buttons_container" instance="Ebizmarts\BrippoPayments\Observer\AddExpressShortcutButton"/>
+    </event>
+    <event name="sales_order_save_after">
+        <observer name="brippopayments_sales_order_save_after" instance="Ebizmarts\BrippoPayments\Observer\OrderSaveAfter" />
+    </event>
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="brippopayments_prevent_confirmation_email_on_pending" instance="Ebizmarts\BrippoPayments\Observer\PreventConfirmationEmail"/>
+    </event>
+    <event name="brippo_checkout_submit_all_after_failed">
+        <observer name="brippo_checkout_submit_all_after_failed" instance="Ebizmarts\BrippoPayments\Observer\CheckoutSubmitFailed"/>
+    </event>
+    <event name="order_cancel_after">
+        <observer name="brippo_order_cancel_after" instance="Ebizmarts\BrippoPayments\Observer\OrderCancelAfter"/>
+    </event>
+    <event name="brippo_webhook_payment_intent_canceled">
+        <observer name="brippo_webhook_payment_intent_canceled" instance="Ebizmarts\BrippoPayments\Observer\WebhookPaymentIntentCanceled" />
+    </event>
+    <event name="brippo_webhook_checkout_session_completed">
+        <observer name="brippo_webhook_checkout_session_completed" instance="Ebizmarts\BrippoPayments\Observer\WebhookCheckoutSessionCompleted" />
+    </event>
+    <event name="brippo_webhook_payment_intent_failed">
+        <observer name="brippo_webhook_payment_intent_failed" instance="Ebizmarts\BrippoPayments\Observer\WebhookPaymentIntentFailed" />
+    </event>
+    <event name="brippo_payments_monitor">
+        <observer name="brippo_payments_monitor_observer" instance="Ebizmarts\BrippoPayments\Observer\MonitorOrder"/>
+    </event>
+    <event name="sales_order_place_after">
+        <observer name="brippo_order_place_after" instance="Ebizmarts\BrippoPayments\Observer\OrderPlaceAfter" />
+    </event>
+    <event name="controller_action_predispatch_checkout_onepage_success">
+        <observer name="brippo_on_checkout_success" instance="Ebizmarts\BrippoPayments\Observer\CheckoutSuccessPage" />
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="brippo_on_page_load" instance="Ebizmarts\BrippoPayments\Observer\CancelIncompleteOrder" />
+    </event>
+</config>

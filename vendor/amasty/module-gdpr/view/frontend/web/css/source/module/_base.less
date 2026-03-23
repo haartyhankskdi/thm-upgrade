@@ -1,0 +1,177 @@
+//
+//  Amasty Gdpr Styles
+//  _______________________________________________
+
+//
+//  Variables
+//  ---------------------------------------------
+
+@action-primary__background__color: #4670c9;
+@action-primary__hover__background__color: #1357e6;
+@amgdpr-notification-container__background: #ffeaac;
+@modal-title__color: #5384ec;
+@webkit-scrollbar-thumb__background: #e0e0e0;
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    [data-amgdpr-content-from='subscription'] {
+        & {
+            display: table-row-group;
+        }
+
+        .block.newsletter .form.subscribe > &.amgdpr-checkbox.field {
+            float: none;
+        }
+
+        .amgdpr-checkbox {
+            margin-top: 8px;
+        }
+
+        .amgdpr-label.label {
+            position: inherit;
+        }
+    }
+
+    .amgdpr-modal-container {
+        z-index: 999;
+
+        .amgdpr-privacy-policy {
+            display: none;
+        }
+
+        .amgdpr-privacy-policy,
+        .amgdpr-html-content {
+            max-height: 500px;
+            overflow-y: scroll;
+            word-wrap: break-word;
+        }
+
+        .checkout-index-index &.modal-popup:not(.agreements-modal):not(.popup-authentication) .modal-inner-wrap,
+        .modal-inner-wrap {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+            max-width: 1130px;
+        }
+
+        .modal-header {
+            padding: 30px 30px 20px;
+        }
+
+        .modal-content {
+            padding: 0 30px 0 25px;
+        }
+
+        .modal-footer {
+            padding: 30px 35px 30px;
+        }
+
+        .modal-header .modal-title {
+            border-bottom: none;
+            color: @modal-title__color;
+            font-size: 26px;
+            font-weight: 400;
+            margin-left: 10px;
+            padding: 0;
+        }
+
+        .action.action-primary:hover {
+            background-color: @action-primary__hover__background__color;
+        }
+
+        .action.action-primary {
+            background-color: @action-primary__background__color;
+            border-radius: 3px;
+            box-shadow: none;
+            color: @color-white;
+            font-weight: bold;
+            letter-spacing: 1.35px;
+            text-transform: uppercase;
+            transition: background-color .3s ease-out;
+            width: 100%;
+        }
+
+        .action-close {
+            line-height: 14px;
+            right: 10px;
+            top: 10px;
+        }
+
+        .action-close,
+        .action-primary {
+            &:focus,
+            &:active {
+                box-shadow: 0 0 3px 1px @color-blue3;
+                opacity: .9;
+            }
+        }
+
+        .amgdpr-html-content::-webkit-scrollbar,
+        .amgdpr-privacy-policy::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .amgdpr-html-content::-webkit-scrollbar-track,
+        .amgdpr-privacy-policy::-webkit-scrollbar-track {
+            background: @color-white;
+            width: 6px;
+        }
+
+        .amgdpr-html-content::-webkit-scrollbar-thumb,
+        .amgdpr-privacy-policy::-webkit-scrollbar-thumb {
+            background: @webkit-scrollbar-thumb__background;
+            border-radius: 2px;
+        }
+    }
+
+    .amgdpr-notification-container {
+        background: @amgdpr-notification-container__background;
+        font-weight: 600;
+        margin-left: 10px;
+        padding: 25px;
+    }
+
+    .amgdpr-cookie-link {
+        & {
+            margin-top: 10px;
+        }
+
+        .amgdpr-link {
+            display: none;
+        }
+
+        .amgdpr-link.-show {
+            display: block;
+        }
+    }
+}
+
+//
+//  Mobile +
+//  --------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amgdpr-modal-container {
+        .modal-header {
+            padding: 40px 50px 20px;
+        }
+
+        .modal-header .modal-title {
+            font-size: 30px;
+        }
+
+        .modal-content {
+            padding: 0 30px 0 50px;
+        }
+
+        .modal-footer {
+            padding: 30px 50px 50px;
+        }
+
+        .action.action-primary {
+            width: auto;
+        }
+    }
+}

@@ -1,0 +1,74 @@
+<div class="drive-thru-form-sec w-full py-10 md:py-20 bg-[url('/pub/media/wysiwyg/drive-thru-form-bg.jpg')] bg-no-repeat bg-left-top bg-cover" id="drive-thru-enquiry-form">
+
+    <div class="container">
+        <div class="drive-thru-form">
+            <h3 class="text-2xl text-[28px] leading-[36px] text-white mb-4">Wish to Open a Drive-Thru?</h3>
+            <p class="text-base text-white border-0 border-b border-white pb-4 mb-8">Fill in the contact form below and someone from our team will get in touch with you soon to discuss further.</p>
+
+            <!-- Success Message -->
+            <div id="success-message" style="display:none;" class="bg-[#3B7E48] text-white mb-8 p-4">
+                Your form has been submitted successfully!
+            </div>
+
+            <form class="" action="<?= $this->getUrl('*/*/index') ?>" method="post" id="drivethru-form">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="w-full name md:mb-4">
+                    <label for="name" class="block text-sm text-white mb-2">Name <span style="color: red;">*</span></label>
+                    <input id="name" name="name" required="" type="text" class="w-full h-[41px] px-3 bg-white/20 text-white text-sm border-0 border-b border-white focus:outline-none focus:border-white focus:ring-0">
+                </div>
+                <div class="w-full tel md:mb-4">
+                    <label for="contact-no" class="block text-sm text-white mb-2">Contact <span style="color: red;">*</span></label>
+                    <input id="contact-no" name="contact-no" required="" type="tel" class="w-full h-[41px] px-3 bg-white/20 text-white text-[13px] border-0 border-b border-white focus:outline-none focus:border-white focus:ring-0">
+                </div>
+                <div class="w-full email mb-6">
+                    <label for="email" class="block text-sm text-white mb-2">Email id <span style="color: red;">*</span></label>
+                    <input id="email" name="email" required="" type="email" class="w-full h-[41px] px-3 bg-white/20 text-white text-[13px] border-0 border-b border-white focus:outline-none focus:border-white focus:ring-0">
+                </div>
+            </div>
+                <div class="w-full mb-4">
+                    <label for="message" class="block text-sm text-white mb-1">Message <span style="color: red;">*</span></label>
+                    <textarea id="message" name="message" required="" class="w-full h-[85px] px-3 bg-white/20 text-white text-[13px] border-0 border-b border-white rounded-0 focus:outline-none focus:border-white focus:ring-0"></textarea>
+                </div> 
+
+                <p class="p-note w-full text-base text-white leading-6">By submitting this form, you agree to allow Tariq Halal and its partners to use your provided information to respond to your enquiry. You also consent to receive marketing communications from Tariq Halal and its partners in line with our <a href="/privacy-policy">Privacy Policy</a>. You can opt-out at any time by following the instructions in the communications.</p>
+ 
+                <div class="form-submit-btn mt-6">
+                    <input type="submit" value="Submit" class="bg-[#E63833] hover:bg-[#3B7E48] text-white  text-base font-normal px-6 py-3 transition-all duration-300 ease-in-out uppercase">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $recaptchaSecret = '6LeYhlcqAAAAALyQsIbn5_wVqDdvUBZ2kwoXCI_N';
+    $recaptchaResponse = $_POST['g-recaptcha-response'];
+
+    // Verify reCAPTCHA response
+    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecret&response=$recaptchaResponse");
+    $responseKeys = json_decode($response, true);
+
+    if ($responseKeys["success"]) {
+        // Form passed reCAPTCHA, process the form data
+        // Add your form processing logic here
+    } else {
+        // reCAPTCHA validation failed
+        echo "Please complete the reCAPTCHA challenge.";
+    }
+}
+?>
+
+
+<script>
+    document.getElementById('drivethru-form').onsubmit = function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Display the success message
+        document.getElementById('success-message').style.display = 'block';
+
+        // Optionally reset the form
+        this.reset();
+    };
+</script>

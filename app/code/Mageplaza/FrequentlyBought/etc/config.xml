@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <module>
+            <user_guide>magento/frequently-bought-together</user_guide>
+        </module>
+        <frequentlybought>
+            <general>
+                <enabled>1</enabled>
+                <product_method>fbt</product_method>
+                <block_name>Frequently bought together</block_name>
+                <item_limit>3</item_limit>
+                <enable_add_to_wishlist>1</enable_add_to_wishlist>
+                <remove_related_block>1</remove_related_block>
+                <use_popup>0</use_popup>
+                <display_style>slider</display_style>
+                <number_of_item_on_slider>3</number_of_item_on_slider>
+            </general>
+        </frequentlybought>
+    </default>
+</config>

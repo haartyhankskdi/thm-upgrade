@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:helloworld:Magento_Widget:etc/widget.xsd">
+    <widget class="Amasty\GdprCookie\Block\Widget\Settings" id="amasty_gdproockie_settings">
+        <label>Amasty Cookie Settings</label>
+        <description>Gdpr Cookie Settings Page</description>
+    </widget>
+</widgets>

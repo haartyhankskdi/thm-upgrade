@@ -1,0 +1,51 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    (function () {
+        'use strict';
+
+        window.addEventListener('cookiebar-action-allow', () => {
+            const url = `${BASE_URL}amcookie/cookie/allow`;
+            const contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+            const body = new URLSearchParams({
+                form_key: hyva.getFormKey()
+            });
+            fetch(url, {method: 'POST', body, headers: {'Content-Type': contentType}})
+                .then(response => {
+                    if (response.ok) {
+                        return response;
+                    }
+
+                    return Promise.reject(`${response.status} ${response.statusText}`);
+                })
+                .then(() => {
+                    Alpine.store('AmastyCookieGroups').updateGroupData(true);
+                })
+                .catch(error => {
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages([
+                        {
+                            type: "error",
+                            text: error
+                        }
+                    ]);
+                })
+                .finally(() => {
+                    amastyCookieManager.processManageableCookies();
+                    window.dispatchEvent(new CustomEvent('cookiebar-action-allow-finish'));
+                    // Wait cookiebar close animation
+                    setTimeout(() => {
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    }, 100);
+                });
+        });
+    })();
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

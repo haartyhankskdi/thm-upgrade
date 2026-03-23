@@ -1,0 +1,12 @@
+type Mutation {
+    customerLoginByEmail(
+        email: String!
+        firstname: String
+        lastname: String
+    ): CustomerLoginByEmailOutput
+        @resolver(class: "Haartyhanks\\SocialLogin\\Model\\Resolver\\CustomerLoginByEmail")
+}
+
+type CustomerLoginByEmailOutput {
+    token: String
+}

@@ -1,0 +1,102 @@
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+#rewardpoints .range {
+    height: 80px;
+    width: 380px;
+    border-radius: 10px;
+    padding: 0 65px 0 45px;
+}
+
+#rewardpoints .sliderValue {
+    position: relative;
+    width: 100%;
+}
+
+#rewardpoints .sliderValue span {
+    position: absolute;
+    height: 45px;
+    width: 45px;
+    transform: translateX(-70%) scale(0);
+    font-weight: 500;
+    top: -40px;
+    line-height: 55px;
+    z-index: 2;
+    color: #fff;
+    transform-origin: bottom;
+    transition: transform 0.3s ease-in-out;
+}
+
+#rewardpoints .sliderValue span.show {
+    transform: translateX(-70%) scale(1);
+}
+
+#rewardpoints .field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+}
+
+#rewardpoints .field .value {
+    position: absolute;
+    font-size: 18px;
+    color: #0000FF;
+    font-weight: 600;
+}
+
+#rewardpoints .field .value.left {
+    left: -22px;
+}
+
+#rewardpoints .field .value.right {
+    right: -43px;
+}
+
+#rewardpoints .range input {
+    width: 100%;
+}
+
+#rewardpoints .range input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    background: #0000FF;
+    border: 1px solid #0000FF;
+    cursor: pointer;
+}
+
+#rewardpoints .range input::-moz-range-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    background: #0000FF;
+    border: 1px solid #0000FF;
+    cursor: pointer;
+}
+
+#rewardpoints .range input::-moz-range-progress {
+    background: #0000FF;
+/ / this progress background is only shown on Firefox
+}

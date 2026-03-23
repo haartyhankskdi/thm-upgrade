@@ -1,0 +1,44 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php if ($block->isEnabledChart()) : ?>
+    <div class="dashboard-item-content-chart">
+        <?php if ($block->mpRewardChartData()) : ?>
+            <canvas id="<?= /** @noEscape */ $block->getComponentName() ?>"
+                    data-mage-init='
+                    {"Mageplaza_RewardPointsUltimate/js/create-chart":
+                        {
+                            "chartData":<?= /** @noEscape */ $block->mpRewardChartData() ?>,
+                            "chartElement" : "<?= /** @noEscape */ $block->getComponentName() ?>"
+                        }
+                    }'>
+            </canvas>
+        <?php else : ?>
+            <div class="ar-empty-text empty-text">
+                <?= $block->escapeHtml(__("We couldn't find any records.")) ?>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php else : ?>
+    <div class="ar-empty-text empty-text">
+        <?= /** @noEscape */ __("Chart is disabled. To enable the chart, click <a href='%1'>here</a>", $block->getUrl('adminhtml/system_config/edit', ['section' => 'mageplaza_reports', 'store' => $this->getRequest()->getParam('store')])) ?>
+    </div>
+<?php endif; ?>

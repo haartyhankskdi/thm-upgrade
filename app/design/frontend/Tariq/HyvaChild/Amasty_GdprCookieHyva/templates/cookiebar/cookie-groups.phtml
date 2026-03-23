@@ -1,0 +1,62 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\CookieGroupInfo;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+
+$groupsInfoPrefix = $block->getData('group_info_prefix');
+$groupInfoBlockName = $block->getData('group_info_block_name');
+$openCookieGroupInfoAction = $groupsInfoPrefix . CookieGroupInfo::OPEN_ACTION;
+$moreInfoLinkClass = in_array($groupsInfoPrefix, ['classic-', 'popup-']) ? 'text-ambar-settings-bar-group-links' : '';
+?>
+
+<div x-data="initAmCookieGroups" class="w-full flex flex-col mt-8">
+    <template x-for="group in $store.AmastyCookieGroups.groupData" :key="group.groupId">
+        <div class="mb-2">
+            <div class="header flex justify-between items-start py-2">
+                <h3 class="text-lg font-light md:text-[28px] pr-6 ambar-group-title text-ambar-settings-bar-group-title" x-text="group.name"></h3>
+                <div class="amgdprcookie-toggle-cookie">
+                    <input type="checkbox" class="amgdprcookie-input"
+                           :name="getInputGroupId"
+                           data-group-prefix="<?= $escaper->escapeHtmlAttr($groupsInfoPrefix) ?>"
+                           @change="toggleGroup"
+                           :checked="group.checked"
+                           :aria-checked="group.checked"
+                           :id="getInputGroupId"
+                           :disabled="group.isEssential"
+                           :value="group.groupId"
+                           class="amsettings-bar-input-toggle"
+                           :class="getInputStyles"
+                           l
+                    >
+                    <label class="amgdprcookie-label" data-group-prefix="<?= $escaper->escapeHtmlAttr($groupsInfoPrefix) ?>"
+                           :for="getInputGroupId" class="sr-only" x-text="group.name">
+                    </label>
+                </div>
+            </div>
+            <p class="py-2 text-sm ambar-group-description text-ambar-settings-bar-group-description" x-html="group.description"></p>
+            <button class="underline float-right mt-2 text-black text-xs mb-4 rounded-xs hover:text-red before:content-none after:content-none transition-all duration-300 ease-in-out more-info-btn"
+                    type="button"
+                    data-dispatch-action="<?= $escaper->escapeHtmlAttr($openCookieGroupInfoAction) ?>"
+                    @click="moreInfoClickHandler">
+                <span class="<?= $escaper->escapeHtmlAttr($moreInfoLinkClass) ?>"><?= $escaper->escapeHtml(__('More Information')) ?></span>
+                <span class="sr-only" x-text="moreInformationAboutCookieGroup"></span>
+            </button>
+        </div>
+    </template>
+</div>
+
+<?= $block->getChildBlock($groupInfoBlockName ?: 'amasty.cookie.cookiebar.groups.info')
+    ->setData('prefix', $groupsInfoPrefix)
+    ->toHtml()
+?>
+ 

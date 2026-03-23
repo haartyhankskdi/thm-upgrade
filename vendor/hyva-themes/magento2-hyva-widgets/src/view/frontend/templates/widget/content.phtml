@@ -1,0 +1,81 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Widgets\Block\Widgets\Content;
+use Magento\Framework\Escaper;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Content $block */
+/** @var Escaper $escaper */
+
+$fontColor = $block->getData('hyva_content_font_color') ?: '';
+$containerBackground = $block->getData('hyva_content_container_background') ?: '';
+$contentMargin = $block->getData('hyva_content_margin') ?: '';
+$contentPadding = $block->getData('hyva_content_padding') ?: '';
+$contentContainerClasses = $block->getData('hyva_content_container') ? 'container mx-auto' : '';
+
+// phpcs:ignore Magento2.Functions.DiscouragedFunction
+$content = html_entity_decode($block->getData('hyva_content') ?? '');
+?>
+<?php if ($fadeAnimations = $block->getData('hyva_content_fade_animations')) {
+    $animationClasses = 'transform ease-in-out transition';
+    $animationClassesStart = 'duration-300 ';
+    $animationClassesEnd = 'duration-500 ';
+
+    if ($fadeAnimations) {
+        if (strpos($fadeAnimations, 'fade') !== false) {
+            $animationClassesStart .= 'opacity-0';
+            $animationClassesEnd .= 'opacity-100';
+        }
+
+        if (strpos($fadeAnimations, 'up') !== false) {
+            $animationClassesStart .= ' translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'right') !== false) {
+            $animationClassesStart .= ' -translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+
+        if (strpos($fadeAnimations, 'down') !== false) {
+            $animationClassesStart .= ' -translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'left') !== false) {
+            $animationClassesStart .= ' translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+    }
+}
+?>
+<div class="overflow-hidden -m-4 p-4">
+    <section
+        <?php if ($containerBackground): ?>style="background: <?= $escaper->escapeHtmlAttr($containerBackground) ?>"<?php endif; ?>
+        <?php if ($fadeAnimations): ?>
+            x-data="{ intersecting: false }"
+            x-intersect:enter.half="intersecting = true"
+            x-intersect:leave="intersecting = false"
+            :class="{
+                '<?= $escaper->escapeHtmlAttr($animationClassesEnd) ?>' : intersecting,
+                '<?= $escaper->escapeHtmlAttr($animationClassesStart) ?>' : !intersecting
+            }"
+        <?php endif; ?>
+        class="hyva-content section
+        <?= $escaper->escapeHtmlAttr($fadeAnimations ? $animationClasses . ' ' . $animationClassesStart . '' : '') ?>
+        <?= $escaper->escapeHtmlAttr($contentContainerClasses . ' ' . $contentMargin) ?>"
+        <?php if ($fontColor): ?>style="color: <?= $escaper->escapeHtmlAttr($fontColor) ?>;"<?php endif ?>
+    >
+        <div class="<?= $escaper->escapeHtmlAttr($contentPadding) ?>">
+            <?= /** @noEscape  */ $content; ?>
+        </div>
+    </section>
+</div>

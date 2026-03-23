@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright © 2017 ebizmarts. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+namespace Ebizmarts\SagePaySuite\Model\Config\Source;
+
+use Magento\Framework\Data\OptionSourceInterface;
+
+/**
+ * Class Mode
+ * @package Ebizmarts\SagePaySuite\Model\Config\Source
+ */
+class Mode implements OptionSourceInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+        return [
+            [
+                'value' => \Ebizmarts\SagePaySuite\Model\Config::MODE_TEST,
+                'label' => __('Test'),
+            ],
+            [
+                'value' => \Ebizmarts\SagePaySuite\Model\Config::MODE_LIVE,
+                'label' => __('Live')
+            ]
+        ];
+    }
+}

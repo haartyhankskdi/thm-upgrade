@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+      <head>
+        <script src="Mageplaza_Osc::js/custom-shipping.js"/>
+    </head>
+    <body>
+         <referenceBlock name="breadcrumbs">
+    <action method="addCrumb"> 
+        <argument name="crumbName" xsi:type="string">home</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="label" xsi:type="string" translate="true">Home</item>
+            <item name="title" xsi:type="string" translate="true">Go to Home Page</item>
+            <item name="link" xsi:type="string">/</item>
+        </argument>
+    </action>
+    <action method="addCrumb">
+        <argument name="crumbName" xsi:type="string">onestepcheckout</argument>
+        <argument name="crumbInfo" xsi:type="array">
+            <item name="label" xsi:type="string" translate="true">Checkout</item>
+            <item name="title" xsi:type="string" translate="true">Checkout</item>
+        </argument>
+    </action>
+</referenceBlock>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                           <item name="shipping-step" xsi:type="array">
+                                                <item name="children" xsi:type="array">
+                                                    <item name="shippingAddress" xsi:type="array">
+                                                        <item name="children" xsi:type="array">
+                                                            <item name="shipping-address-fieldset" xsi:type="array">
+                                                                <item name="children" xsi:type="array">
+                                                                    <item name="telephone" xsi:type="array">
+                                                                        <item name="config" xsi:type="array">
+                                                                            <item name="label" xsi:type="string">Contact </item>
+                                                                            
+                                                                        </item>
+                                                                    </item>
+                                                            <!--         <item name="address-search" xsi:type="array">
+                                                            <item name="component" xsi:type="string">
+                                                                Mageplaza_Osc/js/view/address-search
+                                                            </item>
+                                                            <item name="sortOrder" xsi:type="number">3</item>
+                                                        </item> -->
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="afterMethods" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="coupon-list" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Haartyhanks_Checkout/js/view/coupon-list</item>
+                                                                    <!-- <item name="sortOrder" xsi:type="number">200</item> -->
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="template" xsi:type="string">Haartyhanks_Checkout/coupon/list</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

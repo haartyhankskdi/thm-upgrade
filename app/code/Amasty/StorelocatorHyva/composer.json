@@ -1,0 +1,23 @@
+{
+    "name": "amasty/module-storelocator-hyva",
+    "description": "Store Locator Hyva Compatibility by Amasty",
+    "require": {
+        "php": ">=7.4",
+        "amasty/base": ">=1.19.1",
+        "amasty/module-store-locator": ">=3.1.0",
+        "hyva-themes/magento2-default-theme": ">=1.2.3",
+        "hyva-themes/magento2-compat-module-fallback": "*"
+    },
+    "homepage": "https://amasty.com/",
+    "type": "magento2-module",
+    "version": "1.0.4",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\StorelocatorHyva\\": ""
+        }
+    }
+}

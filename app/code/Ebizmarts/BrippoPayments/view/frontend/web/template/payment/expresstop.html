@@ -1,0 +1,17 @@
+<div class="brippo-checkout-ontop" data-bind="if: shouldDisplayAtCheckoutTop, visible: canMakePayment, afterRender: onRenderedHandler">
+    <div class="payment-group">
+        <div class="step-title mobile brippo-on-top-title" data-role="title">
+            <!-- ko i18n: methodTopTitle() --><!-- /ko -->
+        </div>
+        <div class="payment-method scExpress mobile">
+            <span id="brippo-payments-express-button-errors" class="message error" style="display: none;"></span>
+            <div class="checkout-agreements checkout-agreements-block">
+                <!-- ko foreach: getRegion('beforeMethods') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
+            <div id="brippo-payments-express-button" style="position: relative;"></div>
+        </div>
+    </div>
+</div>
+

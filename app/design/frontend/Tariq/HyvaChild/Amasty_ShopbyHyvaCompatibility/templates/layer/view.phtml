@@ -1,0 +1,141 @@
+<?php
+/**
+ * @author Amasty
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\ShopbyHyvaCompatibility\ViewModel\JsInit;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var JsInit $jsInitViewModel */
+$jsInitViewModel = $viewModels->require(JsInit::class);
+
+/** @var HeroiconsSolid $heroIcons */
+$heroIcons = $viewModels->require(HeroiconsSolid::class);
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+
+$filterUniqId = uniqid();
+$pageLayout = $productListAjax->getPageLayout() ?: $block->getLayout()->getUpdate()->getPageLayout();
+$isOneColumn = in_array($pageLayout, ['1column', 'cms-full-width', 'product-full-width']);
+$isSidebar = !!$block->getData('isSidebar') && !$isOneColumn;
+$expandedArray = $jsInitViewModel->getFiltersExpanded();
+?>
+
+<?php if ($block->canShowBlock()): ?>
+<div class="<?= $isSidebar ? 'sidebar sidebar-main' : 'sidebar-topnav'; ?> one-column-wrapper">
+    <?= $block->getChildHtml('amshopby.js.main') ?>
+
+    <script>
+        function layeredNavigationExtend_<?= $escaper->escapeHtml($filterUniqId); ?>() {
+            <?php if ($isSidebar): ?>
+            return deepMerge({}, initLayeredNavigation(), {
+                isSidebar: true,
+                isStickyEnabled: Boolean(<?= $jsInitViewModel->isEnableStickySidebarDesktop() ? 'true' : 'false' ?>)
+            });
+            <?php else: ?>
+            return deepMerge({}, initLayeredNavigationTop(), {
+                isSidebar: false,
+                isOneColumn: Boolean(<?= $isOneColumn ? 'true' : 'false' ?>)
+            });
+            <?php endif; ?>
+        }
+    </script>
+
+    <div class="block-filter mb-4 md:mb-0"
+         x-data="layeredNavigationExtend_<?= $escaper->escapeHtml($filterUniqId); ?>()"
+         x-init="checkIsMobileResolution($el)"
+         @resize.window.debounce="checkIsMobileResolution($el)"
+         :id="isSidebar ? 'layered-filter-block' : ''"
+         x-on:visibilitychange.window.debounce="isSidebar && checkIsMobileResolution($el)">
+
+        <!-- Sidebar Title for Mobile -->
+        <div class="block-title flex items-center justify-between gap-6 md:gap-4 lg:gap-6 w-full text-start bg-white px-4 border md:py-3 rounded-none font-normal md:hidden"
+             :class="{ 'hidden': !isSidebar }"
+             :aria-expanded="isSidebar ? (blockOpen ? 'true' : 'false') : null"
+             @click="isSidebar && (blockOpen = !blockOpen)"
+             role="button"
+             tabindex="0">
+            <span class="title text-sm md:text-[17px] font-normal">
+                <?= $escaper->escapeHtml(__('Shop By')) ?>
+            </span>
+            <span class="pt-0" :class="{ 'block': isSidebar && isMobile, 'hidden': isSidebar && !isMobile }">
+                <template x-if="isSidebar">
+                    <span class="py-3 inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" stroke-width="0" stroke="currentColor"
+                             class="transition-transform transform duration-300 ease-in-out" width="12" height="12" :class="{ 'rotate-180': blockOpen }" role="img">
+                            <path d="M5.629 8.25L0 0H11.258L5.629 8.25Z" fill="currentColor"></path>
+                            <title>chevron-down</title>
+                        </svg>
+                    </span>
+                </template>
+            </span>
+        </div>
+
+        <!-- Filter content -->
+        <div class="block-content filter-content flex md:flex flex-col md:flex-row gap-2 lg:gap-4 p-4 md:p-0 rounded-none md:absolute top-full left-0 z-10 md:relative md:top-0 w-full hidden bg-[#e4f0e8] md:bg-transparent
+                    <?= $escaper->escapeHtmlAttr($productListAjax->isMobile() ? 'hidden' : '') ?>
+                    <?= $escaper->escapeHtmlAttr($isSidebar ? 'is-sidebar md:block' : 'mt-2'); ?>"
+             :id="isSidebar ? 'layered-filter-block-content' : ''"
+             :class="{
+                 'block-content filter-content': true,
+                 'mt-2': !isSidebar,
+                 'md:block': isSidebar,
+                 'hidden': isMobile && !blockOpen,
+                 'overflow-y-auto': isApplySticky
+             }">
+
+            <?= $block->getChildHtml('state') ?>
+
+            <?php $filterIndex = 0; ?>
+            <?php foreach ($block->getFilters() as $filter): ?>
+                <?php if ($filter->getItemsCount()): ?>
+                    <div class="filter-option relative"
+                        x-data="{ open: false }">
+
+                        <!-- Filter title -->
+                        <div class="filter-options-title flex justify-between items-center gap-6 md:gap-4 lg:gap-6 cursor-pointer text-start font-normal border-container md:min-w-48 lg:min-w-59 w-full bg-white px-4 py-3 rounded-none"
+                             x-on:click.prevent.stop="open = !open"
+                         :aria-expanded="open"
+                         role="button"
+                             >
+                            <span class="title text-sm md:text-[17px] font-normal">
+                                <?= $escaper->escapeHtml(__($filter->getName())) ?>
+                            </span>
+                            <span class="py-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" stroke-width="0" stroke="currentColor"
+                                     class="transition-transform transform duration-300 ease-in-out rotate-180" width="12" height="12" :class="{ 'rotate-180': open }" role="img">
+                                    <path d="M5.629 8.25L0 0H11.258L5.629 8.25Z" fill="currentColor"></path>
+                                    <title>chevron-down</title>
+                                </svg>
+                            </span>
+                        </div>
+
+                        <!-- Filter content -->
+                        <div class="filter-options-content p-4 bg-[#e4f0e8] md:absolute md:left-0 md:top-full z-10 border-container w-full"
+                             x-show="open">
+                            <?= /* @noEscape */ $block->getChildBlock('renderer')->render($filter) ?>
+                        </div>
+
+                    </div>
+                    <?php $filterIndex++; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+
+        <?= $block->getChildHtml('amasty.shopby.applybutton.sidebar'); ?>
+
+    </div>
+</div>
+<?php endif; ?>

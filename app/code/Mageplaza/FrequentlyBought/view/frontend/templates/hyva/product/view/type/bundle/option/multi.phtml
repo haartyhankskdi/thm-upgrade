@@ -1,0 +1,84 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+
+declare(strict_types=1);
+
+
+/** @var Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Multi $block */
+/** @var Magento\Framework\Escaper $escaper */
+
+$option = $block->getOption();
+$selections = $option->getSelections();
+
+$optionId = $option->getId();
+$selectedOptions = [];
+
+$default = $option->getDefaultSelection();
+$productId = $block->getProduct()->getId();
+
+list($defaultQty, $canChangeQty) = $block->getDefaultValues();
+?>
+<?php if ($block->showSingle()): ?>
+    <?= /* @noEscape */ $block->getSelectionQtyTitlePrice($selections[0]) ?>
+    <input type="hidden"
+           class="bundle-option-<?= (int)$optionId ?>  product bundle option"
+           name="bundle_option[<?=(int)$productId ?>][<?= (int)$optionId ?>]"
+           form="mageplaza-fbt-form"
+           value="<?= (int)$selections[0]->getSelectionId() ?>"
+           id="bundle-option-<?= (int)$optionId ?>-<?= (int)$selections[0]->getSelectionId() ?>"
+           checked
+           data-option-id="<?= (int)$optionId ?>"
+           data-selection-id="<?= (int)$selections[0]->getSelectionId() ?>"
+    />
+<?php else: ?>
+    <select multiple="multiple"
+            size="5"
+            id="bundle-option-<?= (int)$optionId ?>"
+            name="bundle_option[<?=(int)$productId ?>][<?= (int)$optionId ?>][]"
+            form="mageplaza-fbt-form"
+            class="bundle-option-<?= (int)$optionId ?>
+                form-multiselect max-w-full"
+            <?php if ($option->getRequired()): ?>
+            data-validate='{"required":true}'
+            <?php endif; ?>
+            x-on:change="calculateTotalPrice()"
+    >
+        <?php if (!$option->getRequired()): ?>
+            <option value=""><?= $escaper->escapeHtml(__('None')) ?></option>
+        <?php endif; ?>
+        <?php foreach ($selections as $selection): ?>
+            <?php $selectionId = $selection->getSelectionId(); ?>
+            <?php $optionSelectionId = $optionId . '-' . $selectionId ?>
+            <option value="<?= (int)$selectionId ?>"
+                <?php if ($block->isSelected($selection)): ?>
+                    selected="selected"
+                <?php endif; ?>
+                <?php if (!$selection->isSaleable()): ?>
+                    disabled
+                <?php endif; ?>
+                    data-option-id="<?= $escaper->escapeHtmlAttr($optionSelectionId) ?>"
+            >
+                <?= /* @noEscape */ $block->getSelectionQtyTitlePrice($selection, false) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+<?php endif; ?>

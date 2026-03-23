@@ -1,0 +1,26 @@
+{
+  "name": "mageplaza/module-reward-points-ultimate",
+  "description": "Magento 2 Reward Points Ultimate Extension",
+  "require": {
+    "mageplaza/module-reward-points-pro": "^4.8.7"
+  },
+  "type": "magento2-module",
+  "version": "4.8.7",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Mageplaza",
+      "email": "support@mageplaza.com",
+      "homepage": "https://www.mageplaza.com",
+      "role": "Technical Support"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Mageplaza\\RewardPointsUltimate\\": ""
+    }
+  }
+}

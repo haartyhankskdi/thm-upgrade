@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/carts/mine/mollie/payment-token" method="GET">
+        <service class="Mollie\Payment\Api\Webapi\PaymentTokenRequestInterface" method="generateForCustomer"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/guest-carts/:cartId/mollie/payment-token" method="GET">
+        <service class="Mollie\Payment\Api\Webapi\PaymentTokenRequestInterface" method="generateForGuest"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/payment-method/meta" method="GET">
+        <service class="Mollie\Payment\Api\Webapi\PaymentInformationMetaInterface" method="getPaymentMethodsMeta"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/transaction/start" method="POST">
+        <service class="Mollie\Payment\Api\Webapi\StartTransactionRequestInterface" method="execute"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/get-order/:hash" method="GET">
+        <service class="Mollie\Payment\Api\Webapi\GetCustomerOrderInterface" method="byHash"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/get-order/:hash" method="POST">
+        <service class="Mollie\Payment\Api\Webapi\GetCustomerOrderInterface" method="byHash"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/reset-cart/:hash" method="POST">
+        <service class="Mollie\Payment\Api\Webapi\ResetCartInterface" method="byHash"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/get-payment-link-redirect/:hash" method="GET">
+        <service class="Mollie\Payment\Api\Webapi\GetPaymentLinkRedirectInterface" method="byHash"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mollie/orders/recurring" method="GET">
+        <service class="Mollie\Payment\Api\MagentoOrderRepositoryInterface" method="getRecurringOrders"/>
+        <resources>
+            <resource ref="Magento_Sales::actions_view" />
+        </resources>
+    </route>
+</routes>

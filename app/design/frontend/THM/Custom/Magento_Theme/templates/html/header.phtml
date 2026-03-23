@@ -1,0 +1,72 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var \Magento\Theme\Block\Html\Header $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$welcomeMessage = $block->getWelcome();
+?>
+<?php if ($block->getShowPart() == 'welcome'): ?>
+    <li class="greet welcome" data-bind="scope: 'customer'">
+        <!-- ko if: customer().fullname  -->
+        <span class="logged-in"
+              data-bind="text: new String('<?= $escaper->escapeHtml(__('Welcome, %1!', '%1')) ?>').
+              replace('%1', customer().fullname)">
+        </span>
+        <!-- /ko -->
+        <!-- ko ifnot: customer().fullname  -->
+        <span class="not-logged-in"
+              data-bind="text: '<?= $escaper->escapeHtml($welcomeMessage) ?>'"></span>
+        <?= $block->getBlockHtml('header.additional') ?>
+        <!-- /ko -->
+    </li>
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "customer": {
+                            "component": "Magento_Customer/js/view/customer"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<?php elseif ($block->getShowPart() == 'other'): ?>
+    <?= $block->getChildHtml() ?>
+<?php endif ?>
+ 
+<style>
+    
+.minicart-wrapper .block-minicart{
+  position: fixed;
+        top: 0;
+        left: 100%;
+        transition: left .4s !important;
+        display: block !important;
+        align-items: center;
+        justify-content: center;
+        width: 400px !important;
+        min-width: 400px !important;
+        transform: none !important;
+        height: 100%;
+        border: 0;
+}
+
+.minicart-wrapper.active .block-minicart{
+    left: 71% !important;
+}
+/*.minicart-wrapper .ui-dialog.ui-corner-all.ui-widget:before{
+  content: " " !important;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.7);
+}*/
+</style>

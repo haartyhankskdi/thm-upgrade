@@ -1,0 +1,30 @@
+{
+    "name": "ebizmarts/brippo-payments",
+    "version": "101.0.21",
+    "description": "Receive payments via Brippo Payments.",
+    "type": "magento2-module",
+    "autoload": {
+        "psr-4": {"Ebizmarts\\BrippoPayments\\":""},
+        "files": ["registration.php"]
+    },
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "support": {
+        "email": "brippo@ebizmarts-desk.zendesk.com"
+    },
+    "authors": [
+        {
+            "name": "Ebizmarts Corp",
+            "email": "info@ebizmarts.com",
+            "homepage": "https://pos.ebizmarts.com"
+        }
+    ],
+    "replace": {
+        "ebizmarts/brippo-payments-frontend": "*"
+    },
+    "conflict": {
+        "ebizmarts/brippo-payments-frontend": "*"
+    }
+}

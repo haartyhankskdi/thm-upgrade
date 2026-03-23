@@ -1,0 +1,220 @@
+<?php
+$wishlistHelper = $this->helper("Magento\Wishlist\Helper\Data");
+$current_block = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$isLoggedIn = $current_block->getCustomerData()->isLoggedIn();
+$bestselling = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\BestSellers::class);
+$formKey = $bestselling->getFormKey();
+$currentCategory = $current_block->getCurrentCategory();
+$currentCategoryId = $currentCategory ? $currentCategory->getId() : null;
+$productCollection = $current_block->getProductCollection();
+$visibility = $current_block->getVisibleTypes();
+$imageHelper = $current_block->getImageHelper();
+$todayDate = $current_block->getCurrentDate();
+/*$todayDate = date('Y-m-d');*/
+$collection_deals = $productCollection->create();
+$collection_deals
+    ->addAttributeToSelect("*")
+    ->addAttributeToFilter(
+        "status",
+        \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+    )
+    ->addAttributeToFilter("visibility", ["in" => $visibility])
+    ->setOrder("created_at", "desc")
+    ->setPageSize(12);
+if ($currentCategoryId) {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $categoryModel = $objectManager->get(
+        \Magento\Catalog\Model\Category::class
+    );
+    $childCategories = $categoryModel
+        ->getCollection()
+        ->addAttributeToSelect("entity_id")
+        ->addAttributeToFilter("is_active", 1)
+        ->addAttributeToFilter("path", [
+            "like" => "%/" . $currentCategoryId . "/%",
+        ]);
+
+    $childCategoryIds = $childCategories->getAllIds();
+    $allCategoryIds = array_merge([$currentCategoryId], $childCategoryIds);
+
+    $collection_deals->addCategoriesFilter(["in" => $allCategoryIds]);
+}
+?> 
+<div class="british-main-section">
+     <?php if ($collection_deals->getSize()) { ?>
+   <h3><span>The Great British BBQ</span></h3>
+  <span>Made Halal,Made for spring</span>
+<?php } ?>
+   <div class="british-section">
+      <div class="british-content-section">
+         <?php
+         $i = 1;
+         if (!empty($collection_deals)):
+             foreach ($collection_deals as $product):
+                 if ($i <= 12) {
+
+                     $inWishlist = false;
+                     if ($isLoggedIn) {
+                         $wishlist = $wishlistHelper->getWishlist();
+                         if ($wishlist) {
+                             $wishlistItems = $wishlist->getItemCollection();
+                             foreach ($wishlistItems as $item) {
+                                 if (
+                                     $item->getProductId() == $product->getId()
+                                 ) {
+                                     $inWishlist = true;
+                                     break;
+                                 }
+                             }
+                         }
+                     }
+                     $productImageUrl =
+                         $block->getMediaUrl() . $product->getSmallImage();
+                     $specialPrice = $product->getSpecialPrice();
+                     $regularPrice = $product->getPrice();
+                     $specialFromDate = $product->getSpecialFromDate();
+                     $specialToDate = $product->getSpecialToDate();
+                     $currentDate = date("Y-m-d");
+                     ?>
+              
+              <!-- <img data-lazy="<?//= $productImageUrl; ?> -->
+         <div class="groceries-product">
+            <div class="groceries-product-img">
+                 <?php if ($isLoggedIn): ?>
+    <?php if (!$inWishlist): ?>
+        <!-- Not in wishlist, show blank heart -->
+        <form action="<?= $block->getUrl(
+            "wishlist/index/add"
+        ) ?>" method="post" class="custom-wishlist-form">
+            <input type="hidden" name="product" value="<?= $product->getId() ?>" />
+            <input type="hidden" name="form_key" value="<?= $formKey ?>" />
+            <button type="submit" class="wishlist-btn" title="Add to Wishlist">
+                <img src="<?php echo $block->getViewFileUrl(
+                    "images/heart.svg"
+                ); ?>" alt="heart" />
+            </button>
+        </form>
+    <?php else: ?>
+        <!-- Already in wishlist, show red heart -->
+        <span class="wishlist-btn added" title="Already in Wishlist">
+            <img src="<?php echo $block->getViewFileUrl(
+                "images/heart-red.svg"
+            ); ?>" alt="heart-red" />
+        </span>
+    <?php endif; ?>
+<?php else: ?>
+    <!-- Not logged in -->
+    <a href="<?= $block->getUrl(
+        "customer/account/login"
+    ) ?>" class="wishlist-btn" title="Login to add to Wishlist">
+        <img src="<?php echo $block->getViewFileUrl(
+            "images/heart.svg"
+        ); ?>" alt="heart" />
+    </a>
+<?php endif; ?>
+
+              <a href="<?= $product->getProductUrl() ?>">
+                <img src="<?= $imageHelper
+                    ->init($product, "product_base_image")
+                    ->getUrl() ?>"
+                             alt="<?= $product->getName() ?>"/></a>
+               <?php if (
+                   $specialPrice &&
+                   $specialFromDate <= $currentDate &&
+                   $specialPrice < $regularPrice
+               ) {
+                   $discount = round(
+                       100 - ($specialPrice / $regularPrice) * 100
+                   );
+                   echo '<div class="discount-badge">' .
+                       $discount .
+                       "%<br>OFF</div>";
+               } ?>
+            <?php
+            $createdAt = $product->getCreatedAt();
+            $isNew = false;
+            if ($createdAt) {
+                $createdDate = new \DateTime($createdAt);
+                $now = new \DateTime();
+                $interval = $now->diff($createdDate)->days;
+                if ($interval <= 5) {
+                    $isNew = true;
+                }
+            }
+            ?>
+
+<?php if ($isNew): ?>
+    <div class="custom-new-label">
+        <span>NEW</span>
+    </div>
+<?php endif; ?>
+             </div>
+            
+            <div class="product-name"><a href="<?= $product->getProductUrl() ?>"><?= __(
+    $product->getName()
+) ?></a></div>
+            <?php if (
+                $specialPrice &&
+                $specialFromDate <= $currentDate &&
+                $specialPrice != ""
+            ) { ?>            
+              <div class="groceries-product-price">£<?= __(
+                  number_format($specialPrice, 2)
+              ) ?>  <span style="text-decoration: line-through;">£<?= __(
+      number_format($regularPrice, 2)
+  ) ?></span></div>
+            <?php } else { ?>
+              <div class="groceries-product-price">£<?= __(
+                  number_format($regularPrice, 2)
+              ) ?></span></div>
+            <?php } ?>
+            <?php if ($product->getWeight() != "") { ?>
+            <div class="bestsell-product-weight">
+               <?php
+               $value = $product->getWeight();
+               echo "Weight " .
+                   rtrim(rtrim(number_format($value, 4, ".", ""), "0"), ".");
+               ?>
+
+              </div>
+           <?php } ?>
+           <span class="vip-points">Get 2 VIP Points</span>
+           <?php
+           $productId = $product->getId();
+           $baseUrl = $block->getBaseUrl();
+           $hasAnyOptions = $product->getHasOptions();
+              $productUrl = $block->escapeUrl($product->getProductUrl());
+      if ($hasAnyOptions): ?>
+        <button type="button"
+            onclick="location.href='<?= $productUrl ?>';"
+            title="<?= $block->escapeHtmlAttr(__("Customise & Add to Cart")) ?>"
+            class="customise-addtocart action tocart primary">
+        <span><?= $block->escapeHtml(__("Customise & Add to Basket")) ?></span>
+    </button>
+    <?php else: ?>
+            <div class="custom-cart-ui" data-product-id="<?= $productId ?>" data-form-key="<?= $formKey ?>">
+    <div class="cart-btn-wrapper default-state">
+        <button class="btn-add-to-cart">+ Add to Basket</button>
+    </div>
+
+    <div class="cart-btn-wrapper qty-state" style="display: none;">
+        <button class="btn-decrease">-</button>
+        <span class="qty-text">1 Added</span>
+        <button class="btn-increase">+</button>
+    </div>
+</div>
+<?php endif; ?>
+         </div>
+         <?php $i++;
+                 } ?> 
+         <?php
+             endforeach;
+         endif;
+         ?>
+      </div>
+   </div>
+</div>

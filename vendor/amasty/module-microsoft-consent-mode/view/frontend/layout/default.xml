@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Microsoft Consent Mode
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.additional">
+            <block ifconfig="amasty_gdprcookie/microsoft_mode/enable" name="amasty.consent.microsoft" template="Amasty_MicrosoftConsentMode::microsoft/consent.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Amasty\MicrosoftConsentMode\ViewModel\MicrosoftViewModel</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block ifconfig="amasty_gdprcookie/microsoft_mode/enable" name="amasty.microsoft.consent.footer"
+                   template="Amasty_MicrosoftConsentMode::microsoft/bind-events.phtml">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

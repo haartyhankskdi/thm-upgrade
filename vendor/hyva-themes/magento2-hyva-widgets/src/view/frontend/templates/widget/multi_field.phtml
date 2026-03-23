@@ -1,0 +1,266 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Slider;
+use Hyva\Widgets\Block\Widgets\MultiField;
+use Magento\Framework\Escaper;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Escaper $escaper */
+/** @var MultiField $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Slider $sliderViewModel */
+
+$containerBackground = $block->getData('hyva_multi_field_container_background') ?: '';
+$contentMargin = $block->getData('hyva_multi_field_margin') ?: '';
+$contentPadding = $block->getData('hyva_multi_field_padding') ?: '';
+$contentContainerClasses = $block->getData('hyva_multi_field_container') ? 'container mx-auto' : '';
+
+$displayType = $block->getData('hyva_multi_field_type');
+$widgetTitle = $block->getData('hyva_multi_field_title');
+$widgetText = $block->getData('hyva_multi_field_data');
+
+$multiFieldSteps = $block->getMultiFieldSteps() ?: [];
+
+if ($fadeAnimations = $block->getData('hyva_multi_field_fade_animations')) {
+    $animationClasses = 'transform ease-in-out transition';
+    $animationClassesStart = 'duration-300 ';
+    $animationClassesEnd = 'duration-500 ';
+
+    if ($fadeAnimations) {
+        if (strpos($fadeAnimations, 'fade') !== false) {
+            $animationClassesStart .= 'opacity-0';
+            $animationClassesEnd .= 'opacity-100';
+        }
+
+        if (strpos($fadeAnimations, 'up') !== false) {
+            $animationClassesStart .= ' translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'right') !== false) {
+            $animationClassesStart .= ' -translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+
+        if (strpos($fadeAnimations, 'down') !== false) {
+            $animationClassesStart .= ' -translate-y-20';
+            $animationClassesEnd .= ' translate-y-0';
+        }
+
+        if (strpos($fadeAnimations, 'left') !== false) {
+            $animationClassesStart .= ' translate-x-20';
+            $animationClassesEnd .= ' translate-x-0';
+        }
+    }
+}
+?>
+<div class="overflow-hidden -m-4 p-4">
+    <section
+        <?php if ($containerBackground): ?>style="background: <?= $escaper->escapeHtmlAttr($containerBackground) ?>"<?php endif; ?>
+        <?php if ($fadeAnimations): ?>
+            x-data="{ intersecting: false }"
+            x-intersect:enter="intersecting = true"
+            x-intersect:leave="intersecting = false"
+            :class="{
+                '<?= $escaper->escapeHtmlAttr($animationClassesEnd) ?>' : intersecting,
+                '<?= $escaper->escapeHtmlAttr($animationClassesStart) ?>' : !intersecting
+            }"
+        <?php endif; ?>
+        class="hyva_multi_field section
+        <?= $escaper->escapeHtmlAttr($fadeAnimations ? $animationClasses . ' ' . $animationClassesStart . '' : '') ?>
+        <?= $escaper->escapeHtmlAttr($contentContainerClasses . ' ' . $contentMargin) ?>"
+    >
+        <div class="hyva_multi_field-content-data <?= $escaper->escapeHtmlAttr($contentPadding) ?>">
+
+            <?php if ($widgetTitle || $widgetText): ?>
+                <div class="relative max-w-7xl mx-auto">
+                    <div class="text-center">
+                        <?php if ($widgetTitle): ?>
+                            <h2 class="text-2xl font-medium text-gray-900 title-font">
+                                <?= $escaper->escapeHtml($widgetTitle) ?>
+                            </h2>
+                        <?php endif; ?>
+                        <?php if ($widgetText): ?>
+                            <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+                                <?= $escaper->escapeHtml($widgetText); ?>
+                            </p>
+                        <?php endif ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($displayType === 'grid'): ?>
+
+                <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+                    <?php foreach ($multiFieldSteps as $column): ?>
+                        <?php
+                        $buttonLabel = $column->getButton();
+                        $buttonUrl = $column->getButtonUrl();
+                        ?>
+                        <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                            <div class="flex-shrink-0">
+                                <img class="h-48 w-full object-cover"
+                                     src="<?= $escaper->escapeUrl($column->getThumbnail()); ?>"
+                                     alt="<?= $escaper->escapeHtmlAttr($column->getTitle()) ?>"
+                                     loading="lazy"
+                                >
+                            </div>
+                            <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                                <div class="flex-1">
+                                    <p class="text-xl font-semibold text-gray-900">
+                                        <?= $escaper->escapeHtmlAttr($column->getTitle()) ?>
+                                    </p>
+                                    <p class="mt-3 text-base text-gray-500">
+                                        <?= /** @noEscape */ $column->getDescription(); ?>
+                                    </p>
+
+                                    <?php if ($buttonLabel && $buttonUrl): ?>
+                                        <div class="mt-4 sm:flex">
+                                            <a href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($buttonUrl)) ?>"
+                                               class="inline-flex btn btn-primary">
+                                                <?= $escaper->escapeHtml($buttonLabel) ?>
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            <?php elseif ($displayType === 'splide_slider'): ?>
+
+                <div class="splide my-12 pb-8"
+                     data-id-multifield="<?= $escaper->escapeHtmlAttr($block->getJsId()); ?>"
+                >
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <?php foreach ($multiFieldSteps as $column): ?>
+                                <?php
+                                $buttonLabel = $column->getButton();
+                                $buttonUrl = $column->getButtonUrl();
+                                ?>
+                                <li class="splide__slide">
+                                    <div>
+                                        <a href="<?= $escaper->escapeUrl($column->getButtonUrl()) ?>"
+                                           class="block w-full rounded-lg overflow-hidden"
+                                        >
+                                            <img src="<?= $escaper->escapeUrl($column->getThumbnail()); ?>"
+                                                 alt="<?= $escaper->escapeHtmlAttr($column->getTitle()) ?>"
+                                                 loading="lazy"
+                                                 class="object-cover hover:opacity-75 w-full min-h-14"
+                                            >
+                                        </a>
+                                        <p class="mt-2 block text-base font-medium text-gray-900 truncate">
+                                            <?= $escaper->escapeHtml($column->getTitle()) ?>
+                                        </p>
+                                        <p class="block text-sm font-medium text-gray-500">
+                                            <?= /** @noEscape  */ $column->getDescription(); ?>
+                                        </p>
+
+                                    </div>
+                                    <?php if ($buttonLabel && $buttonUrl): ?>
+                                        <div class="mt-4 sm:flex">
+                                            <a href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($buttonUrl)) ?>"
+                                               class="inline-flex btn btn-primary">
+                                                <?= $escaper->escapeHtml($buttonLabel) ?>
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+                <script>
+                    (function () {
+                        <?php $splideCssUrl = $block->getViewFileUrl('Hyva_Widgets::css/splide.min.css'); ?>
+                        const styleSheetHref = '<?= $escaper->escapeJs($escaper->escapeUrl($splideCssUrl)) ?>'
+
+                        if (typeof window.SplideCSS === 'undefined') {
+                            const style = document.createElement("link");
+                            style.rel = "stylesheet";
+                            style.type = "text/css";
+                            style.href = styleSheetHref;
+
+                            const insertAt = document.getElementsByTagName('link')[0];
+                            if (insertAt) { // prevent conflicts by loading before other CSS
+                                insertAt.parentNode.insertBefore(style, insertAt);
+                            } else {
+                                document.head.appendChild(style);
+                            }
+                            window.SplideCSS = 'loaded';
+                        }
+
+                        function initSplide() {
+                            const elms = document.querySelectorAll('[data-id-multifield="<?= $escaper->escapeJs($block->getJsId()); ?>"]');
+                            for (let i = 0, len = elms.length; i < len; i++) {
+                                new Splide(elms[i], {
+                                    type: 'loop',
+                                    perPage: 3,
+                                    gap: '1em',
+                                    autoplay: true,
+                                    arrows: 'slider',
+                                    breakpoints: {
+                                        640: {
+                                            perPage: 1,
+                                        },
+                                        768: {
+                                            perPage: 2,
+                                            gap: '1.5em',
+                                        }
+                                    },
+                                    classes: {
+                                        pagination: 'splide__pagination bottom-auto top-full mt-2',
+                                        page: 'splide__pagination__page shadow',
+                                    }
+                                }).mount();
+                            }
+                        }
+
+                        if (typeof window.Splide === 'function') {
+                            initSplide();
+                        } else {
+                            <?php $splideJsUrl = $block->getViewFileUrl('Hyva_Widgets::js/splide.min.js'); ?>
+                            const scriptSource = '<?= $escaper->escapeJs($escaper->escapeUrl($splideJsUrl)) ?>';
+
+                            const pendingLoadScript = Array.from(document.scripts).find(script => script.src === scriptSource);
+
+                            if (pendingLoadScript) { // Splide is already being loaded
+                                pendingLoadScript.addEventListener('load', () => initSplide());
+                                return;
+                            }
+
+                            const script = document.createElement('script')
+                            script.src = scriptSource;
+                            script.async = true;
+
+                            script.addEventListener('load', () => initSplide());
+                            document.head.append(script);
+                        }
+
+                    })();
+
+                </script>
+
+            <?php else: ?>
+                <?php
+                $sliderViewModel = $viewModels->require(Slider::class);
+                $itemsTemplate = 'Hyva_Widgets::widget/slider/multifield-item.phtml';
+                ?>
+                <?= $sliderViewModel->getSliderForItems($itemsTemplate, $multiFieldSteps)
+                    ->toHtml() ?>
+
+            <?php endif; ?>
+        </div>
+    </section>
+</div>

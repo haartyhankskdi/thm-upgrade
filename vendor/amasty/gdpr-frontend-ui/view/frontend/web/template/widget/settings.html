@@ -1,0 +1,61 @@
+<form id="amgdprcookie-widget-form"
+      class="amgdprcookie-settings-form"
+      data-amcookie-js="form-cookie"
+      aria-labelledby="amgdprcookie-head"
+>
+    <div class="amgdprcookie-top">
+        <span id="amgdprcookie-head" class="amgdprcookie-head" data-bind="i18n: 'Cookie Settings'"></span>
+        <div class="amgdprcookie-btn-wrapper">
+            <button class="amgdprcookie-btn"
+                    data-bind="
+                        text: $t('Allow all'),
+                        click: allowCookies"></button>
+            <button class="amgdprcookie-btn"
+                    data-bind="
+                        text: $t('Save'),
+                        click: saveCookie.bind($data, $element, $data)"></button>
+        </div>
+    </div>
+
+    <div role="group"
+         data-bind="
+            attr: {
+                'aria-label': $t('Cookies Group Fieldset')
+            }
+         "
+    >
+        <!-- ko foreach: $data.groups -->
+        <div class="amgdprcookie-cookie-container">
+            <div class="amgdprcookie-header">
+                <h3 class="amgdprcookie-caption" data-bind="text: $data.name"></h3>
+                <div class="amgdprcookie-toggle-cookie">
+                    <input class="amgdprcookie-input"
+                           type="checkbox"
+                           data-amcookie-js="field"
+                           name="groups[]"
+                           data-bind="
+                        attr: {id: 'widget-switch-box-' + $index(), disabled: isEssential},
+                        value: $data.groupId,
+                        css: {'disabled': isEssential},
+                        checked: checked">
+                    <label class="amgdprcookie-label"
+                           data-bind="
+                                attr: {
+                                    for: 'widget-switch-box-' + $index()
+                                },
+                                text: name
+                           "
+                    ></label>
+                </div>
+            </div>
+            <p class="amgdprcookie-text" data-bind="html: $data.description"></p>
+            <a class="amgdprcookie-link"
+               href="#"
+               data-bind="
+                i18n: 'More Information',
+                click: $parent.getInformationModal.bind($parent, $data)"
+            ></a>
+        </div>
+        <!--/ko-->
+    </div>
+</form>

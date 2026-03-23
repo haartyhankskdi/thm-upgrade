@@ -1,0 +1,46 @@
+<?php $recentview = $block->getLayout()->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$collection = $recentview->getRecentView(4); 
+$imageHelper =$recentview->getImageHelper();
+?>
+<?php if ($collection->getSize()): ?>
+    <div class="recently-viewed-wrapper">
+        <h2>Pick up where you left off</h2>
+        <ul class="recently-viewed-products">
+            <?php foreach ($collection as $_product): ?>
+                <li>
+                    <a href="<?= $_product->getProductUrl() ?>">
+                        <img src="<?= $imageHelper->init($_product, 'product_small_image')->getUrl() ?>"
+                             alt="<?= $_product->getName() ?>" width="150" />
+                             </a>
+                              <a href="<?= $_product->getProductUrl() ?>">
+                         <div class="view-product-name">
+                        <?= $_product->getName() ?>
+                      </div>
+                       </a>
+                        <?php 
+                            $specialPrice = $_product->getSpecialPrice();
+                            $regularPrice = $_product->getPrice();
+                            $specialFromDate = $_product->getSpecialFromDate();
+                         $specialToDate = $_product->getSpecialToDate();
+                     $currentDate = date('Y-m-d');
+                        if ($_product->getSpecialPrice() != "" && ($specialFromDate <= $currentDate)) { ?>            
+              <div class="bestsell-product-price">£<?= __(
+                  number_format($specialPrice, 2)
+              ) ?>
+              <span style="text-decoration: line-through;">£<?= __(
+                  number_format($regularPrice, 2)
+              ) ?>  
+              </span>
+           </div>
+            <?php } else { ?>
+              <div class="bestsell-product-price">£<?= __(
+                  number_format($regularPrice, 2)
+              ) ?></div>
+              
+            <?php } ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

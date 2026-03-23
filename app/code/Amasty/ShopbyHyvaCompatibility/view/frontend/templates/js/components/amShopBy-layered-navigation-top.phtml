@@ -1,0 +1,119 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function initLayeredNavigationTop() {
+        return {
+            isSidebar: false,
+            blockOpen: false,
+            isMobile: false,
+            openedFilter: null,
+            isOneColumn: false,
+            isTopNavigation: true,
+            isApplySticky: false,
+            uniqueElements: [],
+
+            init() {
+                const titleArray = Array.from(document.querySelectorAll('.sidebar.sidebar-main .title'))
+                    .map(element => element.textContent.trim());
+
+                this.uniqueElements = Array.from(document.querySelectorAll('.catalog-topnav .title'))
+                    .filter(element => !titleArray.includes(element.textContent.trim()))
+                    .map(element => {
+                        const closestFilterOption = element.closest('.filter-option');
+                        return closestFilterOption ? closestFilterOption.cloneNode(true) : null;
+                    }).filter(Boolean);
+
+                this.$watch('isMobile', value => {
+                    if (value) {
+                        this.addFilterOptionsToSidebar();
+                    } else {
+                        this.removeFilterOptionsFromSidebar();
+                    }
+                });
+            },
+
+            addFilterOptionsToSidebar() {
+                this.uniqueElements.forEach(element => {
+                    const amShopByFilter = element.querySelector('[data-amshopby-filter]');
+                    const filterName = amShopByFilter?.getAttribute('data-amshopby-filter');
+
+                    if (filterName) {
+                        const sidebarMain = document.querySelector('.sidebar-main.one-column-wrapper .block-content');
+                        const cloneNode = element.cloneNode(true);
+                        cloneNode.classList.add(filterName);
+
+                        sidebarMain.insertAdjacentHTML('beforeend', `<div class="filter-option relative mb-4 ${filterName}"></div>`);
+                        hyva.replaceDomElement(`.filter-option.${filterName}`, cloneNode.outerHTML);
+                    }
+                });
+            },
+
+            removeFilterOptionsFromSidebar() {
+                this.uniqueElements.forEach(element => {
+                    const amShopByFilter = element.querySelector('[data-amshopby-filter]');
+                    const filterName = amShopByFilter?.getAttribute('data-amshopby-filter');
+
+                    if (filterName) {
+                        const sidebarMain = document.querySelector('.sidebar-main.one-column-wrapper .block-content');
+                        const filterOptionElement = sidebarMain.querySelector(`.filter-option.${filterName}`);
+
+                        if (filterOptionElement) {
+                            filterOptionElement.remove();
+                        }
+                    }
+                });
+            },
+
+            /**
+             *
+             */
+            checkIsMobileResolution(element) {
+                this.isMobile = window.matchMedia('(max-width: 768px)').matches;
+                this.isSidebar = this.isOneColumn && this.isMobile;
+
+                if (this.isOneColumn) {
+                    const elementToRemove = document.querySelector('.amasty-catalog-topnav');
+
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }
+            },
+
+            /**
+             *
+             * @param index
+             */
+            setOpenedFilter(index) {
+                if (this.isMobile) {
+                    return;
+                }
+                this.openedFilter !== parseInt(index) ? this.openedFilter = parseInt(index) : this.openedFilter = null;
+            },
+
+            /**
+             *
+             * @param index
+             * @returns {boolean}
+             */
+            isFilterOpened(index) {
+                return this.openedFilter === parseInt(index);
+            }
+        }
+    }
+</script>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="brippo_recover_checkout_automatic_notification"
+              label="Brippo Recover Checkout - Automatic Notification"
+              file="brippo_recover_checkout_automatic_notification_email_template.html"
+              type="html"
+              module="Ebizmarts_BrippoPayments"
+              area="frontend"/>
+
+    <template id="payment_brippo_payments_brippo_payments_paybylink_email_template"
+              label="Brippo Pay by Link - Finalize Payment"
+              file="brippo_payments_paybylink_email_template.html"
+              type="html"
+              module="Ebizmarts_BrippoPayments"
+              area="frontend"/>
+
+    <template id="brippo_failed_trying_to_recover"
+              label="Brippo On Hold - Trying to Recover"
+              file="brippo_failed_trying_to_recover_email_template.html"
+              type="html"
+              module="Ebizmarts_BrippoPayments"
+              area="frontend"/>
+</config>

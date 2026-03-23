@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\Html\Links">
+        <plugin name="amasty-gdpr-html-links" type="Amasty\Gdpr\Block\AccountLinkPlugin"/>
+    </type>
+    <type name="Magento\Customer\Block\Account\Navigation">
+        <plugin name="amasty-gdpr-account-navigation" type="Amasty\Gdpr\Block\AccountLinkPlugin"/>
+    </type>
+    <type name="Magento\CheckoutAgreements\Block\Agreements">
+        <plugin name="amasty-gdpr-checkout-agreements" type="Amasty\Gdpr\Block\AgreementsPlugin"/>
+    </type>
+    <type name="Magento\Newsletter\Block\Subscribe">
+        <plugin name="amasty-gdpr-subscribe" type="Amasty\Gdpr\Block\SubscribePlugin" />
+    </type>
+    <type name="Magento\Contact\Block\ContactForm">
+        <plugin name="amasty-gdpr-contact" type="Amasty\Gdpr\Block\ContactPlugin" />
+    </type>
+    <!-- Update internal policy compliance records because the session ID is updated on checkout -->
+    <type name="Magento\Customer\Model\Session">
+        <plugin name="amasty-gdpr-customer-session" type="Amasty\Gdpr\Plugin\Customer\Model\SessionPlugin" />
+    </type>
+    <type name="Magento\Multishipping\Model\Checkout\Type\Multishipping">
+        <plugin name="amasty-gdpr-multishipping-checkout" type="Amasty\Gdpr\Plugin\Multishipping\Model\Checkout\Type\MultishippingPlugin" />
+    </type>
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="amasty_gdpr_config_provider" xsi:type="object">Amasty\Gdpr\Model\ConsentConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Gdpr\Model\Consent\DataProvider\ConsentPolicyContentResolver">
+        <arguments>
+            <argument name="pageRepository" xsi:type="object">Magento\Cms\Api\PageRepositoryInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\Controller\Account\CreatePost">
+        <plugin name="amasty-gdpr-validate-registration-consent" type="Amasty\Gdpr\Plugin\ConsentValidation\Customer\Controller\Account\CreatePostPlugin"/>
+    </type>
+    <type name="Magento\Contact\Controller\Index\Post">
+        <plugin name="amasty-gdpr-validate-contact-us-consent" type="Amasty\Gdpr\Plugin\ConsentValidation\Contact\PostPlugin"/>
+    </type>
+    <type name="Magento\Newsletter\Controller\Subscriber\NewAction">
+        <plugin name="amasty-gdpr-validate-newsletter-consent" type="Amasty\Gdpr\Plugin\ConsentValidation\Newsletter\NewActionPlugin"/>
+    </type>
+</config>

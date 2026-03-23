@@ -1,0 +1,12 @@
+@import "./components/result-page.css";
+@import "./components/autocomplete.css";
+@import "./components/module.css";
+@import "./components/header-type.css";
+
+@theme {
+    --max-width-am-search-sidebar: 20%;
+    --max-width-am-search-content: 80%;
+
+    --flex-am-search-sidebar: 0 1 100%;
+    --height-carousel-product-item: 540px;
+}

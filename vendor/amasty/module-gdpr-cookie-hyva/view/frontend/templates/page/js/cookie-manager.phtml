@@ -1,0 +1,96 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+?>
+
+<script data-cfasync="false">
+    (function (amastyCookieManager) {
+        'use strict';
+
+        amastyCookieManager.pattern = '{(?<cookiePattern>.*)}';
+
+        amastyCookieManager.getAmastyCookieGroupStorage = function () {
+            return Alpine.store('AmastyCookieGroups') ?? {};
+        };
+
+        amastyCookieManager.deleteDisallowedCookie = function () {
+            const amastyCookieGroupStorage = this.getAmastyCookieGroupStorage();
+            const disallowedCookies = amastyCookieGroupStorage?.getDisallowedCookies() ?? [];
+
+            disallowedCookies.forEach((name) => {
+                const pattern = name.match(this.pattern);
+                if (!!pattern && !!amastyCookieGroupStorage) {
+                    const cookiePattern = amastyCookieGroupStorage.getCookiePattern(pattern.groups.cookiePattern) ?? '';
+
+                    amastyCookieGroupStorage.getCookiesByPattern(cookiePattern).forEach((cookieName) => {
+                        this.deleteNotEssentialCookie(cookieName);
+                    });
+                } else {
+                    this.deleteNotEssentialCookie(name);
+                }
+            });
+        };
+
+        amastyCookieManager.isCookieAllowed = function (cookieName) {
+            const allowedGroups = hyva.getCookie('amcookie_allowed');
+            const disallowedCookie = this.getAmastyCookieGroupStorage()?.getDisallowedCookies() ?? [];
+            const isCookiePolicyAllowed = hyva.getCookie('amcookie_policy_restriction') === 'allowed';
+            const isCookieEssential = this.getAmastyCookieGroupStorage()?.isCookieEssential(cookieName);
+            const isCookieEssentialByPattern = this.getAmastyCookieGroupStorage()?.isEssentialByPattern(cookieName, this.pattern);
+
+            if (!isCookiePolicyAllowed || isCookieEssential || isCookieEssentialByPattern) {
+                return true;
+            }
+
+            return !((!allowedGroups && !disallowedCookie) || this.isCookieDisallowed(cookieName));
+        };
+
+        amastyCookieManager.isCookieDisallowed = function (cookieName) {
+            const amastyCookieGroupStorage = this.getAmastyCookieGroupStorage();
+            const disallowedCookies = amastyCookieGroupStorage?.getDisallowedCookies() ?? [];
+
+            return disallowedCookies.some((cookie) => {
+                const pattern = cookie.match(this.pattern);
+
+                return !!pattern && !!cookieName.match(amastyCookieGroupStorage?.getCookiePattern(pattern.groups.cookiePattern));
+            }) || disallowedCookies.indexOf(cookieName) !== -1;
+        };
+
+        amastyCookieManager.processManageableCookies = function () {
+            let cookieScripts = document.querySelectorAll('script[data-amcookie-groupid][type="text/plain"]');
+
+            cookieScripts.forEach((elem) => {
+                if (this.isChecked(elem.dataset['amcookie-groupid'])) {
+                    let elClone = elem.cloneNode(true).setAttribute('type', 'text/javascript');
+
+                    elem.remove();
+                    document.body.appendChild(elClone);
+                }
+            });
+        };
+
+        amastyCookieManager.deleteNotEssentialCookie = function (cookieName) {
+            if (!this.getAmastyCookieGroupStorage()?.isCookieEssential(cookieName)) {
+                hyva.setCookie(cookieName, '', -1, true);
+            }
+        };
+
+        amastyCookieManager.setLastCookieAcceptance = function (lastUpdate) {
+            localStorage.setItem('am-last-cookie-acceptance', lastUpdate);
+        };
+
+        window.addEventListener('amasty-cookie-group-updated', () => {
+            amastyCookieManager.deleteDisallowedCookie();
+        });
+
+        window.addEventListener('private-content-loaded', () => {
+            amastyCookieManager.getAmastyCookieGroupStorage()?.hasGroupData() && amastyCookieManager.deleteDisallowedCookie();
+        });
+    }(window.amastyCookieManager = window.amastyCookieManager || {}));
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

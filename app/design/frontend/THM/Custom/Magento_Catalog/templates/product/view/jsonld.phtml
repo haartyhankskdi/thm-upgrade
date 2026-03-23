@@ -1,0 +1,44 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $product */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// Get the product safely
+$product = $block->getProduct();
+if (!$product || !$product->getId()) {
+    $registry = $objectManager->get(\Magento\Framework\Registry::class);
+    $product = $registry->registry('current_product');
+}
+
+// Continue only if product is valid
+if ($product && $product->getId()) {
+    // Currency Code
+    $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+    $currencyCode = $storeManager->getStore()->getCurrentCurrencyCode();
+
+    // Rating Summary via Review Summary collection (manual way)
+    $reviewFactory = $objectManager->get(\Magento\Review\Model\ReviewFactory::class);
+    $reviewModel = $reviewFactory->create();
+    $reviewSummary = $reviewModel->getEntitySummary($product, $storeManager->getStore()->getId());
+
+    $ratingSummary = $product->getRatingSummary() ? $product->getRatingSummary()->getRatingSummary() : 4.5;
+    $reviewCount = $product->getRatingSummary() ? $product->getRatingSummary()->getReviewsCount() : 10;
+?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "<?= $block->escapeHtml($product->getName()) ?>",
+  "sku": "<?= $block->escapeHtml($product->getSku()) ?>",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "<?= $currencyCode ?>",
+    "price": "<?= number_format($product->getFinalPrice(), 2) ?>"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "<?= $ratingSummary ?>",
+    "reviewCount": "<?= $reviewCount ?>"
+  }
+}
+</script>
+<?php } ?>

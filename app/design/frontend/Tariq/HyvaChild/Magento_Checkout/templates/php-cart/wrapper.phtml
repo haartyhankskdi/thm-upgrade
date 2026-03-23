@@ -1,0 +1,41 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Checkout\Block\Cart;
+use Magento\Framework\Escaper;
+
+/** @var Cart $block */
+/** @var Escaper $escaper */
+?>
+
+<div class="flex flex-col lg:flex-row-reverse lg:items-start gap-8 mb-10">
+    <div class="lg:w-[370px] 2xl:w-96 lg:sticky lg:top-2 mt-6 order-2 md:order-1">
+        <div class="flex flex-col mb-2 pb-3 border-b-2 border-gray-300 hidden">
+            <h2 class="text-2xl text-center text-gray-900 title-font font-base md:text-left">
+                <?= $escaper->escapeHtml(__('Summary')) ?>
+            </h2>
+        </div>
+        <?= $block->getChildHtml('cart.summary') ?>
+    </div>
+    <div class="lg:flex-1 w-full lg:w-[820px] order-1 md:order-2">
+        <?= $block->getChildHtml('form_before') ?>
+
+        <?= $block->getChildHtml('cart-items') ?>
+
+    <?= $block->getLayout()
+    ->createBlock('Magento\Framework\View\Element\Template')
+    ->setTemplate('Magento_Checkout::php-cart/best-selling.phtml')
+    ->toHtml();
+?>
+        <?= $block->getChildHtml('checkout_cart_widget') ?>
+        <?= $block->getChildHtml('cart.discount') ?>
+    </div>
+
+</div>

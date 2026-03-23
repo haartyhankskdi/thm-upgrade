@@ -1,0 +1,37 @@
+{
+    "extensions": [
+        {
+            "src": "vendor\/hyva-themes\/magento2-theme-module\/src"
+        },
+        {
+            "src": "app\/code\/Amasty\/ShopbyHyvaCompatibility"
+        },
+        {
+            "src": "app\/code\/Amasty\/StorelocatorHyva"
+        },
+        {
+            "src": "vendor\/amasty\/module-xsearch-hyva-compatibility"
+        },
+        {
+            "src": "vendor\/amasty\/module-gdpr-cookie-hyva"
+        },
+        {
+            "src": "app\/code\/Amasty\/ShopByBrandSubscriptionFunctionalityHyva"
+        },
+        {
+            "src": "vendor\/magefan\/hyva-theme-blog"
+        },
+        {
+            "src": "vendor\/mollie\/magento2-hyva-compatibility\/src\/Mollie_HyvaCompatibility"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-hyva-widgets\/src"
+        },
+        {
+            "src": "app\/code\/Mageplaza\/SocialLogin"
+        },
+        {
+            "src": "vendor\/monsoonconsulting\/magento2-hyva-ajax-add-to-cart"
+        }
+    ]
+}

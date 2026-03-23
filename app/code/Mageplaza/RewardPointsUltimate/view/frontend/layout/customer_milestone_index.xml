@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<!--    <update handle="mp_font_awesome"/>-->
+    <update handle="rewards_account"/>
+    <head>
+        <css src="Mageplaza_Core::css/grid-mageplaza.css"/>
+        <css src="Mageplaza_RewardPointsUltimate::css/style.css"/>
+        <css src="https://use.fontawesome.com/releases/v6.3.0/css/all.css" src_type="url"/>
+    </head>
+    <body>
+        <referenceBlock name ="sidebar.main.reward_nav">
+            <arguments>
+                <argument name="block_title" translate="true" xsi:type="string">My Milestones</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Mageplaza\RewardPointsUltimate\Block\Milestone\Tier" name="mp_reward_tier"
+                   template="Mageplaza_RewardPointsUltimate::account/milestone/range.phtml" cacheable="false">
+                <block class="Mageplaza\RewardPointsUltimate\Block\Milestone\Tier" name="mp_rw_tier_information"
+                       template="Mageplaza_RewardPointsUltimate::account/dashboard.phtml" as="mp_information"/>
+                <block class="Mageplaza\RewardPointsUltimate\Block\Milestone\Transactions" name="mp_reward_milestone_transactions"
+                       template="Mageplaza_RewardPointsUltimate::account/milestone/transactions.phtml" as="mp_transaction"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

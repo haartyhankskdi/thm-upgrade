@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amasty_gdpr" translate="label" type="text" sortOrder="160504" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Personal Data Protection</label>
+            <tab>amasty</tab>
+            <resource>Amasty_Gdpr::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment>On the Frontend.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="display_pp_popup" translate="label tooltip" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Privacy Policy Popup on First Visit</label>
+                    <tooltip><![CDATA[When a new customer opens the website, the privacy policy popup will be displayed. When a new version of Privacy Policy is issued, the popup will be displayed to those users who have not accepted the policy yet.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="country_restrictions" translate="label tooltip" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Country Restrictions</label>
+                    <source_model>Amasty\GdprCookie\Model\Config\Source\CountryRestrictions</source_model>
+                    <tooltip>It is possible to adjust the visibility of Privacy Policy Popup on frontend according to customer location. Enable the Privacy Policy Popup for All Countries, EEA Countries or specific Countries selected in the list below.</tooltip>
+                </field>
+                <field id="countries" translate="label" type="multiselect" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display for Specific Countries</label>
+                    <source_model>Amasty\GdprCookie\Model\Config\Source\Countries</source_model>
+                    <depends>
+                        <field id="country_restrictions">2</field>
+                    </depends>
+                </field>
+                <field id="log_guest" translate="label comment tooltip" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Log Guest Consent</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If enabled, guest users who give the consent will be logged and displayed in Consent Log.</tooltip>
+                </field>
+                <field id="auto_cleaning" translate="label comment tooltip" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Log Auto-Cleaning</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>The records that were saved for a longer period than the specified below will be automatically removed from Consent and Action Logs.</tooltip>
+                </field>
+                <field id="auto_cleaning_days" translate="label comment tooltip" type="text" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Log Auto-Cleaning Period (Days)</label>
+                    <tooltip>The records that were saved for a longer period than you specified in the field will be automatically removed from Consent and Action Logs.</tooltip>
+                    <validate>required-entry validate-number validate-greater-than-zero validate-digits</validate>
+                    <depends>
+                        <field id="auto_cleaning">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="customer_access_control" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Customer’s Account Privacy Settings</label>
+                <field id="privacy_settings_tab_name" translate="label tooltip" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Privacy Settings Tab Name</label>
+                    <tooltip>The setting allows you to set a custom name for the privacy settings navigation link in the customer’s account.</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="policies_text_section" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Policies Text Section</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="download" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Downloading Personal Data</label>
+                    <tooltip>If enabled, customers will be able to download their personal data.</tooltip>
+                    <source_model>Amasty\Gdpr\Model\Config\Source\YesNoRecommended</source_model>
+                </field>
+                <field id="anonymize" translate="label tooltip" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Anonymizing Personal Data</label>
+                    <tooltip>If enabled, customers will be able to anonymize their personal data.</tooltip>
+                    <source_model>Amasty\Gdpr\Model\Config\Source\YesNoRecommended</source_model>
+                </field>
+                <field id="delete" translate="label tooltip" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Deleting Account</label>
+                    <tooltip>If enabled, customers will be able to delete their accounts.</tooltip>
+                    <source_model>Amasty\Gdpr\Model\Config\Source\YesNoRecommended</source_model>
+                </field>
+                <field id="consent_opting" translate="label tooltip" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Opting Out from Given Consent</label>
+                    <tooltip>If enabled, the section Given Consent will be added to customer account for customers to be able to opt in or opt out from given consent. The checkboxes with the enabled option ‘Hide the Checkbox after User Gave the Consent’ will be displayed under the Given Consent section. When the option 'Hide the Checkbox after User Gave the Consent’ is disabled for checkboxes, they will not be added to the Given Consent section since the system will always display these checkboxes on selected forms even if the consent was given.</tooltip>
+                    <source_model>Amasty\Gdpr\Model\Config\Source\YesNoRecommended</source_model>
+                </field>
+                <field id="skip_empty_fields" translate="label tooltip" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Download Fields with Filled Values Only</label>
+                    <tooltip>If enabled, the fields with empty values will be skipped in downloaded files.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="excluded_fields" translate="label comment" type="textarea" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Exclude Fields from Download</label>
+                    <comment>Each field name from a new line.</comment>
+                    <config_path>amasty_gdpr/general/excluded_fields</config_path>
+                </field>
+                <field id="display_dpo_info" translate="label tooltip" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Data Protection Officer Information</label>
+                    <tooltip>If enabled, customers will be able to get information about your Data Protection Officer added to a separate section at their accounts.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="dpo_section_name" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Section Name</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="display_dpo_info">1</field>
+                    </depends>
+                </field>
+                <field id="dpo_email" translate="label comment tooltip" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data Protection Officer Email</label>
+                    <validate>validate-email</validate>
+                    <comment>You can set only one email address in this field.</comment>
+                    <tooltip>Email address of the Data Protection Officer or department within your company.</tooltip>
+                    <depends>
+                        <field id="display_dpo_info">1</field>
+                    </depends>
+                </field>
+                <field id="dpo_info" translate="label" type="editor" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data Protection Officer information</label>
+                    <validate>required-entry</validate>
+                    <frontend_model>Amasty\Gdpr\Block\Adminhtml\Config\Editor</frontend_model>
+                    <depends>
+                        <field id="display_dpo_info">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="personal_data" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Personal Data Deletion and Anonymization</label>
+                <group id="automatic_personal_data_deletion" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatic Personal Data Deletion</label>
+                    <field id="personal_data_deletion" translate="label comment tooltip" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Delete Personal Data of Abandoned Customer’s Accounts</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <tooltip>The extension will scan customers and their orders. If a customer’s last order was made earlier than the specified number of days the extension will create a deletion request. You will be able to find it on the ‘Delete Requests’ grid</tooltip>
+                    </field>
+                    <field id="personal_data_deletion_days" translate="label comment tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Abandoned Customer’s Accounts Automatic Deletion Period (Days)</label>
+                        <tooltip>The extension will scan customers and their orders. If a customer’s last order was made earlier than the specified number of days the extension will create a deletion request. You will be able to find it on the ‘Delete Requests’ grid.</tooltip>
+                        <validate>required-entry validate-number validate-greater-than-zero validate-digits</validate>
+                        <depends>
+                            <field id="personal_data_deletion">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <group id="anonymization_data" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Prevent Data Deletion of Recent Orders</label>
+                    <field id="personal_data_stored" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Deletion of Personal Data in Recent Documents</label>
+                        <source_model>Amasty\Gdpr\Model\Config\Source\YesNoDelete</source_model>
+                        <tooltip><![CDATA[When a customer asks to delete personal data and the request is approved, the extension deletes their account, subscriptions, and the data in orders, invoices, shipments, and credit memos. Given disabled, it could cause problem for a store owner as these should be stored for a specific period of time.<br><br>The feature keeps personal data untouched in orders, invoices, shipments and credit memos for the set period after deleting customer’s account. When the period expires the personal data in the documents will be automatically deleted.]]></tooltip>
+                    </field>
+                    <field id="personal_data_stored_days" translate="label comment tooltip" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Prevent Data Deletion Period (Days)</label>
+                        <tooltip>After a customer deletes the account, personal data will stay untouched in orders, invoices, shipments and credit memos for the set period. When the set time expires the personal data will be automatically deleted.</tooltip>
+                        <depends>
+                            <field id="personal_data_stored">1</field>
+                        </depends>
+                        <validate>required-entry validate-number validate-greater-than-zero validate-digits</validate>
+                    </field>
+                    <field id="avoid_anonymisation" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Anonymization/Deletion of Personal Data for Orders in Specified Status(es)</label>
+                        <tooltip>If enabled a customer won’t be allowed anonymizing and deleting their personal data if the order is now in one of the specified statuses. A store admin won't be able to approve a request for personal data deletion as well.</tooltip>
+                        <source_model>Amasty\Gdpr\Model\Config\Source\YesNoAllowDeleteForStatus</source_model>
+                        <config_path>amasty_gdpr/general/avoid_anonymisation</config_path>
+                    </field>
+                    <field id="order_statuses" translate="label comment" type="multiselect" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Order Statuses</label>
+                        <source_model>Amasty\Gdpr\Model\Config\Source\Order\Status</source_model>
+                        <validate>required-entry</validate>
+                        <depends>
+                            <field id="avoid_anonymisation">1</field>
+                        </depends>
+                        <config_path>amasty_gdpr/general/order_statuses</config_path>
+                    </field>
+                    <field id="gift_registry_anonymisation" translate="label comment tooltip" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Forbid Customer's Personal Data Anonymization and Deletion if They Have Gift Registries</label>
+                        <tooltip>If enabled, a customer's personal data won't be allowed for anonymization or deletion by a customer or admin if the customer has an active gift registry.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <frontend_model>Amasty\Gdpr\Block\Adminhtml\Config\GiftRegistryAnonymization</frontend_model>
+                        <config_path>amasty_gdpr/general/gift_registry_anonymisation</config_path>
+                    </field>
+                </group>
+            </group>
+            <group id="email_notification" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Notifications</label>
+                <group id="anonymization_notification" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Anonymization Notifications</label>
+                    <field id="enable_anonymization_notification" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>amasty_gdpr/anonymisation_notification/enable_anonymization_notification</config_path>
+                    </field>
+                    <field id="sender" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Sender</label>
+                        <tooltip>Customers are able to anonymize their personal data. After anonymizing, they will get an email with the new credentials for login their account.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>amasty_gdpr/anonymisation_notification/sender</config_path>
+                        <depends>
+                            <field id="enable_anonymization_notification">1</field>
+                        </depends>
+                    </field>
+                    <field id="reply_to" translate="label comment tooltip" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Reply To</label>
+                        <comment>You can set only one email address in this field.</comment>
+                        <tooltip>Specify the email address for customer's replies or leave blank to use the sender address.</tooltip>
+                        <validate>validate-email</validate>
+                        <config_path>amasty_gdpr/anonymisation_notification/reply_to</config_path>
+                        <depends>
+                            <field id="enable_anonymization_notification">1</field>
+                        </depends>
+                    </field>
+                    <field id="template" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Email Template</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <config_path>amasty_gdpr/anonymisation_notification/template</config_path>
+                        <depends>
+                            <field id="enable_anonymization_notification">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <group id="deletion_notification" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Deletion Notifications</label>
+                    <group id="manager_notification" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Manager Notification</label>
+                        <field id="enable_admin_notification" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Notify Manager on Deletion Request</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <tooltip>Your Magento store admin user will get an email when a customer submits a new request for deleting their account.</tooltip>
+                            <config_path>amasty_gdpr/deletion_notification/enable_admin_notification</config_path>
+                        </field>
+                        <field id="admin_sender" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Email Sender</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/admin_sender</config_path>
+                            <depends>
+                                <field id="enable_admin_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="admin_reciever" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Send Email To</label>
+                            <comment>This will be used in the "To" field. Several emails should be written on a separate line.</comment>
+                            <config_path>amasty_gdpr/deletion_notification/admin_reciever</config_path>
+                            <depends>
+                                <field id="enable_admin_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="admin_template" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Email Template</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/admin_template</config_path>
+                            <depends>
+                                <field id="enable_admin_notification">1</field>
+                            </depends>
+                        </field>
+                    </group>
+                    <group id="approve_notification" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Customer’s Approval Notification</label>
+                        <field id="enable_approve_deletion_notification" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Enabled</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/enable_approve_deletion_notification</config_path>
+                        </field>
+                        <field id="sender" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Email Sender</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/sender</config_path>
+                            <depends>
+                                <field id="enable_approve_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="reply_to" translate="label comment tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Email Reply To</label>
+                            <comment>You can set only one email address in this field.</comment>
+                            <tooltip>Specify the email address for customer's replies or leave blank to use the sender address.</tooltip>
+                            <validate>validate-email</validate>
+                            <config_path>amasty_gdpr/deletion_notification/reply_to</config_path>
+                            <depends>
+                                <field id="enable_approve_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Email Template</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/template</config_path>
+                            <depends>
+                                <field id="enable_approve_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                    </group>
+                    <group id="deny_notification" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Customer’s Deny Notification</label>
+                        <field id="enable_deny_deletion_notification" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Enabled</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/enable_deny_deletion_notification</config_path>
+                        </field>
+                        <field id="deny_sender" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Email Sender</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/deny_sender</config_path>
+                            <depends>
+                                <field id="enable_deny_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="deny_reply_to" translate="label comment tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Email Reply To</label>
+                            <comment>You can set only one email address in this field.</comment>
+                            <tooltip>Specify the email address for customer's replies or leave blank to use the sender address.</tooltip>
+                            <validate>validate-email</validate>
+                            <config_path>amasty_gdpr/deletion_notification/deny_reply_to</config_path>
+                            <depends>
+                                <field id="enable_deny_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                        <field id="deny_template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Email Template</label>
+                            <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                            <config_path>amasty_gdpr/deletion_notification/deny_template</config_path>
+                            <depends>
+                                <field id="enable_deny_deletion_notification">1</field>
+                            </depends>
+                        </field>
+                    </group>
+                </group>
+                <group id="policy_change_notification" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Privacy Policy Changes Notifications</label>
+                    <field id="enable_policy_change_notification" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>amasty_gdpr/policy_change_notification/enable_policy_change_notification</config_path>
+                    </field>
+                    <field id="sender" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Sender</label>
+                        <tooltip>After changing the Privacy Policy your customers will get an email with a new version of the Privacy Policy.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>amasty_gdpr/policy_change_notification/sender</config_path>
+                        <depends>
+                            <field id="enable_policy_change_notification">1</field>
+                        </depends>
+                    </field>
+                    <field id="reply_to" translate="label comment tooltip" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Reply To</label>
+                        <comment>You can set only one email address in this field.</comment>
+                        <tooltip>Specify the email address for customer's replies or leave blank to use the sender address.</tooltip>
+                        <validate>validate-email</validate>
+                        <config_path>amasty_gdpr/policy_change_notification/reply_to</config_path>
+                        <depends>
+                            <field id="enable_policy_change_notification">1</field>
+                        </depends>
+                    </field>
+                    <field id="template" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Email Template</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <config_path>amasty_gdpr/policy_change_notification/template</config_path>
+                        <depends>
+                            <field id="enable_policy_change_notification">1</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

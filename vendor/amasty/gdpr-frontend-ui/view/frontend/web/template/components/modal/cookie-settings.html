@@ -1,0 +1,63 @@
+<div css="modalClass">
+    <p class="amgdprcookie-description" if="$data.description" data-bind="html: $data.description"></p>
+    <div class="amgdprcookie-main-wrapper">
+        <form id="amgdprcookie-form" class="amgdprcookie-settings-form" data-amcookie-js="form-cookie">
+            <div class="amgdprcookie-form-container"
+                 role="group"
+                 data-bind="
+                    attr: {
+                        'aria-label': $t('Please select and accept your Cookies Group')
+                    }
+                 "
+            >
+                <!-- ko foreach: items -->
+                <div class="amgdprcookie-cookie-container">
+                    <div class="amgdprcookie-header">
+                        <h3 class="amgdprcookie-caption"
+                            data-bind="text: name, attr: { id: 'amgdprcookie-caption-' + groupId }"
+                        ></h3>
+                        <div class="amgdprcookie-toggle-cookie">
+                            <input class="amgdprcookie-input"
+                                   type="checkbox"
+                                   data-amcookie-js="field"
+                                   name="groups[]"
+                                   data-bind="
+                                    value: groupId,
+                                    attr: {id: 'switchBox-' + groupId, disabled: isEssential},
+                                    checked: checked,
+                                    keyboard: {
+                                        13: () => { $element.checked = !$element.checked },
+                                    }">
+                            <label class="amgdprcookie-label"
+                                   data-bind="
+                                        attr: { for: 'switchBox-' + groupId },
+                                        text: name
+                                   "
+                            ></label>
+                        </div>
+                    </div>
+                    <p class="amgdprcookie-text" data-bind="html: description"></p>
+                    <a class="amgdprcookie-options"
+                       href="#"
+                       data-bind="
+                            i18n: 'More Information',
+                            attr: {
+                                'aria-label': `${$t('More Information')} ${$t('About')} ${name} ${$t('Cookie Group')}`
+                            },
+                            click: $parents[1].getInformationModal.bind($parents[1], $data)">
+                    </a>
+                </div>
+                <!-- /ko -->
+            </div>
+            <div class="amgdprcookie-buttons-block -settings">
+                <button class="amgdprcookie-done"
+                        data-role="action"
+                        type="button"
+                        data-bind="
+                            text: settings.doneButtonText,
+                            click: () => saveCookie($element, $parent)">
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

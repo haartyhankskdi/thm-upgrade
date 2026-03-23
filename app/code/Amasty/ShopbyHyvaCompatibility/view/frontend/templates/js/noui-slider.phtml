@@ -1,0 +1,43 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (document.querySelectorAll('.amshopby-slider-wrapper').length === 0) {
+            return;
+        }
+        if (window._amNoUiSliderLoaded) {
+            return;
+        }
+        // load nouiSlider
+        const script = document.createElement('script');
+        script.src = '<?= $escaper->escapeUrl($block->getViewFileUrl('Amasty_ShopbyHyvaCompatibility::js/nouislider.min.js')) ?>';
+        script.async = true;
+        document.body.appendChild(script);
+
+        window._amNoUiSliderLoaded = true;
+
+        script.onload = () => {
+            window.dispatchEvent(new CustomEvent('noUiSliderLoaded', {}));
+        }
+
+        const styles = document.createElement('link');
+        styles.rel = 'stylesheet';
+        styles.href = '<?= $escaper->escapeUrl($block->getViewFileUrl('Amasty_ShopbyHyvaCompatibility::css/nouislider.min.css')) ?>';
+        document.head.appendChild(styles);
+    });
+</script>

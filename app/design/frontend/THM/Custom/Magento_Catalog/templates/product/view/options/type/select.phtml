@@ -1,0 +1,82 @@
+<?php
+/** @var $block \Magento\Catalog\Block\Product\View\Options\Type\Select */
+$_option = $block->getOption();
+$product = $block->getProduct();
+$optionId = $_option->getId();
+$values = $_option->getValues();
+?>
+
+
+
+<div class="product-options-wrapper">
+    <div class="field<?= $_option->getIsRequire() ? ' required' : '' ?>">
+        <label class="label" for="select_<?= $optionId ?>">
+            <span><?= $block->escapeHtml($_option->getTitle()) ?></span>
+        </label>
+
+        <!-- Tab Buttons -->
+        <div class="custom-option-tabs" data-option-id="<?= $optionId ?>">
+        <?php foreach ($values as $_value): ?>
+            <button type="button"
+                    class="custom-option-btn"
+                    data-value="<?= $_value->getOptionTypeId() ?>"
+                    data-price="<?= $_value->getPrice() ?>">
+                <?= $block->escapeHtml($_value->getTitle()) ?>
+            </button>
+        <?php endforeach; ?>
+        </div>
+
+        <!-- Hidden Select (Magento needs this) -->
+        <select name="options[<?= $optionId ?>]"
+                id="select_<?= $optionId ?>"
+                class="product-custom-option admin__control-select<?= $_option->getIsRequire() ? ' required' : '' ?>"
+                data-selector="options[<?= $optionId ?>]"
+                <?= $_option->getIsRequire() ? 'aria-required="true"' : '' ?>
+                style="display:none;">
+            <option value="">-- <?= __('Please Select') ?> --</option>
+            <?php foreach ($values as $_value): ?>
+                <option value="<?= $_value->getOptionTypeId() ?>">
+                    <?= $block->escapeHtml($_value->getTitle()) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "customOptions": {
+            "optionId": "<?= $optionId ?>"
+        }
+    }
+}
+</script>
+
+<style>
+    .custom-option-tabs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+    .custom-option-tabs button {
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        background: #f5f5f5;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .custom-option-tabs button.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+    .custom-option-btn {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        display: inline-block;
+    }
+</style> 

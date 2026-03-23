@@ -1,0 +1,21 @@
+<?php 
+$current_cat = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Subcategories::class);
+$category = $current_cat->getCurrentCategory();
+
+if (!$category) {
+    return;
+}
+?>
+
+<div class="py-8 lg:py-10 px-5 bg-white">
+    <!-- Title -->
+    <h2 class="text-2xl font-light text-center mb-6 lg:text-[38px] text-black">
+        Select Your <strong class="font-bold">Category</strong>
+    </h2>
+     <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-2 mb-10"></span>
+
+    <!-- Category Grid -->
+    <div class="category-top-list grid grid-cols-2 gap-2 md:flex md:gap-5 md:justify-center scroll-item">
+        <?= $current_cat->getSubcategoryHtml($category) ?>
+    </div>
+</div>

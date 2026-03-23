@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <column name="brippo_threed" class="\Ebizmarts\BrippoPayments\Ui\Component\Listing\Column\ThreeDSecureCheck">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">Brippo 3D Secure Result</item>
+                    <item name="label" xsi:type="string" translate="true">Brippo 3D Secure Result</item>
+                    <item name="sortOrder" xsi:type="number">22</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </column>
+        <column name="brippo_fraud" class="\Ebizmarts\BrippoPayments\Ui\Component\Listing\Column\FraudColumn">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">Brippo Fraud Risk</item>
+                    <item name="label" xsi:type="string" translate="true">Brippo Fraud Risk</item>
+                    <item name="sortOrder" xsi:type="number">23</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </column>
+        <column name="brippo_streetCheck" class="\Ebizmarts\BrippoPayments\Ui\Component\Listing\Column\StreetCheck">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">Brippo Street Check</item>
+                    <item name="label" xsi:type="string" translate="true">Brippo Street Check</item>
+                    <item name="sortOrder" xsi:type="number">24</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </column>
+        <column name="brippo_zipCheck" class="\Ebizmarts\BrippoPayments\Ui\Component\Listing\Column\ZipCheck">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">Brippo Zip Check</item>
+                    <item name="label" xsi:type="string" translate="true">Brippo Zip Check</item>
+                    <item name="sortOrder" xsi:type="number">25</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </column>
+        <column name="brippo_cvcCheck" class="\Ebizmarts\BrippoPayments\Ui\Component\Listing\Column\CvcCheck">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">Brippo CVC Check</item>
+                    <item name="label" xsi:type="string" translate="true">Brippo CVC Check</item>
+                    <item name="sortOrder" xsi:type="number">26</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </column>
+    </columns>
+</listing>

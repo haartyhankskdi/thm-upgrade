@@ -1,0 +1,28 @@
+{
+    "name": "amasty/module-xsearch-hyva-compatibility",
+    "description": "This module makes Amasty Advanced Search compatible with Hyv\u00e4 Themes",
+    "type": "magento2-module",
+    "version": "1.2.1",
+    "require": {
+        "php": ">=7.4.0",
+        "magento/framework": ">=102.0.0",
+        "amasty/xsearch": ">=1.18.4",
+        "amasty/module-elastic-search-graphql": ">=1.1.0",
+        "hyva-themes/magento2-default-theme": ">=1.2.3",
+        "hyva-themes/magento2-compat-module-fallback": ">=1.1.2",
+        "hyva-themes/magento2-graphql-view-model": ">=1.0.3",
+        "amasty/base": ">=1.21.1"
+    },
+    "suggest": {
+        "amasty/module-product-labels-advanced-search": "This module allows you to add product labels to the search popup"
+    },
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\XsearchHyvaCompatibility\\": ""
+        }
+    }
+}

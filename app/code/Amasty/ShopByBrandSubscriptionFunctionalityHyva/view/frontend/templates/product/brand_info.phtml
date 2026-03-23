@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality Hyva
+ */
+
+use Amasty\ShopByBrandSubscriptionFunctionality\Block\Product\BrandInfo;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Escaper $escaper
+ * @var HeroiconsSolid $heroicons
+ * @var BrandInfo $block
+ * @var ViewModelRegistry $viewModels
+ */
+
+$heroicons = $viewModels->require(HeroiconsSolid::class);
+$product = $block->getProduct();
+if (!$product) {
+    return;
+}
+?>
+
+<?php foreach (array_values($block->getBrandListingViewModel()->getBrands($product)) as $index => $brand): ?>
+    <?php if ($block->getBrandInfoViewModel()->isShow($brand)): ?>
+        <div class="ambrand-info-block">
+            <?php if ($index): ?>
+                <hr class="ambrand-info-separator mb-4 mt-2">
+            <?php endif; ?>
+            <span class="ambrand-info-title text-base leading-loose"><?= $escaper->escapeHtml($brand->getTitle() ?: $brand->getAttributeOption()->getLabel()) ?>:</span>
+            <div class="ambrand-info flex mb-8 sm:px-0">
+                <div class="min-w-sm"><?= $heroicons->informationCircleHtml('mr-2 fill-blue-500', 24, 24) ?></div>
+                <div class="ambrand-info-values">
+                    <?php foreach ($block->getBrandInfoViewModel()->getBrandInfoValues($brand) as $brandInfoValue): ?>
+                        <p class="ambrand-info-value mb-0"><?= $escaper->escapeHtml($brandInfoValue, ['u', 'b', 'i', 'br', 'a']) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endforeach; ?>

@@ -1,0 +1,51 @@
+.product-item {
+    .price-container {
+        @apply block;
+
+        .price {
+            @apply font-semibold text-lg;
+        }
+
+        .price-label {
+            @apply text-sm;
+        }
+    }
+
+    .special-price .price-container .price-label {
+        @apply sr-only;
+    }
+
+    .old-price .price-container {
+        @apply text-gray-500;
+
+        .price {
+            @apply font-normal text-base;
+        }
+    }
+}
+
+
+#cart-toast-container .cart-toast.success {
+    @apply border p-6 rounded-none shadow-lg w-[90%] mx-auto text-center;
+}
+#cart-toast-container .cart-toast.success span {
+    @apply flex flex-col items-center justify-center w-full;
+}
+#cart-toast-container .cart-toast.success span a {
+    @apply inline-block mt-5 bg-[#3B7E48] hover:bg-[#E63833] text-white px-5 py-2 rounded-full text-base !no-underline;
+}
+#cart-toast-container .cart-toast.success .toast-close {
+    @apply absolute -right-5 -top-5 bg-black text-white rounded-full w-10 h-10 text-3xl font-normal;
+}
+
+.product-item .custom-label-image {
+    @apply absolute top-0 right-0 w-[80px] h-[80px] z-[99];
+}
+
+.products.list .list-out-of-stock .out-of-stock{
+    @apply w-full inline-block bg-gray-100 text-red text-sm md:text-base font-normal px-2 py-3 rounded-full transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl uppercase mt-3;
+}
+
+/*#cart-toast-container {
+    @apply fixed top-0 left-0 w-full max-w-full bg-black bg-opacity-50 z-50 flex items-center justify-center h-screen !transform-none;
+}*/

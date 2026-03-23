@@ -1,0 +1,27 @@
+{
+    "name": "amasty/module-store-locator",
+    "description": "Store Locator by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.19.1",
+        "amasty/module-store-locator-indexer": ">=1.0.5",
+        "amasty/geoip": "*"
+    },
+    "suggest": {
+        "amasty/module-mixin-rewrite-patch": "Install mixin rewrite patch if you have a problem with extension on Magento 2.4.2+ version on Checkout",
+        "amasty/module-graphql-application-server-compatibility": "Install this package for compatibility with GraphQL Application Server."
+    },
+    "type": "magento2-module",
+    "version": "3.5.0",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\Storelocator\\": ""
+        }
+    }
+}

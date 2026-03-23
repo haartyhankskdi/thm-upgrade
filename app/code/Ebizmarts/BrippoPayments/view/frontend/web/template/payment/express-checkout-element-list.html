@@ -1,0 +1,31 @@
+<div class="payment-method brippoExpressCheckoutElementList" data-bind="if: shouldDisplayAtCheckoutPaymentsList, visible: isWalletAvailable, afterRender: onRenderedHandler, css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span class="logos"></span>
+            <span class="title" data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <form>
+            <span id="brippoExpressCheckoutcheckout_list_error" class="message error" style="display: none;"></span>
+            <div id="brippoExpressCheckoutcheckout_list_mount" data-bind="afterRender: onRenderedHandler"></div>
+        </form>
+    </div>
+</div>

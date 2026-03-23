@@ -1,0 +1,51 @@
+name: phpstan
+on: [push, pull_request]
+
+jobs:
+    build:
+        strategy:
+          matrix:
+            include:
+              - PHP_VERSION: php73-fpm
+                MAGENTO_VERSION: 2.3.7-p4
+              - PHP_VERSION: php74-fpm
+                MAGENTO_VERSION: 2.4.0
+              - PHP_VERSION: php81-fpm
+                MAGENTO_VERSION: 2.4.6-p4
+              - PHP_VERSION: php84-fpm
+                MAGENTO_VERSION: 2.4.8
+              - PHP_VERSION: php84-fpm
+                MAGENTO_VERSION: 2.4.8
+                PHPSTAN_LEVEL: 2
+
+        name: PHP ${{ matrix.PHP_VERSION }} Magento ${{ matrix.MAGENTO_VERSION }}${{ matrix.PHPSTAN_LEVEL && format(' Level {0}', matrix.PHPSTAN_LEVEL) || '' }}
+
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Start Docker
+              run: docker run --detach --name magento-project-community-edition michielgerritsen/magento-project-community-edition:${{ matrix.PHP_VERSION }}-magento${{ matrix.MAGENTO_VERSION }}
+
+            - name: Remove version from composer.json
+              run: sed -i '/version/d' ./composer.json
+
+            - name: Upload our code into the docker container
+              run: docker cp $(pwd) magento-project-community-edition:/data/extensions/
+
+            - name: Install the extensions in Magento
+              run: docker exec magento-project-community-edition ./install-composer-package mollie/magento2:@dev
+
+            - name: Activate the extension
+              run: docker exec magento-project-community-edition ./retry "php bin/magento module:enable Mollie_Payment && php bin/magento setup:di:compile && php bin/magento setup:upgrade --keep-generated"
+
+            - name: Run PHPStan
+              continue-on-error: ${{ matrix.PHPSTAN_LEVEL == 2 }}
+              run: |
+                LEVEL_OPTION=""
+
+                if [ -n "${{ matrix.PHPSTAN_LEVEL }}" ]; then
+                  LEVEL_OPTION="--level=${{ matrix.PHPSTAN_LEVEL }}"
+                fi
+
+                docker exec magento-project-community-edition /bin/bash -c "./vendor/bin/phpstan analyse --no-progress $LEVEL_OPTION -c /data/extensions/*/phpstan.neon /data/extensions"

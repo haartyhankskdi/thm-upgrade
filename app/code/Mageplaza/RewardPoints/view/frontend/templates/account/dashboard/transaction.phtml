@@ -1,0 +1,171 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Magento\Framework\Escaper;
+
+/** @var \Mageplaza\RewardPoints\Block\Account\Dashboard\Transaction $block */
+/** @var Escaper $escaper */
+
+/** @var \Mageplaza\RewardPoints\Model\ResourceModel\Transaction\Collection $transactions */
+$transactions = $block->getTransactions();
+$helperPoints = $this->helper(\Mageplaza\RewardPoints\Helper\Point::class);
+?>
+
+<?php if (!$helperPoints->checkHyvaTheme()) : ?>
+    <div class="block-container block block-reward-dashboard-transaction">
+        <?php if ($block->getIsRecent()) : ?>
+            <div class="!border-0 text-[28px] text-black font-semibold mb-2 order">
+                <?= $block->escapeHtml(__('Recent Transactions')) ?>
+                <?php if ($transactions->getSize()) : ?>
+                    <a class="action view" href="<?= /** @noEscape */
+                    $block->getUrl('customer/rewards/transaction') ?>">
+                        <span><?= $block->escapeHtml(__('View All')) ?></span>
+                    </a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        <div class="block-content bg-white">
+            <?php if ($transactions->getSize()) : ?>
+                <div class="table-wrapper transactions-recent">
+                    <table class="data table table-transaction-items recent" id="rewards-transaction-table">
+                        <caption class="table-caption"><?= $block->escapeHtml(__('Recent Transactions')) ?></caption>
+                        <thead >
+                        <tr>
+                            <th scope="col" class="col id"><?= $block->escapeHtml(__('Transaction #')) ?></th>
+                            <th scope="col" class="col created"><?= $block->escapeHtml(__('Date')) ?></th>
+                            <th scope="col" class="col comment"><?= $block->escapeHtml(__('Comment')) ?></th>
+                            <th scope="col" class="col amount"><?= $block->escapeHtml(__('Amount')) ?></th>
+                            <th scope="col" class="col status"><?= $block->escapeHtml(__('Status')) ?></th>
+                            <th scope="col" class="col expire"><?= $block->escapeHtml(__('Expire Date')) ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($transactions as $transaction) : ?>
+                            <tr>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Transaction #')) ?>"
+                                    class="col id"><?= /** @noEscape */
+                                    $transaction->getId() ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>"
+                                    class="col created"><?= /** @noEscape */
+                                    $block->formatDate($transaction->getCreatedAt()) ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Comment')) ?>"
+                                    class="col comment"><?= /** @noEscape */
+                                    $transaction->getTitle() ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Amount')) ?>"
+                                    class="col amount"><?= /** @noEscape */
+                                    $transaction->getPointAmount() ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>"
+                                    class="col status"><?= /** @noEscape */
+                                    $transaction->getStatusLabel() ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Expire Date')) ?>"
+                                    class="col expire"><?= /** @noEscape */ $transaction->getExpirationDate()
+                                        ? $block->escapeHtml($block->formatDate($transaction->getExpirationDate())) : $block->escapeHtml(__('N/A')) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php if ($block->getPagerHtml()) : ?>
+                    <div class="reward-transactions-toolbar toolbar bottom"><?= /** @noEscape */
+                        $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            <?php else : ?>
+                <div class="message info empty"><span><?= $block->escapeHtml(__('You have created no transactions.')) ?></span></div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php else : ?>
+    <!-- Compatible with Hyva theme -->
+    <div class="block block-reward-dashboard-transaction mb-4 bg-[#F5F9F7] py-4 md:py-8 my-4 md:mt-8">
+        <?php if ($block->getIsRecent()) : ?>
+            <div class="block-title order pb-4 mb-6 flex justify-between">
+                <strong><?= $block->escapeHtml(__('Recent Transactions')) ?></strong>
+                <?php if ($transactions->getSize()) : ?>
+                    <a class="action view bg-[#E63833] hover:bg-[#3B7E48] text-white text-sm font-normal px-4 py-2 rounded-full transition-all duration-300 " href="<?= /** @noEscape */
+                    $block->getUrl('customer/rewards/transaction') ?>">
+                        <span><?= $block->escapeHtml(__('View All')) ?></span>
+                    </a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        <div class="block-content md:bg-white px-2 md:px-0 mx-0">
+            <?php if ($transactions->getSize()) : ?>
+            <div class="mb-4">
+                <div class="grid grid-cols-3 lg:grid-cols-6 mb-4">
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Transaction #')) ?></div>
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Date')) ?></div>
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Comment')) ?></div>
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Amount')) ?></div>
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Status')) ?></div>
+                    <div class="text-base font-semibold hidden md:block bg-[#E4F0E8] text-black p-2"><?= $escaper->escapeHtml(__('Expire Date')) ?></div>
+                </div>
+                    <?php $i = 0; ?>
+                    <?php foreach ($transactions as $transaction) : ?>
+                        <?php $i++; ?>
+                        <div class="grid grid-cols-1 lg:grid-cols-6 md:mb-4">
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Transaction # : </span>
+                            <?= $escaper->escapeHtml($transaction->getId()) ?>
+                        </div>
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Date : </span>
+                            <?= $escaper->escapeHtml($block->formatDate($transaction->getCreatedAt())) ?>
+                        </div>
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Comment : </span>
+                            <?= $escaper->escapeHtml($transaction->getTitle()) ?>
+                        </div>
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Amount : </span>
+                            <?= /* @noEscape */ $transaction->getPointAmount() ?>
+                        </div>
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Status : </span>
+                            <?= $escaper->escapeHtml($transaction->getStatusLabel()) ?>
+                        </div>
+                        <div class="text-sm px-0 py-2 md:p-2 lg:flex items-center action-box <?= $i % 2 === 0 ? '' : ' ' ?>">
+                            <span class="md:hidden  font-bold text-base">Expire Date : </span>
+                            <?= $escaper->escapeHtml($transaction->getExpirationDate()
+                                ? $block->escapeHtml($block->formatDate($transaction->getExpirationDate())) : $block->escapeHtml(__('N/A'))) ?>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php if ($block->getPagerHtml()) : ?>
+                    <div class="reward-transactions-toolbar toolbar bottom"><?= /** @noEscape */
+                        $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            <?php else : ?>
+                <div class="empty py-6 px-4"><span><?= $block->escapeHtml(__('You have created no transactions.')) ?></span></div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <style>
+        .block-title {
+            margin-top: 5%;
+            border-bottom: 1px solid #2c2c2c;
+        }
+        .block-title strong {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+    </style>
+<?php endif; ?>

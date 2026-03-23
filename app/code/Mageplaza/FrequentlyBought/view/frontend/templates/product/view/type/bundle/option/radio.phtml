@@ -1,0 +1,105 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_FrequentlyBought
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Magento\Bundle\ViewModel\ValidateQuantity;
+?>
+<?php /** @var \Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Radio $block */ ?>
+<?php $_option = $block->getOption(); ?>
+<?php $productId = $block->getProduct()->getId();?>
+<?php $_selections  = $_option->getSelections(); ?>
+<?php $_default     = $_option->getDefaultSelection(); ?>
+<?php list($_defaultQty, $_canChangeQty) = $block->getDefaultValues(); ?>
+<?php
+/** @var ValidateQuantity $viewModel */
+$viewModel = $block->getData('validateQuantityViewModel');
+?>
+
+
+<div class="mg-fbt-field-option field option <?php /* @noEscape */ echo ($_option->getRequired()) ? ' required': ''; ?>" id="mp-fbt-bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @noEscape */ echo $_option->getId();?>" data-price-amount="0">
+    <label class="label">
+        <span><?php echo $block->escapeHtml($_option->getTitle()) ?></span>
+    </label>
+    <div class="control">
+        <div class="nested options-list">
+            <?php if ($block->showSingle()): ?>
+                <?php /* @escapeNotVerified */ echo $block->getSelectionTitlePrice($_selections[0]) ?>
+                <input type="hidden"
+                    class="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php echo (int)$_option->getId() ?>  product bundle option"
+                    data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                    name="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php echo (int)$_option->getId() ?>]"
+                    value="<?php echo (int)$_selections[0]->getSelectionId() ?>"
+                    id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php echo (int)$_option->getId() ?>-<?php echo (int)$_selections[0]->getSelectionId() ?>"
+                    checked="checked"
+                />
+            <?php else:?>
+                <?php if (!$_option->getRequired()): ?>
+                    <div class="field choice">
+                        <input type="radio"
+                               class="radio product bundle option"
+                               data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                               id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                               name="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                               data-selector="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                               <?php echo ($_default && $_default->isSalable())?'':' checked="checked" ' ?>
+                               value=""/>
+                        <label class="label" for="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>">
+                            <span><?php /* @escapeNotVerified */ echo __('None') ?></span>
+                        </label>
+                    </div>
+                <?php endif; ?>
+                <?php foreach ($_selections as $_selection): ?>
+                    <div class="field choice">
+                        <input type="radio"
+                               class="radio product bundle option change-container-classname"
+                               data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                               id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"
+                               <?php if ($_option->getRequired()) { echo 'data-validate="{\'validate-one-required-by-name\':true}"'; }?>
+                               name="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                               data-selector="bundle_option[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                               <?php if ($block->isSelected($_selection)) { echo ' checked="checked"'; } ?>
+                               <?php if (!$_selection->isSaleable()) { echo ' disabled="disabled"'; } ?>
+                               value="<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"/>
+                        <label class="label"
+                               for="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>">
+                            <span><?php /* @escapeNotVerified */ echo $block->getSelectionTitlePrice($_selection) ?></span>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+                <div id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-container"></div>
+            <?php endif; ?>
+            <div class="field qty qty-holder">
+                <label class="label" for="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-qty-input">
+                    <span><?php /* @escapeNotVerified */ echo __('Quantity') ?></span>
+                </label>
+                <div class="control">
+                    <input <?php if (!$_canChangeQty) { echo ' disabled="disabled"'; } ?>
+                           id="bundle-option-<?php /* @noEscape */ echo $productId; ?>-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-qty-input"
+                           class="input-text qty<?php if (!$_canChangeQty) { echo ' qty-disabled'; } ?>"
+                           data-option-id="<?php /* @escapeNotVerified */ echo $_option->getId() ?>"
+                           type="number"
+                           data-validate=<?php /* @escapeNotVerified */ echo $viewModel->getQuantityValidators() ?>
+                           name="bundle_option_qty[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                           data-selector="bundle_option_qty[<?php /* @noEscape */ echo $productId; ?>][<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                           value="<?php /* @escapeNotVerified */ echo $_defaultQty ?>"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

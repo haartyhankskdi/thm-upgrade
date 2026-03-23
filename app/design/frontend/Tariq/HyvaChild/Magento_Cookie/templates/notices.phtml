@@ -1,0 +1,149 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\Store as StoreViewModel;
+use Magento\Cookie\Block\Html\Notices;
+use Magento\Framework\Escaper;
+use Magento\Cookie\Helper\Cookie;
+
+/** @var Notices $block */
+/** @var Cookie $cookieHelper */
+/** @var Escaper $escaper */
+/** @var HyvaCsp $hyvaCsp */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var StoreViewModel $storeViewModel */
+$storeViewModel = $viewModels->require(StoreViewModel::class);
+?>
+<?php
+
+$cookieHelper = $block->getData('cookieHelper');
+if ($cookieHelper->isCookieRestrictionModeEnabled()): ?>
+
+<script>
+    function initCookieBanner() {
+        const isUserAllowedSaveCookieName = '<?= /* @noEscape */ Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>';
+        const currentWebsiteId = <?= (int) $storeViewModel->getStore()->getWebsiteId() ?>;
+
+        const isAllowedSaveCookie = () => {
+            const allowedCookies = hyva.getCookie(isUserAllowedSaveCookieName);
+            const allowedCookieWebsites = allowedCookies
+                ? JSON.parse(unescape(allowedCookies))
+                : [];
+
+            return allowedCookieWebsites[currentWebsiteId] !== undefined
+                ? !! allowedCookieWebsites[currentWebsiteId]
+                : false;
+        };
+
+        return {
+            showCookieBanner: false,
+            cookieName: isUserAllowedSaveCookieName,
+            cookieValue: '<?= /* @noEscape */ $cookieHelper->getAcceptedSaveCookiesWebsiteIds() ?>',
+            cookieLifetime: '<?= /* @noEscape */ $cookieHelper->getCookieRestrictionLifetime() ?>',
+            noCookiesUrl: '<?= $escaper->escapeJs($block->getUrl('cookie/index/noCookies')) ?>',
+            checkAcceptCookies() {
+                this.showCookieBanner = ! isAllowedSaveCookie();
+            },
+            hideCookieBanner() {
+                this.showCookieBanner = false;
+            },
+            setAcceptCookies() {
+                const cookieExpires = this.cookieLifetime / 60 / 60 / 24;
+                hyva.setCookie(this.cookieName, this.cookieValue, cookieExpires);
+                if (!hyva.getCookie(this.cookieName)) {
+                    window.location.href = this.noCookiesUrl;
+                } else {
+                    window.dispatchEvent(new CustomEvent('user-allowed-save-cookie'));
+                }
+                this.showCookieBanner = false;
+            }
+        }
+    }
+    window.addEventListener('alpine:init', () => Alpine.data('initCookieBanner', initCookieBanner), {once: true})
+</script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+
+
+<section id="notice-cookie-block"
+         aria-label="<?= $escaper->escapeHtmlAttr(__('We use cookies to make your experience better.')) ?>"
+         x-data="initCookieBanner"
+         x-init="checkAcceptCookies"
+         x-defer="idle"
+>
+
+    <template x-if="showCookieBanner">
+<div>
+   <!-- Overlay -->
+<div
+    class="fixed inset-0 bg-black bg-opacity-60 z-40"
+    @click="hideCookieBanner"
+></div>
+        <div role="dialog"
+             aria-modal="true"
+             aria-label="Cookie Popup"
+             class="fixed py-0 right-0 bottom-0 z-50 flex w-full"
+        >
+        <div class="bg-white mx-4 w-full mb-4">
+
+            <button
+                @click="hideCookieBanner"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Close panel')) ?>"
+                title="<?= $escaper->escapeHtmlAttr(__('Close panel')) ?>"
+                class="absolute right-0 top-0 p-4 hidden"
+            >
+                <?= $heroicons->xHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+            </button>
+
+            <div class="p-4 w-full text-center md:text-left">
+                <div class="mb-1">
+                    <span class="font-semibold">
+                        <!-- <?//= $escaper->escapeHtml(__('We use cookies to make your experience better.')) ?> -->
+                        <h4 class="text-lg font-bold text-red-700 mb-1 md:w-auto md:inline-block"><?= $escaper->escapeHtml(__('Site Use Cookies')) ?></h4>
+                    </span>
+                </div>
+                <p class="mb-6 md:mb-2 text-sm md:w-auto md:inline-block">
+                    <span>
+                        <?= $escaper->escapeHtml(__('This site uses cookies. By using our site, you acknowledge that you have read and understood our')) ?>
+                         <a href="/cookie-policy" target="_blank"
+                       class="underline text-red-700 hover:text-red-800">
+                        <?= $escaper->escapeHtml(__('Cookie Policy')) ?>
+                    </a>, 
+                     <a target="_blank" class="underline cookies__link text-red-700 hover:text-red-800" href="/terms-conditions">Terms &amp; Conditions</a> and <a target="_blank" class="underline cookies__link text-red-700 hover:text-red-800" href="/privacy-policy">Privacy Policy</a>.
+                    </span>
+                    <div class="my-0 md:w-auto md:float-right md:-mt-6">
+                    <button @click="setAcceptCookies"
+                            id="btn-cookie-allow"
+                            class="bg-red-700 hover:bg-red-800 text-white md:text-sm  font-normal px-6 py-2 rounded-full transition duration-400"
+                    >
+                        <?= $escaper->escapeHtml(__('Yes, I Accept')) ?>
+                    </button>
+                </div>
+                </p>
+               <!--  <p class="mb-4">
+                    <a href="<?//= $escaper->escapeUrl($block->getPrivacyPolicyLink()) ?>"
+                       class="underline">
+                        <?//= $escaper->escapeHtml(__('Read our policy')) ?>
+                    </a>
+                </p> -->
+               
+            </div>
+            </div>
+        </div>
+        </div>
+    </template>
+</section>
+<?php endif; ?>

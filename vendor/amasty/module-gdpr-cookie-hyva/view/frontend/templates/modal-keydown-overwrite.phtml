@@ -1,0 +1,63 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\CookieBar;
+use Amasty\GdprCookieHyva\ViewModel\JsLayout;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+
+
+$jsLayout = $viewModels->require(JsLayout::class);
+if ($jsLayout->isAllowCustomersCloseBar()) {
+    return;
+}
+?>
+<script data-cfasync="false">
+    (function () {
+        const amCookieBarName = '<?= $escaper->escapeJs(CookieBar::REF_NAME) ?>'
+        const originalKeydownListener = window.hyva.modal.eventListeners.keydown;
+        const originalClickListener = window.hyva.modal.eventListeners.click;
+
+        document.removeEventListener('keydown', originalKeydownListener);
+        document.removeEventListener('click', originalClickListener);
+
+        window.hyva.modal.eventListeners = {
+            keydown: event => {
+                if (isAmCookieBarModal()) {
+                    return;
+                }
+
+                originalKeydownListener(event);
+            },
+            click: event => {
+                //compatibility with sidebar and cookieSettings modal - outerCLickHandler
+                if (isAmCookieBarModal()) {
+                    return;
+                }
+
+                originalClickListener(event);
+            }
+        }
+
+        /**
+         * @returns {boolean}
+         */
+        const isAmCookieBarModal = function () {
+            return window.hyva.modal.peek()?.name === amCookieBarName;
+        }
+
+        document.addEventListener('keydown', window.hyva.modal.eventListeners.keydown);
+        document.addEventListener('click', window.hyva.modal.eventListeners.click);
+    })();
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

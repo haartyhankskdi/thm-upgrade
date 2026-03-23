@@ -1,0 +1,7 @@
+@layer utilities {
+    .amlocator-review-popup-content {
+        a {
+            @apply text-blue-600 hover:underline;
+        }
+    }
+}

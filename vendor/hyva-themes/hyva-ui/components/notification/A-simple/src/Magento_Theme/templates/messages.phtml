@@ -1,0 +1,182 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Messages;
+
+/** @var Messages $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+
+/** @var HeroiconsSolid $heroicons */
+$heroIcons = $viewModels->require(HeroiconsSolid::class);
+
+/** @var StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(StoreConfig::class);
+
+$defaultSuccessMessageTimeout = $storeConfig->getStoreConfig('hyva_theme_general/messages/success_message_timeout');
+$position = (string) $block->getPosition() ?: 'end';
+$showIcon = (bool) $block->getShowIcon();
+?>
+<script>
+    <?php if ($defaultSuccessMessageTimeout): ?>
+    window.defaultSuccessMessageTimeout = <?= (int) $defaultSuccessMessageTimeout ?>;
+    <?php endif; ?>
+    function initMessages() {
+        return {
+            messages: window.mageMessages || [],
+            isEmpty() {
+                return this.messages.reduce(
+                    function (isEmpty, message) {
+                        return isEmpty && message === undefined
+                    }, true
+                )
+            },
+            hasMessages() {
+                return !this.isEmpty();
+            },
+            hasMessage() {
+                return !!this.message;
+            },
+            removeMessage() {
+                this.messages[this.index] = undefined;
+            },
+            addMessages(messages, hideAfter) {
+                messages.map((message) => {
+                    this.messages = this.messages.concat(message);
+                    if (hideAfter === undefined && message.type === 'success' && window.defaultSuccessMessageTimeout) {
+                        hideAfter = window.defaultSuccessMessageTimeout;
+                    }
+                    if (hideAfter) {
+                        this.setHideTimeOut(this.messages.length -1, hideAfter);
+                    }
+                });
+            },
+            setHideTimeOut(messageIndex, hideAfter) {
+                setTimeout((messageIndex) => {
+                    this.messages[messageIndex] = undefined;
+                }, hideAfter, messageIndex);
+            },
+            getIcon() {
+                switch (this.message.type) {
+                    case 'success':
+                        return <?= /** @noEscape */ json_encode($heroIcons->checkCircleHtml('', 56, 56)) ?>;
+                    case 'error':
+                    case 'warning':
+                        return <?= /** @noEscape */ json_encode($heroIcons->exclamationHtml('', 56, 56)) ?>;
+                    default:
+                        return <?= /** @noEscape */ json_encode($heroIcons->informationCircleHtml('', 56, 56)) ?>;
+                }
+            },
+            getTitle() {
+                switch (this.message.type) {
+                    case 'success':
+                        return '<?= $escaper->escapeHtml(__('Success')) ?>'
+                    case 'error':
+                        return '<?= $escaper->escapeHtml(__('Error')) ?>'
+                    case 'warning':
+                        return '<?= $escaper->escapeHtml(__('Warning')) ?>'
+                    case 'notice':
+                        return '<?= $escaper->escapeHtml(__('Notice')) ?>'
+                    case 'info':
+                        return '<?= $escaper->escapeHtml(__('Info')) ?>'
+                    default:
+                        return ''
+                }
+            },
+            getMessageStyle() {
+                switch (this.message.type) {
+                    case 'success':
+                        return '[--message:theme(colors.green.500)]'
+                    case 'error':
+                        return '[--message:theme(colors.red.500)]'
+                    case 'warning':
+                        return '[--message:theme(colors.yellow.500)]'
+                    case 'notice':
+                    case 'info':
+                        return '[--message:theme(colors.blue.500)]'
+                    default:
+                        return '[--message:theme(colors.slate.500)]'
+                }
+            },
+            getMessageUiId() {
+                return 'message-' + this.message.type;
+            },
+            eventListeners: {
+                ['@messages-loaded.window'](event) {
+                    this.addMessages(event.detail.messages, event.detail.hideAfter)
+                },
+                ['@private-content-loaded.window'](event) {
+                    const data = event.detail.data;
+                    if (
+                        data.messages &&
+                        data.messages.messages &&
+                        data.messages.messages.length
+                    ) {
+                        this.addMessages(data.messages.messages);
+                    }
+                },
+                ['@clear-messages.window']() {
+                    this.messages = [];
+                }
+            }
+        }
+    }
+    window.addEventListener('alpine:init', () => Alpine.data('initMessages', initMessages), {once: true})
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>
+<section
+    id="messages"
+    x-data="initMessages"
+    x-bind="eventListeners"
+    aria-live="assertive"
+    role="alert"
+>
+    <template x-if="hasMessages">
+        <div class="messages container py-6 absolute top-0 inset-x-0 flex flex-col
+            <?= $position === "start" ? 'items-start' : ($position === "center" ? 'items-center' : 'items-end') ?>">
+            <template x-for="(message, index) in messages" :key="index">
+                <template x-if="hasMessage">
+                    <div
+                        class="message max-w-screen-sm justify-start gap-4 rounded-xl shadow-xl font-normal py-6 px-8 bg-white text-slate-600
+                            <?= $showIcon ? 'relative flex-col items-center text-center sm:flex-row sm:items-start sm:text-start' : 'items-start' ?>"
+                        :ui-id="getMessageUiId"
+                        :class="getMessageStyle"
+                    >
+                        <?php if ($showIcon): ?>
+                            <span x-html="getIcon" class="text-[var(--message)] sm:mx-0">></span>
+                        <?php endif ?>
+                        <div>
+                            <div
+                                x-text="getTitle"
+                                class="mb-2 text-lg font-bold text-slate-800"
+                            ></div>
+                            <div x-html="message.text"></div>
+                        </div>
+                        <button
+                            type="button"
+                            class="ml-auto transition-colors text-slate-500 hover:text-slate-900
+                                <?= $showIcon ? 'absolute right-6 sm:static' : '' ?>"
+                            aria-label="<?= $escaper->escapeHtml(__('Close message')) ?>"
+                            @click.prevent="removeMessage"
+                        >
+                            <?= $heroIcons->xHtml('', 32, 32, ['aria-hidden' => 'true']); ?>
+                        </button>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </template>
+</section>

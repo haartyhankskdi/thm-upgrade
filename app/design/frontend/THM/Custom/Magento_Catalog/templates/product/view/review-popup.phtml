@@ -1,0 +1,150 @@
+<?php
+$reviewData = $block->getReviewData();
+?>
+
+
+<div class="adel-review-section">
+<?php if ($reviewData['total_reviews'] > 0): ?>
+    <div class="review-summary-badge">
+        <span class="rating-number"><?= number_format($reviewData['average_stars'], 1) ?></span>
+        <span class="stars">
+            <?php for ($i = 0; $i < $reviewData['full_stars']; $i++): ?>
+                <span class="star full">★</span>
+            <?php endfor; ?>
+            <?php if ($reviewData['half_star']): ?>
+                <span class="star half">★</span>
+            <?php endif; ?>
+            <?php for ($i = 0; $i < $reviewData['empty_stars']; $i++): ?>
+                <span class="star empty">★</span>
+            <?php endfor; ?>
+        </span>
+        <span class="count">(<?= $reviewData['total_reviews'] ?> <?= __('Reviews') ?>)</span>
+    </div>
+<?php else: ?>
+    <div class="review-summary-badge">
+        <?= __('No reviews yet.') ?>
+    </div>
+<?php endif; ?>
+
+<!-- Buttons -->
+<div class="review-buttons">
+    <button type="button" id="open-review-popup" class="action primary">
+        <?= __('Write a Review') ?>
+    </button>
+    <button type="button" id="open-review-list-popup" class="action secondary">
+        <?= __('View All Reviews') ?>
+    </button>
+</div>
+
+<!-- Hidden popup containers -->
+<div id="review-form-popup" style="display: none;">
+    <?php
+    /** @var \Haartyhanks\AutoUpsell\Block\Product\View\ReviewData $block */
+    $product = $block->getCurrentProduct();
+
+    if ($product):
+        $reviewFormBlock = $block->getLayout()
+            ->createBlock(\Magento\Review\Block\Form::class)
+            ->setProduct($product)
+            ->setTemplate('Magento_Review::form.phtml');
+
+        echo $reviewFormBlock->toHtml();
+    else:
+        echo '<div class="message error">' . __('Product not found.') . '</div>';
+    endif;
+    ?>
+</div>
+
+<div id="review-list-popup" style="display: none;">
+    <?php
+    echo $this->getLayout()
+        ->createBlock(\Magento\Review\Block\Product\View\ListView::class)
+        ->setTemplate('Magento_Review::product/view/list.phtml')
+        ->toHtml();
+    ?>
+</div>
+</div>
+
+<!-- JS Modal Init -->
+<script type="text/javascript">
+    require(['jquery', 'Magento_Ui/js/modal/modal'], function ($, modal) {
+        var reviewFormModal, reviewListModal;
+
+        reviewFormModal = modal({
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            title: 'Write a Review',
+            buttons: []
+        }, $('#review-form-popup'));
+
+        reviewListModal = modal({
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            title: 'Customer Reviews',
+            buttons: []
+        }, $('#review-list-popup'));
+
+        $('#open-review-popup').on('click', function () {
+            $('#review-form-popup').modal('openModal');
+        });
+
+        $('#open-review-list-popup').on('click', function () {
+            $('#review-list-popup').modal('openModal');
+        });
+    });
+</script>
+
+<style type="text/css">
+.review-summary-badge {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.review-summary-badge .stars {
+    display: inline-block;
+}
+
+.review-summary-badge .star {
+    font-size: 20px;
+    color: #ddd;
+}
+
+.review-summary-badge .star.full {
+    color: #FFA500;
+}
+
+.review-summary-badge .star.half {
+    background: linear-gradient(to right, #FFA500 50%, #ddd 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #FFA500;
+}
+
+.review-summary-badge .rating-number {
+    color: #222;
+    font-size: 16px;
+}
+
+.review-summary-badge .count {
+    color: #777;
+    font-size: 15px;
+}
+</style>
+
+<!--review main click show review section  -->
+<script type="text/javascript">
+require(['jquery'], function ($) {
+    $('.reviews-actions a').on('click', function (e) {
+        e.preventDefault();
+        document.querySelector('.adel-review-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+</script>

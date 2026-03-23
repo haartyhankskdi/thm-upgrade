@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="amasty-xsearch-hyva-compatibility" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Amasty_Xsearch</item>
+                    <item name="compat_module" xsi:type="string">Amasty_XsearchHyvaCompatibility</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\XsearchHyvaCompatibility\ViewModel\ComponentsRegistry">
+        <arguments>
+            <argument name="components" xsi:type="array">
+                <item name="search-js-autocomplete" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/js/autocomplete-js.phtml
+                    </item>
+                </item>
+                <item name="search-js-products" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/js/products-js.phtml
+                    </item>
+                </item>
+                <item name="search-js-carousel" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/js/carousel-js.phtml
+                    </item>
+                </item>
+                <item name="search-products" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/products.phtml
+                    </item>
+                </item>
+                <item name="search-page" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/pages.phtml
+                    </item>
+                </item>
+                <item name="search-category" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/category.phtml
+                    </item>
+                </item>
+                <item name="search-recentSearches" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/recent-searches.phtml
+                    </item>
+                </item>
+                <item name="search-recentlyViewed" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/recently-viewed.phtml
+                    </item>
+                </item>
+                <item name="search-bestsellers" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/bestsellers.phtml
+                    </item>
+                </item>
+                <item name="search-brand" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/brands.phtml
+                    </item>
+                </item>
+                <item name="search-popularSearches" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/popular-searches.phtml
+                    </item>
+                </item>
+                <item name="search-browsingHistory" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/browsing-history.phtml
+                    </item>
+                </item>
+                <item name="search-landingPage" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/landing-page.phtml
+                    </item>
+                </item>
+                <item name="search-blog" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/blog.phtml
+                    </item>
+                </item>
+                <item name="search-faq" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/sections/faq.phtml
+                    </item>
+                </item>
+                <item name="loading" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Hyva_Theme::ui/loading.phtml
+                    </item>
+                </item>
+                <item name="search-js-hyva-ui-header-compat" xsi:type="array">
+                    <item name="template" xsi:type="string">
+                        Amasty_XsearchHyvaCompatibility::header-search/js/hyva-ui-header-compat.phtml
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>
+

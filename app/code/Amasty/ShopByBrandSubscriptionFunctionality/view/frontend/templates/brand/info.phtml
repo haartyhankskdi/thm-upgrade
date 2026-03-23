@@ -1,0 +1,25 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality
+ */
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php
+    /** @var \Amasty\ShopByBrandSubscriptionFunctionality\ViewModel\BrandInfo $brandInfoViewModel */
+    $brandInfoViewModel = $block->getData('brand_info_view_model');
+?>
+
+<?php if ($brandInfoViewModel->isShow()): ?>
+<div class="ambrand-info">
+    <div class="ambrand-info-values">
+        <?php foreach ($brandInfoViewModel->getBrandInfoValues() as $brandInfoValue): ?>
+            <p class="ambrand-info-value"><?= $escaper->escapeHtml($brandInfoValue, ['u', 'b', 'i', 'br', 'a']) ?></p>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>

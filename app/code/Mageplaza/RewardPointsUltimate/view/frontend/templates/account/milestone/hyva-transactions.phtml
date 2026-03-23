@@ -1,0 +1,91 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Magento\Framework\Escaper;
+
+/** @var \Mageplaza\RewardPointsUltimate\Block\Milestone\Transactions $block */
+/** @var Escaper $escaper */
+$transactions = $block->getTransactions();
+?>
+<div class="block block-reward-dashboard-transaction mb-10 bg-[#F5F9F7] py-4 md:py-8 px-2 md:px-8 my-4 md:mt-8">
+    <?php if ($block->getIsRecent()) : ?>
+        <div class="block-title order pb-4 !mt-0 mb-6 flex justify-between">
+            <strong><?= $block->escapeHtml(__('Recent Transactions')) ?></strong>
+            <?php if ($transactions->getSize()) : ?>
+                <a class="action view bg-[#E63833] hover:bg-[#3B7E48] text-white text-sm font-normal px-4 py-2 rounded-full transition-all duration-300" href="<?= /** @noEscape */
+                $block->getUrl('customer/rewards/transaction') ?>">
+                    <span><?= $block->escapeHtml(__('View All')) ?></span>
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+    <div class="block-content">
+        <?php if ($transactions->getSize()) : ?>
+            <div class="grid grid-cols-3 lg:grid-cols-6 mb-4">
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Transaction #')) ?></div>
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Date')) ?></div>
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Comment')) ?></div>
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Amount')) ?></div>
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Status')) ?></div>
+                <div class="text-base font-semibold hidden lg:block bg-container-darker p-2"><?= $escaper->escapeHtml(__('Expire Date')) ?></div>
+                <?php $i = 0; ?>
+                <?php foreach ($transactions as $transaction) : ?>
+                    <?php $i++; ?>
+                    <div class="p-2 flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= $escaper->escapeHtml($transaction->getId()) ?>
+                    </div>
+                    <div class="p-2 hidden lg:flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= $escaper->escapeHtml($block->formatDate($transaction->getCreatedAt())) ?>
+                    </div>
+                    <div class="p-2 hidden lg:flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= $escaper->escapeHtml($transaction->getTitle()) ?>
+                    </div>
+                    <div class="p-2 hidden lg:flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= /* @noEscape */ $transaction->getPointAmount() ?>
+                    </div>
+                    <div class="p-2 hidden lg:flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= $escaper->escapeHtml($transaction->getStatusLabel()) ?>
+                    </div>
+                    <div class="p-2 hidden lg:flex items-center <?= $i % 2 === 0 ? '' : ' bg-container-darker' ?>">
+                        <?= $escaper->escapeHtml($transaction->getExpirationDate()
+                            ? $block->escapeHtml($block->formatDate($transaction->getExpirationDate())) : $block->escapeHtml(__('N/A'))) ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <?php if ($block->getPagerHtml()) : ?>
+                <div class="reward-transactions-toolbar toolbar bottom"><?= /** @noEscape */
+                    $block->getPagerHtml(); ?></div>
+            <?php endif ?>
+        <?php else : ?>
+            <div class="message info empty"><span><?= $block->escapeHtml(__('You have created no transactions.')) ?></span></div>
+        <?php endif; ?>
+    </div>
+</div>
+<style>
+    .block-title {
+        margin-top: 5%;
+        border-bottom: 1px solid #2c2c2c;
+    }
+    .block-title strong {
+        font-size: 1.5rem;
+        font-weight: 300;
+    }
+
+</style>

@@ -1,0 +1,32 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\CustomerSectionData;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var CustomerSectionData $sectionDataViewModel */
+$sectionDataViewModel = $viewModels->require(CustomerSectionData::class);
+$defaultSectionData = $sectionDataViewModel->getDefaultSectionData();
+if (! $defaultSectionData) {
+    return;
+}
+
+// The script type application/json causes issues on some versions of Chrome on Linux with pretty-printing and breakpoints, so we use text/json instead.
+?>
+<script type="text/json" id="default-section-data">
+    <?= /** @noEscape */ json_encode($defaultSectionData) ?>
+</script>

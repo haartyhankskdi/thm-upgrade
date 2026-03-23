@@ -1,0 +1,144 @@
+<!-- Copy this block into your page -->
+<div class="review-chip" role="group" aria-label="Google reviews">
+  <!-- Google-style G icon (SVG) -->
+  <div class="g-icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" width="20" height="20" xmlns="http://www.w3.org/2000/svg" focusable="false">
+      <path fill="#4285F4" d="M24 9.5c3.9 0 6.6 1.6 8.1 2.9l6-6.1C35.2 3 30.5 1 24 1 14.6 1 6.9 6.7 3.5 14.7l7.8 6.1C13.6 15.1 18 9.5 24 9.5z"/>
+      <path fill="#34A853" d="M46.5 24.5c0-1.6-.2-2.8-.6-4H24v8.1h12.6c-.5 2.9-2.7 6.7-8.6 9.8l6.3 4.9C44.2 38.6 46.5 31.9 46.5 24.5z"/>
+      <path fill="#FBBC05" d="M11.3 30.6A14.8 14.8 0 0 1 10 24.5c0-1.8.3-3.6.8-5.2l-7.8-6C1.1 16.9 0 20.6 0 24.5c0 3.9 1.1 7.6 3.5 10.5l7.8-6.4z"/>
+      <path fill="#EA4335" d="M24 46.9c6.5 0 11.2-2 15-5.4l-7.2-5.6c-2 1.4-5.3 2.9-7.8 2.9-6 0-10.4-5.6-12.2-10.6L3.5 34.4C6.9 42.4 14.6 46.9 24 46.9z"/>
+    </svg>
+  </div>
+
+  <!-- Rating + stars -->
+  <div class="rating" data-rating="4.8" data-reviews="4" aria-hidden="false">
+    <div class="rating-value" aria-hidden="true">4.8</div>
+
+    <!-- stars wrapper: set --fill to percentage (rating/5*100) -->
+    <div class="stars" style="--fill: 96%;">
+      <div class="stars-back">
+        <!-- 5 empty star outlines -->
+        <svg viewBox="0 0 24 24" class="star" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        <svg viewBox="0 0 24 24" class="star" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        <svg viewBox="0 0 24 24" class="star" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        <svg viewBox="0 0 24 24" class="star" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        <svg viewBox="0 0 24 24" class="star" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+      </div>
+
+      <div class="stars-front" aria-hidden="true" style="width: var(--fill);">
+        <!-- filled stars (same shapes) -->
+        <svg viewBox="0 0 24 24" class="star filled"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z"/></svg>
+        <svg viewBox="0 0 24 24" class="star filled"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z"/></svg>
+        <svg viewBox="0 0 24 24" class="star filled"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z"/></svg>
+        <svg viewBox="0 0 24 24" class="star filled"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z"/></svg>
+        <svg viewBox="0 0 24 24" class="star filled"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.17L12 18.896l-7.336 3.872 1.402-8.17L.132 9.21l8.2-1.192z"/></svg>
+      </div>
+    </div>
+
+    <div class="reviews-count" aria-hidden="true">4 reviews</div>
+  </div>
+
+  <!-- CTA button -->
+  <button class="btn-reviews" type="button" aria-label="View all reviews">View all reviews</button>
+</div>
+
+<style>
+/* ---- Basic styling ---- */
+.review-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.g-icon { display:flex; align-items:center; justify-content:center; }
+
+.rating{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  line-height:1;
+}
+
+/* rating number */
+.rating-value{
+  font-weight:700;
+  font-size:1rem;
+  min-width:2ch;
+  text-align:left;
+}
+
+/* stars layout:
+   - .stars-back shows outlines
+   - .stars-front (absolutely positioned) contains filled stars and is clipped via width = --fill
+*/
+.stars{
+  position:relative;
+  display:inline-block;
+  width:110px; /* total width for 5 stars */
+  height:20px;
+  overflow:hidden;
+  vertical-align:middle;
+  --star-size:20px;
+}
+
+.stars-back, .stars-front{
+  display:flex;
+  gap:2px;
+  align-items:center;
+  height:100%;
+}
+
+.stars-back .star{
+  width:var(--star-size);
+  height:var(--star-size);
+  color: #bbb;
+  fill: none;
+  stroke: currentColor;
+}
+
+.stars-front{
+  position:absolute;
+  top:0;
+  left:0;
+  height:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+/* filled star appearance */
+.stars-front .star.filled{ 
+  width:var(--star-size);
+  height:var(--star-size);
+  fill: #f5c518; /* typical star yellow */
+  stroke: none;
+}
+
+/* reviews count text */
+.reviews-count{
+  font-size:0.9rem;
+  color:#555;
+  min-width:4ch;
+}
+
+/* button */
+.btn-reviews{
+  border:1px solid #e0e0e0;
+  background:transparent;
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:0.9rem;
+}
+.btn-reviews:hover{ background:#f7f7f7; }
+
+/* Responsive smaller */
+@media (max-width:420px){
+  .review-chip{ gap:8px; }
+  .stars{ width:90px; height:18px; --star-size:18px; }
+  .rating-value{ font-size:0.95rem; }
+  .btn-reviews{ padding:5px 8px; font-size:0.85rem; }
+}
+</style>

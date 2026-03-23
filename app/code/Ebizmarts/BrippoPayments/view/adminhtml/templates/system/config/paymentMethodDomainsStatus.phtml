@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Adminhtml\System\Config\PaymentMethodDomainsStatus;
+
+/** @var PaymentMethodDomainsStatus $block */
+?>
+
+<div id="brippo_apple_domain_status_<?= $block->escapeHtmlAttr($block->livemode) ?>" class="actions stripeConnectStatus">
+    <?php if (!$block->hasAccountId($block->livemode)) { ?>
+        <p style="color:gray;"><?= $block->escapeHtml(__('Please complete account setup.')) ?></p>
+    <?php } else { ?>
+        <div class="brippoDomainsRegistrationThrobber"><div class="throbber"></div></div>
+        <table class="brippoDomainsTable"></table>
+        <script>
+            require([
+                'domReady!.modman/brippo-payments/view/adminhtml/templates/system/config/paymentMethodDomainsStatus',
+                'jquery',
+                'mage/url'
+            ], function(domReady, $) {
+                const table = $("#brippo_apple_domain_status_<?= $block->escapeHtmlAttr($block->livemode) ?> .brippoDomainsTable");
+                const throbber = $("#brippo_apple_domain_status_<?= $block->escapeHtmlAttr($block->livemode) ?> .brippoDomainsRegistrationThrobber");
+                try {
+                    $.ajax({
+                        url: '<?= $block->escapeUrl($block->getDomainRegistrationUrl()) ?>',
+                        type: 'GET',
+                        dataType: 'json'
+                    }).done(function (data) {
+                        throbber.hide();
+                        data.forEach(registration => {
+                            table.append(
+                                '<tr><td class="title">' + registration.url + '</td>'
+                                + (registration.valid
+                                        ? '<td class="greenText">Registration completed <img src="<?= $block->escapeUrl($block->getViewFileUrl(
+                                        'Ebizmarts_BrippoPayments/img/passed.png'
+                                    )) ?>" alt="Domain registered successfully"></td>'
+                                        : '<td class="redText">' + registration.message + '</td>'
+                                )
+                                + '</tr>'
+                            )
+                        });
+                    });
+                } catch (error) {
+                    throbber.hide();
+                    table.append('<tr><td class="redText">' + error.message + '</td></tr>');
+                }
+            });
+        </script>
+    <?php } ?>
+</div>

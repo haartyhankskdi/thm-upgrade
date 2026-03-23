@@ -1,0 +1,155 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\Location;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/**
+ * @var \Amasty\Storelocator\Block\Location $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ */
+
+$locations = $block->getLocationCollection();
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+
+<div  class="amlocator-wrapper flex flex-col h-full">
+    <div class="amlocator-stores-wrapper mb-2.5">
+        <?php foreach ($locations as $location): ?>
+            <div
+                name="leftLocation"
+                class="amlocator-store-desc mb-4 overflow-auto bg-container-lighter"
+                :class="
+                    idActiveStore === <?= $escaper->escapeHtmlAttr((int)$location['id']) ?> ?
+                    'active bg-primary text-white' : ''
+                "
+            >
+                <div
+                    class="p-4"
+                    @click="chooseStore(<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>)"
+                >
+                    <div class="flex">
+                        <?php if ($baseImage = $block->getLocationImage($location)):?>
+                            <div
+                                class="
+                                    amlocator-image w-[150px] h-[150px] min-w-[150px]
+                                    bg-center bg-cover mr-4
+                                "
+                                style="background-image:url('<?= $escaper->escapeUrl($baseImage) ?>')"
+                            ></div>
+                        <?php endif;?>
+                        <div class="amlocator-store-information">
+                            <?= $location->getStoreListHtml() ?>
+                            <div
+                                id="amasty_distance_<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>"
+                                class="amasty_distance hidden"
+                            >
+                                <?= $escaper->escapeHtml(__('Distance:')) ?>
+                                <span class="amasty_distance_number"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button
+                            class="
+                                sr-only
+                                focus:not-sr-only focus:absolute focus:btn focus:btn-secondary
+                            "
+                        >
+                            <?= $escaper->escapeHtml(__('Click to select this store')) ?>
+                        </button>
+                    </div>
+                </div>
+                <?php if ($location->getShowSchedule() && !empty($location->getWorkingTimeToday())): ?>
+                    <div class="amlocator-schedule-container text-black bg-gray-300">
+                        <div
+                            class="flex items-center w-full px-4 py-1"
+                            :class="idActiveStore === <?= $escaper->escapeHtmlAttr((int)$location['id']) ?> ?
+                                'bg-primary-lighter text-white' : ''"
+                        >
+
+                            <?= $heroicons->clockHtml("w-5 h-5 text-blue-400", 24, 24, ['aria-hidden' => 'true']) ?>
+
+                            <div class="amlocator-today w-full flex justify-between text-sm px-2">
+                                <strong>
+                                    <?= $escaper->escapeHtml(__('Work Time Today:')); ?>
+                                </strong>
+                                <span class="amlocator-time">
+                                    <span class="amlocator-today-opening-hours">
+                                        <?= $escaper->escapeHtml($location->getWorkingTimeToday()); ?>
+                                    </span>
+                                </span>
+                            </div>
+                            <button
+                                @click.once="fetchSchedule(
+                                    <?= $escaper->escapeHtmlAttr((int)$location['id']) ?>,
+                                    '<?= $escaper->escapeUrl($block->getLocationScheduleUrl($location->getId())) ?>'
+                                )"
+                                @click="toggleSchedule(<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>)"
+                                :aria-expanded="scheduleOpenArray.includes(<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>)"
+                                aria-controls="am-locator-week-container-<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>"
+                            >
+                                <span class="sr-only">
+                                    <?= $escaper->escapeHtml(__('Toggle store opening hours')) ?>
+                                </span>
+                                <?= $heroicons->chevronDownHtml(
+                                    'transition-transform transform duration-300 ease-in-out',
+                                    24,
+                                    24,
+                                    [":class" => "{
+                                        'rotate-180': scheduleOpenArray.includes(" .
+                                        $escaper->escapeHtmlAttr((int)$location['id']) .
+                                        ")
+                                    }", "aria-hidden" => "true"]
+                                ); ?>
+                            </button>
+                        </div>
+
+                        <div
+                            id="am-locator-week-container-<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>"
+                            class="
+                                amlocator-week-container
+                                amlocator-week-container-<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>
+                                pb-1 px-4
+                            "
+                            :class="[
+                                scheduleOpenArray.includes(<?= $escaper->escapeHtmlAttr((int)$location['id']) ?>) ?
+                                'block' : 'hidden',
+                                idActiveStore === <?= $escaper->escapeHtmlAttr((int)$location['id']) ?> ?
+                                'bg-primary text-white' : ''
+                            ]"
+                        >
+                            <div class="relative w-full h-12">
+                                <div class="absolute z-10 h-full w-full flex items-center justify-center">
+                                    <div class="flex items-center">
+                                        <!-- loading icon -->
+                                        <svg class="animate-spin h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                        <!-- end loading icon -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if ($pager = $block->getPagerHtml()): ?>
+        <div class="amlocator-pager-container">
+            <?= /** @escapeNotVerified */ $pager; ?>
+        </div>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+	<table name="haartyhanks_career_carrer" resource="default" engine="innodb" comment="haartyhanks_career_carrer Table">
+		<column xsi:type="smallint" name="carrer_id" padding="6" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="carrer_id"/>
+		</constraint>
+		<column name="first_name" nullable="true" xsi:type="varchar" comment="first_name" length="255"/>
+		<column name="last_name" nullable="true" xsi:type="varchar" comment="last_name" length="255"/>
+		<column name="phone" nullable="true" xsi:type="varchar" comment="phone" length="255"/>
+		<column name="email" nullable="true" xsi:type="text" comment="email"/>
+		<column name="role" nullable="true" xsi:type="varchar" comment="role" length="255"/>
+		<column name="location" nullable="true" xsi:type="varchar" comment="location" length="255"/>
+		<column name="attachment" nullable="true" xsi:type="text" comment="attachment"/>
+		<column name="created_at" nullable="true" default="CURRENT_TIMESTAMP" xsi:type="timestamp" on_update="false" comment="created_at"/>
+		<column name="updated_at" nullable="true" default="CURRENT_TIMESTAMP" xsi:type="timestamp" on_update="true" comment="updated_at"/>
+	</table>
+</schema>

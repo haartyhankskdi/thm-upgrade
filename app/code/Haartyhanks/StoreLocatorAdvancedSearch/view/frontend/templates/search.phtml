@@ -1,0 +1,136 @@
+<div x-data="advancedSearch()" class="relative w-full max-w-md">
+
+    <!-- Search Input -->
+    <div class="relative">
+        <input type="text"
+               placeholder="Search Postcode, City, Stores"
+               x-model="query"
+               @input.debounce.400ms="search"
+               @focus="openDropdown = true"
+               @blur="closeDropdown()"
+               class="w-full border p-3 rounded pr-10">
+
+        <!-- Clear button -->
+        <button type="button"
+                x-show="query.length"
+                @click="query=''; results=[]; selectedStoreId=null; currentLocation=null"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            &times;
+        </button>
+    </div>
+
+    <!-- Dropdown -->
+    <div x-show="openDropdown" 
+         class="absolute bg-white shadow-lg rounded w-full mt-1 max-h-80 overflow-y-auto z-50">
+        
+        <!-- Use My Current Location -->
+        <div class="mt-2 text-blue-600 cursor-pointer p-3 hover:bg-gray-100"
+             @click="useMyLocation()">
+            Use My Current Location
+        </div>
+
+        <!-- Show results -->
+        <template x-for="item in results" :key="item.id">
+            <div class="flex justify-between items-center p-3 hover:bg-gray-100">
+                <div>
+                    <div class="font-semibold" x-text="item.title || ''"></div>
+                    <div class="text-sm text-gray-500"
+                         x-text="([item.name, item.city].filter(Boolean).join(', '))"></div>
+                </div>
+                <button class="ml-4 bg-blue-500 text-grey px-3 py-1 rounded hover:bg-blue-600"
+                        @click.prevent="selectStore(item)">
+                    Select
+                </button>
+            </div>
+        </template>
+
+        <div x-show="results.length === 0" class="p-3 text-gray-500">
+            Search and select from result list
+        </div>
+
+    </div>
+
+    <!-- SUBMIT BUTTON -->
+    <div class="mt-4">
+        <button type="button"
+                @click="submitSearch()"
+                class="w-full bg-green-500 text-grey p-3 rounded hover:bg-green-600">
+            Submit
+        </button>
+    </div>
+
+</div>
+
+<script>
+function advancedSearch() {
+    return {
+        query: '',
+        results: [],
+        openDropdown: false,
+        selectedStoreId: null,
+        currentLocation: null, // store coordinates if user chooses location
+
+        search() {
+            if (this.query.length < 2) {
+                this.results = [];
+                return;
+            }
+
+            fetch('/storeadvanced/ajax/search?q=' + encodeURIComponent(this.query))
+                .then(res => res.json())
+                .then(data => this.results = data);
+        },
+
+        selectStore(store) {
+            this.query = [
+                store.title || '',
+                store.name || '',
+                store.city || ''
+            ].filter(Boolean).join(', ');
+
+            this.selectedStoreId = store.id; // important for submit
+            this.currentLocation = null;      // reset location if store selected
+            this.openDropdown = false;
+        },
+
+        useMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    this.currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    this.query = `Current Location (${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)})`;
+                    this.selectedStoreId = null; // reset store
+                    this.openDropdown = false;
+                });
+            }
+        },
+
+        closeDropdown() {
+            setTimeout(() => this.openDropdown = false, 150);
+        },
+
+        submitSearch() {
+            // Make sure something is selected
+            if (!this.selectedStoreId && !this.currentLocation) {
+                alert('Please select a store or use your current location.');
+                return;
+            }
+
+            // Build URL for redirect
+            let url = '/amlocator?'; // <-- change to your target page
+
+            if (this.selectedStoreId) {
+                url += 'id=' + encodeURIComponent(this.selectedStoreId);
+            } else if (this.currentLocation) {
+                url += 'lat=' + encodeURIComponent(this.currentLocation.lat) +
+                       '&lng=' + encodeURIComponent(this.currentLocation.lng);
+            }
+
+            // Redirect to other page with params
+            window.location.href = url;
+        }
+    }
+}
+</script>

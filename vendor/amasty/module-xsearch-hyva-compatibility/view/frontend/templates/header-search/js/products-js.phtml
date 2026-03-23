@@ -1,0 +1,354 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopup;
+use Amasty\XsearchHyvaCompatibility\ViewModel\SearchPopupQueries;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\GraphqlViewModel\ViewModel\GraphqlViewModel;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var SearchPopupQueries $searchPopupQueriesViewModel */
+$searchPopupViewModel = $viewModels->require(SearchPopup::class);
+$searchPopupQueriesViewModel = $viewModels->require(SearchPopupQueries::class);
+$viewModelGraphQl = $viewModels->require(GraphqlViewModel::class);
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+<script>
+    'use strict';
+
+    function amXsearchPriceComponent(product) {
+        return {
+            ...product,
+            formattedFinalPrice: '',
+            formattedRegularPrice: '',
+            formattedExclTaxPrice: '',
+            isDiscounted: false,
+            showOldPrice: false,
+
+            init() {
+                this.prepareData();
+            },
+
+            generateUniqId(prefix = '') {
+                return prefix + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+            },
+
+            prepareData() {
+                this.formattedFinalPrice = hyva.formatPrice(this.product.price_range.minimum_price.final_price.value);
+                this.formattedRegularPrice = hyva.formatPrice(this.product.price_range.minimum_price.regular_price.value);
+                this.formattedExclTaxPrice = hyva.formatPrice(this.product.price_range.minimum_price.regular_price.value);
+                this.isDiscounted = this.product.price_range.minimum_price.final_price.value < this.product.price_range.maximum_price.final_price.value;
+                this.showOldPrice = this.product.price_range.minimum_price.regular_price.value !== this.product.price_range.minimum_price.final_price.value;
+            }
+        }
+    }
+
+    function amXsearchProductsComponent() {
+        const postFormRequest = (postUrl, id) => {
+            const req = fetch(BASE_URL + postUrl, {
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                },
+                "body": "form_key=" + hyva.getFormKey() + "&product=" + id + "&uenc=" + hyva.getUenc(),
+                "method": "POST",
+                "mode": "cors",
+                "credentials": "include"
+            });
+
+            req.finally(() => this.isLoading = false);
+
+            return req;
+        }
+
+        return {
+            mutationAddToCartQuery: <?= /** @noEscape */ json_encode($viewModelGraphQl->query(
+                'amshopby_add_to_cart',
+                'mutation addProductsToCart($cartId: String!, $cartItems: [CartItemInput!]!) {'
+                . $searchPopupQueriesViewModel->mutationAddToCart() .
+                '}'
+            )); ?>,
+            mutationAddToWishlistQuery: <?= /** @noEscape */ json_encode($viewModelGraphQl->query(
+                'amshopby_add_to_wishlist',
+                'mutation addProductsToWishlist($wishlistId: ID!, $wishlistItems: [WishlistItemInput!]!) {'
+                . $searchPopupQueriesViewModel->mutationAddProductsToWishlist() .
+                '}'
+            )); ?>,
+            mutationAddToCompareListQuery: <?= /** @noEscape */ json_encode($viewModelGraphQl->query(
+                'amshopby_add_to_compare_list',
+                'mutation addProductsToCompareList($uid: ID!, $products: [ID!]!) {'
+                . $searchPopupQueriesViewModel->mutationAddToCompareList() .
+                '}'
+            )); ?>,
+
+            sliderInitialization(event) {
+                this[event.detail.key] = event.detail.value;
+            },
+
+            getResultProductsCount() {
+                const suggestions = this.sections.products;
+                const totalCount = suggestions?.total_count ?? 0;
+                const itemsCount = suggestions?.items?.length ?? 0;
+
+                return totalCount > 0 ? totalCount - itemsCount : 0;
+            },
+
+            processProductName(value) {
+                if (value.items) {
+                    value.items = value.items.map(item => {
+                        item.name = this.addHighlight(item, 'name');
+                        item.sku = this.addHighlight(item, 'sku');
+                        item.name = this.truncateWithDots(item.name, this.productNameMaxLength, true);
+
+                        return item;
+                    });
+                }
+                return value;
+            },
+
+            addHighlight(product, key = 'name') {
+                const name = product[key];
+                const { latestQuery } = this;
+                const queries = latestQuery.toLowerCase().split(" ");
+
+                let highlightedName = name;
+
+                for (const query of queries) {
+                    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(`(?!<[^>]*)(${safeQuery})(?![^<]*>)`, "gi");
+                    highlightedName = highlightedName.replace(regex, match => `<span class="amsearch-highlight">${match}</span>`);
+                }
+
+                return highlightedName;
+            },
+
+            truncateWithDots(str, maxLength, returnOriginal = false) {
+                if (maxLength === '' || maxLength < 1) {
+                    return returnOriginal ? str : "";
+                }
+
+                let output = [];
+                let tagBuffer = [];
+                let count = 0;
+                let inTag = false;
+
+                for (const char of str) {
+                    if (char === "<") {
+                        inTag = true;
+                    }
+
+                    if (inTag) {
+                        tagBuffer.push(char);
+                    } else {
+                        count++;
+                    }
+
+                    if (char === ">") {
+                        inTag = false;
+                        output.push(tagBuffer.join(""));
+                        tagBuffer = [];
+                    } else if (!inTag) {
+                        output.push(char);
+                    }
+
+                    if (count >= maxLength) {
+                        break;
+                    }
+                }
+
+                if (count >= maxLength) {
+                    output.push("...");
+                }
+
+                // Close any unclosed tags
+                while (tagBuffer.length > 0) {
+                    const closingTagPos = str.indexOf(">", str.indexOf(tagBuffer.join("")) + tagBuffer.length);
+                    if (closingTagPos !== -1) {
+                        output.push(str.slice(str.indexOf(tagBuffer.join("")) + tagBuffer.length, closingTagPos + 1));
+                        tagBuffer = [];
+                    } else {
+                        break;
+                    }
+                }
+
+                return output.join("");
+            },
+
+            getProductUrl(product) {
+                if (Array.isArray(product.url_rewrites) && product.url_rewrites.length > 0) {
+                    const rewrite = product.url_rewrites.find(rewrite => rewrite.url);
+                    if (rewrite && rewrite.url) {
+                        return `${window.BASE_URL}${rewrite.url}`;
+                    }
+                } else if (product.canonical_url) {
+                    return `${window.BASE_URL}${product.canonical_url}`;
+                } else if (product.url_path) {
+                    return `${window.BASE_URL}${product.url_path}`;
+                }
+
+                return `${window.BASE_URL}${product.url_key}${product.url_suffix || ''}`;
+            },
+
+            getProductImageUrl(product) {
+                const imageUrl = product.small_image.url;
+                let mediaURL = this.config.customMediaUrl || '';
+
+                if (mediaURL.includes('/media') && imageUrl.startsWith('media/')) {
+                    mediaURL = mediaURL.replace('/media', '');
+                }
+
+                if (imageUrl.includes('://')) {
+                    return imageUrl;
+                }
+
+                const productImageUrl = mediaURL + imageUrl;
+
+                if (productImageUrl.includes('/product/placeholder/')) {
+                    return productImageUrl.replace(/\/media(?=\/static)/, '');
+                }
+
+                return productImageUrl;
+            },
+
+            /**
+             * @param Product {id: string}
+             */
+            addToWishlist({id}) {
+                postFormRequest('wishlist/index/add/', id).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else if (response.ok) {
+                        return response.json();
+                    } else {
+                        typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                            [{
+                                type: "warning",
+                                text: "<?= $escaper->escapeHtml(__('Could not add item to wishlist.')) ?>"
+                            }], 5000
+                        );
+                    }
+                }).then(response => {
+                    if (!response) { return }
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                        [{
+                            type: response.success ? "success" : "error",
+                            text: response.success
+                                ? "<?= $escaper->escapeHtml(
+                                    __("%1 has been added to your Wish List.", __("Product"))
+                                ) ?>" : response.error_message
+                        }], 5000
+                    );
+                    window.dispatchEvent(new CustomEvent("reload-customer-section-data"));
+                }).catch(function (error) {
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                        [{
+                            type: "error",
+                            text: error
+                        }], 5000
+                    );
+                });
+            },
+
+            /**
+             * @param Product {id: string}
+             */
+            addToCompare({id}) {
+                postFormRequest('catalog/product_compare/add', id)
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        }
+                        this.isLoading = false;
+                    }).catch(error => {
+                        this.isLoading = false;
+                        typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                            [{
+                                type: "error",
+                                text: error
+                            }], 5000
+                        );
+                    });
+            },
+
+            /**
+             *
+             * @param product
+             */
+            getRating(product) {
+                const { rating_summary } = product;
+                product.ratingData = {
+                    ratingSteps: 5,
+                    starsFilled: Math.floor(+rating_summary / 100 * 5),
+                    starFragment: rating_summary / 100 * 5 % 1,
+                    starsEmpty: Math.floor(5 - (+rating_summary / 100 * 5)),
+                    yellowHex: '#f6e05e',
+                    greyHex: '#cbd5e0'
+                };
+                return product;
+            },
+
+
+            /**
+             * Compatibility function for Amasty_AjaxCart module
+             *
+             * @param id
+             * @param $event
+             */
+            addToCart({id}, $event) {
+                <?php if ($searchPopupViewModel->isAmAjaxCartModuleEnable()): ?>
+                const createFormInput = (name, value) => {
+                    const input = document.createElement('input');
+                    input.name = name;
+                    input.value = value;
+                    input.type = 'hidden';
+
+                    return input;
+                }
+
+                const form = document.createElement('form');
+                form.appendChild(createFormInput('product', id));
+                form.appendChild(createFormInput('qty', 1));
+                form.appendChild(createFormInput('form_key', hyva.getFormKey()));
+
+                window.dispatchEvent(
+                    new CustomEvent('amcart-add-to-cart-action', { detail: form })
+                );
+
+                this.$watch('searchOpen', (v, oldValue) => {
+                    const amCartDialog = document.querySelector(`[]`);
+                    const amCartConfirmDialog = document.querySelector(`[]`);
+                    this.searchOpen = (
+                        oldValue === true
+                        && (amCartDialog.style.display !== 'none'
+                            || amCartConfirmDialog.style.display !== 'none'
+                        ) ? true : v
+                    );
+
+                });
+                <?php else: ?>
+                this.isLoading = true;
+
+                const action = '<?= $escaper->escapeUrl($block->getUrl('checkout/cart/add')); ?>';
+                const data = { product: id, qty: 1 };
+
+                hyva.postForm({ action, data });
+                <?php endif ?>
+            },
+
+            getViewAllUrl() {
+                return this.resultPageUrl + encodeURIComponent(this.latestQuery);
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

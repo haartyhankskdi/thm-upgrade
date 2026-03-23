@@ -1,0 +1,72 @@
+@layer components {
+    .btn {
+        --btn-stroke: theme("colors.blue.400");
+        --btn-bg: theme("colors.white");
+        --btn-color: theme("colors.blue.700");
+        @apply flex justify-center items-center gap-1.5 border-2 rounded-md py-2.5 px-5 text-base font-medium select-none cursor-pointer align-middle ease-in-out duration-150;
+        border-color: var(--btn-stroke);
+        background-color: var(--btn-bg);
+        color: var(--btn-color);
+        transition-property: theme("transitionProperty.colors"), box-shadow;
+
+        &:hover {
+            @apply shadow-lg;
+            border-color: var(--btn-hover-stroke, var(--btn-stroke));
+            background-color: var(--btn-hover-bg, var(--btn-bg));
+            color: var(--btn-hover-color, var(--btn-color));
+        }
+
+        &:focus-visible {
+            @apply outline outline-4 outline-blue-200/50 outline-offset-0;
+        }
+
+        &:active {
+            @apply shadow;
+            border-color: var(--btn-active-stroke, var(--btn-stroke));
+            background-color: var(--btn-active-bg, var(--btn-bg));
+            color: var(--btn-active-color, var(--btn-color));
+        }
+
+        &:disabled {
+            @apply opacity-70 cursor-not-allowed shadow-none hover:shadow-none;
+            border-color: var(--btn-disabled-stroke, theme("colors.slate.200"));
+            background-color: var(--btn-disabled-bg, theme("colors.white"));
+            color: var(--btn-disabled-color, theme("colors.slate.600"));
+        }
+    }
+
+    .btn-primary {
+        --btn-stroke: transparent;
+        --btn-bg: theme("colors.blue.600");
+        --btn-color: theme("colors.white");
+        --btn-hover-bg: theme("colors.blue.700");
+        --btn-active-bg: theme("colors.blue.700");
+        --btn-disabled-stroke: transparent;
+        --btn-disabled-bg: theme("colors.slate.600");
+        --btn-disabled-color: theme("colors.slate.50");
+    }
+
+    .btn-secondary {
+        --btn-stroke: transparent;
+        --btn-bg: theme("colors.blue.200");
+        --btn-color: theme("colors.blue.700");
+        --btn-disabled-stroke: transparent;
+    }
+
+    .btn-flat {
+        --btn-stroke: transparent;
+        --btn-bg: transparent;
+        --btn-color: theme("colors.blue.700");
+        --btn-hover-color: theme("colors.blue.800");
+        --btn-active-stroke: currentcolor;
+        --btn-active-color: theme("colors.blue.800");
+    }
+
+    .btn-size-lg {
+        @apply py-4 px-8 text-lg;
+    }
+
+    .btn-size-sm {
+        @apply py-2 px-4 text-sm;
+    }
+}

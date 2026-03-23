@@ -1,0 +1,162 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\LayeredNavigation\Block\Navigation;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $block */
+/** @var Escaper $escaper */
+?>
+<script>
+    function amShopbyFilterHideMoreOptions() {
+        return {
+            options: [],
+            isActive: true,
+            numberMore: 0,
+            numberUnfoldedOptions: 0,
+            showMore: true,
+            titlePrefix: "<?= $escaper->escapeHtml(__('Show')) ?>",
+            titleSufix: "<?= $escaper->escapeHtml(__('more')) ?>",
+            titleLess: "<?= $escaper->escapeHtml(__('Less')) ?>",
+            title: '',
+            isCategoryFilter: false,
+            isSearchActive: false,
+            selectors: {
+                filterContent: '.filter-options-content',
+                filterItem: '.item',
+                filterWrapper: '.am-filter',
+                showMoreButton: '.am-show-more',
+                collapsedItems: '.item-category .collapsed',
+                highlighted: '.marked'
+            },
+
+            /**
+             *
+             * @param element
+             */
+            initHideMore(element) {
+                this.isCategoryFilter = !!this.getIsCategoryFilter(element);
+                this.options = this.getOptions(element);
+                this.$nextTick(() => {
+                    this.numberMore = this.getFoldedQty();
+                    if (this.numberMore <= 0) {
+                        this.isActive = false;
+                    } else {
+                        this.hideOptions(this.options, this.numberUnfoldedOptions);
+                        this.generateTitle();
+                    }
+                });
+                this.$watch('showMore', (yes) => {
+                    if (yes) {
+                        if (this.numberMore <= 0) {
+                            this.showMore = false;
+                            this.isActive = false;
+                        } else {
+                            this.hideOptions(this.options, this.numberUnfoldedOptions);
+                            this.generateTitle();
+                        }
+                    } else {
+                        this.showOptions(this.options, this.isSearchActive);
+                        this.title = this.titleLess;
+                    }
+                })
+            },
+
+            /**
+             *
+             * @param element
+             * @returns {boolean}
+             */
+            getIsCategoryFilter(element) {
+                return element
+                    .closest(this.selectors.filterContent)
+                    .querySelector(this.selectors.filterWrapper).dataset.amshopbyFilterRequestVar === "cat";
+            },
+
+            /**
+             *
+             * @returns {string}
+             */
+            generateTitle() {
+                return this.title = this.titlePrefix + ' (' + this.numberMore + ') ' + this.titleSufix;
+            },
+
+            /**
+             *
+             * @param element
+             * @returns {*}
+             */
+            getOptions(element) {
+                return element
+                    .closest(this.selectors.filterContent)
+                    .querySelectorAll(this.selectors.filterItem);
+            },
+
+            /**
+             *
+             * @returns {number}
+             */
+            getFoldedQty() {
+                return this.options.length - parseInt(this.numberUnfoldedOptions);
+            },
+
+            /**
+             *
+             */
+            triggerOptions() {
+                this.showMore = !this.showMore;
+            },
+
+            /**
+             *
+             * @param options
+             * @param numberUnfolded
+             */
+            hideOptions(options, numberUnfolded) {
+                options.forEach((node, index) => {
+                    if (index >= numberUnfolded) {
+                        node.classList.add('hidden');
+                    }
+                })
+            },
+
+            /**
+             *
+             * @param options
+             * @param isSearch
+             */
+            showOptions(options, isSearch) {
+                options.forEach((node) => {
+                    if (isSearch) {
+                        if (!!node.querySelector(this.selectors.highlighted)) {
+                            node.classList.remove('hidden');
+                        }
+                    } else {
+                        node.classList.remove('hidden');
+                    }
+                })
+            },
+
+            eventListeners: {
+                ['@filter-search-active']() {
+                    this.showMore = false;
+                    this.isActive = false;
+                    this.isSearchActive = true;
+                },
+                ['@filter-search-inactive']() {
+                    this.showMore = true;
+                    this.isActive = true;
+                    this.isSearchActive = false;
+                }
+            }
+        }
+    }
+</script>

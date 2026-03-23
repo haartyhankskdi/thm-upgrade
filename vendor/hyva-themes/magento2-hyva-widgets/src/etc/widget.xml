@@ -1,0 +1,500 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * See https://hyva.io/license
+ */
+-->
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+
+    <widget class="Hyva\Widgets\Block\Widgets\Category" id="hyva_category"
+            placeholder_image="Hyva_Widgets::images/category.png">
+        <label>Hyva Category Products</label>
+        <description translate="true">Lists products from a given category</description>
+        <parameters>
+
+            <parameter name="hvya_category_content_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="0">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Content</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_category_title" sort_order="10" visible="true" xsi:type="text">
+                <label>Widget title</label>
+            </parameter>
+            <parameter name="hyva_category_content" sort_order="20" visible="true" xsi:type="block">
+                <label>Content</label>
+                <description>Enter any content here.</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Wysiwyg"/>
+            </parameter>
+            <parameter name="hyva_category_container" sort_order="30" visible="true" xsi:type="select">
+                <label>Container</label>
+                <description>
+                    <![CDATA[Apply container to the widget content. This uses following native container <a href="https://tailwindcss.com/docs/container</description">sizes</a>. If different needed should be overriden in hyva themes tailwind.config.js]]></description>
+                <options>
+                    <option name="add-container" value="true">
+                        <label translate="true">Add container</label>
+                    </option>
+                    <option name="remove-container" value="false">
+                        <label translate="true">Remove container</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="hyva_category_background" sort_order="40" visible="true" xsi:type="block">
+                <label>Category container background</label>
+                <description>Category container background</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_category_background</item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="hyva_category_content_padding" xsi:type="text" visible="true" sort_order="50">
+                <label translate="true">Hyva content padding</label>
+                <description>
+                    <![CDATA[Inside spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/padding" target="_blank">here</a>. E.g. "pt-8 pb-8 pl-4 pr-4" or "py-6 px-8". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+
+
+            <parameter name="hyva_category_list_title" xsi:type="block" required="false" visible="true" sort_order="100">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Category Product list</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_category_list" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\CategoryList" visible="true" sort_order="110">
+                <label translate="true">Category select</label>
+                <description>This will show category products</description>
+            </parameter>
+
+            <parameter name="hyva_category_limit" xsi:type="text" required="false" visible="true" sort_order="120">
+                <label translate="true">Number of Products to display</label>
+                <value>16</value>
+            </parameter>
+
+            <parameter name="hyva_category_sort_by" xsi:type="select" required="false"
+                       source_model="Magento\Catalog\Model\Category\Attribute\Source\Sortby" visible="true" sort_order="130">
+                <label translate="true">Sort By</label>
+            </parameter>
+
+            <parameter name="hyva_category_sort_direction" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\SortDirection" visible="true" sort_order="130">
+                <label translate="true">Sort Direction</label>
+            </parameter>
+
+            <parameter name="hyva_category_animations_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="200">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Animations</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_category_fade_animations" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\FadeAnimations" visible="true" sort_order="210">
+                <label translate="true">Category fade animations</label>
+                <description>Loading animation for the whole widget. Default is "No animation".</description>
+            </parameter>
+
+            <parameter name="hyva_category_type_title" xsi:type="block" required="false" visible="true" sort_order="300">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Widget type</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_category_type" xsi:type="select" visible="true" sort_order="310">
+                <label translate="true">Display Type</label>
+                <description>Slider or grid functionality.</description>
+                <options>
+                    <option name="slider" value="hyva_slider" selected="true">
+                        <label translate="true">Hyvä Slider</label>
+                    </option>
+                    <option name="splide" value="splide_slider">
+                        <label translate="true">SplideJS Slider</label>
+                    </option>
+                    <option name="grid" value="grid">
+                        <label translate="true">Grid</label>
+                    </option>
+                </options>
+            </parameter>
+
+
+            <parameter name="hyva_category_spacing_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="400">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Spacing</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_category_padding" xsi:type="text" visible="true" sort_order="410">
+                <label translate="true">Hyva category section padding</label>
+                <description>
+                    <![CDATA[Inside spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/padding" target="_blank">here</a>. E.g. "pt-8 pb-8 pl-4 pr-4" or "py-6 px-8". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+            <parameter name="hyva_category_margin" xsi:type="text" visible="true" sort_order="420">
+                <label translate="true">Hyva category section margin</label>
+                <description>
+                    <![CDATA[Spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/margin" target="_blank">here</a>. E.g. "mt-8 mb-8 mr-4 ml-4". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+
+        </parameters>
+    </widget>
+
+
+    <!-- Content widget -->
+    <widget class="Hyva\Widgets\Block\Widgets\Content" id="hyva_content"
+            placeholder_image="Hyva_Widgets::images/content.png">
+        <label>Hyva Content</label>
+        <description translate="true">Hyva content</description>
+        <parameters>
+
+            <parameter name="hyva_content_admin_title" xsi:type="block" required="false" visible="true" sort_order="0">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Content</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_content" sort_order="10" visible="true" xsi:type="block">
+                <label>Content</label>
+                <description>Enter any content here.</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Wysiwyg"/>
+            </parameter>
+            <parameter name="hyva_content_container" sort_order="20" visible="true" xsi:type="select">
+                <label>Container</label>
+                <description>
+                    <![CDATA[Apply container to the widget content. This uses following native container <a href="https://tailwindcss.com/docs/container</description">sizes</a>. If different needed should be overriden in hyva themes tailwind.config.js]]></description>
+                <options>
+                    <option name="add-container" value="1">
+                        <label translate="true">Add container</label>
+                    </option>
+                    <option name="remove-container" value="0">
+                        <label translate="true">Remove container</label>
+                    </option>
+                </options>
+            </parameter>
+
+
+            <parameter name="hyva_content_animations_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="30">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Animations</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_content_fade_animations" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\FadeAnimations" visible="true" sort_order="40">
+                <label translate="true">Content fade animations</label>
+                <description>Loading animation for the whole widget. Default is "No animation".</description>
+            </parameter>
+            <parameter name="hyva_content_container_background" sort_order="60" visible="true" xsi:type="block">
+                <label>Content container background</label>
+                <description>Content container background</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_content_container_background</item>
+                    </data>
+                </block>
+            </parameter>
+
+
+            <parameter name="hyva_content_spacing_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="90">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Spacing</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_content_padding" xsi:type="text" visible="true" sort_order="100">
+                <label translate="true">Hyva content padding</label>
+                <description>
+                    <![CDATA[Inside spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/padding" target="_blank">here</a>. E.g. "pt-8 pb-8 pl-4 pr-4" or "py-6 px-8". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+            <parameter name="hyva_content_margin" xsi:type="text" visible="true" sort_order="110">
+                <label translate="true">Hyva content margin</label>
+                <description>
+                    <![CDATA[Spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/margin" target="_blank">here</a>. E.g. "mt-8 mb-8 mr-4 ml-4". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+
+
+            <parameter name="hyva_content_font_color_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="120">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Text font color</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_content_font_color" sort_order="130" visible="true" xsi:type="block">
+                <label>Text font color</label>
+                <description>Text font color. To be used only if entered clean WYSIWYYG editor content. This means when
+                    not copying tailwind components.
+                </description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_content_font_color</item>
+                    </data>
+                </block>
+            </parameter>
+        </parameters>
+    </widget>
+
+
+    <!-- Banner widget -->
+    <widget class="Hyva\Widgets\Block\Widgets\Banner" id="hyva_banner" placeholder_image="Hyva_Widgets::images/banner.png">
+        <label>Hyva Banner</label>
+        <description translate="true">Hyva banner</description>
+        <parameters>
+            <parameter name="hyva_banner_content_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="0">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Content</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_banner_image" xsi:type="block" required="false" visible="true" sort_order="10">
+                <label translate="true">Banner image</label>
+                <description>Images are not resized on the frontend by default, be aware of file sizes!</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\ImageField">
+                    <data>
+                        <item name="button" xsi:type="array">
+                            <item name="open" xsi:type="string">Choose Image...</item>
+                        </item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="hyva_banner_image_width" sort_order="12" visible="true" xsi:type="text">
+                <label>Banner image width</label>
+                <description>Insert the original width of the image to help the browser determine the aspect ratio early.</description>
+                <value>720</value>
+            </parameter>
+            <parameter name="hyva_banner_image_height" sort_order="14" visible="true" xsi:type="text">
+                <label>Banner image height</label>
+                <description>Insert the original height of the image to help the browser determine the aspect ratio early.</description>
+                <value>384</value>
+            </parameter>
+            <parameter name="hyva_banner_title" sort_order="20" visible="true" xsi:type="text">
+                <label>Banner title</label>
+                <description>Enter any title here.</description>
+            </parameter>
+            <parameter name="hyva_banner_text" sort_order="30" visible="true" xsi:type="block">
+                <label>Banner text</label>
+                <description>Enter a paragraph of plain-text here</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\TextArea"/>
+            </parameter>
+            <parameter name="hyva_banner_button_label" sort_order="40" visible="true" xsi:type="text">
+                <label>Banner button label</label>
+                <description>Banner button label</description>
+            </parameter>
+            <parameter name="hyva_banner_button_url" sort_order="50" visible="true" xsi:type="text">
+                <label>Banner button url</label>
+                <description>Banner button url</description>
+            </parameter>
+            <parameter name="hyva_banner_content_alignment" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\CaptionAlignment" visible="true" sort_order="60">
+                <label translate="true">Banner content text alignment</label>
+                <description>Banner content text alignment can be left, center or right. Default position is left
+                </description>
+            </parameter>
+            <parameter name="hyva_banner_content_text_color" sort_order="70" visible="true" xsi:type="block">
+                <label>Content text color</label>
+                <description>Content text color</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_banner_content_text_color</item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="hyva_banner_container_background" sort_order="80" visible="true" xsi:type="block">
+                <label>Content container background</label>
+                <description>Content container background</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_banner_container_background</item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="hyva_banner_content_container" sort_order="90" visible="true" xsi:type="select">
+                <label>Container</label>
+                <description>
+                    <![CDATA[Apply container to the widget content. This uses following native container <a href="https://tailwindcss.com/docs/container</description">sizes</a>. If different needed should be overriden in hyva themes tailwind.config.js]]></description>
+                <options>
+                    <option name="remove-container" value="0">
+                        <label translate="true">Remove container</label>
+                    </option>
+                    <option name="add-container" value="1">
+                        <label translate="true">Add container</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="hyva_banner_inner_content_container" sort_order="100" visible="true" xsi:type="select">
+                <label>Banner inner content container</label>
+                <description>
+                    <![CDATA[Apply container to the widget inner content. We would use this with removed container on the whole widget to achieve fluid 100% design of background and contained data. This uses following native container <a href="https://tailwindcss.com/docs/container</description">sizes</a>. If different needed should be overriden in hyva themes tailwind.config.js]]></description>
+                <options>
+                    <option name="remove-container" value="0">
+                        <label translate="true">Remove container</label>
+                    </option>
+                    <option name="add-container" value="1">
+                        <label translate="true">Add container</label>
+                    </option>
+                </options>
+            </parameter>
+
+
+            <parameter name="hyva_banner_styles_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="200">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Banner styles</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_banner_layout" xsi:type="select" visible="true" sort_order="210">
+                <label translate="true">Banner layout</label>
+                <description>Different banner layouts</description>
+                <options>
+                    <option name="full-width" value="full-width" selected="true">
+                        <label translate="true">Full width</label>
+                    </option>
+                    <option name="half-left-caption" value="half-left-caption" selected="true">
+                        <label translate="true">Half left caption</label>
+                    </option>
+                    <option name="half-right-caption" value="half-right-caption" selected="true">
+                        <label translate="true">Half right caption</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="hyva_banner_shading" xsi:type="select" visible="true" sort_order="220">
+                <label translate="true">Shading</label>
+                <description>Shading over the image for better visibility. Default value is No</description>
+                <options>
+                    <option name="no" value="0" selected="true">
+                        <label translate="true">No</label>
+                    </option>
+                    <option name="yes" value="1">
+                        <label translate="true">Yes</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="hyva_banner_shading_color" sort_order="230" visible="true" xsi:type="block">
+                <label>Shading color</label>
+                <description>Shading color</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\Color">
+                    <data>
+                        <item name="colorpickerid" xsi:type="string">hyva_banner_shading_color</item>
+                    </data>
+                </block>
+            </parameter>
+
+            <parameter name="hyva_banner_admin_animations_title" xsi:type="block" required="false" visible="true"
+                       sort_order="300">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Animations</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+
+            <parameter name="hyva_banner_fade_animations" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\FadeAnimations" visible="true" sort_order="310">
+                <label translate="true">Banner fade animations</label>
+                <description>Loading animation for the whole widget. Default is "No animation".</description>
+            </parameter>
+
+            <parameter name="spacing" xsi:type="block" required="false" visible="true" sort_order="400">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Banner spacing</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+
+            <parameter name="hyva_banner_margin" xsi:type="text" visible="true" sort_order="410">
+                <label translate="true">Hyva banner margin (Tailwind Classes)</label>
+                <description>
+                    <![CDATA[Add styling to the main element. For whitespace around the element, look <a href="https://tailwindcss.com/docs/margin" target="_blank">here</a>. E.g. "mt-8 mb-8 mr-4 ml-4". Works with other Tailwind classes like "card rounded shadow" as well.]]></description>
+            </parameter>
+        </parameters>
+
+    </widget>
+
+
+    <!-- Multi field widget -->
+    <widget id="hyva_multi_field" class="Hyva\Widgets\Block\Widgets\MultiField"
+            placeholder_image="Hyva_Widgets::images/multifield.png">
+        <label translate="true">Hyva Multi-Field</label>
+        <description translate="true">Hyva multi field</description>
+        <parameters>
+            <parameter name="hyva_multi_field_content_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="0">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Content</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+
+            <parameter name="hyva_multi_field_title" sort_order="10" visible="true" xsi:type="text">
+                <label>Widget title</label>
+            </parameter>
+            <parameter name="hyva_multi_field_data" sort_order="30" visible="true" xsi:type="block">
+                <label>Multifield content</label>
+                <description>Plain text content shown below the title.</description>
+                <block class="Hyva\Widgets\Block\WidgetConfigs\TextArea"/>
+            </parameter>
+            <parameter name="hyva_multi_field_type" xsi:type="select" visible="true" sort_order="40">
+                <label translate="true">Display Type</label>
+                <description>Slider or grid functionality.</description>
+                <options>
+                    <option name="slider" value="hyva_slider" selected="true">
+                        <label translate="true">Hyvä Slider</label>
+                    </option>
+                    <option name="splide" value="splide_slider">
+                        <label translate="true">SplideJS Slider</label>
+                    </option>
+                    <option name="grid" value="grid">
+                        <label translate="true">Grid</label>
+                    </option>
+                </options>
+            </parameter>
+            <!-- `conditions` is a hardcoded parameter name that serializes multidimensional arrays -->
+            <!-- Without this, you'll get an error about array to string conversion in \Magento\Widget\Model\Widget\Instance::generateLayoutUpdateXml -->
+            <parameter name="conditions" xsi:type="block" sort_order="50" required="false" visible="true">
+                <label translate="true">Steps</label>
+                <block class="Hyva\Widgets\Block\Adminhtml\MultiField"/>
+            </parameter>
+            <parameter name="hyva_multi_field_container" sort_order="60" visible="true" xsi:type="select">
+                <label>Container</label>
+                <description>
+                    <![CDATA[Apply container to the multi field content. This uses following native container <a href="https://tailwindcss.com/docs/container</description">sizes</a>. If different needed should be overriden in hyva themes tailwind.config.js]]></description>
+                <options>
+                    <option name="add-container" value="1">
+                        <label translate="true">Add container</label>
+                    </option>
+                    <option name="remove-container" value="0">
+                        <label translate="true">Remove container</label>
+                    </option>
+                </options>
+            </parameter>
+
+
+            <parameter name="hyva_multi_field_admin_animations_title" xsi:type="block" required="false" visible="true"
+                       sort_order="100">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Animations</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+
+            <parameter name="hyva_multi_field_fade_animations" xsi:type="select" required="false"
+                       source_model="Hyva\Widgets\Block\WidgetConfigs\FadeAnimations" visible="true" sort_order="110">
+                <label translate="true">Multi field fade animations</label>
+                <description>Loading animation for the whole widget. Default is "No animation".</description>
+            </parameter>
+
+            <parameter name="hyva_multi_field_spacing_admin_title" xsi:type="block" required="false" visible="true"
+                       sort_order="200">
+                <description>
+                    <![CDATA[<hr style="margin:40px 0;" /><h1 style="text-align: left; margin: 40px 0">Spacing</h1>]]></description>
+                <block class="Hyva\Widgets\Block\Adminhtml\Renderer\WidgetSectionTitle"/>
+            </parameter>
+            <parameter name="hyva_multi_field_padding" xsi:type="text" visible="true" sort_order="210">
+                <label translate="true">Hyva multifield padding</label>
+                <description>
+                    <![CDATA[Inside spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/padding" target="_blank">here</a>. E.g. "pt-8 pb-8 pl-4 pr-4" or "py-6 px-8". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+            <parameter name="hyva_multi_field_margin" xsi:type="text" visible="true" sort_order="220">
+                <label translate="true">Hyva multifield margin</label>
+                <description>
+                    <![CDATA[Spacing on top, left, bottom, right. More details can be found <a href="https://tailwindcss.com/docs/margin" target="_blank">here</a>. E.g. "mt-8 mb-8 mr-4 ml-4". Multiple entries allowed according to tailwind standards.]]></description>
+            </parameter>
+
+        </parameters>
+    </widget>
+
+</widgets>

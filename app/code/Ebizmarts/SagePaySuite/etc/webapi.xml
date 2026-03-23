@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <route url="/V1/elavon/server" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\ServerManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon-guest/server" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\GuestServerManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/form/:cartId" method="GET">
+        <service class="Ebizmarts\SagePaySuite\Api\FormManagementInterface" method="getEncryptedRequest"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/form-guest/:cartId" method="GET">
+        <service class="Ebizmarts\SagePaySuite\Api\GuestFormManagementInterface" method="getEncryptedRequest"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/paypal/:cartId" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\PayPalManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/paypal-guest/:cartId" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\GuestPayPalManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/pi-msk" method="GET">
+        <service class="Ebizmarts\SagePaySuite\Api\PiMerchantInterface" method="getSessionKey"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+        <data>
+            <parameter name="quote" force="true">null</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/elavon/pi" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\PiManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon-ms/pi" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\MsPiManagementInterface" method="handleTransactionData"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon-guest/pi" method="POST">
+        <service class="Ebizmarts\SagePaySuite\Api\GuestPiManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/elavon/token/:tokenId/:customerId" method="GET">
+        <service class="Ebizmarts\SagePaySuite\Api\TokenGetInterface" method="getSagePayTokenAsResultInterface"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+</routes>

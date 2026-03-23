@@ -1,0 +1,154 @@
+//
+//  Store Locator
+//  ____________________________________________
+
+//
+//  Variables
+//  --------------------------------------------
+
+@amstars-popup-label__color: #3f3f3f;
+
+//
+//  Common
+//  ----------------------------------------------
+
+
+& when (@media-common = true) {
+    .amlocator-review-popup {
+        & {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        &-content {
+            padding-bottom: 30px;
+        }
+
+        .modal-inner-wrap {
+            border-radius: 10px;
+            max-width: 500px;
+            min-width: 330px;
+            width: 30%;
+
+            .modal-header {
+                padding-top: 2rem;
+
+                .action-close {
+                    padding: 12px;
+
+                    &:hover:before {
+                        color: @amlocator__button__hover-color;
+                    }
+
+                    &:focus:before {
+                        color: @amlocator__button__hover-color;
+                    }
+                }
+            }
+
+            .modal-footer {
+                padding-top: 0;
+            }
+
+            .amlocator-header {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .amlocator-name {
+                font-weight: 600;
+                word-break: break-all;
+                word-wrap: break-word;
+            }
+
+            .review-control-vote:focus-within:before {
+                background: @amstars-star__focus__background;
+            }
+        }
+    }
+
+    .amlocator-review-form {
+        //  Override magento styles
+        .review-field-rating .control {
+            margin: 5px 0 40px;
+        }
+
+        .review-field-rating .label {
+            color: @amstars-popup-label__color;
+            font-weight: 400;
+        }
+
+        .review-control-vote:before {
+            content: '';
+            width: 165px;
+            .lib-css(height, @amstars-star__l__height);
+            .lib-css(background, @amstars-star__background);
+        }
+
+        .review-control-vote label:before {
+            content: '';
+            display: inline-block;
+            .lib-css(height, @amstars-star__l__height);
+            .lib-css(background, @amstars-star__active__background);
+        }
+
+        .review-control-vote input[type='radio']:not(:checked) + label:hover:before {
+            .lib-css(background, @amstars-star__hover__background);
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .review-control-vote {
+            @amreview-stars: 5;
+
+            .override-stars (@i) when (@i > 0) {
+                /* phpcs:ignore Magento2.Less.BracesFormatting.SpacingBeforeOpen,Magento2.Less.BracesFormatting.SpacingBeforeClose  */
+                .rating-@{i}:before {
+                    width: @i*33px;
+                }
+                .override-stars(@i - 1);
+            }
+
+            .override-stars (@amreview-stars);
+        }
+
+        &.review-form .action.submit.primary {
+            background: @color-blue1;
+            border: 0;
+            border-radius: 0;
+            color: @color-white;
+            min-height: 40px;
+            width: inherit;
+        }
+
+        &.review-form .action.submit.primary:hover {
+            background: lighten(@color-blue1, 5%);
+        }
+
+        .label-gdpr.amreview-checboxlabel span {
+            color: @color-red10;
+            font-size: 1.2rem;
+            margin: 0 0 0 5px;
+        }
+    }
+
+    .amlocator-review-form .field.review-field-ratings {
+        .label {
+            margin: 10px 15px 0 0;
+            vertical-align: top;
+        }
+
+        .control {
+            display: inline-block;
+            vertical-align: top;
+            width: 100%;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amlocator-review-popup .field.review-field-ratings .control {
+        width: inherit;
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "hyva-themes/magento2-mollie-theme-bundle",
+  "description": "Hyva Themes Mollie companion module",
+  "type": "magento2-module",
+  "require": {
+    "mollie/magento2-hyva-compatibility": "^2.1.1"
+  },
+  "authors": [{
+    "name": "Hyvä Themes B.V.",
+    "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\MollieThemeBundle\\": ["src/"]
+    }
+  }
+}

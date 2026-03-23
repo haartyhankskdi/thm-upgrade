@@ -1,0 +1,23 @@
+<!-- ko if: coupons().length > 0 -->
+
+<div class="coupon-warpper">
+<!--     <div class="title">
+        <h3>Available Coupons</h3>
+    </div> -->
+    <div class="coupon-list">
+        <!-- ko foreach: coupons -->
+        <div class="coupon-item">
+            <div class="coupon-content">
+                <span class="name" data-bind="text: name"></span><br/>
+                <span class="description" data-bind="text: description"></span><br/>
+                <span class="code" data-bind="text: code"></span>
+            </div>
+            <!-- <button type="button"  data-bind="click: $parent.applyCoupon" style="margin-left:10px;">
+                Apply
+            </button> -->
+            <button type="button" class="coupon-action action primary" data-bind="click: function() { $parent.applyCoupon(code) }">Apply Now</button>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->

@@ -1,0 +1,29 @@
+{
+    "brippo_payments_card_fingerprints": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "card_fingerprints": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "brippo_uncaptured_payments": {
+        "column": {
+            "id": true,
+            "store_id": true,
+            "count": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BRIPPO_UNCAPTURED_PAYMENTS_STORE_ID_STORE_STORE_ID": true,
+            "BRIPPO_UNCAPTURED_PAYMENTS_STORE_ID": true
+        }
+    },
+    "quote": {
+        "column": {
+            "brippo_quote_hash": true
+        }
+    }
+}

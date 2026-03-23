@@ -1,0 +1,91 @@
+" can be found at the following stores:&nbsp;"," can be found at the following stores:&nbsp;"
+"Close filters","Close filters"
+"Open filters","Open filters"
+Filter,Filter
+"Please Select","Please Select"
+Reset,Reset
+"%1 out of %2 stars","%1 out of %2 stars"
+"Sorry we're unable to display the nearby stores because the ""Use browser location"" or ""Use Geo IP"" options are disabled in the module settings. Please, contact the administrator.","Sorry we're unable to display the nearby stores because the ""Use browser location"" or ""Use Geo IP"" options are disabled in the module settings. Please, contact the administrator."
+"Issue with fetching data. Please try letter","Issue with fetching data. Please try letter"
+km,km
+mi,mi
+"You need to choose address from the dropdown with suggestions.","You need to choose address from the dropdown with suggestions."
+"Sorry, no locations were found.","Sorry, no locations were found."
+"Sorry, Google failed to get directions","Sorry, Google failed to get directions"
+"Sorry, there is no available view of the street yet.","Sorry, there is no available view of the street yet."
+"Please fill in all required fields","Please fill in all required fields"
+"Review has been placed","Review has been placed"
+"Issue with sending review. Please try letter","Issue with sending review. Please try letter"
+Distance:,Distance:
+"Click to select this store","Click to select this store"
+"Work Time Today:","Work Time Today:"
+"Toggle store opening hours","Toggle store opening hours"
+"Items %1 to %2 of %3 total","Items %1 to %2 of %3 total"
+"%1 Item","%1 Item"
+"%1 Item(s)","%1 Item(s)"
+"Pages pagination","Pages pagination"
+Previous,Previous
+Page,Page
+"You're currently reading page","You're currently reading page"
+"Skip a few pages","Skip a few pages"
+Next,Next
+Show,Show
+"per page","per page"
+"Additional Information","Additional Information"
+"Toggle store attribiutes","Toggle store attribiutes"
+"Travel Modes","Travel Modes"
+Driving,Driving
+Transit,Transit
+Walking,Walking
+Cycling,Cycling
+Destination,Destination
+Origin,Origin
+"Reverse starting point and destination","Reverse starting point and destination"
+Directions,Directions
+"Toggle directions information","Toggle directions information"
+"Zip: ","Zip: "
+"Country: ","Country: "
+"State: ","State: "
+"City: ","City: "
+"Address: ","Address: "
+"Street View","Street View"
+Photos,Photos
+Reviews,Reviews
+"Toggle store reviews","Toggle store reviews"
+"Review score - ","Review score - "
+" reviews"," reviews"
+"Write a review","Write a review"
+"Close modal","Close modal"
+"You're reviewing:","You're reviewing:"
+"* Required Fields","* Required Fields"
+"Your Rating","Your Rating"
+"%1 %2","%1 %2"
+"1 star","1 star"
+"%1 stars","%1 stars"
+Review,Review
+"Submit Review","Submit Review"
+"Please %1 to leave a review.","Please %1 to leave a review."
+"Customer rating -","Customer rating -"
+"See a full review","See a full review"
+"Collapse review","Collapse review"
+"Store photo","Store photo"
+"Search your store","Search your store"
+"Searched location","Searched location"
+"Current location","Current location"
+"Search location","Search location"
+"Reset searched value","Reset searched value"
+"Choose unit of distance","Choose unit of distance"
+kilometer,kilometer
+mile,mile
+"Search Radius","Search Radius"
+"Search Radius in","Search Radius in"
+"Locate Nearby","Locate Nearby"
+"Please note that Hyvä Theme does not provide this functionality.","Please note that Hyvä Theme does not provide this functionality."
+"Amasty Store Locator Hyva","Amasty Store Locator Hyva"
+"Store Locator Hyva","Store Locator Hyva"
+"Show Store List On Widget","Show Store List On Widget"
+"Show NearBy And Radius Filter","Show NearBy And Radius Filter"
+"Automatic positioning to the nearest location","Automatic positioning to the nearest location"
+"Widget Description","Widget Description"
+"Enable Widget Block Wrapping","Enable Widget Block Wrapping"
+"Set 'No' to disable the map block wrapping with the page content","Set 'No' to disable the map block wrapping with the page content"

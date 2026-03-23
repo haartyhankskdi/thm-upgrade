@@ -1,0 +1,128 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPoints
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+
+<script>
+// Single helper to format reward points safely
+window.mpFormatReward = function (value) {
+    try {
+        if (typeof rewardPoints === 'function') {
+            return rewardPoints().format(value);
+        }
+    } catch (e) {return 0}
+    return value;
+};
+</script>
+
+<!-- display subtotal including and excluding tax -->
+<template x-if="segment.code === 'mp_reward_earn' && 'both' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+        </div>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_spent' && 'both' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+        </div>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_discount' && 'both' === checkoutConfig.reviewTotalsDisplayMode && segment.value < 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto"
+             x-text="hyva.formatPrice(segment.value)"
+        ></div>
+    </div>
+</template>
+
+<!-- display subtotal excluding tax -->
+<template x-if="segment.code === 'mp_reward_earn' && 'excluding' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}`"
+        ></div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+        </div>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_spent' && 'excluding' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+        </div>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_discount' && 'excluding' === checkoutConfig.reviewTotalsDisplayMode && segment.value < 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto"
+             x-text="hyva.formatPrice(segment.value)"
+        ></div>
+    </div>
+</template>
+
+<!-- display subtotal including tax -->
+<template x-if="segment.code === 'mp_reward_earn' && 'including' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}`">
+        </div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_spent' && 'including' === checkoutConfig.reviewTotalsDisplayMode && segment.value > 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}` "
+        ></div>
+        <div class="w-5/12 text-right md:w-auto">
+            <span class="price mp-rw-highlight" x-text="mpFormatReward(segment.value)" style="font-weight: bold;"></span>
+        </div>
+    </div>
+</template>
+<template x-if="segment.code === 'mp_reward_discount' && 'including' === checkoutConfig.reviewTotalsDisplayMode && segment.value < 0">
+    <div class="flex pb-2 my-2 border-b text-md lg:text-sm md:grid md:grid-cols-2 md:w-full border-container">
+        <div class="w-7/12 text-left md:w-auto"
+             x-html="`${segment.title}`">
+        </div>
+        <div class="w-5/12 text-right md:w-auto"
+             x-text="hyva.formatPrice(segment.value)"
+        ></div>
+    </div>
+</template>

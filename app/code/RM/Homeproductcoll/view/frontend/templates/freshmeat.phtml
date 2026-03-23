@@ -1,0 +1,353 @@
+<?php
+$exotic_products= $viewModels->require(\RM\Homeproductcoll\ViewModel\Products::class);
+$categoryProducts = $exotic_products->getProductCollectionFromCategory(8);
+$wishlistHelper = $this->helper("Magento\Wishlist\Helper\Data");
+$customerSession = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\Custom::class);
+$isLoggedIn = $customerSession->getCustomerData()->isLoggedIn();
+$bestselling = $viewModels->require(\Haartyhanks\RemoveObjectManager\ViewModel\BestSellers::class);
+$formKey = $bestselling->getFormKey();
+$cartItems = $block->getLayout()->createBlock(\Magento\Checkout\Block\Cart\Sidebar::class)->getItems();
+?>
+   <form id="exotic-form" style="display:none;">
+        <input type="hidden" name="form_key" value="<?= $formKey ?>">
+    </form>
+
+<div id="freshmeat-main-section" class="py-12 px-0 mb-8 md:mb-0 ">
+ <div class="container">
+    <div class="section-title text-center mb-12 scroll-item">
+        <h2 class="text-3xl md:text-[38px] font-light text-black"><span class="font-bold">Exotic</span> Indulgence</h2>
+        <p class="text-base md:text[17px] text-black my-4">
+            Premium cuts. Bold flavours. Rare finds.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div>
+
+    <div x-data="freshMeatSlider()" x-init="init()" class="relative mt-6 scroll-item">
+        <div class="overflow-hidden">
+                <div class="overflow-hidden">
+                <div class="flex md:gap-5"
+                @mousedown="dragStart($event)"
+                @mousemove="dragMove($event)"
+                @mouseup="dragEnd()"
+                @mouseleave="dragEnd()"
+                @touchstart="dragStart($event)"
+                @touchmove="dragMove($event)"
+                @touchend="dragEnd()"
+               :style="sliderStyle">
+                
+                <template x-for="product in products" :key="product.id">
+                    <div class="flex-none product-card-list">
+                        <div class="group border-0 bg-transparent hover:bg-[#F5F9F7] hover:shadow-lg transition-shadow duration-300 transition relative cursor-pointer pb-4 lg:pb-6">
+
+                            <!-- Product Image -->
+                            <div class="bg-[#f3f3f3] mb-2 p-1">
+                                <a class="flex items-center justify-center overflow-hidden" :href="product.url" @click.prevent="if (!dragged) window.location = product.url" :aria-label="product.name">
+                                    <img :src="product.image" :alt="product.name" class="w-full transform transition-transform duration-500 group-hover:scale-110" width="360" height="360" />
+                                </a>
+
+                                <!-- Discount Badge -->
+                                <template x-if="product.discount">
+                                    <div class="discount-badge absolute z-10 top-3 right-3 bg-red-600 text-white w-[58px] h-[58px] flex flex-col items-center justify-center text-center leading-[18px] rounded-full px-2 py-1" x-text="product.discount + '% OFF'"></div>
+                                </template>
+
+                                <!-- New Badge -->
+                                <template x-if="product.isNew">
+                                    <div class="custom-new-label absolute z-10 top-3 right-3 bg-green-600 text-white text-xs px-2 py-1 rounded">NEW</div>
+                                </template>
+
+                                <!-- Wishlist -->
+                                <div class="absolute z-10 top-3 left-3 w-[31px] h-[31px] bg-black rounded-full flex items-center justify-center opacity-0 scale-90
+      transition-all duration-300 ease-out
+
+      group-hover:opacity-100
+      group-hover:scale-100">
+                                   <template x-if="product.isLoggedIn">
+                                  <form :action="product.wishlistUrl" method="post">
+                                     <input type="hidden" name="product" :value="product.id">
+                                     <input type="hidden" name="form_key" :value="product.formKey">
+                                       <button type="submit" class="wishlist-btn">
+                      <img :src="product.inWishlist ? product.heartRedIcon : product.heartIcon" class="w-4 h-4 ml-[1px]" alt="heart" >
+                         </button>
+                          </form>
+                         </template>
+                                    <template x-if="!product.isLoggedIn">
+                                        <a :href="product.loginUrl" class="wishlist-btn">
+                                            <img :src="product.heartIcon" class="w-4 h-4 ml-[1px]" alt="heart">
+                                        </a>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Product Details -->
+                            <div class="py-4 px-0 lg:px-2 text-center">
+                            <div class="product-name mt-0 font-semibold text-base mt-3 font-semibold text-black lg:text-xl line-clamp-2 md:h-[58px] lg:px-4">
+                                <a :href="product.url" @click.prevent="if (!dragged) window.location = product.url" x-text="product.name"></a>
+                            </div>
+
+                            <!-- Price -->
+              <div class="text-lg mt-1 mb-6 font-bold text-black lg:text-xl">
+                      <template x-if="product.specialPrice">
+                       <div>
+               <span class="font-bold text-black lg:text-xl" x-text="product.price"></span>
+            <span class="text-gray-400 font-normal lg:text-xl line-through ml-2" x-text="product.regularPrice"></span>
+        </div>
+        </template>
+     <template x-if="!product.specialPrice">
+        <span class="font-bold text-black lg:text-xl" x-text="product.price"></span>
+    </template>
+</div>
+
+                            <!-- Weight -->
+                            <div class="flex text-center gap-2 justify-center mt-3 prod-list-vip-sec">
+                            <div :class="{ 'no_weight': !product.weight}">
+                            <template x-if="product.weight">
+                                <div class="text-xs text-black font-normal">
+                                    Weight <span class="bg-[#3B7E48] text-xs text-white font-normal p-0.5" x-text="product.weight"></span>
+                                </div>
+                            </template>
+                              </div>
+                            <span class="vip-points text-xs text-[#AC7928] font-normal block">Get 2 VIP Points</span>
+                            </div>
+
+                            <!-- Add to Basket -->
+                                <div class="mt-4" x-data="customCart(product.id, product.qtyInCart, product.itemId, product.name, product.hasOptions)">
+                                    <template x-if="product.hasOptions">
+                                        <button type="button" :onclick="'location.href=\'' + product.url + '\''" 
+                                                class="w-full bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base font-normal px-2 py-3 rounded-full transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl uppercase lg:w-full">
+                                            Customise & Add to Basket
+                                        </button>
+                                    </template>
+
+                                    <template x-if="!product.hasOptions">
+                                        <div class="custom-cart-ui">
+                                            <template x-if="qty === 0">
+                                                <div class="cart-btn-wrapper default-state">
+                                                    <button @click="addToCart()" :disabled="loading" 
+                                                            class="w-full bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base  font-normal px-2 py-3 rounded-full transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl uppercase lg:w-[215px]">
+                                                        <template x-if="!loading"><span>+ Add to Basket</span></template>
+                                                        <template x-if="loading"><span>Adding...</span></template>
+                                                    </button>
+                                                </div>
+                                            </template>
+
+                                            <template x-if="qty > 0">
+                                                <div class="qty-state items-center gap-2 justify-center bg-white border border-black inline-block w-auto mt-1">
+                                                    <button @click="decrease()" class="bg-black px-3 py-2 rounded-none text-white">-</button>
+                                                    <span x-text="qty + ' Added'" class="text-sm font-medium qty-text bg-white inline-block w-[60px] h-[32px] leading-[32px]"></span>
+                                                    <button @click="increase()" class="bg-black px-3 py-2 rounded-none text-white">+</button>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                          </div>
+                        </div>
+                    </div>
+                </template>
+            
+            </div>
+    
+    </div>
+       <div class="flex justify-center mt-4 space-x-2">
+    <template x-for="n in totalDots" :key="n">
+    <div @click="goToSlide(n - 1)"
+         class="w-3 h-3 rounded-full cursor-pointer"
+         :class="currentIndex === (n - 1) ? 'bg-[#E63833]' : 'bg-gray-300'">
+    </div>
+</template>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cart-toast-container"></div>
+<script>
+     document.addEventListener("alpine:init", () => {
+        Alpine.store("freshMeatProducts", [
+        <?php 
+        $i = 1;
+        foreach ($categoryProducts as $product):
+            if($i <= 15):
+                $productImageUrl = $block->getMediaUrl().$product->getSmallImage();
+                $image = $bestselling->getProductImage($product);
+                $specialPrice = $product->getSpecialPrice();
+            $regularPrice = $product->getPrice();
+           $specialFromDate = $product->getSpecialFromDate();
+         $specialToDate = $product->getSpecialToDate();
+         $todayDate = new \DateTime(); // today's date
+       $specialFrom = $specialFromDate ? new \DateTime($specialFromDate) : null;
+    $specialTo   = $specialToDate ? new \DateTime($specialToDate) : null;
+  $hasDiscount = false;
+  if ($specialPrice && $specialPrice < $regularPrice) {
+    if ($specialFrom && $specialTo) {
+        if ($todayDate >= $specialFrom && $todayDate <= $specialTo) {
+            $hasDiscount = true;
+        }
+    } elseif ($specialFrom && !$specialTo) {
+        if ($todayDate >= $specialFrom) {
+            $hasDiscount = true;
+        }
+    } elseif (!$specialFrom && $specialTo) {
+        if ($todayDate <= $specialTo) {
+            $hasDiscount = true;
+        }
+    } else {
+        $hasDiscount = true; 
+    }
+}
+$isSpecialPriceActive = false;
+if ($specialPrice && $specialPrice < $regularPrice) {
+    if ($specialFrom && $specialTo) {
+        $isSpecialPriceActive = ($todayDate >= $specialFrom && $todayDate <= $specialTo);
+    } elseif ($specialFrom && !$specialTo) {
+        $isSpecialPriceActive = ($todayDate >= $specialFrom);
+    } elseif (!$specialFrom && $specialTo) {
+        $isSpecialPriceActive = ($todayDate <= $specialTo);
+    } else {
+        $isSpecialPriceActive = true; // no date limits
+    }
+}
+$displayPrice = $isSpecialPriceActive ? $specialPrice : $regularPrice;
+$displayRegularPrice = $regularPrice;
+$discount = $hasDiscount ? round(100 - ($specialPrice / $regularPrice) * 100) : 0;
+                $createdAt = $product->getCreatedAt();
+                $isNew = ($createdAt && (new DateTime())->diff(new DateTime($createdAt))->days <= 5);
+                $hasOptions = $product->getHasOptions();
+                $inWishlist = false;
+                if ($isLoggedIn) {
+                    $wishlist = $wishlistHelper->getWishlist();
+                    if ($wishlist) {
+                        foreach ($wishlist->getItemCollection() as $item) {
+                            if ($item->getProductId() == $product->getId()) { $inWishlist = true; break; }
+                        }
+                    }
+                }
+
+                $productInCart = 0;
+                $itemId = 'null';
+                foreach ($cartItems as $item) {
+                    if ($item->getProductId() == $product->getId()) {
+                        $productInCart = (int)$item->getQty();
+                        $itemId = $item->getItemId();
+                        break;
+                    }
+                }
+        ?>
+        {
+            id: <?= $product->getId() ?>,
+            name: "<?= addslashes($product->getName()) ?>",
+            url: "<?= $product->getProductUrl() ?>",
+             image: "<?= $image->getImageUrl() ?>",
+            isLoggedIn: <?= $isLoggedIn ? 'true' : 'false' ?>,
+            inWishlist: <?= $inWishlist ? 'true' : 'false' ?>,
+            loginUrl:"<?= $block->getUrl('customer/account/login/') ?>",
+            wishlistUrl: "<?= $block->getUrl('wishlist/index/add') ?>",
+            //formKey: "<?= $formKey ?>",
+            heartIcon: "<?= $block->getViewFileUrl('images/heart.svg') ?>",
+            heartRedIcon: "<?= $block->getViewFileUrl('images/heart-red.svg') ?>",
+            specialPrice: <?= $isSpecialPriceActive ? $specialPrice : 'null' ?>,
+           regularPrice: "£<?= number_format($regularPrice ?? 0, 2) ?>",
+            discount: <?= $discount ?>,
+            isNew: <?= $isNew ? 'true' : 'false' ?>,
+            hasOptions: <?= $hasOptions ? 'true' : 'false' ?>,
+            weight: "<?php $value = (float) $product->getWeight();
+                  if ($value > 0) {
+                     if (floor($value) == $value) {
+                      echo number_format($value, 1, ".", "");
+                      } else {
+                       echo
+                    rtrim(rtrim(number_format($value, 4, ".", ""), "0"), ".");
+                       }
+                         } 
+                    ?>",
+            price: "£<?= number_format($displayPrice ?? 0, 2) ?>",
+            qtyInCart: <?= $productInCart ?>,
+            itemId: <?= $itemId ?>
+        },
+        <?php 
+            endif; $i++;
+        endforeach; 
+        ?>
+    ]);
+    });
+
+function freshMeatSlider() {
+  return {
+        currentIndex: 0,
+        products: Alpine.store("freshMeatProducts"),
+        slidesPerView: 4,
+        isDragging: false,
+        dragged: false,
+        startX: 0,
+        currentTranslate: 0,
+        prevTranslate: 0,
+
+        init() {
+            this.updateSlidesPerView();
+            window.addEventListener("resize", () => this.updateSlidesPerView());
+            this.currentTranslate = -this.currentIndex * 100;
+        },
+
+        updateSlidesPerView() {
+            const width = window.innerWidth;
+            if (width >= 1024) this.slidesPerView = 4;
+            else if (width >= 768) this.slidesPerView = 2;
+            else this.slidesPerView = 2;
+        },
+
+    get totalDots() {
+    if (!this.products?.length) return 1;
+    return Math.ceil(this.products.length / this.slidesPerView);
+},
+
+        maxIndex() {
+            return this.totalDots - 1;
+        },
+
+        goToSlide(i) {
+            this.currentIndex = Math.max(0, Math.min(i, this.maxIndex()));
+            this.currentTranslate = -this.currentIndex * 100;
+        },
+
+        prev() { this.goToSlide(this.currentIndex - 1); },
+        next() { this.goToSlide(this.currentIndex + 1); },
+
+        /* ---------- Drag / Swipe Handlers ---------- */
+          dragStart(e) {
+      if (e.type.includes("mouse")) e.preventDefault();
+      this.isDragging = true;
+      this.dragged = false;
+      this.startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      this.prevTranslate = -this.currentIndex * 100;
+    },
+
+        dragMove(e) {
+            if (!this.isDragging) return;
+            const currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+            const diff = currentX - this.startX;
+
+            if (Math.abs(diff) > 5) this.dragged = true;
+            this.currentTranslate = this.prevTranslate + (diff / window.innerWidth) * 100;
+        },
+
+        dragEnd() {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            const moved = this.currentTranslate - this.prevTranslate;
+
+            if (moved < -10) this.next();
+            else if (moved > 10) this.prev();
+            else this.goToSlide(this.currentIndex);
+        },
+
+        /* ---------- Slider Style ---------- */
+        get sliderStyle() {
+            return `
+                transform: translateX(${this.currentTranslate}%);
+                transition: ${this.isDragging ? 'none' : 'transform .5s ease'};
+            `;
+        }
+    }
+};
+
+</script>

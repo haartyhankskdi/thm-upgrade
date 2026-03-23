@@ -1,0 +1,196 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+/** @var \Mageplaza\RewardPoints\Helper\Email $helper */
+/** @var  Mageplaza\RewardPointsUltimate\Block\Referral\Index $block */
+$helper  = $block->getEmailHelper();
+$formKey = $helper->getObject(\Magento\Framework\Data\Form\FormKey::class)->getFormKey();
+?>
+<div id="mp_reward_referral" class="my-10 inline-block w-full bg-[#F5F9F7] py-4 px-2 md:px-8 my-4 md:mt-8">
+    <?php /** @var Mageplaza\RewardPointsUltimate\Block\Referral\Index $block */
+    if ($block->getRule()) : ?>
+        <div id="description">
+            <strong><?= $block->escapeHtml(__('Share your referral link with your friends and earn commissions')) ?></strong>
+            <div class="refer">
+                <span><?= $block->escapeHtml($block->getReferMessage()) ?></span>
+            </div>
+            <div class="customer">
+                <span><?= $block->escapeHtml($block->getCustomerMessage()) ?></span>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div id="mp_section" x-data="rewardRefer">
+        <div class="col-mp mp-6 mp-md-6 mp-sm-12 mp-xs-12 !pl-0">
+            <?php $referUrl = $block->getReferUrl(); ?>
+            <div class="block url_and_code">
+                <div class="block-title"><h3><?= $block->escapeHtml(__('Referral URL And Code')) ?></h3></div>
+                <div class="box-content">
+                    <div class="mp_url">
+                        <span class="mp-label mb-2 inline-block"><?= $block->escapeHtml(__('Refer URL')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input bg-white border-[#E4F0E8] rounded-none   w-full" name="refer_url"
+                                   value="<?= $block->escapeUrl($referUrl) ?>" readonly/>
+                            <div class="copy bg-gray-400" @click="changeText" x-on:mouseleave="hoverText">
+                                <span x-text="hoverText"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mp_code">
+                        <span class="mp-label mb-2 inline-block"><?= $block->escapeHtml(__('Refer Code')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input bg-white border-[#E4F0E8] rounded-none   w-full" name="refer_code"
+                                   value="<?= $block->escapeHtmlAttr($block->getCode()) ?>" readonly/>
+                            <div class="copy bg-gray-400" @click="changeText" x-on:mouseleave="hoverText">
+                                <span x-text="hoverText"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mp_email">
+                        <span class="mp-label mb-2 inline-block"><?= $block->escapeHtml(__('Refer Email')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input bg-white border-[#E4F0E8] rounded-none   w-full" name="refer_email"
+                                   value="<?= $block->escapeHtmlAttr($block->getCustomerEmail()) ?>" readonly/>
+                            <div class="copy bg-gray-400" @click="changeText" x-on:mouseleave="hoverText">
+                                <span x-text="hoverText"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="block refer-via-social mt-4">
+                <div class="block-title"><h3><?= $block->escapeHtml(__('Referral via Social')) ?></h3></div>
+                <div class="box-content">
+                    <script type='text/javascript'
+                            src='https://platform-api.sharethis.com/js/sharethis.js#property=65a4a7a4dce46a00126a9a26&product=inline-share-buttons'
+                            async='async'></script>
+                    <!-- ShareThis BEGIN -->
+                    <div class="sharethis-inline-share-buttons" data-url="<?= $block->escapeUrl($referUrl) ?>"
+                         data-title="<?= $block->escapeUrl($referUrl) ?>">
+                    </div><!-- ShareThis END -->
+                </div>
+            </div>
+        </div>
+        <div class="block col-mp mp-6 mp-md-6 mp-sm-12 mp-xs-12">
+            <div class="block-title"><h3><?= $block->escapeHtml(__('Send Invitations')) ?></h3></div>
+            <div class="box-content">
+                <form action="<?= $block->escapeUrl($block->getSaveInvitationsUrl() . '?form_key=' . $formKey) ?>"
+                      method="post" name="invitation-data">
+                    <div class="send-from">
+                        <div class="mp-title w-full">
+                            <span class="mp-label mb-2 inline-block"><?= $block->escapeHtml(__('Send from')) ?></span>
+                        </div>
+                        <div class="mp-content w-full">
+                            <select id="send-by" name="send-by" class="bg-white border-[#E4F0E8] rounded-none h-12 w-full" 
+                                    x-model="id"
+                                    x-on:change="sendBy(id)">
+                                <option value="store"><?= $block->escapeHtml(__('Store')) ?></option>
+                                <option
+                                    value="email_address"><?= $block->escapeHtml(__('Your email address')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="invite-friend inline-block">
+                        <span
+                            class="mp-label mb-2 inline-block"><?= $block->escapeHtml(__('Invite your friends by entering their email addresses below')) ?></span>
+                        <textarea name="invitees" class="bg-white border-[#E4F0E8] rounded-none w-full"></textarea>
+                        <div class="comment my-4">
+                            <p><?= $block->escapeHtml(__('To reduce the chance that your message is marked as spam, please follow this format: "Contact name" <name@example.com>')) ?></p>
+                            <p><?= $block->escapeHtml(__('Example contact list:"John" <john@example.com>, peter@icloud.com,jennifer@google.com, hello@yahoo.com, mark@gmail.com')) ?></p>
+                        </div>
+                    </div>
+                    <template x-if="id">
+                        <div class="invite-message ">
+                        <span
+                            class="mp-label"
+                            style="display: block"><?= $block->escapeHtml(__('Message (Just your message, referral links will be added automatically.)')) ?></span>
+                            <textarea name="message" style="width: 100%"></textarea>
+                        </div>
+                    </template>
+                    <div class="action primary bt-send mt-4">
+                        <button type="submit" title="<?= $block->escapeHtmlAttr(__('message')) ?>"
+                                class="bg-[#3B7E48] hover:bg-[#E63833] group-hover:bg-[#E63833] text-white text-xs  md:text-base font-normal px-2 py-3 rounded-full transition duration-400 uppercase px-8">
+                            <?= $block->escapeHtml(__('SEND NOW')) ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <?= /** @noEscape */
+        $block->getChildHtml() ?>
+    </div>
+</div>
+
+<script>
+    function rewardRefer() {
+        return {
+            id: null,
+            copiedText: '',
+            sendBy: function (id) {
+                this.isDisplayInviteMessage(id);
+            },
+            changeText: function (e) {
+                const inputElement = e.currentTarget.parentElement.querySelector('input');
+                inputElement.select();
+                document.execCommand('copy');
+
+                return e.currentTarget.innerText = '<?= $block->escapeHtml(__('copied')) ?>';
+            },
+            hoverText: function (e) {
+                if (e) {
+                    return e.currentTarget.innerText = '<?= $block->escapeHtml(__('copy')) ?>';
+                }
+
+                return '<?= $block->escapeHtml(__('copy')) ?>';
+            },
+            isDisplayInviteMessage: function (id) {
+                if (id === 'store') {
+                    this.id = null;
+                } else {
+                    this.id = id;
+                }
+            },
+        }
+    }
+</script>
+<style>
+    .mp-input {
+        width: 100%;
+    }
+    #mp_reward_referral{
+        top: 0;
+    }
+
+    .url_and_code .copy {
+        right: 8px;
+        top: 6px;
+    }
+    .block-title {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #c6c6c6;
+        margin-bottom: 20px;
+    }
+    .block-title h3 {
+        font-size: 1.3rem;
+    }
+    .invite-friend{
+    margin-top: 10px;
+}
+</style>

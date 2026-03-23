@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="career" translate="label" sortOrder="999">
+			<label>career</label>
+		</tab>
+		<section id="general_section" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+			<label>General Section</label>
+			<tab>career</tab>
+			<resource>Haartyhanks_Career::config_haartyhanks_career</resource>
+			<group id="general_group" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+				<label>general_group</label>
+				<field id="enable" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Enable</label>
+					<comment/>
+					<source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+				</field>
+				<field id="email_identity" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Email Identity</label>
+					<comment/>
+					<source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+				</field>
+				<field id="email_template" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Email Template</label>
+					<comment/>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+				</field>
+				<field id="email_cc" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Email CC</label>
+					<comment/>
+				</field>
+				<field id="email_to" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Email To</label>
+					<comment/>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>

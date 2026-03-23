@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * MKY
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MKY license that is
+ * available through the world-wide-web at this URL:
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    MKY
+ * @package     MY_CustomerSurvey
+ * @copyright   Copyright (c) MKY 
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MY_CustomerSurvey::css/style.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="MY\CustomerSurvey\Block\CustomerSurvey" name="customersurvey.survey" template="MY_CustomerSurvey::onepage/success/customersurvey.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

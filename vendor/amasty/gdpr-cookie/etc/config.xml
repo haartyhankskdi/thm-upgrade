@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <amasty_gdprcookie>
+            <cookie_policy>
+                <bar>1</bar>
+                <first_visit_show>0</first_visit_show>
+                <confirmation_bar_text><![CDATA[We use cookies to help improve our services, make personal offers, and enhance your experience. If you do not accept optional cookies below, your experience may be affected. If you want to know more, please read the <a href="privacy-policy-cookie-restriction-mode" title="Cookie Policy" target="_blank">Cookie Policy</a>]]></confirmation_bar_text>
+                <website_interaction>0</website_interaction>
+                <allowed_urls>privacy-policy-cookie-restriction-mode</allowed_urls>
+                <bar_visibility>0</bar_visibility>
+                <log_guest>0</log_guest>
+                <auto_cleaning_days>180</auto_cleaning_days>
+            </cookie_policy>
+            <cookie_bar_customisation>
+                <cookies_bar_style>1</cookies_bar_style>
+                <classic_bar>
+                    <notification_text><![CDATA[We use cookies to improve our services, make personal offers, and enhance your experience. If you do not accept optional cookies below, your experience may be affected. If you want to know more, please, read the <a href="privacy-policy-cookie-restriction-mode" title="Cookie Policy" target="_blank">Cookie Policy</a>]]></notification_text>
+                </classic_bar>
+                <sidebar>
+                    <notification_text><![CDATA[We use cookies to improve our services, make personal offers, and enhance your experience. If you do not accept optional cookies below, your experience may be affected. If you want to know more, please, read the <a href="privacy-policy-cookie-restriction-mode" title="Cookie Policy" target="_blank">Cookie Policy</a>]]></notification_text>
+                </sidebar>
+                <popup>
+                    <notification_text><![CDATA[We use cookies to improve our services, make personal offers, and enhance your experience. If you do not accept optional cookies below, your experience may be affected. If you want to know more, please, read the <a href="privacy-policy-cookie-restriction-mode" title="Cookie Policy" target="_blank">Cookie Policy</a>]]></notification_text>
+                </popup>
+            </cookie_bar_customisation>
+            <consent_mode>
+                <enable>0</enable>
+            </consent_mode>
+            <clarity_consent_mode>
+                <enable>0</enable>
+            </clarity_consent_mode>
+        </amasty_gdprcookie>
+    </default>
+</config>

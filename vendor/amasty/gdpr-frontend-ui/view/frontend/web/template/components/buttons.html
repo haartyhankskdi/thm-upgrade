@@ -1,0 +1,30 @@
+<div class="amgdprcookie-buttons-block">
+    <!--ko template: {
+                name: $data.current.templates.button,
+                data: {current: $data.current, class: '-allow -save',
+                       text: $data.current.acceptBtnText || $t('Accept Cookies'),
+                       action: $data.current.index === 'gdpr-cookie-container' ?
+                       $data.current.allowCookies.bind($data.current, $element, $data.current) :
+                       $data.current.saveCookie.bind($data.current, $element, $data.current)} } --><!-- /ko -->
+    <!-- ko if: $data.current.isDeclineEnabled -->
+    <!--ko template: {
+                name: $data.current.templates.button,
+                data: {current: $data.current, class: '-decline',
+                       text: $data.current.declineBtnText || $t('Decline Cookies'),
+                       action: $data.current.declineCookie.bind($data.current, $element, $data.current)} } --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: $data.allowAction -->
+    <!--ko template: {
+                    name: $data.current.templates.button,
+                    data: {current: $data.current, class: '-allow -settings',
+                           text: $data.current.settingsBtnText || $t('Allow all Cookies'),
+                           action: allowAction.bind($data.current)} } --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: $data.settingsAction -->
+    <!--ko template: {
+                        name: $data.current.templates.button,
+                        data: {current: $data.current, class: '-settings',
+                               text: $data.current.settingsBtnText || $t('Custom Settings'),
+                               action: settingsAction.bind($data.current)} } --><!-- /ko -->
+    <!-- /ko -->
+</div>

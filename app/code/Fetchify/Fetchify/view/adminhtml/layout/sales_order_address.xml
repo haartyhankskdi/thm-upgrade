@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<script src="Fetchify_Fetchify::form_integrations/cc_admin_order.js"/>
+		<script src="Fetchify_Fetchify::cc_c2a.min.js"/>
+		<css src="Fetchify_Fetchify::cc_c2a.min.css"/>
+		<script src="Fetchify_Fetchify::cc_ukpcl_lib.js"/>
+		<css src="Fetchify_Fetchify::cc_rapid2.css"/>
+	</head>
+	<body>
+		<referenceContainer name="header">
+			<block class="Magento\Framework\View\Element\Template"
+				   name="fetchify.configpass"
+				   template="Fetchify_Fetchify::config.phtml">
+			</block>
+		</referenceContainer>
+	</body>
+</page>

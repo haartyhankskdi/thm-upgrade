@@ -1,0 +1,204 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+// phpcs:disable Generic.WhiteSpace.ScopeIndent
+// phpcs:disable Magento2.Files.LineLength.MaxExceeded
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductStockItem;
+use Magento\Checkout\Block\Cart\Item\Renderer;
+use Magento\Framework\Escaper;
+
+/** @var Renderer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$item = $block->getItem();
+$product = $item->getProduct();
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+
+$stockItemViewModel = $viewModels->require(ProductStockItem::class);
+$qty = $stockItemViewModel->isQtyDecimal($product)
+    ? $block->getQty()
+    : (int) $block->getQty();
+?>
+
+<tbody class="cart item bg-white border-b border-b-[#c4c4c4] "
+       <?php foreach (
+           $block->getData("cart_item_data_attributes") ?? []
+           as $attribute => $include
+       ): ?>
+           <?php if ($include): ?>
+               <?php
+               /** Append data-* attributes based on layout XML arguments */
+               ?>
+               <?= $escaper->escapeHtml(
+                   sprintf("data-%s", $attribute)
+               ) ?>="<?= $escaper->escapeHtmlAttr(
+    $item->getData($attribute)
+) ?>"
+           <?php endif; ?>
+       <?php endforeach; ?>
+>
+    <tr class="item-info align-top text-left lg:text-right flex flex-wrap lg:table-row">
+        <td data-th="<?= $escaper->escapeHtml(
+            __("Item")
+        ) ?>" class="col item pt-5 lg:pt-8 lg:px-4 flex  gap-4 lg:gap-8 text-left w-full sm:flex-nowrap lg:w-auto">
+            <?php if ($block->hasProductUrl()): ?>
+                <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(
+                       $block->getProductName()
+                   ) ?>"
+                   tabindex="-1"
+                   class="product-item-photo shrink-0">
+            <?php else: ?>
+                <span class="product-item-photo shrink-0">
+            <?php endif; ?>
+            <?= $block
+                ->getImage(
+                    $block->getProductForThumbnail(),
+                    "cart_page_product_thumbnail"
+                )
+                ->setTemplate("Magento_Catalog::product/image.phtml")
+                ->toHtml() ?>
+            <?php if ($block->hasProductUrl()): ?>
+                </a>
+            <?php else: ?>
+                </span>
+            <?php endif; ?>
+            <div class="product-item-details grow">
+                <strong class="product-item-name break-all text-lg">
+                    <?php if ($block->hasProductUrl()): ?>
+                        <a class="text-xl font-semibold text-black" href="<?= $escaper->escapeUrl(
+                            $block->getProductUrl()
+                        ) ?>"><?= $escaper->escapeHtml(
+    $block->getProductName()
+) ?></a>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml($block->getProductName()) ?>
+                    <?php endif; ?>
+                </strong>
+                <?php if ($options = $block->getOptionList()): ?>
+                    <dl class="item-options w-full break-all mt-4 pb-2 text-sm clearfix">
+                        <?php foreach ($options as $option): ?>
+                            <?php $formatedOptionValue = $block->getFormatedOptionValue(
+                                $option
+                            ); ?>
+                            <dt class="font-normal float-left clear-left mr-2 mb-2"><?= $escaper->escapeHtml(
+                                $option["label"]
+                            ) ?>:</dt>
+                            <dd class="float-left">
+                                <?php if (
+                                    isset($formatedOptionValue["full_view"])
+                                ): ?>
+                                        <?= $escaper->escapeHtml(
+                                            $formatedOptionValue["full_view"]
+                                        ) ?>
+                                    <?php else: ?>
+                                        <?= $escaper->escapeHtml(
+                                            $formatedOptionValue["value"],
+                                            ["span", "a"]
+                                        ) ?>
+                                <?php endif; ?>
+                            </dd>
+                        <?php endforeach; ?>
+                    </dl>
+                <?php endif; ?>
+                <?php if ($messages = $block->getMessages()): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class= "cart item message <?= $escaper->escapeHtmlAttr(
+                            $message["type"]
+                        ) ?>">
+                            <div><?= $escaper->escapeHtml(
+                                $message["text"]
+                            ) ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock): ?>
+                    <?= $addInfoBlock->setItem($item)->toHtml() ?>
+                <?php endif; ?>
+            </div>
+        </td>
+
+
+        <td class="hidden md:block col price pt-5 lg:pt-8 lg:px-4 block w-[90px] sm:w-1/3 lg:w-auto lg:table-cell">
+            <span class="hidden font-bold mt-2">
+                <?= $escaper->escapeHtml(__("Price")) ?>
+            </span>
+            <span class="cart-p text-xl font-semibold text-[#3B7E48]"><?= $block->getUnitPriceHtml($item) ?></span>
+        </td>
+
+    <td class="col qty pt-3 lg:pt-8 lg:px-4 mr-4 lg:mr-0 block w-[130px] sm:w-1/3 lg:w-[190px] lg:table-cell">
+    <span class="hidden font-bold block mb-1">
+        <?= $escaper->escapeHtml(__("Qty")) ?>
+    </span>
+
+    <form action="<?= $block->getUrl(
+        "checkout/cart/updatePost"
+    ) ?>" method="post" class="mt-1">
+        <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" />
+
+        <div class="flex items-center border border-gray-300 rounded-none overflow-hidden w-32 lg:w-[145px]">
+            <!-- Decrease Button -->
+            <button type="button"
+                    onclick="
+                        const input = this.nextElementSibling;
+                        let qty = parseInt(input.value, 10);
+                        if(qty <= 1){
+                            window.dispatchMessages && window.dispatchMessages([{
+                                type: 'error',
+                                text: '<?= $escaper->escapeJs(
+                                    __("Quantity cannot be less than 1")
+                                ) ?>'
+                            }]);
+                        } else {
+                            input.stepDown();
+                            this.form.submit();
+                        }
+                    "
+                    class="bg-black text-xl text-white px-4 py-2 lg:py-3 hover:bg-green-800 transition">
+                −
+            </button>
+
+            <!-- Quantity Input -->
+            <input type="number"
+                   name="cart[<?= $item->getId() ?>][qty]"
+                   value="<?= (int) $qty ?>"
+                   min="1"
+                   class="w-12 h-8 text-center border border-gray-300 rounded-md text-sm text-center w-full border-0 focus:ring-0 focus:outline-none py-3"
+                   onchange="this.form.submit();" />
+
+            <!-- Increase Button -->
+            <button type="button"
+                    onclick="this.previousElementSibling.stepUp(); this.form.submit();"
+                    class="bg-black text-xl text-white px-4 py-2 lg:py-3 hover:bg-green-800 transition">
+                +
+            </button>
+        </div>
+    </form>
+</td>
+
+ <td class="col subtotal pt-5 lg:pt-8 lg:px-4 block w-[90px] sm:w-1/3 lg:w-auto lg:table-cell">
+            <span class="hidden font-bold">
+                <?= $escaper->escapeHtml(__("Subtotal")) ?>
+            </span>
+            <span class="cart-p text-xl font-semibold text-[#3B7E48]"><?= $block->getRowTotalHtml($item) ?></span>
+        </td>
+    </tr>
+    <tr class="item-actions relative">
+        <td colspan="4">
+            <div class="flex items-center justify-end gap-4 p-4 lg:mt-[-3rem] text-red">
+                <?= /* @noEscape */ $block->getActions($item) ?>
+            </div>
+        </td>
+    </tr>
+</tbody>

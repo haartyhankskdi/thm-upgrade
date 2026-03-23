@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+use Ebizmarts\BrippoPayments\Block\Adminhtml\BrippoAdmin;
+
+/** @var BrippoAdmin $block */
+?>
+
+<script>
+    const brippoControllerUrlConfiguration = '<?= $block->escapeJs($block->getUrlControllerConfiguration()) ?>';
+    const brippoControllerUrlOrderLog = '<?= $block->escapeJs($block->getUrlControllerOrderLog()) ?>';
+</script>

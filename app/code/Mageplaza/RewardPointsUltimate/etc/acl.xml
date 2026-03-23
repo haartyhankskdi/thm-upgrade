@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::marketing">
+                    <resource id="Mageplaza_RewardPoints::reward_points">
+                        <resource id="Mageplaza_RewardPoints::earning" title="Earning" translate="title" sortOrder="10">
+                            <resource id="Mageplaza_RewardPoints::earning_behavior" title="Behavior Rules" translate="title" sortOrder="50"/>
+                        </resource>
+                        <resource id="Mageplaza_RewardPoints::referrals" title="Referrals" translate="title" sortOrder="30">
+                            <resource id="Mageplaza_RewardPoints::referral_rules" title="Rules" translate="title" sortOrder="10"/>
+                            <resource id="Mageplaza_RewardPoints::referral_invitation" title="Invitation History" translate="title" sortOrder="20"/>
+                        </resource>
+                        <resource id="Mageplaza_RewardPoints::milestone" title="Milestones" translate="title" sortOrder="35"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Reports::report">
+                    <resource id="Mageplaza_RewardPoints::reports" title="Mageplaza Reward Reports" translate="title" sortOrder="88">
+                        <resource id="Mageplaza_RewardPoints::reports_earned" title="Earned" translate="title" sortOrder="10"/>
+                        <resource id="Mageplaza_RewardPoints::reports_spent" title="Spent" translate="title" sortOrder="20"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

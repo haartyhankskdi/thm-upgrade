@@ -1,0 +1,63 @@
+<?php $deals = $block->getLayout()->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$productCollection=$deals->getProductCollection();
+$visibility= $deals->getVisibleTypes();
+$imageHelper =$deals->getImageHelper();
+$todayDate = $deals->getCurrentDate();
+$collection_deals = $productCollection->create();
+$collection_deals->addAttributeToSelect('*')
+    ->addAttributeToFilter('special_price', ['gt' => 0])
+    ->addAttributeToFilter('special_from_date', ['or' => [
+        0 => ['date' => true, 'to' => $todayDate],
+        1 => ['is' => new \Zend_Db_Expr('null')],
+    ]], 'left')
+    ->addAttributeToFilter('special_to_date', ['or' => [
+        0 => ['date' => true, 'from' => $todayDate],
+        1 => ['is' => new \Zend_Db_Expr('null')],
+    ]], 'left')
+    ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+    ->addAttributeToFilter('visibility', ['in' => $visibility])
+    ->setOrder('created_at', 'desc')
+    ->setPageSize(4); 
+?>
+
+<div class="latest-offer-products" >
+  <h2>Deals based on your shopping</h2>
+        <ul class="recently-viewed-products">
+            <?php foreach ($collection_deals as $_product): ?>
+                <li>
+                    <a href="<?= $_product->getProductUrl() ?>">
+                        <img src="<?= $imageHelper->init($_product, 'product_small_image')->getUrl() ?>"
+                             alt="<?= $_product->getName() ?>" width="150" />
+                             </a>
+                              <a href="<?= $_product->getProductUrl() ?>">
+                         <div class="view-product-name">
+                        <?= $_product->getName() ?>
+                      </div>
+                       </a>
+                        <?php 
+                            $specialPrice = $_product->getSpecialPrice();
+                            $regularPrice = $_product->getPrice();
+                            $specialFromDate = $_product->getSpecialFromDate();
+                         $specialToDate = $_product->getSpecialToDate();
+                     $currentDate = date('Y-m-d');
+                        if ($_product->getSpecialPrice() != "" && ($specialFromDate <= $currentDate)) { ?>            
+              <div class="bestsell-product-price">£<?= __(
+                  number_format($specialPrice, 2)
+              ) ?>
+              <span style="text-decoration: line-through;">£<?= __(
+                  number_format($regularPrice, 2)
+              ) ?>  
+              </span>
+           </div>
+            <?php } else { ?>
+              <div class="bestsell-product-price">£<?= __(
+                  number_format($regularPrice, 2)
+              ) ?></div>
+              
+            <?php } ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+</div>
+

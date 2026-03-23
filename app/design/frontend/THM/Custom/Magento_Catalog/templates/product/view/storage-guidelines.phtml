@@ -1,0 +1,11 @@
+<?php
+$_product = $block->getProduct();
+$storage = $_product->getData('storage_guidelines');
+
+if (!$storage) {
+    return; 
+}
+?>
+<div class="product-tab-content storage-guidelines-tab">
+    <p><?= $block->escapeHtml($storage) ?></p>
+</div>

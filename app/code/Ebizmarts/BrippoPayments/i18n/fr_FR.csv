@@ -1,0 +1,179 @@
+Yes,Oui
+No,Non
+Configure,Configurer
+Close,Fermer
+"BRIPPO Payments (by <a target=""_blank"" href=""https://ebizmarts.com"">Ebizmarts</a>)","BRIPPO Payments (par <a target=""_blank"" href=""https://ebizmarts.com"">Ebizmarts</a>)"
+"This solution is powered by <i>Stripe Connect</i>.","Cette solution est alimentée par <i>Stripe Connect</i>."
+"Need support? <a href=""mailto:support@ebizmarts-desk.zendesk.com"">Submit a ticket</a>","Besoin d'aide ? <a href=""mailto:support@ebizmarts-desk.zendesk.com"">Soumettez un ticket</a>"
+"Create Account","Créer un compte"
+"Test Mode","Mode Test"
+Email,Courriel
+"Store URL","URL du magasin"
+"By continuing, you agree to our <a href=""https://brippo.s3.amazonaws.com/agreements/Brippo_Customer_TCs.pdf"" target=""_blank"">Terms of Service</a>.","En continuant, vous acceptez nos <a href=""https://brippo.s3.amazonaws.com/agreements/Brippo_Customer_TCs.pdf"" target=""_blank"">Conditions de service</a>."
+Continue,Continuer
+"Authorization completed successfully.","Autorisation terminée avec succès."
+"Notified customer about invoice creation #%1.","Client notifié de la création de la facture #%1."
+"Order payment not found.","Paiement de la commande introuvable."
+"Invalid Payments Service response status ' . . '.","Statut de réponse du service de paiement invalide ' . . '."
+"Invalid URL provided from Platform Service.","URL fournie par le service de plateforme invalide."
+"Invalid Tokens provided from Platform Service during onboarding completion.","Jetons fournis par le service de plateforme invalides lors de l'achèvement de l'intégration."
+"Invalid response from Platform Service during onboarding completion.","Réponse invalide du service de plateforme lors de l'achèvement de l'intégration."
+"Invalid Platform Service response status ' . . '.","Statut de réponse invalide du service de plateforme ' . . '."
+message,message
+"Invalid Platform Service response.","Réponse invalide du service de plateforme."
+"Unknown event type","Type d'événement inconnu"
+"Event with ID %1 has already been processed.","L'événement avec l'ID %1 a déjà été traité."
+Test,Test
+Live,"En direct"
+"Capture failed. Invalid Payment Intent ID.","Échec de la capture. Identifiant d'intention de paiement invalide."
+"Capture failed. Payment Intent status is status.","Échec de la capture. Le statut de l'intention de paiement est status."
+"Online refund failed to process, please try again.","Le remboursement en ligne n'a pas pu être traité, veuillez réessayer."
+"Stripe Card Fingerprints not found for customer #' . . '.","Empreintes digitales de la carte Stripe non trouvées pour le client n° ' . . '."
+"Invalid Payments Service response status 400.","Statut de réponse du service de paiement invalide 400."
+Refunds,Remboursements
+"Payment Link ID","ID du lien de paiement"
+"Payment Link Status","Statut du lien de paiement"
+"Email Sent","E-mail envoyé"
+"Charge ID","ID de la charge"
+"There is no charge associated with this payment intent.","Aucune charge associée à cette intention de paiement."
+"Intent ID","ID de l'intention"
+Status,Statut
+Amount,Montant
+Captured,Capturé
+Refunded,Remboursé
+Error,Erreur
+"Frontend Source","Source Frontend"
+Wallet,Portefeuille
+"Card Brand","Marque de la carte"
+"Card Last 4","4 derniers chiffres de la carte"
+"Card Country","Pays de la carte"
+"Card Type","Type de carte"
+"Fraud Risk","Risque de fraude"
+"Street Check","Vérification de l'adresse"
+"Zip Check","Vérification du code postal"
+"CVC Check","Vérification du CVC"
+"Account Id","ID du compte"
+"Submitted Details","Détails soumis"
+"Charge Enabled","Charge activée"
+"Webhook Mapping","Mapping du webhook"
+Completed,Complété
+Dashboard,Panneau de bord
+"Update Details","Mettre à jour les détails"
+"Are you sure you want to reset this connected account?","Êtes-vous sûr de vouloir réinitialiser ce compte connecté ?"
+Mode,Mode
+"Live Account Status","État du compte en direct"
+"Test Account Status","État du compte de test"
+"Monitoring Cron","Surveillance du Cron"
+"Invalid discount code.","Code de réduction invalide."
+"No shipping options available for your address.","Aucune option d'expédition disponible pour votre adresse."
+"'Unable to find order with id ' .","Impossible de trouver la commande avec l'identifiant ' ."
+"Your cart is empty, please refresh the page and try again.","Votre panier est vide, veuillez rafraîchir la page et réessayer."
+"Unable to process the order. Please contact support.","Impossible de traiter la commande. Veuillez contacter le support."
+"Order Id not provided.","Identifiant de commande non fourni."
+"Order with id "" . . "" not found.","Commande avec l'identifiant "" . . "" introuvable."
+"Invalid payment intent provided.","Intention de paiement invalide fournie."
+"Were unable to process the order, please contact support","Impossible de traiter la commande, veuillez contacter le support"
+"Capture failed. Payment Intent status is status.","Échec de la capture. Le statut de l'intention de paiement est status."
+"""Unable to place Apple's Domain-Association-File. Please manually move "" . . "" to "" . . "". Create directory if necessary and make sure is publicly accessible at "" . . .","Impossible de placer le fichier d'association de domaine d'Apple. Veuillez déplacer manuellement "" . . "" vers "" . . "". Créez un répertoire si nécessaire et assurez-vous qu'il est accessible publiquement à "" . . ."
+"No recipient name provided.","Aucun nom de destinataire fourni."
+"Grand Total","Total général"
+Items,Articles
+"'Tax' .","'Taxe' ."
+Shipping,Expédition
+Discount,Réduction
+Checkout,Vérifier
+Minicart,Mini-panier
+Cart,Panier
+"Product Page","Page du produit"
+"Please check the billing address information. Invalid country code:","Veuillez vérifier les informations sur l'adresse de facturation. Code de pays invalide :"
+"Please check the billing address information. Invalid region:","Veuillez vérifier les informations sur l'adresse de facturation. Région invalide :"
+"Please check the shipping address information. Invalid country code:","Veuillez vérifier les informations sur l'adresse de livraison. Code de pays invalide :"
+"Please check the shipping address information. Invalid region:","Veuillez vérifier les informations sur l'adresse de livraison. Région invalide :"
+Automatic,Automatique
+Manual,Manuel
+"On Status Change","Lors du changement d'état"
+"Wallet Button","Bouton du portefeuille"
+"Checkout Default","Validation par défaut"
+"Payment Methods List","Liste des méthodes de paiement"
+"On Top","En haut"
+Dark,Sombre
+Light,Clair
+"Light Outline","Contour clair"
+"Default (Only logo)","Par défaut (Logo uniquement)"
+Book,Livre
+Buy,Acheter
+Donate,"Faire un don"
+Stripe,Stripe
+Night,Nuit
+Flat,Plat
+None,Aucun
+"Clean cart and checkout only that product","Vider le panier et passer uniquement cette commande"
+"Add to existing cart and checkout","Ajouter au panier existant et passer à la commande"
+"Add to existing cart and checkout (qty increments)", "Ajouter au panier existant et passer à la commande (incréments de quantité)"
+"Enforce for all if available","Appliquer pour tous s'il est disponible"
+"Enforce if available only if amount exceeds threshold","Appliquer seulement si disponible et si le montant dépasse le seuil"
+"Automatic depending on fraud score","Automatique en fonction du score de fraude"
+"Apple Pay","Apple Pay"
+"Google Pay","Google Pay"
+Link,Link
+"Payment intent %1 cancelled successfully.","L'intention de paiement %1 a été annulée avec succès."
+"Capture failed. Invalid Payment Intent Id.","Échec de la capture. Identifiant d'intention de paiement invalide."
+"Can not get Order ID nor Quote ID from event.","Impossible d'obtenir l'identifiant de commande ou l'identifiant de devis à partir de l'événement."
+"Please complete account setup.","Veuillez compléter la configuration du compte."
+"Setup complete","Configuration terminée"
+"Apple association file correctly placed","Fichier d'association Apple correctement placé"
+"Apple association file error: ","Erreur de fichier d'association Apple : "
+"Store domain successfully registered","Domaine du magasin enregistré avec succès"
+"Order #%order_id is Awaiting Payment","La commande #%order_id est en attente de paiement"
+"%customer_name,","%customer_name,"
+"Thank you for your order from %store_name.","Merci pour votre commande de %store_name."
+"Please click on to following link to finalize payment:","Veuillez cliquer sur le lien suivant pour finaliser le paiement :"
+"If you have questions about your order, you can email us at <a href=""mailto:%store_email"">%store_email</a>","Si vous avez des questions sur votre commande, vous pouvez nous envoyer un e-mail à <a href=""mailto:%store_email"">%store_email</a>"
+"Your Order <span class=""no-link"">#%increment_id</span>","Votre commande <span class=""no-link"">#%increment_id</span>"
+"Placed on <span class=""no-link"">%created_at</span>","Passée le <span class=""no-link"">%created_at</span>"
+Billing Info,Informations de facturation
+"Payment Method","Méthode de paiement"
+"Place Order","Passer la commande"
+"Another step will appear to securely submit your payment information.","Une autre étape apparaîtra pour soumettre en toute sécurité vos informations de paiement."
+"Checkout with","Valider avec"
+"Please agree to the terms and conditions before placing the order.","Veuillez accepter les termes et conditions avant de passer la commande."
+"Please complete all required fields before placing the order.","Veuillez remplir tous les champs obligatoires avant de passer la commande."
+"Payment Methods Status","État des méthodes de paiement"
+"UI component embedded into your self-hosted checkout.","Composant UI intégré à votre caisse en libre-service."
+Enabled,Activé
+Title,Titre
+"Capture Method","Méthode de capture"
+"When a payment is authorised, the bank guarantees the amount and holds it on the customer's card for up to 7 days.","Lorsqu'un paiement est autorisé, la banque garantit le montant et le retient sur la carte du client pendant jusqu'à 7 jours."
+"Status Triggering Capture","État déclenchant la capture"
+"3D Secure","3D Secure"
+"3D Secure Threshold","Seuil 3D Secure"
+"Order minimum amount to trigger 3D Secure.","Montant minimum de commande pour déclencher 3D Secure."
+Theme,Thème
+"Sort Order","Ordre de tri"
+"Alternative Payment Types","Types de paiement alternatifs"
+"Allow customers to checkout via Apple Pay, Google Pay, or similar from any page of your website.","Autoriser les clients à payer via Apple Pay, Google Pay ou similaire depuis n'importe quelle page de votre site web."
+"Business Name","Nom de l'entreprise"
+"This is the text that appears as PAY [BUSINESS NAME] in the payment modal. If left empty will show as 'GRAND TOTAL'.","Il s'agit du texte qui apparaît comme PAY [NOM DE L'ENTREPRISE] dans le modal de paiement. S'il est laissé vide, il s'affichera comme 'TOTAL GÉNÉRAL'."
+Location,Emplacement
+"Request Agreements","Demander des accords"
+"Request the customer to accept agreements in express locations (Cart, Minicart & Product Page).","Demander au client d'accepter des accords dans des emplacements express (Panier, Mini-panier et Page du produit)."
+"Checkout Location","Emplacement de la validation de la commande"
+"Place Order Button","Bouton de passation de commande"
+"Product Page Behavior","Comportement de la page produit"
+"Discount Code Input","Entrée du code de réduction"
+"Display coupon code input for Minicart and Product Page locations.","Afficher l'entrée du code de coupon pour les emplacements Mini-panier et Page du produit."
+Wallets,Portefeuilles
+"Block Delivery Methods","Bloquer les méthodes de livraison"
+"Block specific delivery methods even if quote and shipping address rules allow them.","Bloquer des méthodes de livraison spécifiques même si les règles de devis et d'adresse de livraison les autorisent."
+"Button Type","Type de bouton"
+"Button Theme","Thème du bouton"
+"Button Height","Hauteur du bouton"
+"Pay by Link","Payer par lien"
+"Customer receives an email afterwards to finalize payment from Stripe-hosted checkout.","Le client reçoit un e-mail ensuite pour finaliser le paiement depuis le paiement hébergé par Stripe."
+"Note for Customer in Checkout","Note pour le client lors de la validation de la commande"
+"Note for Customer in Success","Note pour le client lors du succès"
+"Note for Customer after Payment Confirmation","Note pour le client après la confirmation du paiement"
+"Email Sender","Expéditeur de l'e-mail"
+"Email Template","Modèle d'e-mail"
+"Display Payment Method Logos","Afficher les logos des méthodes de paiement"
+"The selected options will display the corresponding payment logos on the checkout page.","Les options sélectionnées afficheront les logos de paiement correspondants sur la page de paiement."

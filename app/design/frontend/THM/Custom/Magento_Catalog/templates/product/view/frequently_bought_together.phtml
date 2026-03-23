@@ -1,0 +1,47 @@
+<?php
+/** @var \Magento\Catalog\Model\Product $product */
+$product = $block->getProduct();
+$relatedProducts = $product->getRelatedProducts();
+
+// Limit to 3 related products
+$relatedProducts = array_slice($relatedProducts, 0, 3);
+
+$imageHelper = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Catalog\Helper\Image::class);
+
+if (!empty($relatedProducts)): ?>
+    <div class="frequently-bought-together" style="margin-top: 30px;">
+        <h3 style="margin-bottom: 15px;">Frequently Bought Together</h3>
+        <ul class="fbt-list" style="display: flex; gap: 30px; list-style: none; padding: 0;">
+            <?php foreach ($relatedProducts as $related): ?>
+                <?php
+                $imageUrl = $imageHelper->init($related, 'product_page_image_small')->getUrl();
+                $productUrl = $related->getProductUrl();
+                $productName = $block->escapeHtml($related->getName());
+
+                // Render price using renderer
+                $priceRender = $block->getLayout()->createBlock(
+                    \Magento\Framework\Pricing\Render::class
+                );
+                $price = $priceRender->setData([
+                    'price_render_handle' => 'catalog_product_prices',
+                    'use_link_for_as_low_as' => true,
+                ])->render(
+                    \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE,
+                    $related,
+                    ['zone' => \Magento\Framework\Pricing\Render::ZONE_ITEM_LIST]
+                );
+                ?>
+                <li class="fbt-item" style="width: 200px; text-align: center;">
+                    <a href="<?= $productUrl ?>" style="text-decoration: none; color: inherit;">
+                        <img src="<?= $imageUrl ?>" alt="<?= $productName ?>" style="max-width: 100%; height: auto;" />
+                        <p class="fbt-name" style="margin-top: 10px; font-weight: 600;"><?= $productName ?></p>
+                        <div class="fbt-price" style="margin-top: 5px;">
+                            <?= $price ?>
+                        </div>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

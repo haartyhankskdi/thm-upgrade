@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="amasty-shopby-hyva-compatibility" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Amasty_Shopby</item>
+                    <item name="compat_module" xsi:type="string">Amasty_ShopbyHyvaCompatibility</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Swatches\Block\Product\Renderer\Listing\Configurable">
+        <plugin name="Amasty_ShopbyHyvaCompatibility::ConfigurablePlugin"
+                type="Amasty\ShopbyHyvaCompatibility\Plugin\Block\Product\Renderer\Listing\Configurable"
+                sortOrder="10"/>
+    </type>
+    <type name="Amasty\ShopbyHyvaCompatibility\Plugin\Block\Product\Renderer\Listing\Configurable">
+        <arguments>
+            <argument name="templateFilter" xsi:type="string">
+                Amasty_ShopbyHyvaCompatibility::product/productlist/renderer-init.phtml
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Block\Result">
+        <plugin name="Amasty_ShopbyHyvaCompatibility::ResultWrapper"
+                type="Amasty\ShopbyHyvaCompatibility\Plugin\ResultWrapper"
+                sortOrder="100"/>
+    </type>
+</config>

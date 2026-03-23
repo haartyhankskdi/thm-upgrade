@@ -1,0 +1,174 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Toolbar $block */
+
+$uniqueId = '_' . uniqid();
+$additionalOptions = ['page' => 'p'];
+
+$leftNav = $block->getChildHtml('catalog.leftnav');
+$searchLeftNav = $block->getChildHtml('catalogsearch.leftnav');
+
+?>
+<script>
+    function initToolbar<?= /** @noEscape */  $uniqueId ?>() {
+        return {
+            options: <?= /* @noEscape */ $block->getWidgetOptionsJson($additionalOptions) ?>.productListToolbarForm || {},
+            getUrlParams: function () {
+                let decode = window.decodeURIComponent,
+                    urlPaths = this.options.url.split('?'),
+                    urlParams = urlPaths[1] ? urlPaths[1].split('&') : [],
+                    params = {},
+                    parameters, i;
+
+                for (i = 0; i < urlParams.length; i++) {
+                    parameters = urlParams[i].split('=');
+                    params[decode(parameters[0])] = parameters[1] !== undefined ?
+                        decode(parameters[1].replace(/\+/g, '%20')) :
+                        '';
+                }
+
+                return params;
+            },
+            getCurrentLimit: function () {
+                return this.getUrlParams()[this.options.limit] || this.options.limitDefault;
+            },
+            getCurrentPage: function () {
+                return this.getUrlParams()[this.options.page] || 1;
+            },
+            changeUrl(paramName, paramValue, defaultValue) {
+                let urlPaths = this.options.url.split('?'),
+                    baseUrl = urlPaths[0],
+                    paramData = this.getUrlParams(),
+                    currentPage = this.getCurrentPage(),
+                    newPage;
+
+                /**
+                 * calculates the page on which the first item of the current page will
+                 * be with the new limit and sets that number as the new page
+                 */
+                if (currentPage > 1 && paramName === this.options.limit) {
+                    newPage = Math.floor(this.getCurrentLimit() * (currentPage - 1) / paramValue) + 1;
+
+                    if (newPage > 1) {
+                        paramData[this.options.page] = newPage;
+                    } else {
+                        delete paramData[this.options.page];
+                    }
+                }
+
+                paramData[paramName] = paramValue;
+
+                if (this.options.post) {
+                    hyva.postForm({action: baseUrl, data: paramData, skipUenc: true});
+                } else {
+                    if (paramValue === defaultValue.toString()) {
+                        delete paramData[paramName];
+                    }
+                    paramData = Object.keys(paramData).length === 0
+                        ? ''
+                        : '?' + (new URLSearchParams(paramData));
+                    location.href = baseUrl + paramData
+                }
+            }
+        }
+    }
+</script>
+<?php if ($block->getCollection()->getSize()): ?>
+    <div x-data="initToolbar<?= /** @noEscape */ $uniqueId ?>()"
+         class="toolbar toolbar-products flex gap-2 lg:gap-4 justify-between md:justify-start items-center bg-[#f5f9f7] p-3 lg:px-6 py-3 mb-8 relative">
+        <?php if ($block->getIsBottom()): ?>
+            <?= /** @noEscape */  $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
+            <?= $block->getPagerHtml() ?>
+            <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
+        <?php else: ?>
+            <?php if ($block->isExpanded()): ?>
+                <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
+
+                <div class="hyva-layered-nav col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-2 flex items-center">
+                    <?php if (!empty($leftNav)): ?>
+                        <?= $leftNav ?>
+                    <?php endif; ?>
+
+                    <?php if (!empty($searchLeftNav)): ?>
+                        <?= $searchLeftNav ?>
+                    <?php endif; ?>
+                </div>
+                <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+            <?php endif ?>
+        <?php endif ?>
+    </div>
+    <div x-data="{ open: false }">
+    <!-- Filter Button -->
+    <div class="list-sticky-btn">
+    <button @click="open = true"
+            class="block md:hidden fixed bottom-0 left-0 w-full z-[9] bg-black bg-opacity-50 py-2 px-6">
+            <span class="text-base text-white font-normal flex items-center justify-center gap-4 bg-black rounded-full py-4 px-16">
+            <svg xmlns="http://www.w3.org/2000/svg"
+       fill="none"
+       viewBox="0 0 24 24"
+       stroke-width="2"
+       stroke="#ffffff"
+       class="w-7 h-7">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 6h18M3 12h18M3 18h18" />
+  </svg>
+        FILTER PRODUCT
+        </span>
+    </button>
+    </div>
+
+    <!-- Overlay -->
+    <div x-cloak
+         x-show="open" 
+         x-transition.opacity
+         class="fixed inset-0 bg-black bg-opacity-40 z-40  md:hidden" 
+         @click="open = false"></div>
+
+    <!-- Sidebar Drawer -->
+    <aside x-cloak
+           x-show="open"
+           x-transition:enter="transition transform duration-300"
+           x-transition:enter-start="translate-x-full"
+           x-transition:enter-end="translate-x-0"
+           x-transition:leave="transition transform duration-300"
+           x-transition:leave-start="translate-x-0"
+           x-transition:leave-end="translate-x-full"
+           class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 overflow-auto p-4 md:hidden">
+        
+        <!-- Close Button -->
+        <div class="flex justify-end mb-4">
+            <button @click="open = false" class="text-black text-[40px] leading-[25px] font-normal">
+                &times;
+            </button>
+        </div>
+
+        <!-- Toolbar / Sorter -->
+        <div class="sticky top-0 bg-white z-20">
+           
+            <?php if (!empty($leftNav)): ?>
+                        <?= $leftNav ?>
+                    <?php endif; ?>
+
+                    <?php if (!empty($searchLeftNav)): ?>
+                        <?= $searchLeftNav ?>
+                    <?php endif; ?>
+                   
+            <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+        </div>
+
+        
+    </aside>
+</div>
+<?php endif ?>

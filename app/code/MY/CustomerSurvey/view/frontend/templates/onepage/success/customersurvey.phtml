@@ -1,0 +1,226 @@
+<?php
+/**
+ * MKY
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MKY license that is
+ * available through the world-wide-web at this URL:
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    MKY
+ * @package     MY_CustomerSurvey
+ * @copyright   Copyright (c) MKY
+ */
+
+/** @var \MY\CustomerSurvey\Block\CustomerSurvey $block */
+
+?>
+
+<?php
+/** @var \MY\CustomerSurvey\Block\CustomerSurvey $block */
+$escaper = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Framework\Escaper::class);
+?>
+
+<?php if ($block->getOrderId()): ?>
+    <div class="checkout-success py-12 text-center">
+        <p>
+            Your order # is: <strong><?= $escaper->escapeHtml($block->getOrderId()) ?></strong>
+        </p>
+        <p>We'll email you an order confirmation with details and tracking info.</p>
+
+        <div class="buttons-wrapper text-center inline-block w-full mt-6">
+            <a href="<?= $escaper->escapeUrl($block->getViewOrderUrl()) ?>" class="inline-block bg-[#3B7E48] hover:bg-[#E63833] text-white text-xs md:text-base font-normal px-8 py-4 rounded-full transition duration-400 mx-2">
+                View Order
+            </a>
+            <a href="<?= $escaper->escapeUrl($block->getContinueUrl()) ?>" class="inline-block bg-[#E63833] hover:bg-[#3B7E48] text-white text-xs md:text-base font-normal px-8 py-4 rounded-full transition duration-400 mx-2">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
+<button style="display:none;" id="myBtn1">Open Modal</button>
+ 
+<div id="myModal1" class="modal-popup1">
+ 
+  <div class="modal-content-popup1">
+    <span class="close-popup1">&times;</span>
+<div id="customersurvey">
+    <div class="survey-content ">
+        <h3 class="pb-3"><strong><?= $block->escapeHtml(__('We would appreciate your feedback so we can improve for next time!')) ?>: </strong></h3>
+      <form action="<?= $block->getUrl('customersurvey/survey/save') ?>"
+      method="post"
+      data-mage-init='{"validation":{}}'
+      id="customersurvey_form">
+
+    <?= $block->getBlockHtml('formkey'); ?>
+
+	        <p class="pb-2 font-semibold">1. Did you find our website easy to navigate?</p>
+	        
+            <div class="flex gap-2">
+	        <input type="radio" name="website_navigation" id="website_navigation1" class="required-entry validate-one-required-by-name mt-1" value="Yes, definitely" >
+	        <label for="website_navigation1">Yes, definitely</label>
+            </div>
+	        
+
+            <div class="flex gap-2">
+	        <input type="radio" name="website_navigation" id="website_navigation2" class="required-entry validate-one-required-by-name mt-1" value="Maybe, could use improvement" >
+	        <label for="website_navigation2">Maybe, could use improvement</label>
+            </div>
+	        
+            <div class="flex gap-2">
+	        <input type="radio" name="website_navigation" id="website_navigation3" class="required-entry validate-one-required-by-name mt-1" value="No, not at all" >	        
+	        <label for="website_navigation3">No, not at all</label>
+            </div>
+
+	        <div for="website_navigation" generated="true" class="mage-error" style="display: none;" id="website_navigation-error" data-was-processed="true">This is a required field.</div>
+
+            <div class="survey-form-textarea mt-4 mb-8">
+            <div class="survey-form-message">
+    	        <p class="pb-2 font-semibold">2 .What would you like to see us improve?</p>	        
+    	        <textarea name="improvement" data-validate="{required:true}"></textarea> 
+            </div>
+            </div>
+
+            <div class="survery-submit-btn">
+	        <input type="submit" name="customersurvey_submit" value="Submit" class="bg-[#3B7E48] hover:bg-[#E63833] text-white text-xs md:text-base font-normal px-8 py-4 rounded-full transition duration-400">
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
+</div>
+
+<style type="text/css">
+ 
+.checkout-onepage-success .modals-wrapper{
+    display: none;
+}
+     
+
+body {font-family: Arial, Helvetica, sans-serif;}
+
+.modal-popup1 {
+  display: block; 
+  position: fixed;
+  z-index: 99999999999;
+  padding-top: 70px;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.7); 
+}
+
+/* Modal Content */
+.modal-content-popup1 {
+  background-color: transparent;
+    margin: auto;
+    padding: 0;
+    border: 0px solid #888;
+    width: 446px;
+    position: relative;
+    text-align: center;
+    border-radius: 0;
+}
+
+/* The Close Button */
+.close-popup1 {
+  color: #fff;
+  float: right;
+  font-size: 36px;
+  font-weight: 400;
+  position: absolute;
+    top: -20px;
+    right: -20px;
+    text-shadow: 0 0px 0 #fff;
+    opacity: 1;
+}
+
+.close-popup1:hover,
+.close-popup1:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 1;
+}
+ 
+
+
+@media (max-width: 767px) {
+  .modal-content-popup1{
+    width: 85%;
+  }
+  .modal-content-popup1 p img{
+    width: 100%;
+  }
+  .modal-popup1{
+    padding-top: 40px;
+  }
+  .modal-popup1 .close-popup1{
+    top: -20px;
+    right: -10px;
+  }
+ 
+}
+
+
+@media only screen and (min-width: 768px) and (max-width:977px) {
+.modal-content-popup1{
+    width: 60%;
+  }
+  .modal-popup1{
+    padding-top: 70px;
+  }
+
+}
+@media only screen and (min-width: 978px) and (max-width:1024px) {
+.modal-content-popup1{
+    width: 45%;
+  }
+  .modal-popup1{
+    padding-top: 70px;
+  }
+
+}
+
+</style>
+
+
+
+<script>
+// Get the modal
+var modal = document.getElementById("myModal1");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn1");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close-popup1")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>

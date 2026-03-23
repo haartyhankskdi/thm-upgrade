@@ -1,0 +1,88 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Store Locator Hyva Compatibility
+ */
+
+use Amasty\Storelocator\Block\View\Attributes;
+use Magento\Framework\Escaper;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/**
+ * @var Amasty\Storelocator\Block\View\Attributes $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Hyva\Theme\ViewModel\HeroiconsOutline $heroicons
+ * @var \Hyva\Theme\Model\ViewModelRegistry $viewModels
+ */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+?>
+<div class="amlocator-block -attributes amlocator-attributes-wrapper bg-container-lighter hidden">
+    <div
+        class="
+            amlocator-collapse-title flex justify-between items-center px-7
+            pt-1 pb-2 bg-white md:hidden
+        "
+    >
+        <span class="font-semibold">
+            <?= $escaper->escapeHtml(__('Additional Information')); ?>
+        </span>
+
+        <button
+            @click="mobileAttribiutesExpanded = !mobileAttribiutesExpanded"
+            aria-expanded="mobileAttribiutesExpanded"
+            aria-controls="amlocator-attributes-container"
+        >
+            <span class="sr-only">
+                <?= $escaper->escapeHtml(__('Toggle store attribiutes')) ?>
+            </span>
+            <?= $heroicons->chevronDownHtml(
+                'transition-transform transform duration-300 ease-in-out',
+                24,
+                24,
+                [":class" => "{ 'rotate-180': mobileAttribiutesExpanded }"]
+            ); ?>
+        </button>
+    </div>
+    <div
+        id="amlocator-attributes-container"
+        class="amlocator-attributes-container flex-wrap px-7 py-5"
+        :class="mobileAttribiutesExpanded ? 'flex' : 'hidden md:flex'"
+    >
+        <?php foreach ($block->getLocationAttributes() as $attribute): ?>
+            <div class="amlocator-location-attribute w-1/2 flex flex-wrap mb-2.5">
+                <span class="amlocator-label pt-1 mr-1">
+                    <strong>
+                        <?= $escaper->escapeHtml($attribute['frontend_label']) ?>:
+                    </strong>
+                </span>
+                <div class="amlocator-values inline-block">
+                    <?php if (isset($attribute['option_title']) && is_array($attribute['option_title'])): ?>
+                        <?php foreach ($attribute['option_title'] as $optionTitle): ?>
+                            <span
+                                class="
+                                    amlocator-value -<?= $escaper->escapeHtmlAttr($attribute['frontend_input']) ?>
+                                    px-2.5 py-1 mr-2.5 mb-1 shadow inline-block
+                                "
+                            >
+                                <?= $escaper->escapeHtml($optionTitle) ?>
+                            </span>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <span
+                            class="
+                                amlocator-value -<?= $escaper->escapeHtmlAttr($attribute['frontend_input']) ?>
+                                px-2.5 py-1 mr-2.5 mb-1 shadow inline-block
+                            "
+                        >
+                            <?= $escaper->escapeHtml(isset($attribute['option_title']) ? $attribute['option_title'] : '')?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

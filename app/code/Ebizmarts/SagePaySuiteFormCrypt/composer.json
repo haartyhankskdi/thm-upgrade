@@ -1,0 +1,30 @@
+{
+    "name": "ebizmarts/sagepaysuiteformcrypt",
+    "version": "101.0.0",
+    "description": "Opayo FormCrypt integration for Magento 2.",
+    "require": {
+        "magento/framework": ">=103.0.4",
+        "phpseclib/phpseclib": "3.0.*"
+    },
+    "type": "magento2-module",
+    "autoload": {
+        "psr-4": {"Ebizmarts\\SagePaySuiteFormCrypt\\":""},
+        "files": ["registration.php"]
+    },
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "support": {
+        "email": "sagepay@ebizmarts-desk.zendesk.com",
+        "wiki": "http://wiki.ebizmarts.com",
+        "forum": "http://ebizmarts.com/forums/view/2"
+    },
+    "authors": [
+        {
+            "name": "Ebizmarts Corp",
+            "email": "info@ebizmarts.com",
+            "homepage": "http://ebizmarts.com"
+        }
+    ]
+}

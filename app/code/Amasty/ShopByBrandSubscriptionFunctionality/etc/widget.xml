@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop by Brand Subscription Functionality
+ */-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="amshopby_brand_info" class="Amasty\ShopByBrandSubscriptionFunctionality\Block\Widget\BrandInfo">
+        <label>Amasty Brand Info</label>
+        <description>Brand Info</description>
+        <parameters>
+            <parameter name="brand_fields" xsi:type="multiselect" required="false" visible="true" source_model="Amasty\ShopByBrandSubscriptionFunctionality\Model\Source\WidgetBrandFields">
+                <label translate="true">Brand Fields for the Widget</label>
+                <description translate="true">The selected brand fields will be displayed in the widget. Select all or leave empty to display all fields.</description>
+            </parameter>
+        </parameters>
+        <containers>
+            <container name="content">
+                <template name="default" value="default" />
+            </container>
+            <container name="content.aside">
+                <template name="default" value="default" />
+            </container>
+            <container name="content.top">
+                <template name="default" value="default" />
+            </container>
+            <container name="content.bottom">
+                <template name="default" value="default" />
+            </container>
+            <container name="main">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.simple.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.configurable.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.virtual.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.downloadable.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.bundle.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.grouped.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="product.info.giftcard.extra">
+                <template name="default" value="default" />
+            </container>
+            <container name="page.top">
+                <template name="default" value="default" />
+            </container>
+            <container name="top.container">
+                <template name="default" value="default" />
+            </container>
+            <container name="page.bottom">
+                <template name="default" value="default" />
+            </container>
+            <container name="page.bottom.container">
+                <template name="default" value="default" />
+            </container>
+            <container name="columns.top">
+                <template name="default" value="default" />
+            </container>
+            <container name="header.container">
+                <template name="default" value="default" />
+            </container>
+            <container name="before.body.end">
+                <template name="default" value="default" />
+            </container>
+        </containers>
+    </widget>
+</widgets>

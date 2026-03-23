@@ -1,0 +1,229 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+
+declare(strict_types=1);
+
+use Amasty\Shopby\Block\Navigation\FilterRenderer\Category;
+use Amasty\Shopby\Model\Layer\Filter\CategoryItems;
+use Amasty\Shopby\Model\Layer\Filter\Item;
+use Amasty\Shopby\Model\Source\SubcategoriesExpand;
+use Amasty\ShopbyBase\Model\FilterSetting;
+use Amasty\ShopbyHyvaCompatibility\ViewModel\ProductListAjax;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var FilterSetting $filterSetting */
+/** @var Item $filterItem */
+/** @var Category $block */
+/** @var CategoryItems $filterItems */
+/** @var ViewModelRegistry $viewModels */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var ProductListAjax $productListAjax */
+$productListAjax = $viewModels->require(ProductListAjax::class);
+
+$filterItems = $block->getFilter()->getItems();
+$categoryHelper = $block->getCategoryHelper();
+
+$filterSetting = $block->getFilterSetting();
+$filterSubcategoriesView = $block->isFolding();
+$isFlyOut = !$filterSubcategoriesView;
+$filterSubcategoriesType = $filterSubcategoriesView
+    ? 'labelsFolding'
+    : 'flyOut';
+$filterFoldingClass = $filterSubcategoriesView ? '-folding' : '';
+$isParent = $block->isParent($filterItems, $block->getPath());
+$showProductQuantities = $filterSetting->getShowProductQuantities();
+$filterPathItems = $filterItems->getItems($block->getPath());
+$isByClickSetting = $filterSubcategoriesView && $filterSetting->getSubcategoriesExpand() == SubcategoriesExpand::BY_CLICK;
+
+$firstLevelHaveCollapsible = false;
+foreach ($filterPathItems as $filterItem) {
+    $currentPath = ($block->getPath() ?: $filterItems->getStartPath()) . '/' . $filterItem->getValueString();
+    if ($filterItems->getItemsCount($currentPath)) {
+        $firstLevelHaveCollapsible = true;
+        break;
+    }
+}
+?>
+<?php if (count($filterPathItems)): ?>
+    <?php foreach ($filterPathItems as $filterItem): ?>
+        <?php
+        $currentPath = ($block->getPath() ?: $filterItems->getStartPath()) . '/' . $filterItem->getValueString();
+        $filterItemId = uniqid();
+        $filterItemUrl = $filterItem->getUrl();
+        $classes = '';
+        if (!$filterItem->getCount()) {
+            $classes .= ' -empty-value ';
+        }
+        if ($filterItems->getItemsCount($currentPath)) {
+            $classes .= ' -is-collapsible ';
+        }
+        $classes .= $block->isExpandByClick($currentPath) || $firstLevelHaveCollapsible ? ' relative ' : ' is-expanded ';
+
+        if ($block->getFilter()->getItemsCount()) {
+            $classes .= ' -filter-parent ';
+        }
+        if ($isFlyOut) {
+            $classes .= ' flyout-element ';
+        }
+        if ($block->getLevel() === 1 && !$isFlyOut) {
+            $classes .= ' px-6 ';
+        }
+        if ($block->getLevel() !== 1 && $isFlyOut) {
+            $classes .= ' px-6 ';
+        }
+        ?>
+        <script>
+            function initInput_<?= $escaper->escapeHtml($filterItemId); ?>() {
+                return deepMerge({}, initInput(), {
+                    isSelected: Boolean(<?= /** @noEscape */ $block->checkedFilter($filterItem)?>),
+                    value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                    name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>',
+                    type: '<?= /* @noEscape */ $block->getInputType() ?>'
+                })
+            }
+        </script>
+
+        <li x-data="initInput_<?= $escaper->escapeHtml($filterItemId); ?>()" x-init="openParentFilter($el)"
+            x-bind="eventListeners"
+            x-spread="eventListeners"
+            class="item flex flex-wrap items-center hover:text-black mt-0.5 level-<?= $escaper->escapeHtmlAttr($block->getLevel()); ?>
+                <?= $escaper->escapeHtmlAttr($classes); ?>
+                <?= $block->isExpandByClick($currentPath) ? 'am-with-children' : 'am-without-children' ?>"
+            data-label="<?= /* @noEscape */ $block->stripTags($filterItem->getOptionLabel()) ?>"
+            <?php if ($isFlyOut): ?>
+                @mouseenter="positioned = true; leftPosition($el)"
+                @mouseleave="positioned = false; left = true"
+                :class="{ 'relative': positioned }"
+            <?php endif; ?>>
+
+            <?php if ($block->isExpandByClick($currentPath)): ?>
+                <button type="button"
+                        class="filter-options-title absolute top-0 left-0 flex justify-between items-center cursor-pointer hover:text-secondary-darker border-container
+                        filter-options-title-level-<?= /**@noEscape */ $block->getLevel()?>"
+                        @click="open = !open" :class="{'collapsed' : !open, 'opened' : open}"
+                        :aria-expanded="open ? 'true' : 'false' ">
+                    <span class="py-1 px-1 rounded border border-container">
+                        <?= $heroicons->chevronDownHtml(
+                            'transition-transform transform duration-300 ease-in-out',
+                            12,
+                            12,
+                            [":class" => "{ 'rotate-180': open }"]
+                        ); ?>
+                    </span>
+                </button>
+            <?php endif; ?>
+
+            <?php if ($filterItem->getCount() > 0): ?>
+        <?php $inputId = 'amshopby-' . $block->getFilter()->getRequestVar() . '-' . $filterItem->getValueString() . ' - ' . uniqid() ?>
+        <div class="filter-row category-filter-row flex max-w-full w-full
+                 role="radiogroup"
+            aria-label="<?= $escaper->escapeHtmlAttr($filterItem->getOptionLabel()) ?>">
+        <?php $filterUniqId = uniqid(); ?>
+            <label for="amfilter-id-<?= $escaper->escapeHtmlAttr($inputId) ?>">
+                        <span class="sr-only">
+                            <?= $escaper->escapeHtmlAttr($filterItem->getOptionLabel()) ?>
+                        </span>
+            </label>
+        <input class="am-input mt-1 mr-2"
+               id="amfilter-id-<?= $escaper->escapeHtmlAttr($inputId) ?>"
+               name="amshopby[<?= $escaper->escapeHtmlAttr($block->getFilter()->getRequestVar()); ?>][]"
+               value="<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>"
+               type="<?= /* @noEscape */ $block->getInputType() ?>"
+               @change="$dispatch('amApplyInputChanged', {
+                            value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                            element: $el,
+                            name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>'
+                        })"
+               :checked="isSelected"
+        />
+            <a
+                    class="flex align-middle max-w-full hover:text-blue-600 w-full justify-start items-start
+                        <?= $isParent ? 'amshopby-filter-parent' : '' ?>
+                    "
+                    data-am-js="filter-item-default"
+                    href="<?= $escaper->escapeUrl($filterItem->getUrl()) ?>"
+                    title="<?= $escaper->escapeHtmlAttr($filterItem->getOptionLabel()); ?>"
+                    :class="{ 'amshopby-link-selected text-blue-600': isSelected }"
+                    @click.prevent.stop="$dispatch('amApplyInputChanged', {
+                       value: '<?= $escaper->escapeHtmlAttr($filterItem->getValueString()); ?>',
+                       element: $event.currentTarget,
+                       name: '<?= /* @noEscape */ $block->getFilter()->getRequestVar(); ?>'
+                    })"
+                <?= $filterItem->isAddNofollow() ? ' rel="nofollow"' : '' ?>>
+                <?php endif; ?>
+
+                <?php if ($block->getFilter()->useLabelsOnly()): ?>
+                    <span class="label max-w-[90%] break-words <?= /**@noEscape */ $block->getLevel() == 1 ? 'font-semibold' : ''; ?>">
+                    <?= /* @noEscape */ $filterItem->getOptionLabel() ?></span>
+                <?php else: ?>
+                    <?php if ($block->isShowThumbnail($filterItem->getValue())): ?>
+                        <img src="<?= /* @noEscape */ $categoryHelper->getCategoryImageUrl($filterItem->getValue()) ?>"
+                             class="am-category-image mr-1 inline-block mt-[2px]"
+                             title="<?= $escaper->escapeHtmlAttr($filterItem->getOptionLabel()); ?>"
+                             alt="<?= $escaper->escapeHtmlAttr($filterItem->getOptionLabel()); ?>"
+                             height="<?= /* @noEscape */ $categoryHelper->getCategoryFilterImageSize(); ?>"
+                             width="<?= /* @noEscape */ $categoryHelper->getCategoryFilterImageSize(); ?>"/>
+                    <?php endif; ?>
+                    <?php if ($block->getFilter()->useLabelsAndImages()): ?>
+                        <span class="label <?= /**@noEscape */ $block->getLevel() == 1 ? 'font-semibold' : ''; ?>">
+                        <?= /* @noEscape */ $filterItem->getOptionLabel() ?></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($block->isShowProductQuantities($showProductQuantities)): ?>
+                    <span class="count ml-auto text-primary <?= /* @noEscape */ $isFlyOut ? 'fly-out-count' : '' ?>">
+                    <?= /* @noEscape */ "(" . $filterItem->getCount() . ")"; ?>
+                    <span class="filter-count-label sr-only">
+                        <?php $title = ($filterItem->getCount() == 1) ? __('item') : __('items');?>
+                        <?= /* @noEscape */ $escaper->escapeHtml($title) ?>
+                    </span>
+                </span>
+                <?php endif; ?>
+
+                <?php if ($filterItem->getCount() > 0): ?>
+            </a>
+            </div>
+        <?php endif; ?>
+
+
+            <?php if ($filterItems->getItemsCount($currentPath)): ?>
+                <?php
+                $level = $block->getLevel();
+                $itemsClass = " items items-children w-full ml-0 level-{$level} {$filterFoldingClass} ";
+
+                if (!$isFlyOut) {
+                    $itemsClass .= ' relative ';
+                } else {
+                    $itemsClass .= ' absolute z-30 py-4 md:m-0 shadow-lg bg-container-lighter left-0 top-6 md:top-0 w-full border-box w-max ';
+                }
+                ?>
+                <ul class="<?= /* @noEscape */ $itemsClass ?> h-fit"
+                    <?php if ($isFlyOut): ?>
+                        :class="{
+                            'hidden': !positioned,
+                            'block md:!-top-3': positioned,
+                            'md:left-full': left,
+                            'md:translate-x-[-100%]': !left
+                        }"
+                    <?php endif; ?>
+                    <?php if ($isByClickSetting): ?>
+                        x-show="open" x-cloak
+                    <?php endif; ?>>
+                    <?= /* @noEscape */ $block->renderChildrenItems($currentPath); ?>
+                </ul>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+<?php endif; ?>

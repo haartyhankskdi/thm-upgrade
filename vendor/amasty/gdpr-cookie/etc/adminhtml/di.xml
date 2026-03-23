@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Cookie Consent (GDPR) for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Ui\Model\Export\MetadataProvider">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="amasty_gdprcookie_cookie_consent_listing" xsi:type="array">
+                    <item name="date_recieved" xsi:type="string">date_recieved</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Cms\Model\Wysiwyg\CompositeConfigProvider">
+        <arguments>
+            <argument name="galleryConfigProvider" xsi:type="array">
+                <item name="amcookie_wysiwyg_config" xsi:type="string">Amasty\GdprCookie\Model\Wysiwyg\GalleryConfig</item>
+            </argument>
+            <argument name="wysiwygConfigPostProcessor" xsi:type="array">
+                <item name="amcookie_wysiwyg_config" xsi:type="string">Amasty\GdprCookie\Model\Wysiwyg\TinymceConfig</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Amasty\GdprCookie\ConsentModeFieldset\Promo" type="Amasty\Base\Block\Adminhtml\System\Config\Form\Fieldset\PromoFieldset">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">Amasty_GoogleConsentMode</argument>
+            <argument name="promoConfig" xsi:type="array">
+                <item name="planType" xsi:type="string">subscribe</item>
+                <item name="infoMessage" xsi:type="string"><![CDATA[The functionality is available as part of an active product subscription or support subscription.
+                To upgrade and obtain functionality, please follow the <a href="https://amasty.com/amcustomer/account/products/?utm_source=extension&utm_medium=backend&utm_campaign=subscribe_gdprcookie" target="_blank">link</a>.
+                Then you can find the 'amasty/module-google-consent-mode' package for installation in composer suggest.]]></item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\GdprCookie\MicrosoftModeFieldset\Promo" type="Amasty\Base\Block\Adminhtml\System\Config\Form\Fieldset\PromoFieldset">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">Amasty_MicrosoftConsentMode</argument>
+            <argument name="promoConfig" xsi:type="array">
+                <item name="planType" xsi:type="string">subscribe</item>
+                <item name="infoMessage" xsi:type="string"><![CDATA[The functionality is available as part of an active product subscription or support subscription.
+                To upgrade and obtain functionality, please follow the <a href="https://amasty.com/amcustomer/account/products/?utm_source=extension&utm_medium=backend&utm_campaign=subscribe_gdprcookie" target="_blank">link</a>.
+                Then you can find the 'amasty/module-microsoft-consent-mode' package for installation in composer suggest.]]></item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty_GdprCookie\ClarityModeFieldset\Promo" type="Amasty\Base\Block\Adminhtml\System\Config\Form\Fieldset\PromoFieldset">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">Amasty_ClarityConsentMode</argument>
+            <argument name="promoConfig" xsi:type="array">
+                <item name="planType" xsi:type="string">subscribe</item>
+                <item name="infoMessage" xsi:type="string"><![CDATA[The functionality is available as part of an active product subscription or support subscription.
+                To upgrade and obtain functionality, please follow the <a href="https://amasty.com/amcustomer/account/products/?utm_source=extension&utm_medium=backend&utm_campaign=subscribe_gdprcookie" target="_blank">link</a>.
+                Then you can find the 'amasty/module-clarity-consent-mode' package for installation in composer suggest.]]></item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,64 @@
+<?php $bsetselling_category = $block
+    ->getLayout()
+    ->createBlock(
+        \Haartyhanks\RemoveObjectManager\Block\BestsellingCategory::class
+    );
+$categoryId = $bsetselling_category->getCurrentCategoryId();
+$imageHelper = $bsetselling_category->getImageHelper();
+$bestsell_products = $bsetselling_category->getBestSellingProducts(
+    4,
+    $categoryId
+);
+if (!$bestsell_products || count($bestsell_products) === 0) {
+    $bestsell_products = $bsetselling_category->getBestSellingProducts(4);
+}
+$current_block = $block
+    ->getLayout()
+    ->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$currentCategory = $current_block->getCurrentCategory();
+$display_mode = $currentCategory->getData("display_mode");
+if ($display_mode == "PRODUCTS"):
+    if ($bestsell_products && count($bestsell_products)): ?>
+<div class="latest-offer-products">
+    <h2><strong>Best Selling</strong> Products</h2>
+    <p>The most popular picks, flying off the shelves – don’t miss out.</p>
+    <ul class="recently-viewed-products">
+        <?php foreach ($bestsell_products as $_product): ?>
+            <li>
+                <a href="<?= $_product->getProductUrl() ?>">
+                    <img src="<?= $imageHelper
+                        ->init($_product, "product_small_image")
+                        ->getUrl() ?>"
+                         alt="<?= $_product->getName() ?>" width="150" />
+                </a>
+                <a href="<?= $_product->getProductUrl() ?>">
+                    <div class="view-product-name"><?= $_product->getName() ?></div>
+                </a>
+                <?php
+                $specialPrice = $_product->getSpecialPrice();
+                $regularPrice = $_product->getPrice();
+                $specialFromDate = $_product->getSpecialFromDate();
+                $currentDate = date("Y-m-d");
+                if (
+                    !empty($specialPrice) &&
+                    (!$specialFromDate || $specialFromDate <= $currentDate)
+                ): ?>
+                    <div class="bestsell-product-price">
+                        £<?= number_format($specialPrice, 2) ?>
+                        <span style="text-decoration: line-through;">
+                            £<?= number_format($regularPrice, 2) ?>
+                        </span>
+                    </div>
+                <?php else: ?>
+                    <div class="bestsell-product-price">£<?= number_format(
+                        $regularPrice,
+                        2
+                    ) ?></div>
+                <?php endif;
+                ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
+<?php endif; ?>

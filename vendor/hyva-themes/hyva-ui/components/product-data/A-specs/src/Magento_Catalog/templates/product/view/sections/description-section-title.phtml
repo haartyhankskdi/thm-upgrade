@@ -1,0 +1,26 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var ProductPage $productViewModel */
+/** @var Escaper $escaper */
+
+$productViewModel = $viewModels->require(ProductPage::class);
+$product = $productViewModel->getProduct();
+?>
+
+<h2 class="mb-4 title-font text-2xl font-semibold text-gray-900">
+    <?= $escaper->escapeHtml(__('Description')) ?> /
+    <span class="font-semibold"><?= $escaper->escapeHtml($product->getName()) ?></span>
+</h2>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="category.amshopby.ajax"
+                template="Amasty_ShopbyHyvaCompatibility::js/shopby_js.phtml" />
+
+        <referenceContainer name="category.product.list.additional">
+            <block name="block-loader" template="Hyva_Theme::ui/loading.phtml"/>
+        </referenceContainer>
+
+        <move element="amasty.shopby.applybutton.sidebar" destination="sidebar.main" />
+        <referenceContainer name="div.sidebar.main" htmlClass="sidebar sidebar-main relative" />
+    </body>
+</page>

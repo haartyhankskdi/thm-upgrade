@@ -1,0 +1,23 @@
+{
+  "name": "hyva-themes/magento2-email-module",
+  "description": "Hyva Themes email module",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "magento/module-email": ">=101.0.0"
+  },
+  "authors": [{
+    "name": "Hyvä Themes, Wigman Interactive",
+    "email": "info@hyva.io"
+  }],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\Email\\": "src/"
+    }
+  }
+}
+

@@ -1,0 +1,73 @@
+<div role="dialog"
+     class="modal-<%- data.type %> <%- data.modalClass %>"
+     aria-label="<%= data.headingArialLabel %>"
+     data-role="modal"
+     data-type="<%- data.type %>"
+>
+<div data-role="focusable-start" tabindex="0"></div>
+<div class="modal-inner-wrap"
+     data-role="focusable-scope">
+    <header class="modal-header">
+        <button class="action-close" data-role="closeBtn" type="button">
+            <span><%= data.closeText %></span>
+        </button>
+    </header>
+    <div id="modal-content-<%- data.id %>" class="modal-content" data-role="content"></div>
+</div>
+<div data-role="focusable-end" tabindex="0"></div>
+</div>
+<style>
+    <% if(data.settings.backgroundColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap {
+        background-color: <%= data.settings.backgroundColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.titleColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-information-title {
+        color: <%= data.settings.titleColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.descriptionColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-description {
+        color: <%= data.settings.descriptionColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.tableHeaderColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-table thead {
+        color: <%= data.settings.tableHeaderColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.tableContentColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-table .amgdprcookie-tbody {
+        color: <%= data.settings.tableContentColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.doneButtonColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-done {
+        background-color: <%= data.settings.doneButtonColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.doneButtonTextColor) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-done {
+        color: <%= data.settings.doneButtonTextColor %>;
+    }
+    <% } %>
+
+    <% if(data.settings.doneButtonColorHover) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-done:hover {
+        background-color: <%= data.settings.doneButtonColorHover %>;
+    }
+    <% } %>
+
+    <% if(data.settings.doneButtonTextColorHover) { %>
+    .amgdprcookie-cookie-information-modal .modal-inner-wrap .amgdprcookie-done:hover {
+        color: <%= data.settings.doneButtonTextColorHover %>;
+    }
+    <% } %>
+</style>

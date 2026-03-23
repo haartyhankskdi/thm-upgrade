@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Shop By Hyva Compatibility
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="Amasty_ShopbyBase::css/chosen/chosen.css"/>
+    </head>
+    <body>
+        <!-- remove original blocks/containers -->
+        <referenceBlock name="category.amshopby.children.list" remove="true"/>
+        <referenceBlock name="amshopby.catalog.topnav.container" remove="true"/>
+        <!-- end remove original blocks/containers -->
+
+        <!-- remove scripts init -->
+        <referenceBlock name="catalog.navigation.collapsing" remove="true"/>
+        <referenceBlock name="catalog.navigation.swatches.choose" remove="true"/>
+        <!-- end remove scripts init -->
+
+        <referenceContainer name="category.view.container">
+            <block class="Amasty\Shopby\Block\Product\ProductList\ChildrenCategoryList"
+                   name="hyva.category.amshopby.children.list"
+                   template="Amasty_Shopby::product/productlist/children_category_list.phtml"
+                   after="category.view.container"/>
+        </referenceContainer>
+
+        <referenceContainer name="sidebar.main">
+            <block name="hyva.amshopby.noui.slider.script"
+                   template="Amasty_ShopbyHyvaCompatibility::js/noui-slider.phtml" after="-"/>
+        </referenceContainer>
+
+        <referenceBlock name="catalog.leftnav" template="Amasty_ShopbyHyvaCompatibility::layer/view.phtml">
+            <arguments>
+                <argument xsi:type="boolean" name="isSidebar">true</argument>
+            </arguments>
+            <block name="amshopby.js.main"
+                   template="Amasty_ShopbyHyvaCompatibility::js/main.phtml">
+            <block name="amshopby.js.layered-navigation-top"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-layered-navigation-top.phtml"/>
+            <block name="amshopby.js.layered-navigation"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-layered-navigation.phtml"/>
+            <block name="amshopby.js.data-layered-swatch"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-data-layered-swatch.phtml"/>
+            <block name="amshopby.js.filter-hide-more-options"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-filter-hide-more-options.phtml"/>
+            <block name="amshopby.js.filter-tooltip"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-filter-tooltip.phtml"/>
+            <block name="amshopby.js.input"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-input.phtml"/>
+            <block name="amshopby.js.ranges"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-ranges.phtml"/>
+            <block name="amshopby.js.data-show-button"
+                   template="Amasty_ShopbyHyvaCompatibility::js/components/amShopBy-data-show-button.phtml"/>
+            </block>
+            <block class="Amasty\Shopby\Block\Navigation\FilterRenderer" name="catalog.navigation.renderer"
+                   as="renderer" template="Magento_LayeredNavigation::layer/filter.phtml"/>
+        </referenceBlock>
+
+        <referenceContainer name="content.top">
+            <container name="hyva.amshopby.catalog.topnav.container" htmlTag="div"
+                       htmlClass="catalog-topnav amasty-catalog-topnav relative z-10" after="-">
+                <block class="Amasty\Shopby\Block\Navigation\CategoryTop" name="amshopby.catalog.topnav"
+                       template="Amasty_ShopbyHyvaCompatibility::layer/view.phtml">
+                    <block class="Amasty\Shopby\Block\Navigation\Top\State" name="amshopby.catalog.topnav.state"
+                           as="state"/>
+                    <block class="Amasty\Shopby\Block\Navigation\FilterRenderer" name="amshopby.catalog.topnav.renderer"
+                           as="renderer" template="Magento_LayeredNavigation::layer/filter.phtml"/>
+                </block>
+                <container name="amshopby.catalog.topnav.container.last" htmlTag="div"
+                           htmlClass="catalog-topnav-last-item" after="amshopby.catalog.topnav"/>
+            </container>
+        </referenceContainer>
+
+        <referenceBlock name="category.amshopby.ajax"
+                        template="Amasty_ShopbyHyvaCompatibility::js/shopby_js.phtml"/>
+
+        <move element="amasty.shopby.applybutton.sidebar" destination="catalog.leftnav"/>
+        <referenceContainer name="div.sidebar.main" htmlClass="sidebar sidebar-main relative"/>
+    </body>
+</page>

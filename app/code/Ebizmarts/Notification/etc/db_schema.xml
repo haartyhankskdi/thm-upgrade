@@ -1,0 +1,14 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ebizmarts_notifications">
+        <column xsi:type="int" name="id" nullable="false" identity="true" comment="Table Id"/>
+        <column xsi:type="varchar" name="notification_id" nullable="false" length="255" comment="Store Notification ID"/>
+        <column xsi:type="timestamp" name="updated_at" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="STORE_NOTIFICATION_ID" indexType="btree">
+            <column name="notification_id"/>
+        </index>
+    </table>
+</schema>

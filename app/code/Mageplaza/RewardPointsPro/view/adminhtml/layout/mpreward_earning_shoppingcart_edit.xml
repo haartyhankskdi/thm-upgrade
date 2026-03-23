@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsPro
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="left">
+            <block class="Mageplaza\RewardPointsPro\Block\Adminhtml\Earning\ShoppingCart\Edit\Tabs" name="mp_rewardpro_earning_shopping_cart_tabs">
+                <block class="Mageplaza\RewardPointsPro\Block\Adminhtml\Earning\ShoppingCart\Edit\Tabs\General" name="mp_rewardpro_earning_shopping_cart_tabs_general"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">general</argument>
+                    <argument name="block" xsi:type="string">mp_rewardpro_earning_shopping_cart_tabs_general</argument>
+                </action>
+                <block class="Mageplaza\RewardPointsPro\Block\Adminhtml\Earning\ShoppingCart\Edit\Tabs\Conditions" name="mp_rewardpro_earning_shopping_cart_tabs_conditions"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">conditions</argument>
+                    <argument name="block" xsi:type="string">mp_rewardpro_earning_shopping_cart_tabs_conditions</argument>
+                </action>
+                <block class="Mageplaza\RewardPointsPro\Block\Adminhtml\Earning\ShoppingCart\Edit\Tabs\Actions" name="mp_rewardpro_earning_shopping_cart_tabs_actions"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">actions</argument>
+                    <argument name="block" xsi:type="string">mp_rewardpro_earning_shopping_cart_tabs_actions</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Mageplaza\RewardPointsPro\Block\Adminhtml\Earning\ShoppingCart\Edit" name="earning_shopping_cart"/>
+        </referenceContainer>
+    </body>
+</page>

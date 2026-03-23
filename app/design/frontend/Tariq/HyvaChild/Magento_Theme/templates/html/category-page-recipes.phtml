@@ -1,0 +1,77 @@
+<?php
+/** @var \Mageplaza\Blog\Block\Listpost $block */
+
+$block = $block->getLayout()->createBlock(\Mageplaza\Blog\Block\Listpost::class);
+$currentCategoryBlock = $block->getLayout()->createBlock(\Haartyhanks\RemoveObjectManager\Block\RemoveObj::class);
+$currentCategory = $currentCategoryBlock->getCurrentCategory();
+$recipe_catid = $currentCategory ? $currentCategory->getData('recipe_cat_id') : null;
+
+$postCollection = $block->getPostCollection();
+$baseUrl = $block->getBaseUrl();
+
+$postCollection->addFieldToFilter('enabled', 1);
+$postCollection->setOrder('publish_date', 'DESC');
+$postCollection->setCurPage(1);
+
+$filteredPosts = [];
+
+if (!empty($recipe_catid)) {
+    foreach ($postCollection as $post) {
+        $postModel = $post->load($post->getId());
+        $categoryIds = $postModel->getCategoryIds();
+
+        if (in_array($recipe_catid, $categoryIds) && $postModel->getShortDescription()) {
+            $filteredPosts[] = $postModel;
+        }
+        if (count($filteredPosts) >= 2) break;
+    }
+} else {
+    foreach ($postCollection as $post) {
+        if ($post->getShortDescription()) {
+            $filteredPosts[] = $post;
+        }
+        if (count($filteredPosts) >= 2) break;
+    }
+}
+?>
+
+<div class="text-center py-6 px-0 mx-auto lg:pb-12">
+    <div class="section-title text-center mb-12 scroll-item">
+        <h2 class="text-3xl md:text-[38px] font-normal text-black">
+        <span class="font-bold">Watch. Learn. Cook</span> <br class="md:hidden">with Confidence.
+        </h2>
+        <p class="text-base md:text[17px] text-black my-4">
+           From mouth-watering halal recipes to expert butchery tips - discover the secrets behind every cut.
+        </p>
+        <span class="block w-10 h-0.5 bg-red-600 mx-auto mt-6"></span>
+    </div>
+
+    <div class="md:grid gap-4 sm:grid-cols-1 md:grid-cols-2 category-recipe scroll-item">
+        <?php if (count($filteredPosts)): ?>
+            <?php foreach ($filteredPosts as $post): ?>
+                <div class="bg-white p-0 shadow-sm  transition duration-150 recipes-list-sec">
+                    <div class="text-gray-800 mb-1 text-sm md:text-base">
+                  <?php echo $post->getShortDescription(); ?>
+                   </div>
+
+                  <h3 class="w-full text-black text-xl lg:text-[28px] lg:leading-[34px] font-bold p-0 text-left mt-6 mb-4 text-center md:text-left">
+                        <?php echo $post->getName(); ?>
+                    </h3>
+                    <!-- <a href="<?//php echo $baseUrl ?>recipes" 
+                       class="md:hidden text-[#E63833] hover:underline text-base uppercase font-bold text-center md:text-left">
+                       View All Insights by Tariq Halal →
+                    </a> -->
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-gray-500">No videos found.</p>
+        <?php endif; ?>
+    </div>
+
+   <!--  <div class="mt-12">
+        <a href="<?//= $baseUrl ?>recipes"
+           class="bg-black text-white text-sm font-normal uppercase tracking-wider py-4 px-8 rounded-full  hover:bg-[#E63833] transition duration-300">
+            VIEW ALL RECIPES
+        </a>
+    </div> -->
+</div>

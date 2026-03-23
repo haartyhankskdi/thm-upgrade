@@ -1,0 +1,156 @@
+<?php
+/** @var \Haartyhanks\AutoUpsell\Block\BestSeller $block */
+$products = $block->getProductCollection();
+$formKey = $block->getFormKey();
+$isLoggedIn = $block->isCustomerLoggedIn();
+$wishlistHelper = $block->getWishlistHelper();
+
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+
+<?php if (count($products)): ?>
+<div class="bestseller-main-section">
+    <h3><span>Bestseller You'll Love </span></h3>
+    <p>Shop what everyone's talking about <p>
+    <div class="bestseller-section">
+        <div class="bestseller-content">
+            <?php $i = 1; foreach ($products as $product): ?>
+                <?php if ($i > 15) break; ?>
+
+                <?php
+                $inWishlist = false;
+                if ($isLoggedIn) {
+                    $wishlist = $wishlistHelper->getWishlist();
+                    if ($wishlist) {
+                        foreach ($wishlist->getItemCollection() as $item) {
+                            if ($item->getProductId() == $product->getId()) {
+                                $inWishlist = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                $productImageUrl = $imageHelper->init($product, 'category_page_grid')->getUrl();
+                $specialPrice = $product->getSpecialPrice();
+                $regularPrice = $product->getPrice();
+                $specialFromDate = $product->getSpecialFromDate();
+                $specialToDate = $product->getSpecialToDate();
+                $currentDate = date('Y-m-d');
+                ?>
+
+                <div class="bestseller-product">
+                    <div class="bestseller-product-img">
+                        <!-- Wishlist -->
+                        <?php if ($isLoggedIn): ?>
+                            <?php if (!$inWishlist): ?>
+                                <form action="<?= $block->getUrl("wishlist/index/add") ?>" method="post" class="custom-wishlist-form">
+                                    <input type="hidden" name="product" value="<?= $product->getId() ?>" />
+                                    <input type="hidden" name="form_key" value="<?= $formKey ?>" />
+                                    <button type="submit" class="wishlist-btn" title="Add to Wishlist">
+                                        <img src="<?= $block->getViewFileUrl("images/heart.svg") ?>" alt="heart" />
+                                    </button>
+                                </form>
+                            <?php else: ?>
+                                <span class="wishlist-btn added" title="Already in Wishlist">
+                                    <img src="<?= $block->getViewFileUrl("images/heart-red.svg") ?>" alt="heart-red" />
+                                </span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <a href="<?= $block->getUrl("customer/account/login") ?>" class="wishlist-btn" title="Login to add to Wishlist">
+                                <img src="<?= $block->getViewFileUrl("images/heart.svg") ?>" alt="heart" />
+                            </a>
+                        <?php endif; ?>
+
+                        
+
+                        <a href="<?= $product->getProductUrl() ?>">
+                            <img src="<?= $productImageUrl ?>" alt="<?= $product->getName() ?>" />
+                        </a>
+
+                        <!-- Discount -->
+                        <?php if ($specialPrice && $specialFromDate <= $currentDate && $specialPrice < $regularPrice): 
+                            $discount = round(100 - ($specialPrice / $regularPrice) * 100);
+                        ?>
+                            <div class="discount-badge"><?= $discount ?>%<br>OFF</div>
+                        <?php endif; ?>
+
+                        <!-- NEW -->
+                        <?php
+                        $createdAt = $product->getCreatedAt();
+                        $isNew = false;
+                        if ($createdAt) {
+                            $createdDate = new \DateTime($createdAt);
+                            $now = new \DateTime();
+                            if ($now->diff($createdDate)->days <= 5) {
+                                $isNew = true;
+                            }
+                        }
+                        ?>
+                        <?php if ($isNew): ?>
+                            <div class="custom-new-label"><span>NEW</span></div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="product-name">
+                        <a href="<?= $product->getProductUrl() ?>"><?= $block->escapeHtml($product->getName()) ?></a>
+                    </div>
+
+                    <!-- Price -->
+                    <?php if ($specialPrice && $specialFromDate <= $currentDate && $specialPrice < $regularPrice): ?>
+                        <div class="groceries-product-price">
+                            £<?= number_format($specialPrice, 2) ?>
+                            <span style="text-decoration: line-through;">£<?= number_format($regularPrice, 2) ?></span>
+                        </div>
+                    <?php else: ?>
+                        <div class="groceries-product-price">£<?= number_format($regularPrice, 2) ?></div>
+                    <?php endif; ?>
+
+                    <!-- Weight -->
+                    <?php if ($product->getWeight()): ?>
+                        <div class="bestsell-product-weight">
+                            Weight <?= rtrim(rtrim(number_format($product->getWeight(), 4, ".", ""), "0"), ".") ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <span class="vip-points">Get 2 VIP Points</span>
+
+                    <!-- Add to Cart -->
+                  <?php $productId = $product->getId();
+                  $baseUrl = $block->getBaseUrl();?>
+                  
+                <div class="custom-cart-ui" data-product-id="<?= $productId ?>" data-form-key="<?= $formKey ?>">
+                    <div class="cart-btn-wrapper default-state">
+                        <button class="btn-add-to-cart">+ Add to Basket</button>
+                    </div>
+
+                    <div class="cart-btn-wrapper qty-state" style="display: none;">
+                        <button class="btn-decrease">-</button>
+                        <span class="qty-text">1 Added</span>
+                        <button class="btn-increase">+</button>
+                    </div>
+                    </div>
+               </div>
+                <?php $i++; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<style>
+.upsell-content .slick-prev,
+.upsell-content .slick-next {
+    z-index: 10;
+    background: #fff;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+.upsell-content .slick-prev:before,
+.upsell-content .slick-next:before {
+    color: #333;
+    font-size: 18px;
+}
+</style>

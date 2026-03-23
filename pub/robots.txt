@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow:/blog/tag/*
+Disallow:/catalogsearch/result/?q=*
+Disallow:/customer/account/login/referer/*
+Disallow:/home/*
+Sitemap: https://www.tariqhalalmeats.com/sitemap.xml

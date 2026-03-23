@@ -1,0 +1,210 @@
+.press-detail {
+  @apply pt-4 md:pt-[50px] pb-[10px];
+}
+
+.press-detail .container {
+  @apply mx-auto px-4 md:px-0 md:max-w-[900px];
+}
+
+.press-detail h1.press-title {
+  @apply text-[32px] md:text-[38px] leading-[40px] md:leading-[46px] font-semibold mb-[15px] text-left;
+}
+
+.press-detail .press-meta {
+  @apply text-[14px] text-black mb-[18px] text-left;
+}
+
+.press-inner-data {
+  @apply w-full inline-block;
+}
+
+.press-inner-data p {
+  @apply text-[17px] md:text-[15px] leading-[27px] md:leading-[23px] text-black mb-[10px] text-left;
+}
+
+.press-detail .press-image {
+  @apply my-[25px];
+}
+
+.press-detail .press-image img {
+  @apply w-full h-auto object-cover bg-gray-300;
+}
+ 
+.press-hub {
+  @apply bg-[#F5F9F7] py-0;
+}
+
+.press-container {
+  @apply flex flex-col md:flex-row items-center mx-auto max-w-full;
+}
+
+.press-content .breadcrumb {
+  @apply text-[14px] font-medium leading-[24px] mb-[10px] text-black block;
+}
+
+.press-content h1 {
+  @apply text-[38px] font-semibold leading-[46px] mb-[10px] text-left;
+}
+
+.press-content p {
+  @apply text-[17px] leading-[27px] text-black mb-[10px] text-left;
+}
+
+.press-stats {
+  @apply flex gap-4 md:gap-[50px] mt-[15px];
+}
+
+.press-stats .stat h2 {
+  @apply text-[45px] md:text-[55px] font-normal mb-[5px] mt-[15px];
+}
+
+.press-stats .stat span {
+  @apply text-[17px] leading-[27px] text-black;
+}
+
+.press-hub .press-image img {
+  @apply w-full h-full object-cover;
+}
+ 
+.press-feature {
+  @apply py-[80px];
+}
+
+.press-feature .container {
+  @apply mx-auto max-w-[1200px] px-0;
+}
+
+.press-feature .feature-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-[35px];
+}
+
+.press-feature .feature-col h2 {
+  @apply text-[38px] font-semibold leading-[46px] mb-[10px] text-left;
+}
+
+.press-feature .subtext {
+  @apply text-[17px] leading-[27px] mb-[30px] text-left;
+}
+
+.press-feature .feature-card {
+  @apply relative overflow-hidden cursor-pointer mt-[25px];
+}
+
+.press-feature .feature-card img {
+  @apply w-full object-cover transition duration-500;
+}
+
+.press-feature .hover-card:hover img {
+  @apply scale-110;
+}
+
+.press-feature .feature-card::after {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-t from-black/70 to-transparent;
+}
+
+.press-feature .feature-overlay {
+  @apply absolute left-[20px] right-[20px] md:left-[30px] md:right-[30px] bottom-[5px] text-white z-10;
+}
+
+.press-feature .feature-overlay h3 {
+  @apply text-[22px] leading-[28px] md:text-[25px] md:leading-[34px] mt-[10px];
+}
+
+.press-feature .feature-overlay.full {
+  @apply translate-y-[110px] transition-all duration-300;
+}
+
+.press-feature .hover-card:hover .feature-overlay.full {
+  @apply -translate-y-[30px];
+}
+
+.press-feature .feature-overlay.full p {
+  @apply text-[15px] leading-[1.4] my-[15px];
+}
+
+.press-feature .read-more {
+  @apply text-white border-b-2 border-red-500 text-[14px];
+}
+ 
+.press-listing {
+  @apply bg-white pt-[25px];
+}
+
+.press-listing .container {
+  @apply mx-auto max-w-[1200px];
+}
+
+.press-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-[40px];
+}
+
+.press-grid .press-card .thumb {
+  @apply w-full h-[250px] mb-[20px] overflow-hidden;
+}
+
+.press-grid .press-card .thumb img {
+  @apply w-full transition duration-500;
+}
+
+.press-grid .press-card:hover img {
+  @apply scale-110;
+}
+
+.press-grid .press-card .date {
+  @apply text-[14px] leading-[24px] text-black block;
+}
+
+.press-grid .press-card h3 {
+  @apply text-[28px] md:text-[22px] font-semibold leading-[36px] md:leading-[32px] mt-[10px] mb-[15px] text-left;
+}
+
+.press-grid .press-card p {
+  @apply text-[17px] leading-[27px] text-black text-left;
+}
+
+.press-grid .press-card .read-more {
+  @apply inline-block mt-[10px] text-black border-b-2 border-red-500 text-[14px];
+}
+
+ 
+.cms-press-hub .top-container.container{
+  @apply hidden;
+}
+
+.press-hub .press-content,
+.press-hub .press-image {
+  flex: 1;
+}
+
+.press-content .left-sec {
+    @apply md:ml-16 md:w-[70%];
+}
+
+.press-feature .feature-overlay.full p {
+    @apply md:h-[65px];
+}
+
+.press-container,
+.press-feature .container,
+.press-listing .container{
+    @apply pt-4 px-[15px] md:pt-0 md:px-0;
+}
+
+.press-content {
+    @apply mb-8 md:mb-0;
+}
+
+.press-feature .feature-card img {
+    @apply h-[360px] md:h-auto;
+}
+
+.press-feature .feature-card .feature-overlay.full {
+    @apply translate-y-[130px] md:translate-y-[110px];
+}
+
+.press-listing {
+    @apply mb-8
+}
+
+ 

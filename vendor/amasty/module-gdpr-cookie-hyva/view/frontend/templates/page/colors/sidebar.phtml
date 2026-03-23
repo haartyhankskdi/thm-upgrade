@@ -1,0 +1,26 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Amasty\GdprCookieHyva\ViewModel\Settings;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+$settings = $viewModels->require(Settings::class);
+?>
+
+<style>
+    :root {
+        /* Sidebar Color Settings */
+        --ambar-sidebar-group-title-text: <?= $escaper->escapeHtml($settings->getTitleTextColor()) ?>;
+        --ambar-sidebar-group-description-text: <?= $escaper->escapeHtml($settings->getDescriptionTextColor()) ?>;
+        --ambar-sidebar-toggle-active-color: <?= $escaper->escapeHtml($settings->getSidebarToggleActiveStateColor()) ?>;
+        --ambar-sidebar-toggle-inactive-color: <?= $escaper->escapeHtml($settings->getSidebarToggleInActiveStateColor()) ?>;
+    }
+</style>

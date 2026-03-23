@@ -1,0 +1,34 @@
+<div class="pdo-google-review bg-black text-white flex flex-wrap items-center justify-between p-4 md:p-6 lg:px-10 lg:py-10 gap-4 scroll-item">
+    <!-- Left side: Google logo and rating -->
+    <div class="flex items-center gap-3">
+        <!-- Google G -->
+        <div class="flex items-center justify-center">
+            <img alt="Google" 
+                 class="w-auto" width="64" height="64" src ="<?= $block->getViewFileUrl('images/google-review-i.webp') ?>"/> 
+        </div>
+        <span class="h-16 border-r border-[#585858] lg:ml-6 lg:mr-6"></span>
+
+        <div>
+            <div class="inline-block items-center gap-1">
+                <span class="text-4xl lg:text-[80px] lg:leading-[80px] font-normal text-white float-left mr-6">4.8</span>
+                <!-- stars -->
+                <div class="flex items-center ml-1 mt-[25px]">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="<?= $i <= 5 ? 'currentColor' : 'none' ?>" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-yellow-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                  d="M11.48 3.499a.75.75 0 011.04 0l2.475 2.373 3.433.502a.75.75 0 01.415 1.279l-2.482 2.418.586 3.415a.75.75 0 01-1.088.791L12 12.347l-3.079 1.62a.75.75 0 01-1.088-.79l.586-3.416-2.482-2.418a.75.75 0 01.415-1.279l3.433-.502 2.475-2.373z" />
+                        </svg>
+                    <?php endfor; ?>
+                </div>
+                <p class="text-sm text-gray-300">4 Reviews</p>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Right side: Button -->
+    <a href="<?= $block->getBaseUrl(); ?>#reviews" 
+       class="w-full bg-[#E63833] hover:bg-[#3B7E48] text-white text-base font-normal px-2 py-3 rounded-full transition duration-400 uppercase lg:w-[215px] transition text-center">
+       VIEW ALL REVIEWS
+    </a>
+</div>

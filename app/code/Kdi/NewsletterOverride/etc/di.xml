@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+  <!-- this is for newsletter success page redirect -->
+  <preference for="Magento\Newsletter\Controller\Subscriber\NewAction" type="Kdi\NewsletterOverride\Rewrite\Magento\Newsletter\Controller\Subscriber\NewAction"/>
+</config>

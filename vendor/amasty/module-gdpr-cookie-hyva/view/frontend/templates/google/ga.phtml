@@ -1,0 +1,119 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Hyva Compatibility (System)
+ */
+
+use Magento\Cookie\Helper\Cookie;
+use Magento\GoogleAnalytics\Block\Ga;
+use Magento\GoogleAnalytics\Helper\Data;
+
+/** @var Ga $block */
+/** @var Hyva\Theme\ViewModel\HyvaCsp|null $hyvaCsp */
+
+$accountId = $block->getConfig(Data::XML_PATH_ACCOUNT);
+?>
+
+<script defer data-cfasync="false">
+    (function () {
+        'use strict';
+
+        const options = {
+            cookieDomain: window.location.host,
+            isCookieRestrictionModeEnabled: <?= (int)$block->isCookieRestrictionModeEnabled() ?>,
+            currentWebsite: <?= (int)$block->getCurrentWebsiteId() ?>,
+            cookieName: "<?= /* @noEscape */ Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>",
+            ordersTrackingData: <?= /* @noEscape */ json_encode($block->getOrdersTrackingData()) ?>,
+            pageTrackingData: <?= /* @noEscape */ json_encode($block->getPageTrackingData($accountId)) ?>,
+        };
+
+        function initializeGA() {
+            let allowServices = false,
+                allowedCookies,
+                allowedWebsites,
+                gaCookiesAllowed,
+                disallowedCookieAmasty,
+                allowedCookiesAmasty,
+                amGoogleCookiesDisallowed,
+                amCookieManager,
+                googleAnalyticsCookieName = '_ga';
+
+            amCookieManager = window.amastyCookieManager ?? null;
+            allowedCookies = options.isCookieRestrictionModeEnabled ? hyva.getCookie(options.cookieName) : null;
+            allowedWebsites = allowedCookies ? JSON.parse(decodeURIComponent(allowedCookies)) : null;
+            allowServices = !options.isCookieRestrictionModeEnabled
+                || (allowedWebsites && allowedWebsites[options.currentWebsite] === 1);
+            allowedCookiesAmasty = hyva.getCookie('amcookie_allowed') || '';
+
+            if (amCookieManager !== null) {
+                amGoogleCookiesDisallowed = amCookieManager.isCookieDisallowed(googleAnalyticsCookieName);
+            } else {
+                disallowedCookieAmasty = hyva.getCookie('amcookie_disallowed')
+                    ? decodeURIComponent(hyva.getCookie('amcookie_disallowed')).split(',')
+                    : '';
+                amGoogleCookiesDisallowed = disallowedCookieAmasty.includes(googleAnalyticsCookieName);
+            }
+
+            gaCookiesAllowed = (!amGoogleCookiesDisallowed && !!allowedCookiesAmasty)
+                || !window.isGdprCookieEnabled
+                || Alpine.store('AmastyCookieGroups').isCookieEssential(googleAnalyticsCookieName);
+
+            if (gaCookiesAllowed && allowServices) {
+                Promise.resolve().then(() => {
+                    runGA(options);
+                });
+            }
+        }
+
+        function runGA() {
+            (function (i, s, o, g, r, a, m) {
+                i.GoogleAnalyticsObject = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments);
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m);
+            }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'));
+
+            // Process page info
+            ga('create', options.pageTrackingData.accountId, options.cookieDomain);
+
+            if (options.pageTrackingData.isAnonymizedIpActive) {
+                ga('set', 'anonymizeIp', true);
+            }
+
+            // Process orders data
+            if (options.ordersTrackingData.hasOwnProperty('currency')) {
+                ga('require', 'ec', 'ec.js');
+
+                ga('set', 'currencyCode', options.ordersTrackingData.currency);
+
+                // Collect product data for GA
+                if (options.ordersTrackingData.products) {
+                    options.ordersTrackingData.products.forEach(value => {
+                        ga('ec:addProduct', value);
+                    })
+                }
+
+                // Collect orders data for GA
+                if (options.ordersTrackingData.orders) {
+                    options.ordersTrackingData.orders.forEach(value => {
+                        ga('ec:setAction', 'purchase', value);
+                    })
+                }
+
+                ga('send', 'pageview');
+            } else {
+                // Process Data if not orders
+                ga('send', 'pageview' + options.pageTrackingData.optPageUrl);
+            }
+        }
+
+        window.addEventListener('amasty-cookie-group-updated', () => initializeGA());
+    })();
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

@@ -1,0 +1,92 @@
+# Magento 2 base exclusions from official template [web:1][web:3]
+/app/etc/env.php
+/app/etc/config.php
+/app/etc/di.xml
+/var/*
+!/var/.htaccess
+/generated/*
+!/generated/.htaccess
+/pub/media/*
+!/pub/media/.htaccess
+/pub/static/*
+!/pub/static/.htaccess
+/pub/static_deploy/*
+!/pub/static_deploy/.htaccess
+
+# Composer and dependencies
+!/vendor/.htaccess
+composer.phar*
+/composer1.phar
+
+# Logs and errors
+/*.log
+/php_errorlog
+php_error.log
+
+# IDE and editor files
+/.idea/
+.vscode/
+.sublime-
+.DS_Store
+.project
+.buildpath
+.settings/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+.DS_Store?
+
+# Runtime and cache
+/session/*
+/var/cache/*
+/var/page_cache/*
+/var/import/*
+/var/export/*
+/media/catalog/product/cache/*
+/media/import/*
+/media/theme-cache/*
+
+# Backups and large files from your ls
+*.tar
+app.tar
+*.pdf
+Essentials_certificate.pdf
+.back
+
+# Custom to your project
+/info.php
+/sg-phpinfo-.php
+/adminer.php
+/test.txt
+/nginx.conf.sample
+/php.ini
+/user.ini
+/.editorconfig  # if you don't want to commit it
+/app.tar
+/weightloss/  # if it contains generated data
+/blog_sitemap.xml
+/sitemap_blog.xml
+
+# Node/Grunt/Yarn
+/node_modules/
+/yarn.lock
+package-lock.json
+
+# Testing
+phpunit.xml*
+/coverage/
+.phpunit.result.cache
+
+# ZIP and archives
+*.zip
+*.gz
+*.tgz
+*.bz2
+*.sql
+*.tar
+*.fig
+# Temporary files
+*~
+*.swp
+vendor/hyva-themes/hyva-ui/assets/Hyva-UI.fig

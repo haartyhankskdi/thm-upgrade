@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Cookie Clarity Consent Mode
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block ifconfig="amasty_gdprcookie/clarity_consent_mode/enable"
+                   name="amasty.consent.clarity"
+                   template="Amasty_ClarityConsentMode::clarity/consent.phtml"
+                   after="-"
+            >
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Amasty\ClarityConsentMode\ViewModel\ClarityViewModel</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block ifconfig="amasty_gdprcookie/clarity_consent_mode/enable" name="amasty.clarity.consent.footer"
+                   template="Amasty_ClarityConsentMode::clarity/bind-events.phtml">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

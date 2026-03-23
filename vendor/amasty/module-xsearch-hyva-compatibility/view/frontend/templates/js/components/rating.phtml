@@ -1,0 +1,76 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<script>
+    function amXsearchRating() {
+        return {
+            ratingWrapperClass() {
+                return {
+                    'mx-0 w-full': this.config.isGridView,
+                    'mx-auto': !this.config.isGridView
+                }
+            },
+            ratingSummaryClass() {
+                return {
+                    'flex items-center': this.config.isGridView && !this.product.isSliderItem
+                }
+            },
+            svgFill() {
+                return 'url(#partialFill' + this.product.id + ')'
+            },
+            ratingStarsFilled() {
+                return this.product.ratingData.starsFilled
+            },
+            ratingStarsEmpty() {
+                return this.product.ratingData.starsEmpty
+            },
+            productUrl() {
+                return `${this.getProductUrl(this.product)}`
+            },
+            productReviewsCountHtml() {
+                return this.product.reviews_count
+            },
+            svgProductId() {
+                return 'partialFill' + this.product.id
+            },
+            isRatingStarFragment() {
+                return this.product.ratingData.starFragment > 0
+            },
+            isProductRatingSummary() {
+                return this.product.rating_summary > 0
+            },
+            ratingStarFragmentPercent() {
+                return this.product.ratingData.starFragment * 100 + '%'
+            },
+            ratingStarYellowHex() {
+                return this.product.ratingData.yellowHex
+            },
+            ratingStarGreyHex() {
+                return this.product.ratingData.greyHex
+            },
+            ratingStarYellowStyle() {
+                return `color: ${this.product.ratingData.yellowHex}`
+            },
+            ratingStarGreyStyle() {
+                return `color: ${this.product.ratingData.greyHex}`
+            },
+            ratingSummaryTitle() {
+                return this.product.rating_summary === 0 ? `${this.$el.dataset.title}` : ''
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

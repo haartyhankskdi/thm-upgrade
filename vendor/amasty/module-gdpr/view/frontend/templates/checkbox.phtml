@@ -1,0 +1,45 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package GDPR Base for Magento 2
+ */
+/** @var \Amasty\Gdpr\Block\Checkbox $block */
+
+$consents = $block->getConsents();
+?>
+
+<?php /** @var \Amasty\Gdpr\Model\Consent\Consent $consent **/ ?>
+<?php foreach ($consents as $consent):
+    $uniqueKey = $block->getUniqueKey();
+    ?>
+<div class="amgdpr-checkbox field choice  <?php if ($consent->isRequired()): ?>required<?php endif; ?>"
+     data-role="amasty-gdpr-consent"
+     data-amgdpr-content-from="<?= $block->escapeHtml($block->getScope()) ?>">
+    <input type="hidden" name="amgdpr_agreement[<?= $block->escapeHtml($consent->getConsentCode()) ?>]" value="0">
+    <input type="checkbox"
+           name="amgdpr_agreement[<?= $block->escapeHtml($consent->getConsentCode()) ?>]"
+           title="<?= $block->escapeHtml($consent->getConsentName()) ?>"
+           value="1"
+           id="<?= $block->escapeHtml($uniqueKey) ?>"
+           class="amgdpr-checkbox"
+           data-consent-id="<?= $block->escapeHtml($consent->getConsentId()) ?>"
+        <?php if ($block->isRequired($consent)): ?>
+            required
+            data-validate="{required:true}"
+        <?php endif;
+        if ($block->isChecked($consent)): ?>
+            checked
+        <?php endif; ?>
+    >
+    <label for="<?= $block->escapeHtmlAttr($uniqueKey) ?>" class="label amgdpr-label">
+        <span class="amgdpr-text">
+            <?= $block->escapeHtml($block->getConsentText($consent), ['a']) ?>
+        </span>
+    </label>
+</div>
+<?php endforeach; ?>
+
+<input type="hidden"
+    name="<?= $block->escapeHtml($block->getConsentFromLocation()) ?>"
+    value="<?= $block->escapeHtml($block->getScope()) ?>">

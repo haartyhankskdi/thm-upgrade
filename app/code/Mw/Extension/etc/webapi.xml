@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route method="GET" url="/V1/mw-extension">
+        <service class="Mw\Extension\Api\PostManagementInterface" method="customGetMethod" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <!--POST API Start-->
+    <route method="POST" url="/V1/mw-extension/post">
+        <service class="Mw\Extension\Api\PostManagementInterface" method="customPostMethod" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route method="GET" url="/V1/getproductimage/:sku">
+        <service class="Mw\Extension\Api\GetProductImageInterface" method="getProductImageUrl" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route method="GET" url="/V1/gethomeproduct">
+        <service class="Mw\Extension\Api\GetHomeInterface" method="getHomeProducts" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <!-- Wishlist API -->
+
+    <route url="/V1/wishlist" method="GET">
+        <service class="Mw\Extension\Api\WishlistManagementInterface" method="getWishlistForCustomer" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/wishlist/add/:productId" method="PUT">
+        <service class="Mw\Extension\Api\WishlistManagementInterface" method="addWishlistForCustomer" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/wishlist/delete/:wishlistItemId" method="DELETE">
+        <service class="Mw\Extension\Api\WishlistManagementInterface" method="deleteWishlistForCustomer" />
+        <resources>
+            <resource ref="anonymous" />
+            <!-- <resource ref="self" /> -->
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <!-- Review API -->
+    <route url="/V1/products/:sku/reviews" method="GET">
+        <service class="Mw\Extension\Api\GetProductReviewsInterface" method="execute" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+    <route url="/V1/reviews/:reviewId" method="GET">
+        <service class="Mw\Extension\Api\ReviewRepositoryInterface" method="get" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+    <route url="/V1/reviews/:id" method="PUT">
+        <service class="Mw\Extension\Api\ReviewRepositoryInterface" method="save" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+    <route url="/V1/add-review" method="POST">
+        <service class="Mw\Extension\Api\ReviewRepositoryInterface" method="save" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+    <route url="/V1/reviews/:reviewId" method="DELETE">
+        <service class="Mw\Extension\Api\ReviewRepositoryInterface" method="deleteById" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+    <route url="/V1/reviews" method="GET">
+        <service class="Mw\Extension\Api\ReviewRepositoryInterface" method="getList" />
+        <resources>
+            <resource ref="Magento_Review::reviews_all" />
+        </resources>
+    </route>
+
+    <!-- Get Configuration -->
+    <route method="GET" url="/V1/free-shipping-rate">
+        <service class="Mw\Extension\Api\GetConfigInterface" method="getFreeShippingRate" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route method="POST" url="/V1/payment-token">
+        <service class="Mw\Extension\Api\GetConfigInterface" method="getBraintreeNounce" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <!--  -->
+    <route url="/V1/invoices/:id/export/pdf" method="GET">
+        <service class="Mw\Extension\Api\PdfInvoiceRepositoryInterface" method="getInvoiceForExportInPdfFormat" />
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/order-invoice/:orderId" method="GET">
+        <service class="Mw\Extension\Api\GetOrderInterface" method="getInvoiceDataByOrderId" />
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <!-- Place Order -->
+    <route url="/V1/placeOrder" method="POST">
+        <service class="Mw\Extension\Api\ApiPlaceOrderInterface" method="placeOrderForCustomer" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/orderMail" method="POST">
+        <service class="Mw\Extension\Api\ApiPlaceOrderInterface" method="orderMail" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/getOrderId" method="POST">
+        <service class="Mw\Extension\Api\ApiPlaceOrderInterface" method="getOrderId" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <!-- Logs -->
+    <route url="/V1/putLog" method="POST">
+        <service class="Mw\Extension\Api\PutLogInterface" method="putLog" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/getMerchantKey" method="POST">
+        <service class="Mw\Extension\Api\PaymentInterface" method="getMerchantKey"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/getTransaction" method="POST">
+        <service class="Mw\Extension\Api\TransactionInterface" method="getTransaction"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/getTransactionDetail" method="GET">
+        <service class="Mw\Extension\Api\TransactionDetailInterface" method="getTransactionDetail"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/getCardIdentifiers" method="POST">
+        <service class="Mw\Extension\Api\CardIdentifiersInterface" method="getCardIdentifiers"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

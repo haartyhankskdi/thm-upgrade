@@ -1,0 +1,53 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Advanced Search Hyva Compatibility M2 by Amasty
+ */
+
+declare(strict_types=1);
+?>
+<script>
+    'use strict';
+
+    function initTabs () {
+        return {
+            changeTab() {
+                this.$nextTick(() => {
+                    const tabs = document.querySelector('.amtabs-wrapper');
+                    const titles = document.querySelectorAll('.amtitle');
+                    const contents = document.querySelectorAll('.amcontent');
+
+                    tabs.addEventListener('click', (e)=> {
+                        const id = e.target.dataset.id;
+
+                        if (!id) {
+                            return false;
+                        }
+
+                        titles.forEach(title => {
+                            title.classList.remove('active');
+                        });
+                        e.target.classList.add('active');
+
+                        contents.forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        const element = document.getElementById(id);
+                        element.classList.remove('hidden');
+                    })
+                })
+            },
+        }
+    }
+
+    window.addEventListener(
+        'alpine:init',
+        () => Alpine.data(
+            'initTabs',
+            initTabs
+        ),
+        {once: true}
+    );
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

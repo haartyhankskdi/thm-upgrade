@@ -1,0 +1,408 @@
+"Save and Continue Edit","Save and Continue Edit"
+"Behavior Information","Behavior Information"
+"Behavior Action","Behavior Action"
+Actions,Actions
+"Fixed amount","Fixed amount"
+"Maximum Earning Points","Maximum Earning Points"
+"Set the maximum number of earning points. If empty or zero, there is no limitation","Set the maximum number of earning points. If empty or zero, there is no limitation"
+"Max point earn period","Max point earn period"
+Frequency,Frequency
+"Start Day","Start Day"
+"Day of week","Day of week"
+"Start Date","Start Date"
+"Date of month","Date of month"
+"Start Month","Start Month"
+"Expire After","Expire After"
+"Day(s). Will expire after the selected time period from the date of receiving points. If empty, there is no expiration time for the point.","Day(s). Will expire after the selected time period from the date of receiving points. If empty, there is no expiration time for the point."
+Conditions,Conditions
+"Customer Action or Event","Customer Action or Event"
+"Minimum number of words in the review","Minimum number of words in the review"
+"Minimum Grand Total","Minimum Grand Total"
+"When customers write a review will receive the number of points if their order has paid out to reach minimum grand total.","When customers write a review will receive the number of points if their order has paid out to reach minimum grand total."
+"Minimum number of non-login days","Minimum number of non-login days"
+"App Id","App Id"
+"Create app id <a href=""https://developers.facebook.com"" target=""_blank"">here</a>. ","Create app id <a href=""https://developers.facebook.com"" target=""_blank"">here</a>. "
+"Only those who purchased product can earn points","Only those who purchased product can earn points"
+Yes,Yes
+No,No
+"Enable email sent to Customers for their birthdays","Enable email sent to Customers for their birthdays"
+"Recurring Time Period","Recurring Time Period"
+Sender,Sender
+"Email template sent to customers for their birthdays","Email template sent to customers for their birthdays"
+"Minimum interval between Likes","Minimum interval between Likes"
+"(seconds). This is the minimum interval between 2 repeated interactions made by customers to get rewards","(seconds). This is the minimum interval between 2 repeated interactions made by customers to get rewards"
+"Total Invoiced Amount","Total Invoiced Amount"
+"In a customer's order, when they reach the total invoiced amount, they will earn reward points.","In a customer's order, when they reach the total invoiced amount, they will earn reward points."
+"Customer Behavior Rules","Customer Behavior Rules"
+"Add New Rule","Add New Rule"
+"Milestone Tier Benefit","Milestone Tier Benefit"
+"Increase Earning Points","Increase Earning Points"
+"Apply for Earning Rate, Catalog Rules and Shopping Cart Rules","Apply for Earning Rate, Catalog Rules and Shopping Cart Rules"
+"Fixed Points","Fixed Points"
+"Apply for Behavior Rules","Apply for Behavior Rules"
+"Decrease Spending Points","Decrease Spending Points"
+Benefit,Benefit
+ID,ID
+"First Name","First Name"
+"Last Name","Last Name"
+Email,Email
+Group,Group
+Gender,Gender
+Customer,Customer
+General,General
+"Tier Name","Tier Name"
+Status,Status
+Image,Image
+"The appropriate size is 265px * 250px.","The appropriate size is 265px * 250px."
+"Customer Group(s)","Customer Group(s)"
+Website,Website
+"Min Points Value","Min Points Value"
+"Number of Orders","Number of Orders"
+Description,Description
+"Milestone Tier Information","Milestone Tier Information"
+"Refer Information","Refer Information"
+"Customer Action","Customer Action"
+Action,Action
+"Points (X)","Points (X)"
+"Money Step (Y)","Money Step (Y)"
+Discount,Discount
+"Apply to shipping","Apply to shipping"
+"Stop further rules processing","Stop further rules processing"
+"Referral's Action","Referral's Action"
+"Referral's action type","Referral's action type"
+"Referral's points (X)","Referral's points (X)"
+"Referral's Money Step (Y)","Referral's Money Step (Y)"
+"Referral Group(s)","Referral Group(s)"
+"Invitation History","Invitation History"
+"Refer Friends Rules","Refer Friends Rules"
+"Delete Image","Delete Image"
+"Spending/Earning Ratio","Spending/Earning Ratio"
+"Earnings Distribution","Earnings Distribution"
+"You will receive %1 for every %2 amount of price purchasing made by your friends.","You will receive %1 for every %2 amount of price purchasing made by your friends."
+"You will receive %1 purchasing made by your friends.","You will receive %1 purchasing made by your friends."
+"Your friends will be received %1 when purchasing at our store.","Your friends will be received %1 when purchasing at our store."
+"Your friends will receive %1 for every %2 currency unit(s) when purchasing at our store","Your friends will receive %1 for every %2 currency unit(s) when purchasing at our store"
+"Your friends will receive %1 currency unit(s) when purchasing at our store","Your friends will receive %1 currency unit(s) when purchasing at our store"
+"Your friends will receive %1 percent discount on the order total when purchasing at our store","Your friends will receive %1 percent discount on the order total when purchasing at our store"
+"This rule no longer exists.","This rule no longer exists."
+"The rule has been deleted.","The rule has been deleted."
+"Something went wrong while deleting the rule data.","Something went wrong while deleting the rule data."
+"New Behavior Rule","New Behavior Rule"
+"The wrong rule is specified.","The wrong rule is specified."
+"You saved the rule.","You saved the rule."
+"Something went wrong while saving the rule data.","Something went wrong while saving the rule data."
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"The Milestone Tier has been deleted.","The Milestone Tier has been deleted."
+"The Milestone Tier to delete was not found.","The Milestone Tier to delete was not found."
+"Manage Milestone Tier","Manage Milestone Tier"
+"Edit ""%1""","Edit ""%1"""
+"New Milestone Tier","New Milestone Tier"
+Milestones,Milestones
+"Milestone Tiers has been deleted.","Milestone Tiers has been deleted."
+"Something wrong when delete Milestone Tier.","Something wrong when delete Milestone Tier."
+"Something went wrong while updating status for %1.","Something went wrong while updating status for %1."
+"A total of %1 record(s) have been updated.","A total of %1 record(s) have been updated."
+"Already a Milestone Tier with the same parameters you enter.","Already a Milestone Tier with the same parameters you enter."
+"The Milestone Tier has been saved.","The Milestone Tier has been saved."
+"Something went wrong while saving the Milestone Tier.","Something went wrong while saving the Milestone Tier."
+"Something went wrong while delete the rule data.","Something went wrong while delete the rule data."
+"New Refer Rule","New Refer Rule"
+Earned,Earned
+Spent,Spent
+"My Milestone","My Milestone"
+"REFERRAL PROGRAM","REFERRAL PROGRAM"
+"Please fill in the invitation field!","Please fill in the invitation field!"
+"An invitation to your friends has been sent successfully!","An invitation to your friends has been sent successfully!"
+"Please log in to earn points for this action!","Please log in to earn points for this action!"
+"Something went wrong while processing this action","Something went wrong while processing this action"
+"You've already liked this page.","You've already liked this page."
+"You've earned %1 for liking this page!","You've earned %1 for liking this page!"
+"You have to wait at least %1 seconds for the next action!","You have to wait at least %1 seconds for the next action!"
+"You've already shared this product.","You've already shared this product."
+"You've earned %1 for sharing the product","You've earned %1 for sharing the product"
+"Unlike this page successfully!","Unlike this page successfully!"
+"You've already tweeted this page.","You've already tweeted this page."
+"You've earned %1 for tweeting!","You've earned %1 for tweeting!"
+"Earn %1 for subscribing to newsletter","Earn %1 for subscribing to newsletter"
+"Earn %1 for writing a review for this product","Earn %1 for writing a review for this product"
+"Earn %1 for registering an account","Earn %1 for registering an account"
+"Earn %1 on your birthday","Earn %1 on your birthday"
+Tweet,Tweet
+Admin,Admin
+"Purchase Order","Purchase Order"
+"Sign Up","Sign Up"
+Newsletter,Newsletter
+"Review Product","Review Product"
+Birthday,Birthday
+"Like Facebook","Like Facebook"
+"Share Facebook","Share Facebook"
+Twitter,Twitter
+"Referral Earn","Referral Earn"
+"Customer birthday","Customer birthday"
+"Earn point(s) for customer birthday","Earn point(s) for customer birthday"
+"Customer comeback","Customer comeback"
+"Earn point(s) for customer comeback","Earn point(s) for customer comeback"
+"Lifetime Amount","Lifetime Amount"
+"Earn point(s) for Lifetime Amount","Earn point(s) for Lifetime Amount"
+"Earn point(s) for liking a Facebook page","Earn point(s) for liking a Facebook page"
+"Newsletter Subscriber","Newsletter Subscriber"
+"Earn points for newsletter subscriber","Earn points for newsletter subscriber"
+"Points Allocation","Points Allocation"
+"Earn point(s) for Points Allocation","Earn point(s) for Points Allocation"
+"Review product","Review product"
+"Earn point(s) for reviewing product","Earn point(s) for reviewing product"
+"Send email to friends","Send email to friends"
+"Earn point(s) for sending emails to friends","Earn point(s) for sending emails to friends"
+"Earn points for sharing on Facebook","Earn points for sharing on Facebook"
+"Earn point(s) for signing up","Earn point(s) for signing up"
+"Tweet Twitter","Tweet Twitter"
+"Earn point(s) for sharing a page on Twitter","Earn point(s) for sharing a page on Twitter"
+"Unlike Facebook","Unlike Facebook"
+"Minus points for unliking Facebook page","Minus points for unliking Facebook page"
+"Admin Import","Admin Import"
+"Import by %1","Import by %1"
+"Referral Earning","Referral Earning"
+"Referral Refund","Referral Refund"
+"Purchase products by using points","Purchase products by using points"
+"Sell points refund","Sell points refund"
+"You don't have enough points to spend!","You don't have enough points to spend!"
+"The module is disabled","The module is disabled"
+"No such rule id!","No such rule id!"
+"-- Please Select --","-- Please Select --"
+label,label
+Sunday,Sunday
+Monday,Monday
+Tuesday,Tuesday
+Wednesday,Wednesday
+Thursday,Thursday
+Friday,Friday
+Saturday,Saturday
+Weekly,Weekly
+Monthly,Monthly
+Yearly,Yearly
+January,January
+February,February
+March,March
+April,April
+May,May
+June,June
+July,July
+August,August
+September,September
+October,October
+November,November
+December,December
+"There is no data for the export.","There is no data for the export."
+Add/Update,Add/Update
+Replace,Replace
+Delete,Delete
+Add,Add
+"Please specify a website.","Please specify a website."
+"An email wasn't specified. Enter the email and try again.","An email wasn't specified. Enter the email and try again."
+"We found an invalid value in a website column.","We found an invalid value in a website column."
+"Please enter a valid email.","Please enter a valid email."
+"We can't find a reward customer who matches this email and website code.","We can't find a reward customer who matches this email and website code."
+"Module has been disabled. Please enable the module to use this feature","Module has been disabled. Please enable the module to use this feature"
+"Reward Account invalid.","Reward Account invalid."
+"Point balance is empty","Point balance is empty"
+"Point balance must equals or greater than zero","Point balance must equals or greater than zero"
+"Store id is empty","Store id is empty"
+"store_id doesn't exist","store_id doesn't exist"
+"%1 invalid","%1 invalid"
+"Action code doesn't exist","Action code doesn't exist"
+"Customer doesn't exist","Customer doesn't exist"
+"Transaction doesn't exist.","Transaction doesn't exist."
+"We can't find a reward account who matches the customer.","We can't find a reward account who matches the customer."
+"We can't find a customer who matches this store id.","We can't find a customer who matches this store id."
+"Point remaining must be equals or greater than zero","Point remaining must be equals or greater than zero"
+"Point used must be equals or greater than zero","Point used must be equals or greater than zero"
+"%1 at invalid","%1 at invalid"
+"%1 is empty","%1 is empty"
+"Invalid status.","Invalid status."
+"Point Amount must be equals or greater than zero","Point Amount must be equals or greater than zero"
+"%1 invalid!","%1 invalid!"
+"Email required.","Email required."
+"Email list must be equals or less than 20.","Email list must be equals or less than 20."
+"%1 is not a valid email address.","%1 is not a valid email address."
+"Referrer does not exist.","Referrer does not exist."
+"Give fixed X points to Customers","Give fixed X points to Customers"
+"Give X points for every Y amount of Price","Give X points for every Y amount of Price"
+"Give a fixed discount to Customer","Give a fixed discount to Customer"
+"Give percent discount to Customer","Give percent discount to Customer"
+"Create a new account","Create a new account"
+"Sign up for a newsletter","Sign up for a newsletter"
+"Write a review","Write a review"
+"Customer's birthday","Customer's birthday"
+"Like a page with Facebook","Like a page with Facebook"
+"Tweet a page with Twitter","Tweet a page with Twitter"
+"Share a purchase on Facebook","Share a purchase on Facebook"
+"Get X Points after Y Days of Inactivity","Get X Points after Y Days of Inactivity"
+"Home Page","Home Page"
+"Product List","Product List"
+"Product Details","Product Details"
+Day,Day
+Week,Week
+Month,Month
+Year,Year
+"Give points to the customer","Give points to the customer"
+"Per day","Per day"
+"Per month","Per month"
+"Per year","Per year"
+Lifetime,Lifetime
+"Admin added","Admin added"
+Purchase,Purchase
+Review,Review
+"Sign up","Sign up"
+"Newsletter subscriber","Newsletter subscriber"
+"Facebook like","Facebook like"
+"Facebook share","Facebook share"
+"Twitter tweet","Twitter tweet"
+Referral,Referral
+"Send email to friend","Send email to friend"
+"Earn Refund","Earn Refund"
+Basic,Basic
+Advanced,Advanced
+"Give fixed X points to Referer","Give fixed X points to Referer"
+Disable,Disable
+Enable,Enable
+Hash,Hash
+"Url Param","Url Param"
+"Earn <strong>%1</strong> points to rank up <strong>%2</strong>","Earn <strong>%1</strong> points to rank up <strong>%2</strong>"
+"Current Tier:","Current Tier:"
+"Your balance is not enough to place the order.","Your balance is not enough to place the order."
+"You haven't enough point update items","You haven't enough point update items"
+"There is no sample file for this entity.","There is no sample file for this entity."
+"You haven't enough point to add this product!","You haven't enough point to add this product!"
+"Please sign in to add the product!","Please sign in to add the product!"
+"Buy by Points","Buy by Points"
+"Buy by Product Price","Buy by Product Price"
+"""%fieldName"" is required. Enter and try again.","""%fieldName"" is required. Enter and try again."
+"Something went wrong while reordering.","Something went wrong while reordering."
+Base,Base
+"We couldn't find any records.","We couldn't find any records."
+"Chart is disabled. To enable the chart, click <a href='%1'>here</a>","Chart is disabled. To enable the chart, click <a href='%1'>here</a>"
+"My Milestones","My Milestones"
+"View All","View All"
+"Your tier is <strong>%1</strong> at present.","Your tier is <strong>%1</strong> at present."
+"Earn <strong>%1</strong> Reward Points to rank up <strong>%2</strong>.","Earn <strong>%1</strong> Reward Points to rank up <strong>%2</strong>."
+"Recent Transactions","Recent Transactions"
+"Transaction #","Transaction #"
+Date,Date
+Comment,Comment
+Amount,Amount
+"Expire Date","Expire Date"
+N/A,N/A
+"You have created no transactions.","You have created no transactions."
+"Milestone Transactions","Milestone Transactions"
+"Add Product by Points","Add Product by Points"
+"Excl. Tax","Excl. Tax"
+"As low as","As low as"
+"Refer Email Or Code","Refer Email Or Code"
+"Share your referral link with your friends and earn commissions","Share your referral link with your friends and earn commissions"
+"Referral URL And Code","Referral URL And Code"
+"Refer URL","Refer URL"
+"Refer Code","Refer Code"
+"Refer Email","Refer Email"
+"Referral via Social","Referral via Social"
+"Send Invitations","Send Invitations"
+"Send from","Send from"
+Store,Store
+"Your email address","Your email address"
+"Invite your friends by entering their email addresses below","Invite your friends by entering their email addresses below"
+"To reduce the chance that your message is marked as spam, please follow this format: ""Contact name"" <name@example.com>","To reduce the chance that your message is marked as spam, please follow this format: ""Contact name"" <name@example.com>"
+"Example contact list:""John"" <john@example.com>, peter@icloud.com,jennifer@google.com, hello@yahoo.com, mark@gmail.com","Example contact list:""John"" <john@example.com>, peter@icloud.com,jennifer@google.com, hello@yahoo.com, mark@gmail.com"
+"Message (Just your message, referral links will be added automatically.)","Message (Just your message, referral links will be added automatically.)"
+message,message
+"SEND NOW","SEND NOW"
+copied,copied
+copy,copy
+"Your Invitee","Your Invitee"
+Receiver,Receiver
+"Receiver earn","Receiver earn"
+"Receiver discount","Receiver discount"
+"You earn","You earn"
+"EARN REWARDS FOR SHARING YOUR PURCHASE.","EARN REWARDS FOR SHARING YOUR PURCHASE."
+"Dear %name,","Dear %name,"
+"%storeName would like to wish you good health, luck and success on the occasion of your birthday!","%storeName would like to wish you good health, luck and success on the occasion of your birthday!"
+"By the way, please receive our small gift which is %pointAmount to spend at ","By the way, please receive our small gift which is %pointAmount to spend at "
+"Happy Birthday!","Happy Birthday!"
+"Invitation from %store_name","Invitation from %store_name"
+"Please accept this invitation to join ","Please accept this invitation to join "
+Link:,Link:
+Message:,Message:
+"Welcome to our Milestone program","Welcome to our Milestone program"
+"Congratulations,","Congratulations,"
+"You become a ","You become a "
+" member and own "," member and own "
+" reward points."," reward points."
+"Here are your ","Here are your "
+" benefits:"," benefits:"
+"For 'Earn Rate', 'Catalog Rules', 'Shopping Cart Rules', you will be increased ","For 'Earn Rate', 'Catalog Rules', 'Shopping Cart Rules', you will be increased "
+" percent to earning"," percent to earning"
+"For 'Behavior Rules', you will be plus ","For 'Behavior Rules', you will be plus "
+" point to earning"," point to earning"
+"You will receive a ","You will receive a "
+"% discount for your spending reward points.","% discount for your spending reward points."
+"Attain more points to reach more benefits at higher tiers.","Attain more points to reach more benefits at higher tiers."
+Qty,Qty
+"View Details","View Details"
+"Options Details","Options Details"
+Earning,Earning
+"Behavior Rules","Behavior Rules"
+Referrals,Referrals
+Rules,Rules
+"Mageplaza Reward Reports","Mageplaza Reward Reports"
+"Earning Point from Orders with Applied Coupon","Earning Point from Orders with Applied Coupon"
+"If No, When a customer applies a coupon to an order, they will not receive points from this order.","If No, When a customer applies a coupon to an order, they will not receive points from this order."
+"Spending Point from Orders with Applied Coupon","Spending Point from Orders with Applied Coupon"
+"If No, When a customer applies a coupon to an order, they won't get spending points for this order.","If No, When a customer applies a coupon to an order, they won't get spending points for this order."
+"Social behavior","Social behavior"
+"Like via Facebook","Like via Facebook"
+"Show Facebook like button on frontend","Show Facebook like button on frontend"
+"Show Facebook like count on frontend","Show Facebook like count on frontend"
+"Page to display","Page to display"
+"Tweet via Twitter","Tweet via Twitter"
+"Show Twitter tweet button on frontend","Show Twitter tweet button on frontend"
+"Customer referrals","Customer referrals"
+"Invitation e-mail","Invitation e-mail"
+"Default Refer URL","Default Refer URL"
+"Url Key","Url Key"
+"Use Param","Use Param"
+Prefix,Prefix
+"Enable Milestones","Enable Milestones"
+"Earn Point Source","Earn Point Source"
+"Earning Period","Earning Period"
+"Progress Bar Type","Progress Bar Type"
+"Milestone Tier Progress Background Color","Milestone Tier Progress Background Color"
+"Milestone Tier Progress Color","Milestone Tier Progress Color"
+"Email Notification","Email Notification"
+"Customer Update Tier Template","Customer Update Tier Template"
+"Select an email template used to send customers before Customer Update Tier.","Select an email template used to send customers before Customer Update Tier."
+Name,Name
+"Point Amount","Point Amount"
+Active,Active
+Inactive,Inactive
+"Created On","Created On"
+Expired,Expired
+Priority,Priority
+"Referral Email","Referral Email"
+"Invited Email","Invited Email"
+"Invited Earn","Invited Earn"
+"Invited Discount","Invited Discount"
+"Web Site(s)","Web Site(s)"
+"Add Milestone Tier","Add Milestone Tier"
+"Are you sure to delete selected items?","Are you sure to delete selected items?"
+"Change Status","Change Status"
+"Number of Customers","Number of Customers"
+Edit,Edit
+"Store View","Store View"
+"Customer Groups","Customer Groups"
+"-- Select --","-- Select --"
+Period,Period
+"Created At","Created At"
+"Total earning","Total earning"
+"Total Spending","Total Spending"
+"Number of orders","Number of orders"
+"Discount for spending points","Discount for spending points"
+"Grand Total Of Orders Using Points","Grand Total Of Orders Using Points"
+"My Referral","My Referral"

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Mw\Extension\Api\PostManagementInterface" type="Mw\Extension\Model\PostManagement" />
+    <preference for="Mw\Extension\Api\GetProductImageInterface" type="Mw\Extension\Model\GetProductImageUrl" />
+    <preference for="Mw\Extension\Api\GetHomeInterface" type="Mw\Extension\Model\GetHomeData" />
+    <!--Wishlist API preference-->
+    <preference for="Mw\Extension\Api\WishlistManagementInterface" type="Mw\Extension\Model\WishlistManagement" />
+    <!--Wishlist API preference End-->
+    <!-- Review Api Starts -->
+    <preference for="Mw\Extension\Api\Data\ReviewInterface" type="Mw\Extension\Model\Data\Review" />
+    <preference for="Mw\Extension\Api\Data\RatingVoteInterface" type="Mw\Extension\Model\Data\RatingVote" />
+    <preference for="Mw\Extension\Api\GetProductReviewsInterface" type="Mw\Extension\Model\GetProductReviews" />
+    <preference for="Mw\Extension\Api\ReviewRepositoryInterface" type="Mw\Extension\Model\ReviewRepository" />
+    <preference for="Mw\Extension\Model\Review\Command\DeleteByIdInterface" type="Mw\Extension\Model\Review\Command\DeleteById" />
+    <preference for="Mw\Extension\Model\Review\Command\SaveInterface" type="Mw\Extension\Model\Review\Command\Save" />
+    <preference for="Mw\Extension\Model\Review\Command\GetInterface" type="Mw\Extension\Model\Review\Command\Get" />
+    <preference for="Mw\Extension\Model\Review\Command\GetListInterface" type="Mw\Extension\Model\Review\Command\GetList" />
+    <preference for="Mw\Extension\Model\ReviewValidatorInterface" type="Mw\Extension\Model\ReviewValidationChain" />
+    <preference for="Mw\Extension\Api\Data\ReviewSearchResultInterface" type="Mw\Extension\Model\ReviewSearchResult" />
+    <preference for="Mw\Extension\Model\Review\ReviewTypeResolverInterface" type="Mw\Extension\Model\Review\ReviewTypeResolver" />
+    <type name="Mw\Extension\Model\ReviewValidationChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="title" xsi:type="object">Mw\Extension\Model\Review\Validator\TitleValidator</item>
+                <item name="detail" xsi:type="object">Mw\Extension\Model\Review\Validator\DetailValidator</item>
+                <item name="nickname" xsi:type="object">Mw\Extension\Model\Review\Validator\NicknameValidator</item>
+                <item name="review_entity" xsi:type="object">Mw\Extension\Model\Review\Validator\ReviewEntityValidator</item>
+                <item name="entity_pk_value" xsi:type="object">Mw\Extension\Model\Review\Validator\EntityPkValueValidator</item>
+                <item name="stores" xsi:type="object">Mw\Extension\Model\Review\Validator\StoresValidator</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Review Api Ends -->
+    <!-- Config -->
+    <preference for="Mw\Extension\Api\GetConfigInterface" type="Mw\Extension\Model\GetConfigData" />
+    <!-- Product Invoice  -->
+    <type name="Magento\Framework\Webapi\Rest\Response\RendererFactory">
+        <arguments>
+            <argument name="renders" xsi:type="array">
+                <item name="application_pdf" xsi:type="array">
+                    <item name="type" xsi:type="string">application/pdf</item>
+                    <item name="model" xsi:type="string">\Mw\Extension\Renderer\PdfRenderer</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Mw\Extension\Api\GetOrderInterface" type="Mw\Extension\Model\GetOrderData" />
+    <!-- Place Order -->
+    <preference for="Mw\Extension\Api\ApiPlaceOrderInterface" type="Mw\Extension\Model\ApiPlaceOrder" />
+    <!-- Log -->
+    <preference for="Mw\Extension\Api\PutLogInterface" type="Mw\Extension\Model\ApiPutLog" />
+    <preference for="Mw\Extension\Api\PaymentInterface" type="Mw\Extension\Model\ApiPayment" />
+    <preference for="Mw\Extension\Api\TransactionInterface" type="Mw\Extension\Model\ApiTransaction" />
+    <preference for="Mw\Extension\Api\TransactionDetailInterface" type="Mw\Extension\Model\ApiTransactionDetail" />
+    <preference for="Mw\Extension\Api\CardIdentifiersInterface" type="Mw\Extension\Model\ApiCardIdentifiers" />
+
+
+
+</config>

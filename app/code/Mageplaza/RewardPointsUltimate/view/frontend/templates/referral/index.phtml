@@ -1,0 +1,177 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_RewardPointsUltimate
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<div id="mp_reward_referral">
+    <?php /** @var Mageplaza\RewardPointsUltimate\Block\Referral\Index $block */
+    if ($block->getRule()) : ?>
+        <div class="mp-refer-description" id="description">
+            <strong><?= $block->escapeHtml(__('Share your referral link with your friends and earn commissions')) ?></strong>
+            <div class="mp-refer-rule-des">
+                <div class="refer">
+                    <span><?= $block->escapeHtml($block->getReferMessage()) ?></span>
+                </div>
+                <div class="customer">
+                    <span><?= $block->escapeHtml($block->getCustomerMessage()) ?></span>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div id="mp_section">
+        <div class="col-mp mp-6 mp-md-6 mp-sm-12 mp-xs-12">
+            <?php $referUrl = $block->getReferUrl(); ?>
+            <div class="block url_and_code">
+                <div class="block-title"><strong><?= $block->escapeHtml(__('Referral URL And Code')) ?></strong></div>
+                <div class="box-content">
+                    <div class="mp_url">
+                        <span class="mp-label"><?= $block->escapeHtml(__('Refer URL')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input" name="refer_url"
+                                   value="<?= $block->escapeUrl($referUrl) ?>" readonly/>
+                            <div class="copy">
+                                <span class="mp-copied-tooltip"><?= $block->escapeHtml(__('copied')) ?></span>
+                                <span class="mp-copy-icon"><i class="fa fa-clone" aria-hidden="true"></i></span>
+                                <span class="mp-copied-icon" hidden><i class="fa fa-clipboard" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mp_code">
+                        <span class="mp-label"><?= $block->escapeHtml(__('Refer Code')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input" name="refer_code"
+                                   value="<?= $block->escapeHtmlAttr($block->getCode()) ?>" readonly/>
+                            <div class="copy">
+                                <span class="mp-copied-tooltip"><?= $block->escapeHtml(__('copied')) ?></span>
+                                <span class="mp-copy-icon"><i class="fa fa-clone" aria-hidden="true"></i></span>
+                                <span class="mp-copied-icon" hidden><i class="fa fa-clipboard" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mp_email">
+                        <span class="mp-label"><?= $block->escapeHtml(__('Refer Email')) ?></span>
+                        <div class="mp_input">
+                            <input type="text" class="mp-input" name="refer_email"
+                                   value="<?= $block->escapeHtmlAttr($block->getCustomerEmail()) ?>" readonly/>
+                            <div class="copy">
+                                <span class="mp-copied-tooltip"><?= $block->escapeHtml(__('copied')) ?></span>
+                                <span class="mp-copy-icon"><i class="fa fa-clone" aria-hidden="true"></i></span>
+                                <span class="mp-copied-icon" hidden><i class="fa fa-clipboard" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block refer-via-social">
+                <div class="block-title"><strong><?= $block->escapeHtml(__('Referral via Social')) ?></strong></div>
+                <div class="box-content">
+                    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=660d0523dcb638001a9fb63c&product=inline-share-buttons&source=platform" async="async"></script>
+                    <!-- ShareThis BEGIN -->
+                    <div class="sharethis-inline-share-buttons" data-url="<?= $block->escapeUrl($referUrl) ?>"
+                         data-title="<?= $block->escapeUrl($referUrl) ?>">
+                    </div><!-- ShareThis END -->
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="block col-mp mp-6 mp-md-6 mp-sm-12 mp-xs-12">
+            <div class="block-title"><strong><?= $block->escapeHtml(__('Send Invitations')) ?></strong></div>
+            <div class="box-content">
+                <form action="<?= $block->escapeUrl($block->getSaveInvitationsUrl()) ?>"
+                      method="post" name="invitation-data">
+                    <div class="send-from">
+                        <div class="mp-title mp-3">
+                            <span class="mp-label"><?= $block->escapeHtml(__('Send from')) ?></span>
+                        </div>
+                        <div class="mp-content mp-12">
+                            <select id="send-by" name="send-by">
+                                <option value="store"><?= $block->escapeHtml(__('Store')) ?></option>
+                                <option value="email_address"><?= $block->escapeHtml(__('Your email address')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="invite-friend">
+                        <span class="mp-label"><?= $block->escapeHtml(__('Invite your friends by entering their email addresses below')) ?></span>
+                        <textarea name="invitees"></textarea>
+                        <div class="comment">
+                            <p><?= $block->escapeHtml(__('To reduce the chance that your message is marked as spam, please follow this format: "Contact name" <name@example.com>')) ?></p>
+                            <p><?= $block->escapeHtml(__('Example contact list:"John" <john@example.com>, peter@icloud.com,jennifer@google.com, hello@yahoo.com, mark@gmail.com')) ?></p>
+                        </div>
+                    </div>
+                    <div class="invite-message">
+                        <span class="mp-label"><?= $block->escapeHtml(__('Message (Just your message, referral links will be added automatically.)')) ?></span>
+                        <textarea name="message"></textarea>
+                    </div>
+                    <div class="action primary bt-send">
+                        <button type="submit" title="<?= $block->escapeHtmlAttr(__('message')) ?>" class="action primary">
+                            <span><?= $block->escapeHtml(__('SEND NOW')) ?></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <?= /** @noEscape */ $block->getChildHtml() ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            isDislayInviteMessage();
+            var btnCopy = $('.url_and_code .copy');
+
+            $('#send-by').on('change', function () {
+                isDislayInviteMessage();
+            });
+
+            btnCopy.hover(function () {
+                $(this).find('.mp-copied-icon').hide();
+                $(this).find('.mp-copy-icon').show();
+                $(this).find('.mp-copied-tooltip').css({
+                    'visibility': 'hidden',
+                    'opacity': '0'
+                });
+            });
+
+            btnCopy.click(function () {
+                $(this).siblings('.mp-input').select();
+                document.execCommand("copy");
+                $(this).find('.mp-copied-tooltip').css({
+                    'visibility': 'visible',
+                    'opacity': '1'
+                });
+                $(this).find('.mp-copy-icon').hide();
+                $(this).find('.mp-copied-icon').show();
+            });
+
+            function isDislayInviteMessage() {
+                if ($('#send-by').val() === 'store') {
+                    $('.invite-message').hide();
+                } else {
+                    $('.invite-message').show();
+                }
+            }
+        });
+    });
+</script>
+
